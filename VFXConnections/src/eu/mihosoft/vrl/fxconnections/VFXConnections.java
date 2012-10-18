@@ -10,6 +10,7 @@ import eu.mihosoft.vrl.fxwindows.RotateIcon;
 import eu.mihosoft.vrl.fxwindows.ScalableContentPane;
 import eu.mihosoft.vrl.fxwindows.Window;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -33,15 +34,19 @@ public class VFXConnections extends Application {
 
         Scene scene = new Scene(canvas, 800, 800);
 
+        for (int i = 0; i < 3; i++) {
 
-        Window w = WindowUtil.createWindow("Window 1");
-        StackPane content = new StackPane();
-        
-        WebView view = new WebView();
-        view.getEngine().load("http://www.google.com");
-        content.getChildren().add(view);
-        w.setContentPane(content);
-        w.setPrefSize(200, 200);
+            Window w = WindowUtil.createWindow("Window 1");
+            StackPane content = new StackPane();
+            content.setPadding(new Insets(2));
+
+            WebView view = new WebView();
+            view.getEngine().load("http://www.google.com");
+            content.getChildren().add(view);
+            w.setContentPane(content);
+            w.setPrefSize(300, 200);
+            root.getChildren().add(w);
+        }
 
         Window w2 = WindowUtil.createWindow("Window 1");
 
@@ -50,7 +55,7 @@ public class VFXConnections extends Application {
         w2.setLayoutX(1200);
         w2.setLayoutY(1200);
 
-        root.getChildren().add(w);
+
         root.getChildren().add(w2);
 
 

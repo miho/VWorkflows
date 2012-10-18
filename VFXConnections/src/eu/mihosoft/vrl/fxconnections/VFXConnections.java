@@ -12,6 +12,8 @@ import eu.mihosoft.vrl.fxwindows.Window;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 /**
@@ -33,7 +35,12 @@ public class VFXConnections extends Application {
 
 
         Window w = WindowUtil.createWindow("Window 1");
-
+        StackPane content = new StackPane();
+        
+        WebView view = new WebView();
+        view.getEngine().load("http://www.google.com");
+        content.getChildren().add(view);
+        w.setContentPane(content);
         w.setPrefSize(200, 200);
 
         Window w2 = WindowUtil.createWindow("Window 1");

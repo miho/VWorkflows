@@ -6,6 +6,10 @@
         Purpose of the stylesheet follows.
 */
 
+.connection-pane {
+    -fx-skin: 
+}
+
 .window {
 
 }

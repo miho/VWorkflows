@@ -12,12 +12,12 @@ import javafx.scene.Cursor;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class DefaultOuterConnectorSkin extends SkinBase<OuterConnector, BehaviorBase<OuterConnector>> {
+public class DefaultConnectorSkin extends SkinBase<Connector, BehaviorBase<Connector>> {
 
 //    private Pane root = new StackPane();
-    public DefaultOuterConnectorSkin(final OuterConnector c) {
+    public DefaultConnectorSkin(final Connector c) {
         super(c, new BehaviorBase<>(c));
 
-        setCursor(Cursor.DEFAULT);
+//        setCursor(Cursor.DEFAULT);
     }
 }

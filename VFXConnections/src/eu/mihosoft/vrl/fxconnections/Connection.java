@@ -13,5 +13,6 @@ import javafx.scene.control.Control;
 public class Connection extends Control {
 
     public Connection(Connector s, Connector r) {
+        
     }
 }

@@ -6,8 +6,8 @@
         Purpose of the stylesheet follows.
 */
 
-.connection-pane {
-    -fx-skin: 
+.connector {
+    -fx-skin: "eu.mihosoft.vrl.fxconnections.DefaultConnectorSkin";
 }
 
 .window {

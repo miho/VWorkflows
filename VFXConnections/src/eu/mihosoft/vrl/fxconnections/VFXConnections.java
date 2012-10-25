@@ -34,30 +34,39 @@ public class VFXConnections extends Application {
 
         Scene scene = new Scene(canvas, 800, 800);
 
-        for (int i = 0; i < 3; i++) {
+//        for (int i = 0; i < 3; i++) {
+//
+//            Window w = WindowUtil.createWindow("Window 1");
+//            StackPane content = new StackPane();
+//            content.setPadding(new Insets(2));
+//
+//            WebView view = new WebView();
+//            view.getEngine().load("http://www.google.com");
+//            content.getChildren().add(view);
+//            w.setContentPane(content);
+//            w.setPrefSize(300, 200);
+//            root.getChildren().add(w);
+//        }
+        Window w = WindowUtil.createWindow("Window 1");
+        w.setPrefSize(300, 200);
+        root.getChildren().add(w);
+        
+        Connector output = new Connector();
+        
+        output.setStyle("-fx-background-color: rgb(0,0,0);");
+        
+        output.setPrefSize(30, 30);
 
-            Window w = WindowUtil.createWindow("Window 1");
-            StackPane content = new StackPane();
-            content.setPadding(new Insets(2));
+        w.getContentPane().getChildren().add(output);
 
-            WebView view = new WebView();
-            view.getEngine().load("http://www.google.com");
-            content.getChildren().add(view);
-            w.setContentPane(content);
-            w.setPrefSize(300, 200);
-            root.getChildren().add(w);
-        }
-
-        Window w2 = WindowUtil.createWindow("Window 1");
+        Window w2 = WindowUtil.createWindow("Window 2");
 
         w2.setPrefSize(200, 200);
 
         w2.setLayoutX(1200);
         w2.setLayoutY(1200);
 
-
         root.getChildren().add(w2);
-
 
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);

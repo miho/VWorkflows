@@ -4,10 +4,15 @@
  */
 package eu.mihosoft.vrl.fxconnections;
 
+import javafx.scene.control.Control;
+
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Connection {
-    
+public class ConnectionControl extends Control {
+
+    public ConnectionControl(Connector s, Connector r) {
+        
+    }
 }

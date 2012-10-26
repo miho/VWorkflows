@@ -8,6 +8,6 @@ package eu.mihosoft.vrl.fxconnections;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Connection {
+public interface FlowNode {
     
 }

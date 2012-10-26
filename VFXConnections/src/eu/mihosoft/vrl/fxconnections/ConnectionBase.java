@@ -41,4 +41,9 @@ public class ConnectionBase implements Connection{
     public void setReceiverId(String id) {
         this.receiverId = id;
     }
+    
+    @Override
+    public String toString() {
+        return "s: [" + getSenderId() + "] -> r: [" + getReceiverId() + "]";
+    }
 }

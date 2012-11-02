@@ -11,19 +11,21 @@ import javafx.scene.Node;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class DataFlow implements Flow {
+class DataFlow<T> implements Flow<T> {
 
     public DataFlow() {
     }
 
     @Override
-    public FlowNode newNode(Node w1) {
+    public FlowNode<T> newNode(T n) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Connection connect(FlowNode s, FlowNode r) {
+    public Connection connect(FlowNode<T> s, FlowNode<T> r) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    
     
 }

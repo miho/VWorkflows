@@ -4,26 +4,20 @@
  */
 package eu.mihosoft.vrl.fxconnections;
 
-import eu.mihosoft.vrl.fxwindows.Window;
-import javafx.scene.Node;
-
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class ControlFlow implements Flow {
+abstract class ControlFlow<T> implements Flow<T> {
+    
+    private Connections  connections = VFXConnections.newConnections();
 
     public ControlFlow() {
     }
 
     @Override
-    public FlowNode newNode(Node w1) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Connection connect(FlowNode<T> s, FlowNode<T> r) {
+        connections.
     }
-
-    @Override
-    public Connection connect(FlowNode s, FlowNode r) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
+ 
 }

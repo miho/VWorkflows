@@ -4,16 +4,14 @@
  */
 package eu.mihosoft.vrl.fxconnections;
 
-import javafx.scene.Node;
-
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Flow {
+public interface Flow<T> {
 
-    public FlowNode newNode(Node w1);
+    public FlowNode<T> newNode(T n);
     
-    public Connection connect(FlowNode s, FlowNode r);
+    public Connection connect(FlowNode<T> s, FlowNode<T> r);
     
 }

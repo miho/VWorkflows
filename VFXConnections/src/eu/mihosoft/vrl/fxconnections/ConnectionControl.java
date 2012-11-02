@@ -12,7 +12,7 @@ import javafx.scene.control.Control;
  */
 public class ConnectionControl extends Control {
 
-    public ConnectionControl(Connector s, Connector r) {
+    public ConnectionControl(ConnectorControl s, ConnectorControl r) {
         
     }
 }

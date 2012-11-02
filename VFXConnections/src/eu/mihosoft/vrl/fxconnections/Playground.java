@@ -14,19 +14,19 @@ public class Playground {
 
     public void play() {
 
-        Flow connections1 = new ControlFlow();
+        Flow<Window> connections1 = new ControlFlow<>();
 
         Window w1 = new Window();
 
-        FlowNode n1 = connections1.newNode(w1);
+        FlowNode<Window> n1 = connections1.newNode(w1);
 
         Window w2 = new Window();
 
-        FlowNode n2 = connections1.newNode(w2);
+        FlowNode<Window> n2 = connections1.newNode(w2);
 
         connections1.connect(n1, n2);
 
-        Flow connections2 = new DataFlow();
+        Flow<Window> connections2 = new DataFlow<>();
         
         
 

@@ -23,7 +23,7 @@ class JFXFlowNode extends FlowNodeBase<Window> {
 
     @Override
     public StringProperty titleProperty() {
-        return titleProperty();
+        return getNode().titleProperty();
     }
 
     @Override

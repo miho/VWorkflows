@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface FlowNode<T> {
+public interface FlowNode extends Model {
     
     public StringProperty titleProperty();
     
@@ -29,13 +29,21 @@ public interface FlowNode<T> {
     
     public void setX(double x);
     public void setY(double x);
+    
     public double getX();
     public double getY();
     
-    public ObservableList<FlowNode<T>> getChildren();
+    public DoubleProperty widthProperty();
+    public DoubleProperty heightProperty();
     
-    public T getNode();
+    public void setWidth(double w);
+    public void setHeight(double h);
     
-    public ObservableList<Connector<T>> getInputs();
-    public ObservableList<Connector<T>> getOutputs();
+    public double getWidth();
+    public double getHeight();
+    
+    public ObservableList<FlowNode> getChildren();
+    
+    public ObservableList<Connector<FlowNode>> getInputs();
+    public ObservableList<Connector<FlowNode>> getOutputs();
 }

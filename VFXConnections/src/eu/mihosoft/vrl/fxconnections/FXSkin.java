@@ -4,15 +4,12 @@
  */
 package eu.mihosoft.vrl.fxconnections;
 
+import javafx.scene.Node;
+
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Flow<T extends FlowNode> {
-
-    public Connection connect(T s, T r);
-
-    public T remove(T n);
-    
-    public Iterable<T> getNodes();
+public interface FXSkin<T extends Model, V extends Node> extends Skin<T>{
+    public V getNode();
 }

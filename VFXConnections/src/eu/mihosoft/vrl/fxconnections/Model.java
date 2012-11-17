@@ -8,11 +8,7 @@ package eu.mihosoft.vrl.fxconnections;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Flow<T extends FlowNode> {
-
-    public Connection connect(T s, T r);
-
-    public T remove(T n);
-    
-    public Iterable<T> getNodes();
+public interface Model {
+//    public void setSkin(Skin<?> skin);
+//    public Skin<?> getSkin();
 }

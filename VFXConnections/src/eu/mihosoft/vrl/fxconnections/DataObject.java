@@ -8,10 +8,9 @@ package eu.mihosoft.vrl.fxconnections;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Connection extends Model{
-    public String getSenderId();
-    public void setSenderId(String id);
-    public String getReceiverId();
-    public void setReceiverId(String id);
-    
+public interface DataObject {
+    public FlowNode getParent();
+    public Object getValue();
+    public void setValue();
+    public CompatibilityResult compatible(DataObject other);
 }

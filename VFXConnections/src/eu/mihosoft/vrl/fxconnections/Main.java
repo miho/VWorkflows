@@ -78,8 +78,13 @@ public class Main extends Application {
         connections.add("1out","2in");
         connections.add("3out","4out");
         connections.add("1out","4out");
+        connections.add("1out","2in");
+        connections.add("1out","2in");
+        connections.add("3out","4out");
         
         System.out.println("all-with: " + connections.getAllWith("1out"));
+        
+        System.out.println("all: " + connections.getAll("1out", "2in"));
         
         System.out.println("\n");
         

@@ -25,7 +25,7 @@ class ConnectionsImpl implements Connections {
 //    Map<String, Integer> receivers = new HashMap<>();
 
     private static String connectionId(String id, String s, String r) {
-        return id + ":" + s + "->" + r;
+        return "id=" + id + ";[" + s + "]->[" + r + "]";
     }
 
     private static String connectionId(Connection c) {

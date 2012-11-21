@@ -13,6 +13,7 @@ public class ConnectionBase implements Connection{
     private String senderId;
     private String receiverId;
     private String id;
+    private String type;
 
     public ConnectionBase() {
     }
@@ -57,5 +58,15 @@ public class ConnectionBase implements Connection{
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 }

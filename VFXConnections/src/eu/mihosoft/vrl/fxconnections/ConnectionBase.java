@@ -8,7 +8,7 @@ package eu.mihosoft.vrl.fxconnections;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class ConnectionBase implements Connection{
+class ConnectionBase implements Connection{
     
     private String senderId;
     private String receiverId;

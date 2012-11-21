@@ -12,14 +12,14 @@ public class Playground {
 
     public void play() {
 
-        Flow<FlowNode> connections1 = new ControlFlow();
+        Flow<FlowNode> flow = new ControlFlow();
 
         FlowNode n1 = new FlowNodeBase();
-        FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(n1, connections1);
+        FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(n1, flow);
 
         FlowNode n2 = new FlowNodeBase();
-        FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(n2, connections1);
+        FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(n2, flow);
 
-        connections1.connect(n1, n2);
+        flow.connect(n1, n2);
     }
 }

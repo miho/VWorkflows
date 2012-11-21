@@ -5,7 +5,9 @@
 package eu.mihosoft.vrl.fxconnections;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -21,19 +23,18 @@ public class FlowNodeBase implements FlowNode {
 
     private ObservableList<Connector<FlowNode>> inputs =
             FXCollections.observableArrayList();
-    
     private ObservableList<Connector<FlowNode>> outputs =
             FXCollections.observableArrayList();
-    
     private ObservableList<FlowNode> children =
             FXCollections.observableArrayList();
-    
     private StringProperty idProperty = new SimpleStringProperty();
     private StringProperty titleProperty = new SimpleStringProperty();
     private DoubleProperty xProperty = new SimpleDoubleProperty();
     private DoubleProperty yProperty = new SimpleDoubleProperty();
     private DoubleProperty widthProperty = new SimpleDoubleProperty();
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
+    private ObjectProperty<ValueObject> valueObjectProperty =
+            new SimpleObjectProperty<ValueObject>();
 
     public FlowNodeBase() {
 
@@ -54,7 +55,6 @@ public class FlowNodeBase implements FlowNode {
                             }
                         } else if (change.wasAdded()) {
                             for (Connector<FlowNode> connector : change.getAddedSubList()) {
-                                
                             }
                         }
                     }
@@ -174,5 +174,18 @@ public class FlowNodeBase implements FlowNode {
     @Override
     public ObservableList<FlowNode> getChildren() {
         return children;
+    }
+
+    @Override
+    public ValueObject getValueObject() {
+        return valueObjectProperty.get();
+    }
+
+    protected void setValueObject(ValueObject o) {
+        valueObjectProperty.set(o);
+    }
+    
+    protected ObjectProperty<ValueObject> valueObjectProperty() {
+        return valueObjectProperty;
     }
 }

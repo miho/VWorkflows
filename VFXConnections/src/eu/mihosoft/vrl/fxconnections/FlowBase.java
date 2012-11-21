@@ -20,12 +20,11 @@ public class FlowBase<T extends FlowNode> implements Flow<T> {
 
     @Override
     public Connection connect(T s, T r) {
-        getConnections().add(s.getId(), r.getId());
 
         nodes.put(s.getId(), s);
         nodes.put(r.getId(), r);
 
-        return getConnections().get(s.getId(), r.getId());
+        return getConnections().add(s.getId(), r.getId());
     }
 
     @Override

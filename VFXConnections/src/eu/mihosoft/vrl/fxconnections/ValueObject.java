@@ -4,13 +4,16 @@
  */
 package eu.mihosoft.vrl.fxconnections;
 
+import javafx.beans.property.ObjectProperty;
+
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface DataObject {
+public interface ValueObject {
     public FlowNode getParent();
     public Object getValue();
     public void setValue();
-    public CompatibilityResult compatible(DataObject other);
+    public ObjectProperty<Object> valueProperty();
+    public CompatibilityResult compatible(ValueObject other);
 }

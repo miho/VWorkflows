@@ -47,5 +47,5 @@ public interface FlowNode extends Model {
     public ObservableList<Connector<FlowNode>> getInputs();
     public ObservableList<Connector<FlowNode>> getOutputs();
     
-    public DataObject getValueObject();
+    public ValueObject getValueObject();
 }

@@ -14,9 +14,11 @@ import java.util.Collection;
 public interface Connections {
     public void add(Connection c);
     public void remove(Connection c);
-    public Connection get(String s, String r);
-    public void add(String s, String r);
-    public void remove(String s, String r);
+    public Connection get(String id, String s, String r);
+    public Iterable<Connection> getAll(String s, String r);
+    public Connection add(String s, String r);
+    public void remove(String id, String s, String r);
+    public void removeAll(String s, String r);
     
     public void setConnectionClass(Class<? extends Connection> cls);
     public Class<? extends Connection> getConnectionClass();

@@ -13,5 +13,7 @@ public interface Connection extends Model{
     public void setSenderId(String id);
     public String getReceiverId();
     public void setReceiverId(String id);
+    public String getId();
+    public void setId(String id);
     
 }

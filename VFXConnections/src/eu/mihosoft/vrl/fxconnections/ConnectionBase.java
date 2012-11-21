@@ -12,11 +12,13 @@ public class ConnectionBase implements Connection{
     
     private String senderId;
     private String receiverId;
+    private String id;
 
     public ConnectionBase() {
     }
 
-    public ConnectionBase(String senderId, String receiverId) {
+    public ConnectionBase(String id, String senderId, String receiverId) {
+        this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
     }
@@ -44,6 +46,16 @@ public class ConnectionBase implements Connection{
     
     @Override
     public String toString() {
-        return "s: [" + getSenderId() + "] -> r: [" + getReceiverId() + "]";
+        return "c: " + getId() + " = s: [" + getSenderId() + "] -> r: [" + getReceiverId() + "]";
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 }

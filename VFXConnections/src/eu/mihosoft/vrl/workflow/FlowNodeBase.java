@@ -38,6 +38,49 @@ public class FlowNodeBase implements FlowNode {
             new SimpleObjectProperty<>();
 
     public FlowNodeBase() {
+        setValueObject(new ValueObject() {
+
+            @Override
+            public FlowNode getParent() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public Object getValue() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setValue(Object o) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public ObjectProperty<Object> valueProperty() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompatibilityResult compatible(ValueObject other) {
+                return new CompatibilityResult() {
+
+                    @Override
+                    public boolean isCompatible() {
+                        return true;
+                    }
+
+                    @Override
+                    public String getMessage() {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public String getStatus() {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                };
+            }
+        });
 
 //        inputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
 //            @Override

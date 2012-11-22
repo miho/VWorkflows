@@ -8,9 +8,16 @@ package eu.mihosoft.vrl.fxconnections;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public abstract class DataFlow extends FlowBase {
+public interface ConnectionResult {
 
-    public DataFlow() {
-    }
+    /**
+     * @return the connection
+     */
+    Connection getConnection();
 
+    /**
+     * @return the status
+     */
+    CompatibilityResult getStatus();
+    
 }

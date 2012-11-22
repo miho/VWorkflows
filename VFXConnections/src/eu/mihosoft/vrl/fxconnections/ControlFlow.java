@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class ControlFlow extends FlowBase<FlowNode> {
+public class ControlFlow extends FlowBase {
 
     public ControlFlow() {
         //

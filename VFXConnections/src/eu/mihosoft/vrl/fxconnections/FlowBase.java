@@ -13,36 +13,52 @@ import java.util.Map;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FlowBase<T extends FlowNode> implements Flow<T> {
+public class FlowBase implements Flow {
 
     private Connections connections = VFXConnections.newConnections();
-    private Map<String, T> nodes = new HashMap<>();
+    private Map<String, FlowNode> nodes = new HashMap<>();
 
     @Override
-    public Connection connect(T s, T r) {
+    public ConnectionResult tryConnect(FlowNode s, FlowNode r) {
+        CompatibilityResult result = r.getValueObject().
+                compatible(s.getValueObject());
+        
+        return new ConnectionResultImpl(result, null);
+    }
+    
+    @Override
+    public ConnectionResult connect(FlowNode s, FlowNode r) {
+
+        ConnectionResult result = tryConnect(s, r);
+        
+        if (result.getStatus().isCompatible()) {
+            return result;
+        }
 
         nodes.put(s.getId(), s);
         nodes.put(r.getId(), r);
 
-        return getConnections().add(s.getId(), r.getId());
+        Connection connection = getConnections().add(s.getId(), r.getId());
+        
+        return new ConnectionResultImpl(result.getStatus(), connection);
     }
 
     @Override
-    public Collection<T> getNodes() {
+    public Collection<FlowNode> getNodes() {
         return Collections.unmodifiableCollection(nodes.values());
     }
 
     @Override
-    public T remove(T n) {
-        T result = nodes.remove(n.getId());
+    public FlowNode remove(FlowNode n) {
+        FlowNode result = nodes.remove(n.getId());
 
         Collection<Connection> connectionsToRemove =
                 getConnections().getAllWith(n.getId());
 
         for (Connection c : connectionsToRemove) {
-            getConnections().remove(c);   
+            getConnections().remove(c);
         }
-        
+
         return result;
     }
 

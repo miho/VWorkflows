@@ -9,5 +9,7 @@ package eu.mihosoft.vrl.fxconnections;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public interface CompatibilityResult {
-    
+    boolean isCompatible();
+    String getMessage();
+    String getStatus();
 }

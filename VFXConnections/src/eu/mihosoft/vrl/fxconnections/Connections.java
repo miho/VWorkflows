@@ -4,14 +4,13 @@
  */
 package eu.mihosoft.vrl.fxconnections;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Connections {
+public interface Connections extends Model{
 
     public void add(Connection c);
 

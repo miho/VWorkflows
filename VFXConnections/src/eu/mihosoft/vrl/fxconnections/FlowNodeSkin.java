@@ -10,8 +10,8 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface FlowNodeSkin<T extends FlowNode, V extends Flow<T> > extends Skin<T> {
-    public void setFlow(V flow);
-    public V getFlow();
-    public ObjectProperty<V> flowProperty();
+public interface FlowNodeSkin<T extends FlowNode> extends Skin<T> {
+//    public void setFlow(V flow);
+//    public V getFlow();
+//    public ObjectProperty<V> flowProperty();
 }

@@ -12,16 +12,16 @@ import javafx.beans.property.SimpleObjectProperty;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FXFlowNodeSkin<T extends FlowNode, V extends Flow<T>>
-implements FXSkin<T, Window>, FlowNodeSkin<T, V> {
+public class FXFlowNodeSkin
+implements FXSkin<FlowNode, Window>, FlowNodeSkin<FlowNode> {
     
     private FlowNode model;
-    private ObjectProperty<V> flowProperty = new SimpleObjectProperty<>();
+//    private ObjectProperty<V> flowProperty = new SimpleObjectProperty<>();
     private Window node;
     
-    public FXFlowNodeSkin(T model, V flow) {
+    public FXFlowNodeSkin(FlowNode model) {
         this.model = model;
-        setFlow(flow);
+//        setFlow(flow);
         init();
     }
     
@@ -42,18 +42,18 @@ implements FXSkin<T, Window>, FlowNodeSkin<T, V> {
         return node;
     }
 
-    @Override
-    public final void setFlow(V flow) {
-        flowProperty.set(flow);
-    }
-
-    @Override
-    public final V getFlow() {
-        return flowProperty.get();
-    }
-    
-    @Override
-    public ObjectProperty<V> flowProperty() {
-        return flowProperty;
-    }
+//    @Override
+//    public final void setFlow(V flow) {
+//        flowProperty.set(flow);
+//    }
+//
+//    @Override
+//    public final V getFlow() {
+//        return flowProperty.get();
+//    }
+//    
+//    @Override
+//    public ObjectProperty<V> flowProperty() {
+//        return flowProperty;
+//    }
 }

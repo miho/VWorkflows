@@ -25,7 +25,21 @@ public class FlowBase implements Flow {
             FXCollections.observableArrayList();
     private Map<String, FlowNode> nodes = new HashMap<>();
     private Class<? extends FlowNode> flowNodeClass = FlowNodeBase.class;
+    
+    private FlowNodeSkinFactory nodeSkinFactory;
+    private ConnectionSkinFactory connectionSkinFactory;
+    
+    private Map<String,FlowNodeSkin> nodeSkins = new HashMap<>();
+    private Map<String,ConnectionSkin> connectionSkins = new HashMap<>();
 
+    private static String connectionId(String id, String s, String r) {
+        return "id=" + id + ";[" + s + "]->[" + r + "]";
+    }
+
+    private static String connectionId(Connection c) {
+        return connectionId(c.getId(), c.getSenderId(), c.getReceiverId());
+    }
+    
     @Override
     public ConnectionResult tryConnect(FlowNode s, FlowNode r) {
         CompatibilityResult result = r.getValueObject().
@@ -50,6 +64,10 @@ public class FlowBase implements Flow {
         observableNodes.add(r);
 
         Connection connection = getConnections().add(s.getId(), r.getId());
+        
+        if (connection!=null) {
+           createConnectionSkin(connection);
+        }
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -63,12 +81,15 @@ public class FlowBase implements Flow {
     public FlowNode remove(FlowNode n) {
         FlowNode result = nodes.remove(n.getId());
         observableNodes.remove(n);
+        
+        removeNodeSkin(n);
 
         Collection<Connection> connectionsToRemove =
                 getConnections().getAllWith(n.getId());
 
         for (Connection c : connectionsToRemove) {
             getConnections().remove(c);
+            removeConnectionSkin(c);
         }
 
         return result;
@@ -130,6 +151,8 @@ public class FlowBase implements Flow {
 
                 nodes.put(id, result);
                 observableNodes.add(result);
+                
+                createNodeSkin(result);
 
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,5 +162,55 @@ public class FlowBase implements Flow {
         }
 
         return result;
+    }
+    
+    private FlowNodeSkin createNodeSkin(FlowNode n) {
+        FlowNodeSkin skin = nodeSkinFactory.createSkin(n);
+        
+        nodeSkins.put(n.getId(), skin);
+        skin.add();
+        
+        return skin;
+    } 
+    
+    private ConnectionSkin createConnectionSkin(Connection c) {
+        ConnectionSkin skin = connectionSkinFactory.createSkin(c, this);
+        
+        connectionSkins.put(connectionId(c), skin);
+        skin.add();
+        
+        return skin;
+    } 
+    
+    private void removeNodeSkin(FlowNode n) {
+        FlowNodeSkin skin = nodeSkins.remove(n.getId());
+        
+        if (skin!= null) {
+            skin.remove();
+        }
+    }
+    
+    private void removeConnectionSkin(Connection c) {
+        ConnectionSkin skin = connectionSkins.remove(connectionId(c));
+        
+        if (skin!= null) {
+            skin.remove();
+        }
+    }
+
+    /**
+     * @param nodeSkinFactory the nodeSkinFactory to set
+     */
+    @Override
+    public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
+        this.nodeSkinFactory = nodeSkinFactory;
+    }
+
+    /**
+     * @param connectionSkinFactory the connectionSkinFactory to set
+     */
+    @Override
+    public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
+        this.connectionSkinFactory = connectionSkinFactory;
     }
 }

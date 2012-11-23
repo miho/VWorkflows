@@ -10,4 +10,5 @@ package eu.mihosoft.vrl.workflow;
  */
 public interface ControlFlow extends Flow{
     public FlowNode newNode();
+
 }

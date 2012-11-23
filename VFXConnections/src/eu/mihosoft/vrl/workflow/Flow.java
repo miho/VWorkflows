@@ -30,4 +30,7 @@ public interface Flow {
     public Class<? extends FlowNode> getFlowNodeClass();
     
     public FlowNode newNode(ValueObject obj);
+    
+    public void setNodeSkinFactory(FlowNodeSkinFactory factory);
+    public void setConnectionSkinFactory(ConnectionSkinFactory factory);
 }

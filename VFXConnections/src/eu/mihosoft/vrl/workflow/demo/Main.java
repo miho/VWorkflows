@@ -66,10 +66,14 @@ public class Main extends Application {
 
         Connection c1 = flow.connect(n1, n2).getConnection();
 
-        FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(root, n2);
         FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(root, n1);
+        FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(root, n2);
         FXConnectionSkin c1Skin = new FXConnectionSkin(root, c1, flow);
-        
+
+//        n1.setSkin(n1Skin);
+//        n2.setSkin(n2Skin);
+//        c1.setSkin(c1Skin);
+
         n1Skin.add();
         n2Skin.add();
         c1Skin.add();

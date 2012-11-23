@@ -37,13 +37,11 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> nodeHeightListener;
 
     public FXFlowNodeSkin(Parent parent, FlowNode model) {
-        
+
         setParent(parent);
         setModel(model);
 
-//        setFlow(flow);
         init();
-
     }
 
     private void init() {
@@ -54,13 +52,13 @@ public class FXFlowNodeSkin
         node.setLayoutY(getModel().getY());
         node.setPrefWidth(getModel().getWidth());
         node.setPrefHeight(getModel().getHeight());
-        
+
         registerListeners(getModel());
 
         modelProperty.addListener(new ChangeListener<FlowNode>() {
             @Override
             public void changed(ObservableValue<? extends FlowNode> ov, FlowNode oldVal, FlowNode newVal) {
-                
+
                 removeListeners(oldVal);
                 registerListeners(newVal);
             }
@@ -90,6 +88,7 @@ public class FXFlowNodeSkin
     @Override
     public void remove() {
         VFXNodeUtils.removeFromParent(node);
+        getModel().getFlow().remove(getModel());
     }
 
     @Override

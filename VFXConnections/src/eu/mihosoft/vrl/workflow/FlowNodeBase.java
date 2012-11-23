@@ -38,10 +38,15 @@ class FlowNodeBase implements FlowNode {
     
     private VisualizationRequest vReq;
     
+    private Flow flow;
+    
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
 
-    public FlowNodeBase() {
+    public FlowNodeBase(Flow flow) {
+        
+        this.flow = flow;
+        
         setValueObject(new ValueObject() {
             @Override
             public FlowNode getParent() {
@@ -278,4 +283,11 @@ class FlowNodeBase implements FlowNode {
 //    public ObjectProperty<?> skinProperty() {
 //        return skinProperty;
 //    }
+
+    /**
+     * @return the flow
+     */
+    public Flow getFlow() {
+        return flow;
+    }
 }

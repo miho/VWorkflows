@@ -51,4 +51,6 @@ public interface FlowNode extends Model {
     public void setValueObject(ValueObject obj);
     public ValueObject getValueObject();
     public ObjectProperty<ValueObject> valueObjectProperty();
+    
+    public Flow getFlow();
 }

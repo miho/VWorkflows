@@ -92,7 +92,7 @@ public class FlowBase implements Flow {
     @Override
     public void setFlowNodeClass(Class<? extends FlowNode> cls) {
         try {
-            Constructor constructor = cls.getConstructor();
+            Constructor constructor = cls.getConstructor(Flow.class);
             throw new IllegalArgumentException("constructor missing: (String, String)");
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,9 +112,9 @@ public class FlowBase implements Flow {
         FlowNode result = null;
 
         try {
-            Constructor constructor = getFlowNodeClass().getConstructor();
+            Constructor constructor = getFlowNodeClass().getConstructor(Flow.class);
             try {
-                result = (FlowNode) constructor.newInstance();
+                result = (FlowNode) constructor.newInstance(this);
                 result.setValueObject(obj);
 
                 // search id:

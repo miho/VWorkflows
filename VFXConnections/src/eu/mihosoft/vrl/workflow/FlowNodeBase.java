@@ -287,6 +287,7 @@ class FlowNodeBase implements FlowNode {
     /**
      * @return the flow
      */
+    @Override
     public Flow getFlow() {
         return flow;
     }

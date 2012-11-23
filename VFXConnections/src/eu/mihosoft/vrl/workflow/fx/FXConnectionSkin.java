@@ -7,10 +7,12 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Parent;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -26,8 +28,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Path connectionPath;
     private Flow flow;
     private Connection connection;
+     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
+         private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
-    public FXConnectionSkin(Connection connection, Flow flow) {
+    public FXConnectionSkin(Parent parent, Connection connection, Flow flow) {
+        setParent(parent);
         this.connection = connection;
         this.flow = flow;
         init();
@@ -86,5 +91,37 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     @Override
     public void remove() {
         VFXNodeUtils.removeFromParent(connectionPath);
+    }
+    
+    @Override
+    public void setModel(Connection model) {
+        modelProperty.set(model);
+    }
+
+    @Override
+    public Connection getModel() {
+        return modelProperty.get();
+    }
+
+    @Override
+    public ObjectProperty<Connection> modelProperty() {
+        return modelProperty;
+    }
+
+    final void setParent(Parent parent) {
+        parentProperty.set(parent);
+    }
+
+    Parent getParent() {
+        return parentProperty.get();
+    }
+
+    ObjectProperty<Parent> parentProperty() {
+        return parentProperty;
+    }
+
+    @Override
+    public void add() {
+        VFXNodeUtils.addToParent(getParent(), connectionPath);
     }
 }

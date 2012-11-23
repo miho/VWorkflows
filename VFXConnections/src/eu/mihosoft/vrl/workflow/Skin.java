@@ -4,10 +4,16 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import javafx.beans.property.ObjectProperty;
+
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public interface Skin<T extends Model> {
+    public void add();
     public void remove();
+    public void setModel(T model);
+    public T getModel();
+    public ObjectProperty<T> modelProperty();
 }

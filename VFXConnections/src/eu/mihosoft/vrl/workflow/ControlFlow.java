@@ -87,6 +87,22 @@ public class ControlFlow extends FlowBase {
                     }
                 };
             }
+
+            @Override
+            public VisualizationRequest getVisualizationRequest() {
+                return new VisualizationRequest() {
+
+                    @Override
+                    public String getStyle() {
+                        return "default";
+                    }
+
+                    @Override
+                    public String getOptions() {
+                        return "";
+                    }
+                };
+            }
         });
     }
 }

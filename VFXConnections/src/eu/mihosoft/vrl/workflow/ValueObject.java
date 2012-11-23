@@ -16,4 +16,5 @@ public interface ValueObject {
     public void setValue(Object o);
     public ObjectProperty<Object> valueProperty();
     public CompatibilityResult compatible(ValueObject other);
+    public VisualizationRequest getVisualizationRequest();
 }

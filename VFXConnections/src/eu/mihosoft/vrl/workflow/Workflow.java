@@ -13,4 +13,7 @@ public interface Workflow {
     public DataFlow getDataFlow();
 
     public ControlFlow getControlFlow();
+    
+    public void setFlowNodeSkinFactory(FlowNodeSkinFactory factory);
+    public void setConnectionSkinFactory(ConnectionSkinFactory factory);
 }

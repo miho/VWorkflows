@@ -8,6 +8,7 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Controller {
-    
+public interface VisualizationRequest {
+    public String getStyle();
+    public String getOptions();
 }

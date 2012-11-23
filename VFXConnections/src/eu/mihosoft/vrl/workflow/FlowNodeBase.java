@@ -25,7 +25,6 @@ class FlowNodeBase implements FlowNode {
 //            FXCollections.observableArrayList();
 //    private ObservableList<Connector<FlowNode>> outputs =
 //            FXCollections.observableArrayList();
-    
     private ObservableList<FlowNode> children =
             FXCollections.observableArrayList();
     private StringProperty idProperty = new SimpleStringProperty();
@@ -39,7 +38,6 @@ class FlowNodeBase implements FlowNode {
 
     public FlowNodeBase() {
         setValueObject(new ValueObject() {
-
             @Override
             public FlowNode getParent() {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -63,7 +61,6 @@ class FlowNodeBase implements FlowNode {
             @Override
             public CompatibilityResult compatible(ValueObject other) {
                 return new CompatibilityResult() {
-
                     @Override
                     public boolean isCompatible() {
                         return true;
@@ -77,6 +74,21 @@ class FlowNodeBase implements FlowNode {
                     @Override
                     public String getStatus() {
                         throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                };
+            }
+
+            @Override
+            public VisualizationRequest getVisualizationRequest() {
+                return new VisualizationRequest() {
+                    @Override
+                    public String getStyle() {
+                        return "default";
+                    }
+
+                    @Override
+                    public String getOptions() {
+                        return "";
                     }
                 };
             }
@@ -124,7 +136,6 @@ class FlowNodeBase implements FlowNode {
 //    public ObservableList<Connector<FlowNode>> getOutputs() {
 //        return outputs;
 //    }
-
     @Override
     public StringProperty titleProperty() {
         return titleProperty;
@@ -229,7 +240,7 @@ class FlowNodeBase implements FlowNode {
     public void setValueObject(ValueObject o) {
         valueObjectProperty.set(o);
     }
-    
+
     @Override
     public ObjectProperty<ValueObject> valueObjectProperty() {
         return valueObjectProperty;

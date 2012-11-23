@@ -8,114 +8,64 @@ import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
 import eu.mihosoft.vrl.fxwindows.Window;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Parent;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class FXFlowNodeSkin
-implements FXSkin<FlowNode, Window>, FlowNodeSkin<FlowNode> {
-    
-    private FlowNode model;
+        implements FXSkin<FlowNode, Window>, FlowNodeSkin<FlowNode> {
+
+    private ObjectProperty<FlowNode> modelProperty = new SimpleObjectProperty<>();
 //    private ObjectProperty<V> flowProperty = new SimpleObjectProperty<>();
     private Window node;
-    
-    public FXFlowNodeSkin(FlowNode model) {
-        this.model = model;
+    private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private ChangeListener<String> modelTitleListener;
+    private ChangeListener<Number> modelXListener;
+    private ChangeListener<Number> modelYListener;
+    private ChangeListener<Number> modelWidthListener;
+    private ChangeListener<Number> modelHeightListener;
+    private ChangeListener<String> nodeTitleListener;
+    private ChangeListener<Number> nodeXListener;
+    private ChangeListener<Number> nodeYListener;
+    private ChangeListener<Number> nodeWidthListener;
+    private ChangeListener<Number> nodeHeightListener;
+
+    public FXFlowNodeSkin(Parent parent, FlowNode model) {
+        
+        setParent(parent);
+        setModel(model);
+
 //        setFlow(flow);
         init();
+
     }
-    
+
     private void init() {
         node = new Window();
-        
-        node.setTitle(model.getTitle());
-        node.setLayoutX(model.getX());
-        node.setLayoutY(model.getY());
-        node.setPrefWidth(model.getWidth());
-        node.setPrefHeight(model.getHeight());
-        
-        model.titleProperty().addListener(new ChangeListener<String>() {
 
+        node.setTitle(getModel().getTitle());
+        node.setLayoutX(getModel().getX());
+        node.setLayoutY(getModel().getY());
+        node.setPrefWidth(getModel().getWidth());
+        node.setPrefHeight(getModel().getHeight());
+        
+        registerListeners(getModel());
+
+        modelProperty.addListener(new ChangeListener<FlowNode>() {
             @Override
-            public void changed(ObservableValue<? extends String> ov, String oldVal, String newVal) {
-                node.setTitle(newVal);
+            public void changed(ObservableValue<? extends FlowNode> ov, FlowNode oldVal, FlowNode newVal) {
+                
+                removeListeners(oldVal);
+                registerListeners(newVal);
             }
         });
-        
-        model.xProperty().addListener(new ChangeListener<Number>() {
 
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setLayoutX((double)newVal);
-            }
-        });
-        
-        model.yProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setLayoutY((double)newVal);
-            }
-        });
-        
-        model.widthProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setPrefWidth((double)newVal);
-            }
-        });
-        
-        model.heightProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setPrefHeight((double)newVal);
-            }
-        });
-        
-        node.layoutXProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                model.setX((double)newVal);
-            }
-        });
-        
-        node.layoutYProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                model.setY((double)newVal);
-            }
-        });
-        
-        node.prefWidthProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                model.setWidth((double)newVal);
-            }
-        });
-        
-        node.prefHeightProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                model.setHeight((double)newVal);
-            }
-        });
-        
-//        node.titleProperty().bind(model.titleProperty());
-        
-//        node.layoutXProperty().bind(model.xProperty());
-//        node.layoutYProperty().bind(model.yProperty());
-//        
-//        node.prefWidthProperty().bind(model.widthProperty());
-//        node.prefHeightProperty().bind(model.heightProperty());
     }
 
     @Override
@@ -137,9 +87,136 @@ implements FXSkin<FlowNode, Window>, FlowNodeSkin<FlowNode> {
 //    public ObjectProperty<V> flowProperty() {
 //        return flowProperty;
 //    }
-
     @Override
     public void remove() {
         VFXNodeUtils.removeFromParent(node);
+    }
+
+    @Override
+    public final void setModel(FlowNode model) {
+        modelProperty.set(model);
+    }
+
+    @Override
+    public final FlowNode getModel() {
+        return modelProperty.get();
+    }
+
+    @Override
+    public final ObjectProperty<FlowNode> modelProperty() {
+        return modelProperty;
+    }
+
+    final void setParent(Parent parent) {
+        parentProperty.set(parent);
+    }
+
+    Parent getParent() {
+        return parentProperty.get();
+    }
+
+    ObjectProperty<Parent> parentProperty() {
+        return parentProperty;
+    }
+
+    @Override
+    public void add() {
+        VFXNodeUtils.addToParent(getParent(), node);
+    }
+
+    private void removeListeners(FlowNode flowNode) {
+        flowNode.titleProperty().removeListener(modelTitleListener);
+        flowNode.xProperty().removeListener(modelXListener);
+        flowNode.yProperty().removeListener(modelYListener);
+        flowNode.widthProperty().removeListener(modelWidthListener);
+        flowNode.heightProperty().removeListener(modelHeightListener);
+
+        node.layoutXProperty().removeListener(nodeXListener);
+        node.layoutYProperty().removeListener(nodeXListener);
+        node.prefWidthProperty().removeListener(nodeWidthListener);
+        node.prefHeightProperty().removeListener(nodeHeightListener);
+    }
+
+    private void initListeners() {
+        modelTitleListener = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String oldVal, String newVal) {
+                node.setTitle(newVal);
+                System.out.println("TITLE: " + newVal);
+            }
+        };
+
+        modelXListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setLayoutX((double) newVal);
+            }
+        };
+
+        modelYListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setLayoutY((double) newVal);
+            }
+        };
+
+        modelWidthListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setPrefWidth((double) newVal);
+            }
+        };
+
+        modelHeightListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setPrefHeight((double) newVal);
+            }
+        };
+
+        nodeXListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                getModel().setX((double) newVal);
+            }
+        };
+
+        nodeYListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                getModel().setY((double) newVal);
+            }
+        };
+
+        nodeWidthListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                getModel().setWidth((double) newVal);
+            }
+        };
+
+        nodeHeightListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                getModel().setHeight((double) newVal);
+            }
+        };
+    }
+
+    private void registerListeners(FlowNode flowNode) {
+
+        initListeners();
+
+        flowNode.titleProperty().addListener(modelTitleListener);
+        flowNode.xProperty().addListener(modelXListener);
+        flowNode.yProperty().addListener(modelYListener);
+        flowNode.widthProperty().addListener(modelWidthListener);
+        flowNode.heightProperty().addListener(modelHeightListener);
+
+        node.layoutXProperty().addListener(nodeXListener);
+        node.layoutYProperty().addListener(nodeYListener);
+        node.prefWidthProperty().addListener(nodeWidthListener);
+        node.prefHeightProperty().addListener(nodeHeightListener);
+
     }
 }

@@ -65,23 +65,22 @@ public class Main extends Application {
         FlowNode n2 = flow.newNode();
 
         Connection c1 = flow.connect(n1, n2).getConnection();
+
+        FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(root, n2);
+        FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(root, n1);
+        FXConnectionSkin c1Skin = new FXConnectionSkin(root, c1, flow);
         
+        n1Skin.add();
+        n2Skin.add();
+        c1Skin.add();
+
         n1.setTitle("MyTitle 1");
         n1.setWidth(300);
         n1.setHeight(200);
-        
+
         n2.setTitle("MyTitle 2");
         n2.setWidth(300);
         n2.setHeight(200);
-
-        FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(n2);
-        FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(n1);
-        FXConnectionSkin c1Skin = new FXConnectionSkin(c1, flow);
-        
-        root.getChildren().add(n1Skin.getNode());
-        root.getChildren().add(n2Skin.getNode());
-        root.getChildren().add(c1Skin.getNode());
-
     }
 
     public void connectionTest() {

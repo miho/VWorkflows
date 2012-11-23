@@ -9,5 +9,7 @@ package eu.mihosoft.vrl.workflow;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public interface ConnectionSkinFactory {
+
+    ConnectionSkin createSkin(Connection c, Flow flow);
     
 }

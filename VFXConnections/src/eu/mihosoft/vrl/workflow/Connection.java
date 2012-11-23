@@ -16,6 +16,8 @@ public interface Connection extends Model{
     public String getId();
     public void setId(String id);
 
+    @Override
     public void setVisualizationRequest(VisualizationRequest vReq);
+    @Override
     public VisualizationRequest getVisualizationRequest();
 }

@@ -9,6 +9,8 @@ import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
@@ -17,6 +19,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
+import javax.script.SimpleBindings;
 
 /**
  *
@@ -31,8 +34,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Shape receiverConnector;
     private Flow flow;
     private Connection connection;
-     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
-         private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
     public FXConnectionSkin(Parent parent, Connection connection, Flow flow) {
         setParent(parent);
@@ -42,27 +45,75 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     private void init() {
-        FlowNode sender = flow.getSender(connection);
-        FlowNode receiver = flow.getReceiver(connection);
+        final FlowNode sender = flow.getSender(connection);
+        final FlowNode receiver = flow.getReceiver(connection);
 
-        MoveTo moveTo = new MoveTo();
-        moveTo.xProperty().bind(sender.xProperty());
-        moveTo.yProperty().bind(sender.yProperty());
+        DoubleBinding startXBinding = new DoubleBinding() {
+            {
+                super.bind(sender.xProperty(), sender.widthProperty());
+            }
 
-        LineTo lineTo = new LineTo();
-        lineTo.xProperty().bind(receiver.xProperty());
-        lineTo.yProperty().bind(receiver.yProperty());
+            @Override
+            protected double computeValue() {
+                return sender.getX() + sender.getWidth();
+            }
+        };
+
+
+
+        DoubleBinding startYBinding = new DoubleBinding() {
+            {
+                super.bind(sender.yProperty(), receiver.heightProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return sender.getY() + sender.getHeight() / 2;
+            }
+        };
+
+        DoubleBinding receiveXBinding = new DoubleBinding() {
+            {
+                super.bind(receiver.xProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return receiver.getX();
+            }
+        };
+
+        DoubleBinding receiveYBinding = new DoubleBinding() {
+            {
+                super.bind(receiver.yProperty(), receiver.heightProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return receiver.getY() + receiver.getHeight() / 2;
+            }
+        };
+
+        final MoveTo moveTo = new MoveTo();
+        moveTo.xProperty().bind(startXBinding);
+        moveTo.yProperty().bind(startYBinding);
+
+        final LineTo lineTo = new LineTo();
+        lineTo.xProperty().bind(receiveXBinding);
+        lineTo.yProperty().bind(receiveYBinding);
 
         connectionPath = new Path(moveTo, lineTo);
-        
+
         startConnector = new Circle(10);
-        startConnector.layoutXProperty().bind(moveTo.xProperty());
-        startConnector.layoutYProperty().bind(moveTo.yProperty());
-        
+
+        startConnector.layoutXProperty().bind(startXBinding);
+        startConnector.layoutYProperty().bind(startYBinding);
+
+
         receiverConnector = new Circle(10);
         receiverConnector.layoutXProperty().bind(lineTo.xProperty());
         receiverConnector.layoutYProperty().bind(lineTo.yProperty());
-        
+
     }
 
     @Override
@@ -100,8 +151,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         return connectionPath;
     }
 
-    
-    
     @Override
     public void setModel(Connection model) {
         modelProperty.set(model);
@@ -135,7 +184,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         VFXNodeUtils.addToParent(getParent(), startConnector);
         VFXNodeUtils.addToParent(getParent(), receiverConnector);
     }
-    
+
     @Override
     public void remove() {
         VFXNodeUtils.removeFromParent(connectionPath);

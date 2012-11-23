@@ -59,7 +59,9 @@ public class Main extends Application {
 
         Scene scene = new Scene(canvas, 800, 800);
         
-        WorkFlow workflow = new DefaultWorkflow(new FXFlowNodeSkinFactory(root), new FXConnectionSkinFactory(root));
+        WorkFlow workflow = new DefaultWorkflow(
+                new FXFlowNodeSkinFactory(root),
+                new FXConnectionSkinFactory(root));
 
         workflowTest(workflow);
 

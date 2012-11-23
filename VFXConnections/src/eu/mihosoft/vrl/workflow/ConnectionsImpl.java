@@ -98,7 +98,7 @@ class ConnectionsImpl implements Connections {
     @Override
     public void setConnectionClass(Class<? extends Connection> cls) {
         try {
-            Constructor constructor = cls.getConstructor(String.class, String.class);
+            Constructor constructor = cls.getConstructor(String.class, String.class, String.class);
             throw new IllegalArgumentException("constructor missing: (String, String)");
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);

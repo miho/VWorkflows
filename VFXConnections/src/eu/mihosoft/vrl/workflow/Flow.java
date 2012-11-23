@@ -24,4 +24,10 @@ public interface Flow {
     public FlowNode getReceiver(Connection c);
     
     public Connections getConnections();
+    
+    public void setFlowNodeClass(Class<? extends FlowNode> cls);
+    
+    public Class<? extends FlowNode> getFlowNodeClass();
+    
+    public FlowNode newNode(ValueObject obj);
 }

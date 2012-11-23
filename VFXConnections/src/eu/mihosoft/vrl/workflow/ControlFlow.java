@@ -7,6 +7,7 @@ package eu.mihosoft.vrl.workflow;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javafx.beans.property.ObjectProperty;
 
 /**
  *
@@ -41,5 +42,51 @@ public class ControlFlow extends FlowBase {
         }
 
         return super.remove(n);
+    }
+    
+    public FlowNode newNode() {
+        return super.newNode(new ValueObject() {
+
+            @Override
+            public FlowNode getParent() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public Object getValue() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setValue(Object o) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public ObjectProperty<Object> valueProperty() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompatibilityResult compatible(ValueObject other) {
+                return new CompatibilityResult() {
+
+                    @Override
+                    public boolean isCompatible() {
+                        return true;
+                    }
+
+                    @Override
+                    public String getMessage() {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public String getStatus() {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                };
+            }
+        });
     }
 }

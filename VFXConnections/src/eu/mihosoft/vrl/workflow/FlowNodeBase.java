@@ -19,7 +19,7 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FlowNodeBase implements FlowNode {
+class FlowNodeBase implements FlowNode {
 
 //    private ObservableList<Connector<FlowNode>> inputs =
 //            FXCollections.observableArrayList();
@@ -225,11 +225,13 @@ public class FlowNodeBase implements FlowNode {
         return valueObjectProperty.get();
     }
 
-    protected void setValueObject(ValueObject o) {
+    @Override
+    public void setValueObject(ValueObject o) {
         valueObjectProperty.set(o);
     }
     
-    protected ObjectProperty<ValueObject> valueObjectProperty() {
+    @Override
+    public ObjectProperty<ValueObject> valueObjectProperty() {
         return valueObjectProperty;
     }
 }

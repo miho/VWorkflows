@@ -5,6 +5,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
@@ -47,5 +48,7 @@ public interface FlowNode extends Model {
 //    public ObservableList<Connector<FlowNode>> getInputs();
 //    public ObservableList<Connector<FlowNode>> getOutputs();
     
+    public void setValueObject(ValueObject obj);
     public ValueObject getValueObject();
+    public ObjectProperty<ValueObject> valueObjectProperty();
 }

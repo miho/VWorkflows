@@ -35,6 +35,11 @@ class FlowNodeBase implements FlowNode {
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
+    
+    private VisualizationRequest vReq;
+    
+//     private ObjectProperty<Skin> skinProperty =
+//            new SimpleObjectProperty<>();
 
     public FlowNodeBase() {
         setValueObject(new ValueObject() {
@@ -245,4 +250,32 @@ class FlowNodeBase implements FlowNode {
     public ObjectProperty<ValueObject> valueObjectProperty() {
         return valueObjectProperty;
     }
+    
+    @Override
+    public VisualizationRequest getVisualizationRequest() {
+        return vReq;
+    }
+
+    /**
+     * @param vReq the vReq to set
+     */
+    @Override
+    public void setVisualizationRequest(VisualizationRequest vReq) {
+        this.vReq = vReq;
+    }
+
+//    @Override
+//    public void setSkin(Skin<?> skin) {
+//        skinProperty.set(skin);
+//    }
+//
+//    @Override
+//    public Skin<?> getSkin() {
+//        return skinProperty.get();
+//    }
+//
+//    @Override
+//    public ObjectProperty<?> skinProperty() {
+//        return skinProperty;
+//    }
 }

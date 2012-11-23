@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -27,6 +29,8 @@ class ConnectionsImpl implements Connections {
 //    Map<String, Integer> receivers = new HashMap<>();
     private ObservableList<Connection> observableConnections =
             FXCollections.observableArrayList();
+    private VisualizationRequest vReq;
+//    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
 
     private static String connectionId(String id, String s, String r) {
         return "id=" + id + ";[" + s + "]->[" + r + "]";
@@ -45,7 +49,7 @@ class ConnectionsImpl implements Connections {
 //        incReceiverCounter(c.getReceiverId());
 
         connections.put(connectionId(c), c);
-        
+
         observableConnections.add(c);
     }
 
@@ -60,18 +64,18 @@ class ConnectionsImpl implements Connections {
             count++;
             id = "" + count;
         }
-        
+
         Connection c = createConnection(id, s, r);
 
         add(c);
-        
+
         return c;
     }
 
     @Override
     public void remove(Connection c) {
         connections.remove(connectionId(c));
-        
+
         observableConnections.remove(c);
 
 //        decSenderCounter(c.getSenderId());
@@ -85,12 +89,12 @@ class ConnectionsImpl implements Connections {
 
     @Override
     public void remove(String id, String s, String r) {
-        
+
         observableConnections.remove(get(id, s, r));
-        
+
         connections.remove(connectionId(id, s, r));
 
-        
+
 //        decSenderCounter(s);
 //        decReceiverCounter(r);
     }
@@ -150,12 +154,12 @@ class ConnectionsImpl implements Connections {
     }
 
     private void checkUniqueness(Connection c) {
-        
+
         if (connections.containsKey(connectionId(c))) {
             throw new IllegalStateException(
                     "Cannot add connection: a connection with equal id already added!");
         }
-        
+
 //        if (c.getSenderId().equals(c.getReceiverId())) {
 //            throw new IllegalStateException(
 //                    "Cannot add connection: sender and receiver are equal: " + c.getSenderId());
@@ -236,13 +240,13 @@ class ConnectionsImpl implements Connections {
                 result.add(c);
             }
         }
-        
+
         return result;
     }
 
     @Override
     public void removeAll(String s, String r) {
-        
+
         Collection<Connection> delList = new ArrayList<>();
 
         for (Connection c : connections.values()) {
@@ -250,9 +254,36 @@ class ConnectionsImpl implements Connections {
                 delList.add(c);
             }
         }
-        
+
         for (Connection connection : delList) {
             remove(connection);
         }
     }
+
+    @Override
+    public VisualizationRequest getVisualizationRequest() {
+        return vReq;
+    }
+
+    /**
+     * @param vReq the vReq to set
+     */
+    @Override
+    public void setVisualizationRequest(VisualizationRequest vReq) {
+        this.vReq = vReq;
+    }
+//    @Override
+//    public void setSkin(Skin<?> skin) {
+//        skinProperty.set(skin);
+//    }
+//
+//    @Override
+//    public Skin<?> getSkin() {
+//        return skinProperty.get();
+//    }
+//
+//    @Override
+//    public ObjectProperty<?> skinProperty() {
+//        return skinProperty;
+//    }
 }

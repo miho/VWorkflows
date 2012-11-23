@@ -15,6 +15,7 @@ public interface Connection extends Model{
     public void setReceiverId(String id);
     public String getId();
     public void setId(String id);
-    public void setType(String t);
-    public String getType();
+
+    public void setVisualizationRequest(VisualizationRequest vReq);
+    public VisualizationRequest getVisualizationRequest();
 }

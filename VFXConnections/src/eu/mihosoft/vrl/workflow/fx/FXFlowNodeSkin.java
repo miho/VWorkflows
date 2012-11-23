@@ -8,6 +8,8 @@ import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
 import eu.mihosoft.vrl.fxwindows.Window;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 /**
  *
@@ -27,15 +29,93 @@ implements FXSkin<FlowNode, Window>, FlowNodeSkin<FlowNode> {
     }
     
     private void init() {
-        Window w = new Window();
+        node = new Window();
         
-        w.titleProperty().bind(model.titleProperty());
+        node.setTitle(model.getTitle());
+        node.setLayoutX(model.getX());
+        node.setLayoutY(model.getY());
+        node.setPrefWidth(model.getWidth());
+        node.setPrefHeight(model.getHeight());
         
-        w.layoutXProperty().bind(model.xProperty());
-        w.layoutYProperty().bind(model.yProperty());
+        model.titleProperty().addListener(new ChangeListener<String>() {
+
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String oldVal, String newVal) {
+                node.setTitle(newVal);
+            }
+        });
         
-        w.layoutXProperty().bind(model.widthProperty());
-        w.layoutYProperty().bind(model.heightProperty());
+        model.xProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setLayoutX((double)newVal);
+            }
+        });
+        
+        model.yProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setLayoutY((double)newVal);
+            }
+        });
+        
+        model.widthProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setPrefWidth((double)newVal);
+            }
+        });
+        
+        model.heightProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                node.setPrefHeight((double)newVal);
+            }
+        });
+        
+        node.layoutXProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                model.setX((double)newVal);
+            }
+        });
+        
+        node.layoutYProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                model.setY((double)newVal);
+            }
+        });
+        
+        node.prefWidthProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                model.setWidth((double)newVal);
+            }
+        });
+        
+        node.prefHeightProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
+                model.setHeight((double)newVal);
+            }
+        });
+        
+//        node.titleProperty().bind(model.titleProperty());
+        
+//        node.layoutXProperty().bind(model.xProperty());
+//        node.layoutYProperty().bind(model.yProperty());
+//        
+//        node.prefWidthProperty().bind(model.widthProperty());
+//        node.prefHeightProperty().bind(model.heightProperty());
     }
 
     @Override

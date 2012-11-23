@@ -28,6 +28,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Connection connection;
 
     public FXConnectionSkin(Connection connection, Flow flow) {
+        this.connection = connection;
         this.flow = flow;
         init();
     }

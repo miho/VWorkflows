@@ -4,24 +4,18 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.fxwindows.CloseIcon;
-import eu.mihosoft.vrl.fxwindows.MinimizeIcon;
-import eu.mihosoft.vrl.fxwindows.RotateIcon;
 import eu.mihosoft.vrl.fxwindows.ScalableContentPane;
-import eu.mihosoft.vrl.fxwindows.Window;
+import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.ControlFlow;
 import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
-import eu.mihosoft.vrl.workflow.FlowNodeBase;
 import eu.mihosoft.vrl.workflow.VConnections;
+import eu.mihosoft.vrl.workflow.fx.FXConnectionSkin;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 /**
@@ -62,21 +56,32 @@ public class Main extends Application {
         primaryStage.show();
 
     }
-    
+
     public void workflowTest(Pane root) {
+
+        ControlFlow flow = new ControlFlow();
+
+        FlowNode n1 = flow.newNode();
+        FlowNode n2 = flow.newNode();
+
+        Connection c1 = flow.connect(n1, n2).getConnection();
         
-        Flow flow = new ControlFlow();
+        n1.setTitle("MyTitle 1");
+        n1.setWidth(300);
+        n1.setHeight(200);
+        
+        n2.setTitle("MyTitle 2");
+        n2.setWidth(300);
+        n2.setHeight(200);
 
-        FlowNode n1 = new FlowNodeBase();
-        FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(n1);
-
-        FlowNode n2 = new FlowNodeBase();
         FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(n2);
-
-        flow.connect(n1, n2);
+        FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(n1);
+        FXConnectionSkin c1Skin = new FXConnectionSkin(c1, flow);
         
         root.getChildren().add(n1Skin.getNode());
         root.getChildren().add(n2Skin.getNode());
+        root.getChildren().add(c1Skin.getNode());
+
     }
 
     public void connectionTest() {

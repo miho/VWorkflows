@@ -6,14 +6,24 @@ package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.fxwindows.ScalableContentPane;
 import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.ConnectionResult;
+import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.ConnectionSkinFactory;
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.ControlFlow;
+import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
+import eu.mihosoft.vrl.workflow.FlowNodeSkin;
+import eu.mihosoft.vrl.workflow.FlowNodeSkinFactory;
 import eu.mihosoft.vrl.workflow.VConnections;
+import eu.mihosoft.vrl.workflow.WorkFlow;
 import eu.mihosoft.vrl.workflow.fx.FXConnectionSkin;
+import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
+import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinFactory;
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -48,8 +58,10 @@ public class Main extends Application {
         root.setStyle("-fx-background-color: rgb(160, 160, 160);");
 
         Scene scene = new Scene(canvas, 800, 800);
+        
+        WorkFlow workflow = new DefaultWorkflow(new FXFlowNodeSkinFactory(root), new FXConnectionSkinFactory(root));
 
-        workflowTest(root);
+        workflowTest(workflow);
 
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);
@@ -57,25 +69,14 @@ public class Main extends Application {
 
     }
 
-    public void workflowTest(Pane root) {
+    public void workflowTest(WorkFlow workflow) {
 
-        ControlFlow flow = new ControlFlow();
+        FlowNode n1 = workflow.getControlFlow().newNode();
+        FlowNode n2 = workflow.getControlFlow().newNode();
+        FlowNode n3 = workflow.getControlFlow().newNode();
 
-        FlowNode n1 = flow.newNode();
-        FlowNode n2 = flow.newNode();
-        Connection c1 = flow.connect(n1, n2).getConnection();
-        
-        FXFlowNodeSkin n1Skin = new FXFlowNodeSkin(root, n1);
-        FXFlowNodeSkin n2Skin = new FXFlowNodeSkin(root, n2);
-        FXConnectionSkin c1Skin = new FXConnectionSkin(root, c1, flow);
-
-//        n1.setSkin(n1Skin);
-//        n2.setSkin(n2Skin);
-//        c1.setSkin(c1Skin);
-
-        n1Skin.add();
-        n2Skin.add();
-        c1Skin.add();
+        workflow.getControlFlow().connect(n1, n2);
+        workflow.getControlFlow().connect(n2, n3);
 
         n1.setTitle("MyTitle 1");
         n1.setWidth(300);
@@ -84,6 +85,10 @@ public class Main extends Application {
         n2.setTitle("MyTitle 2");
         n2.setWidth(300);
         n2.setHeight(200);
+        
+        n3.setTitle("MyTitle 3");
+        n3.setWidth(300);
+        n3.setHeight(200);
     }
 
     public void connectionTest() {

@@ -8,7 +8,7 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Workflow {
+public interface WorkFlow {
 
     public DataFlow getDataFlow();
 

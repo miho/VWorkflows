@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class DefaultWorkflow implements Workflow {
+public class DefaultWorkflow implements WorkFlow {
 
     private ControlFlow controlFlow = new ControlFlowImpl();
 //    private DataFlow dataFlow = new DataFlow();

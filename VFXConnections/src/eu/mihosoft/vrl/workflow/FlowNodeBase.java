@@ -35,18 +35,17 @@ class FlowNodeBase implements FlowNode {
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
-    
     private VisualizationRequest vReq;
-    
     private Flow flow;
-    
+    private ObjectProperty<FlowNode> parentProperty =
+            new SimpleObjectProperty<>();
+
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
-
     public FlowNodeBase(Flow flow) {
-        
+
         this.flow = flow;
-        
+
         setValueObject(new ValueObject() {
             @Override
             public FlowNode getParent() {
@@ -69,7 +68,7 @@ class FlowNodeBase implements FlowNode {
             }
 
             @Override
-            public CompatibilityResult compatible(ValueObject other) {
+            public CompatibilityResult compatible(ValueObject other, Flow flow) {
                 return new CompatibilityResult() {
                     @Override
                     public boolean isCompatible() {
@@ -134,6 +133,54 @@ class FlowNodeBase implements FlowNode {
 //                throw new UnsupportedOperationException("Not supported yet.");
 //            }
 //        });
+
+
+        children.addListener(new ListChangeListener<FlowNode>() {
+            @Override
+            public void onChanged(Change<? extends FlowNode> change) {
+                while (change.next()) {
+                    if (change.wasPermutated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            //permutate
+                        }
+                    } else if (change.wasUpdated()) {
+                        //update item
+                    } else {
+                        if (change.wasRemoved()) {
+                            for (FlowNode node : change.getRemoved()) {
+                                //
+                            }
+                        } else if (change.wasAdded()) {
+                            for (FlowNode node : change.getAddedSubList()) {
+                                
+                                // search id:
+                                String id = null;
+                                int count = 0;
+
+                                boolean containsId = true;
+                                
+                                while (containsId) {
+                                    
+                                    id = getId() + ":" + count;
+                                    count++;
+                                    
+                                    containsId = false;
+
+                                    for (FlowNode n : children) {
+                                        if (n.getId().equals(id)) {
+                                            containsId = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                node.setId(id);
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
     }
 
@@ -255,7 +302,7 @@ class FlowNodeBase implements FlowNode {
     public ObjectProperty<ValueObject> valueObjectProperty() {
         return valueObjectProperty;
     }
-    
+
     @Override
     public VisualizationRequest getVisualizationRequest() {
         return vReq;
@@ -283,12 +330,16 @@ class FlowNodeBase implements FlowNode {
 //    public ObjectProperty<?> skinProperty() {
 //        return skinProperty;
 //    }
-
     /**
      * @return the flow
      */
     @Override
     public Flow getFlow() {
         return flow;
+    }
+
+    @Override
+    public FlowNode getParent() {
+        return parentProperty.get();
     }
 }

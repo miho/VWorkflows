@@ -69,12 +69,12 @@ class ControlFlowImpl extends FlowBase implements ControlFlow {
             }
 
             @Override
-            public CompatibilityResult compatible(ValueObject other) {
+            public CompatibilityResult compatible(ValueObject other, final Flow flow) {
                 return new CompatibilityResult() {
 
                     @Override
                     public boolean isCompatible() {
-                        return true;
+                        return flow instanceof ControlFlow;
                     }
 
                     @Override

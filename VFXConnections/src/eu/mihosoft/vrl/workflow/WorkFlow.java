@@ -16,4 +16,10 @@ public interface WorkFlow {
     
     public void setNodeSkinFactory(FlowNodeSkinFactory factory);
     public void setConnectionSkinFactory(ConnectionSkinFactory factory);
+    
+    public FlowNode newNode();
+    public FlowNode newNode(FlowNode parent);
+
+    FlowNode remove(FlowNode n);
+    
 }

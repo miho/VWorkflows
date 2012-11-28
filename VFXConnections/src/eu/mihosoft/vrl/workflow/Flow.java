@@ -16,7 +16,7 @@ public interface Flow {
     
     public ConnectionResult connect(FlowNode s, FlowNode r);
 
-    public FlowNode remove(FlowNode n);
+//    public FlowNode remove(FlowNode n);
     
     public ObservableList<FlowNode> getNodes();
     
@@ -29,8 +29,7 @@ public interface Flow {
     
     public Class<? extends FlowNode> getFlowNodeClass();
     
-    public FlowNode newNode(ValueObject obj);
-    
-    public void setNodeSkinFactory(FlowNodeSkinFactory factory);
-    public void setConnectionSkinFactory(ConnectionSkinFactory factory);
+//    public FlowNode newNode(ValueObject obj);
+
+    FlowNode remove(FlowNode n);
 }

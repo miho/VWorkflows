@@ -59,7 +59,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(canvas, 800, 800);
         
-        WorkFlow workflow = new DefaultWorkflow(
+        Flow workflow = new DefaultWorkflow(
                 new FXFlowNodeSkinFactory(root),
                 new FXConnectionSkinFactory(root));
 
@@ -71,14 +71,14 @@ public class Main extends Application {
 
     }
 
-    public void workflowTest(WorkFlow workflow) {
+    public void workflowTest(Flow workflow) {
 
-        FlowNode n1 = workflow.getControlFlow().newNode();
-        FlowNode n2 = workflow.getControlFlow().newNode();
-        FlowNode n3 = workflow.getControlFlow().newNode();
+        FlowNode n1 = workflow.newNode();
+        FlowNode n2 = workflow.newNode();
+        FlowNode n3 = workflow.newNode();
 
-        workflow.getControlFlow().connect(n1, n2);
-        workflow.getControlFlow().connect(n2, n3);
+        workflow.connect(n1, n2, "control");
+        workflow.connect(n2, n3, "control");
 
         n1.setTitle("MyTitle 1");
         n1.setWidth(300);

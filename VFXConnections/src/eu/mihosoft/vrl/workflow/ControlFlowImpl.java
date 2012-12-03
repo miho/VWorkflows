@@ -22,32 +22,35 @@ class ControlFlowImpl extends FlowBase implements ControlFlow {
     @Override
     public FlowNode remove(FlowNode n) {
 
-        // collect connections before removal
-        Collection<Connection> allWidth = getConnections().getAllWith(n.getId());
+        for (Connections cns : getAllConnections()) {
 
-        // collect all senders and receivers of the node that shall be removed
-        List<String> senders = new ArrayList<>();
-        List<String> receivers = new ArrayList<>();
-        for (Connection c : allWidth) {
-            senders.add(c.getSenderId());
-            receivers.add(c.getReceiverId());
-        }
+            // collect connections before removal
+            Collection<Connection> allWidth = cns.getAllWith(n.getId());
 
-        // if #senders equals #receivers reconnect senders of the node that 
-        // shall be removed width its receivers
-        if (senders.size() == receivers.size()) {
-            for (int i = 0; i < senders.size(); i++) {
-                getConnections().add(senders.get(i), receivers.get(i));
+            // collect all senders and receivers of the node that shall be removed
+            List<String> senders = new ArrayList<>();
+            List<String> receivers = new ArrayList<>();
+            for (Connection c : allWidth) {
+                senders.add(c.getSenderId());
+                receivers.add(c.getReceiverId());
             }
+
+            // if #senders equals #receivers reconnect senders of the node that 
+            // shall be removed width its receivers
+            if (senders.size() == receivers.size()) {
+                for (int i = 0; i < senders.size(); i++) {
+                    cns.add(senders.get(i), receivers.get(i));
+                }
+            }
+
         }
 
         return super.remove(n);
     }
-    
+
     @Override
     public FlowNode newNode() {
         return super.newNode(new ValueObject() {
-
             @Override
             public FlowNode getParent() {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -69,9 +72,8 @@ class ControlFlowImpl extends FlowBase implements ControlFlow {
             }
 
             @Override
-            public CompatibilityResult compatible(ValueObject other) {
+            public CompatibilityResult compatible(ValueObject other, String flowType) {
                 return new CompatibilityResult() {
-
                     @Override
                     public boolean isCompatible() {
                         return true;
@@ -92,7 +94,6 @@ class ControlFlowImpl extends FlowBase implements ControlFlow {
             @Override
             public VisualizationRequest getVisualizationRequest() {
                 return new VisualizationRequest() {
-
                     @Override
                     public String getStyle() {
                         return "default";

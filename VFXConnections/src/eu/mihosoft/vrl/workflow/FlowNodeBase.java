@@ -69,7 +69,7 @@ class FlowNodeBase implements FlowNode {
             }
 
             @Override
-            public CompatibilityResult compatible(ValueObject other) {
+            public CompatibilityResult compatible(ValueObject other, String flowType) {
                 return new CompatibilityResult() {
                     @Override
                     public boolean isCompatible() {

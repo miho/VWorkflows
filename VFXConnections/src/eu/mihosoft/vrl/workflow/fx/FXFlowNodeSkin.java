@@ -45,7 +45,7 @@ public class FXFlowNodeSkin
     }
 
     private void init() {
-        node = new Window();
+        node = new FlowNodeWindow(this);
 
         node.setTitle(getModel().getTitle());
         node.setLayoutX(getModel().getX());

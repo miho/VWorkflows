@@ -130,9 +130,23 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                System.out.println("EVT: " + t);
                 makeDraggable();
             }
         });
+        
+        receiverConnector.setLayoutX(getSender().getX() + getSender().getWidth());
+        receiverConnector.setLayoutY(getSender().getY() + getSender().getHeight()/2.0);
+        
+        
+//        getParent().onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
+//
+//            @Override
+//            public void handle(MouseEvent t) {
+//                receiverConnector.setLayoutX(t.getSceneX());
+//                receiverConnector.setLayoutY(t.getSceneY());
+//            }
+//        });
 
     }
 
@@ -227,6 +241,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         });
 
     }
+    
+    public Node getReceiverConnector() {
+        return receiverConnector;
+    }
 
     @Override
     public FlowNode getSender() {
@@ -297,8 +315,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         VFXNodeUtils.addToParent(getParent(), receiverConnector);
 
 //        startConnector.toBack();
-        receiverConnector.toBack();
-        connectionPath.toBack();
+        receiverConnector.toFront();
+        connectionPath.toFront();
     }
 
     @Override

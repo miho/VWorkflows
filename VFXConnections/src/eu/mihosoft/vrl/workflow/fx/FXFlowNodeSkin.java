@@ -6,8 +6,6 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
 import eu.mihosoft.vrl.fxwindows.Window;
-import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
 import javafx.beans.binding.DoubleBinding;
@@ -16,8 +14,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
@@ -42,6 +42,7 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> nodeWidthListener;
     private ChangeListener<Number> nodeHeightListener;
     private Node output;
+    private FXNewConnectionSkin newConnectionSkin;
 
     public FXFlowNodeSkin(Parent parent, FlowNode model) {
 
@@ -119,24 +120,94 @@ public class FXFlowNodeSkin
         output.layoutYProperty().bind(startYBinding);
 
         VFXNodeUtils.addToParent(getParent(), output);
-
+        
         output.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
 
-                if (getModel().getFlow().getConnections("control").
-                        isOutputConnected(getModel().getId())) {
-                    return;
-                }
+//                if (getModel().getFlow().getConnections("control").
+//                        isOutputConnected(getModel().getId())) {
+//                    return;
+//                }
 
-                FXNewConnectionSkin newConnectionSkin =
+                newConnectionSkin =
                         new FXNewConnectionSkin(
                         getParent(), getModel(),
                         getModel().getFlow(), "control");
 
                 newConnectionSkin.add();
+
+                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
             }
         });
+
+        output.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+            }
+        });
+        
+        output.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent t) {
+                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+            }
+        });
+    }
+
+    private void delegateEventsTo(Node src, final Node target) {
+        EventHandler<MouseEvent> interceptHandler = new EventHandler<MouseEvent>() {
+            //is the fixed copy fired already - controls the recursion
+            boolean isEventCopyFired = false;
+
+            @Override
+            public void handle(MouseEvent e) {
+                try {
+                    if (!isEventCopyFired) {
+                        isEventCopyFired = true; //prevents further recursion
+                        //copy the original event but set the appropriate isShiftDown and isControlDown flags
+                        MouseEvent copy = copyEvent(e);
+
+                        MouseEvent.fireEvent(target, copy); //this causes a recursion 
+
+                        e.consume(); //consume the original event, because we fired a copy
+
+                        //turn off the flag for the next event
+                        isEventCopyFired = false;
+                    }
+                } catch (Exception ex) {//impl_ methods can be removed in the future, ensure we don't break event handling 
+                    ex.printStackTrace(System.err);
+                }
+            }
+        };
+        //mouse pressed events deal with selection of items
+        src.addEventFilter(MouseEvent.MOUSE_PRESSED, interceptHandler);
+        src.addEventFilter(MouseEvent.MOUSE_DRAGGED, interceptHandler);
+    }
+
+    private MouseEvent createMousePressedEvent(double screenX, double screenY, double sceneX, double sceneY) {
+        final int numClicks = 1;
+
+        return MouseEvent.impl_mouseEvent(sceneX, sceneY, screenX, screenY, MouseButton.PRIMARY, numClicks,
+                false, false, false, false, false, true, false, false, false, MouseEvent.MOUSE_PRESSED);
+    }
+
+    private MouseEvent copyEvent(MouseEvent e) {
+        MouseEvent copy = MouseEvent.impl_mouseEvent(
+                e.getSceneX(), e.getSceneY(),
+                e.getScreenX(), e.getScreenY(),
+                e.getButton(), e.getClickCount(),
+                e.isShiftDown(), e.isControlDown(),
+                e.isAltDown(), e.isMetaDown(),
+                MouseEvent.impl_getPopupTrigger(e),
+                e.isPrimaryButtonDown(),
+                e.isMiddleButtonDown(),
+                e.isSecondaryButtonDown(),
+                e.isSynthesized(),
+                (EventType<MouseEvent>) e.getEventType());
+        return copy;
     }
 
     private void removeOutputConnector() {

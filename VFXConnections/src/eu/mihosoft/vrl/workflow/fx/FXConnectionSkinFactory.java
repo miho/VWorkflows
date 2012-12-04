@@ -22,7 +22,7 @@ public class FXConnectionSkinFactory implements ConnectionSkinFactory{
     }
     
     @Override
-    public ConnectionSkin createSkin(Connection c, Flow flow) {
-        return new FXConnectionSkin(parent, c, flow);
+    public ConnectionSkin createSkin(Connection c, Flow flow, String type) {
+        return new FXConnectionSkin(parent, c, flow, type);
     }
 }

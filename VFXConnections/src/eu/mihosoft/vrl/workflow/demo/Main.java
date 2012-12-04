@@ -81,6 +81,9 @@ public class Main extends Application {
 
         workflow.connect(n1, n2, "control");
         workflow.connect(n2, n3, "control");
+        
+        workflow.connect(n3, n4, "control");
+        workflow.connect(n4, n5, "control");
 
         n1.setTitle("MyTitle 1");
         n1.setWidth(300);

@@ -5,7 +5,6 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.fxwindows.Window;
-import eu.mihosoft.vrl.workflow.FlowNodeSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -20,15 +19,13 @@ public class FlowNodeWindow extends Window{
         
         nodeSkinProperty().set(skin);
         
+        
     }
-
-    
-    
-    
+ 
     /**
      * @return the nodeSkinProperty
      */
-    public ObjectProperty<FXFlowNodeSkin> nodeSkinProperty() {
+    public final ObjectProperty<FXFlowNodeSkin> nodeSkinProperty() {
         return nodeSkinProperty;
     }
     

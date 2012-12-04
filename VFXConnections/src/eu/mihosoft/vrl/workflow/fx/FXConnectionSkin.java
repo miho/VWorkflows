@@ -5,21 +5,18 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
-import eu.mihosoft.vrl.fxwindows.Window;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
-import eu.mihosoft.vrl.workflow.FlowNodeSkin;
-import eu.mihosoft.vrl.workflow.WindowUtil;
-import javafx.beans.binding.Binding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.input.MouseDragEvent;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -27,7 +24,6 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import javax.script.SimpleBindings;
 
 /**
  *
@@ -46,11 +42,14 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Connection connection;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private String type;
+    private Node lastNode;
 
-    public FXConnectionSkin(Parent parent, Connection connection, Flow flow) {
+    public FXConnectionSkin(Parent parent, Connection connection, Flow flow, String type) {
         setParent(parent);
         this.connection = connection;
         this.flow = flow;
+        this.type = type;
 
         startConnector = new Circle(10);
         receiverConnector = new Circle(10);
@@ -144,16 +143,35 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         DraggingUtil.makeDraggable(receiverConnector, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                Node n = VFXNodeUtils.getNode(
+                final Node n = VFXNodeUtils.getNode(
                         getParent().getScene().getRoot(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (n != null) {
-                    FlowNodeWindow w = (FlowNodeWindow) n;
+                    final FlowNodeWindow w = (FlowNodeWindow) n;
 
-                    receiverConnector.setFill(Color.RED);
+//                    ColorAdjust colorAdjust = new ColorAdjust();
+//                    colorAdjust.setContrast(0.1);
+//                    colorAdjust.setHue(-0.1);
+//                    colorAdjust.setBrightness(0.1);
+//                    colorAdjust.setSaturation(0.2);
+//                    w.setEffect(colorAdjust);
+                    
+                    ColorInput colorEffect = new ColorInput();
+                    
+                    colorEffect.setPaint(new Color(0,0,1.0,0.9));
+                    
+                    w.setEffect(new Glow(0.8));
+
+                    receiverConnector.setFill(Color.GREEN);
+                    
+                    lastNode = w;
                 } else {
                     receiverConnector.setFill(Color.BLACK);
+                    if (lastNode!=null) {
+                        lastNode.setEffect(null);
+                        lastNode=null;
+                    }
                 }
             }
         }, null);
@@ -186,6 +204,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     receiverConnector.setFill(Color.BLACK);
                     init();
+                    
+                    if (lastNode!=null) {
+                        lastNode.setEffect(null);
+                        lastNode=null;
+                    }
 
                 } else {
                     remove();

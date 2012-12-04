@@ -66,7 +66,7 @@ public class FlowBase implements Flow {
         Connection connection = getConnections(type).add(s.getId(), r.getId());
 
         if (connection != null) {
-            createConnectionSkin(connection);
+            createConnectionSkin(connection, type);
         }
 
         return new ConnectionResultImpl(result.getStatus(), connection);
@@ -241,8 +241,8 @@ public class FlowBase implements Flow {
         return skin;
     }
 
-    private ConnectionSkin createConnectionSkin(Connection c) {
-        ConnectionSkin skin = connectionSkinFactory.createSkin(c, this);
+    private ConnectionSkin createConnectionSkin(Connection c, String type) {
+        ConnectionSkin skin = connectionSkinFactory.createSkin(c, this, type);
 
         connectionSkins.put(connectionId(c), skin);
         skin.add();

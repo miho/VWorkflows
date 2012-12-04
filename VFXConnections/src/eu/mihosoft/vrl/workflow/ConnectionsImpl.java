@@ -286,4 +286,30 @@ class ConnectionsImpl implements Connections {
 //    public ObjectProperty<?> skinProperty() {
 //        return skinProperty;
 //    }
+
+    @Override
+    public boolean isInputConnected(String id) {
+        Collection<Connection> connectionsWith = getAllWith(id);
+        
+        for (Connection connection : connectionsWith) {
+            if (connection.getReceiverId().equals(id)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean isOutputConnected(String id) {
+        Collection<Connection> connectionsWith = getAllWith(id);
+        
+        for (Connection connection : connectionsWith) {
+            if (connection.getSenderId().equals(id)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }

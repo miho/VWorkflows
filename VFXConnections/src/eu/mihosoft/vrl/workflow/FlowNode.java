@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -53,4 +54,23 @@ public interface FlowNode extends Model {
     public ObjectProperty<ValueObject> valueObjectProperty();
     
     public Flow getFlow();
+
+    /**
+     * @return the inputProperty
+     */
+    BooleanProperty inputProperty();
+
+    boolean isInput();
+
+    boolean isOutput();
+
+    /**
+     * @return the outputProperty
+     */
+    BooleanProperty outputProperty();
+
+    void setInput(boolean state);
+
+    void setOutput(boolean state);
+    
 }

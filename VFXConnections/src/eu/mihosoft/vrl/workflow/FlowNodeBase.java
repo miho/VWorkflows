@@ -4,8 +4,10 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,6 +41,9 @@ class FlowNodeBase implements FlowNode {
     private VisualizationRequest vReq;
     
     private Flow flow;
+    
+    private BooleanProperty outputProperty = new SimpleBooleanProperty(true); 
+    private BooleanProperty inputProperty = new SimpleBooleanProperty(); 
     
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
@@ -290,5 +295,41 @@ class FlowNodeBase implements FlowNode {
     @Override
     public Flow getFlow() {
         return flow;
+    }
+
+    /**
+     * @return the outputProperty
+     */
+    @Override
+    public BooleanProperty outputProperty() {
+        return outputProperty;
+    }
+
+    /**
+     * @return the inputProperty
+     */
+    @Override
+    public BooleanProperty inputProperty() {
+        return inputProperty;
+    }
+    
+    @Override
+    public void setOutput(boolean state) {
+        outputProperty.set(state);
+    }
+    
+    @Override
+    public void setInput(boolean state) {
+        inputProperty.set(state);
+    }
+    
+    @Override
+    public boolean isOutput() {
+        return outputProperty.get();
+    }
+    
+    @Override
+    public boolean isInput() {
+        return inputProperty.get();
     }
 }

@@ -34,4 +34,7 @@ public interface Connections extends Model{
     public ObservableList<Connection> getConnections();
 
     public Collection<Connection> getAllWith(String id);
+    
+    public boolean isInputConnected(String id);
+    public boolean isOutputConnected(String id);
 }

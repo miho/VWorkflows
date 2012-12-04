@@ -6,13 +6,20 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
 import eu.mihosoft.vrl.fxwindows.Window;
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
 
 /**
  *
@@ -22,7 +29,7 @@ public class FXFlowNodeSkin
         implements FXSkin<FlowNode, Window>, FlowNodeSkin<FlowNode> {
 
     private ObjectProperty<FlowNode> modelProperty = new SimpleObjectProperty<>();
-//    private ObjectProperty<V> flowProperty = new SimpleObjectProperty<>();
+//    private ObjectProperty<Flow> flowProperty = new SimpleObjectProperty<>();
     private Window node;
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private ChangeListener<String> modelTitleListener;
@@ -30,11 +37,11 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> modelYListener;
     private ChangeListener<Number> modelWidthListener;
     private ChangeListener<Number> modelHeightListener;
-    private ChangeListener<String> nodeTitleListener;
     private ChangeListener<Number> nodeXListener;
     private ChangeListener<Number> nodeYListener;
     private ChangeListener<Number> nodeWidthListener;
     private ChangeListener<Number> nodeHeightListener;
+    private Node output;
 
     public FXFlowNodeSkin(Parent parent, FlowNode model) {
 
@@ -64,6 +71,78 @@ public class FXFlowNodeSkin
             }
         });
 
+        if (getModel().isOutput()) {
+            addOutputConnector();
+        }
+
+        getModel().outputProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) {
+                if (newVal) {
+                    addOutputConnector();
+                } else {
+                    removeOutputConnector();
+                }
+            }
+        });
+
+    }
+
+    private void addOutputConnector() {
+        DoubleBinding startXBinding = new DoubleBinding() {
+            {
+                super.bind(node.layoutXProperty(), node.widthProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return node.getLayoutX() + node.getWidth();
+            }
+        };
+
+        DoubleBinding startYBinding = new DoubleBinding() {
+            {
+                super.bind(node.layoutYProperty(), node.heightProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return node.getLayoutY() + node.getHeight() / 2;
+            }
+        };
+
+        Circle circle = new Circle(20);
+
+        output = circle;
+
+        output.layoutXProperty().bind(startXBinding);
+        output.layoutYProperty().bind(startYBinding);
+
+        VFXNodeUtils.addToParent(getParent(), output);
+
+        output.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+
+                if (getModel().getFlow().getConnections("control").
+                        isOutputConnected(getModel().getId())) {
+                    return;
+                }
+
+                FXNewConnectionSkin newConnectionSkin =
+                        new FXNewConnectionSkin(
+                        getParent(), getModel(),
+                        getModel().getFlow(), "control");
+
+                newConnectionSkin.add();
+            }
+        });
+    }
+
+    private void removeOutputConnector() {
+        if (output != null) {
+            VFXNodeUtils.removeFromParent(output);
+        }
     }
 
     @Override
@@ -141,7 +220,6 @@ public class FXFlowNodeSkin
             @Override
             public void changed(ObservableValue<? extends String> ov, String oldVal, String newVal) {
                 node.setTitle(newVal);
-                System.out.println("TITLE: " + newVal);
             }
         };
 

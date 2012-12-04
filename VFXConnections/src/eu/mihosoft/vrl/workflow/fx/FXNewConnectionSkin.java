@@ -31,13 +31,12 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import javafx.stage.Stage;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
+public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
     private ObjectProperty<FlowNode> senderProperty = new SimpleObjectProperty<>();
     private ObjectProperty<FlowNode> receiverProperty = new SimpleObjectProperty<>();
@@ -47,15 +46,15 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //    private Shape startConnector;
     private Shape receiverConnector;
     private Flow flow;
-    private Connection connection;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
 
-    public FXConnectionSkin(Parent parent, Connection connection, Flow flow, String type) {
+    public FXNewConnectionSkin(Parent parent, FlowNode sender, Flow flow, String type) {
         setParent(parent);
-        this.connection = connection;
+        setSender(sender);
+        
         this.flow = flow;
         this.type = type;
 
@@ -69,13 +68,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         init();
     }
 
+    
+
     private void init() {
 
-        final FlowNode sender = flow.getSender(connection);
-        final FlowNode receiver = flow.getReceiver(connection);
-
-        setSender(sender);
-        setReceiver(receiver);
+        final FlowNode sender = getSender();
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
@@ -90,7 +87,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(sender.yProperty(), sender.heightProperty(), receiver.heightProperty());
+                super.bind(sender.yProperty(), sender.heightProperty());
             }
 
             @Override
@@ -99,33 +96,30 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             }
         };
 
-        final DoubleBinding receiveXBinding = new DoubleBinding() {
-            {
-                super.bind(receiver.xProperty());
-            }
-
-            @Override
-            protected double computeValue() {
-                return receiver.getX();
-            }
-        };
-
-        final DoubleBinding receiveYBinding = new DoubleBinding() {
-            {
-                super.bind(receiver.yProperty(), receiver.heightProperty());
-            }
-
-            @Override
-            protected double computeValue() {
-                return receiver.getY() + receiver.getHeight() / 2;
-            }
-        };
-
-//        startConnector.layoutXProperty().bind(startXBinding);
-//        startConnector.layoutYProperty().bind(startYBinding);
-
-        receiverConnector.layoutXProperty().bind(receiveXBinding);
-        receiverConnector.layoutYProperty().bind(receiveYBinding);
+//        final DoubleBinding receiveXBinding = new DoubleBinding() {
+//            {
+//                super.bind(receiver.xProperty());
+//            }
+//
+//            @Override
+//            protected double computeValue() {
+//                return receiver.getX();
+//            }
+//        };
+//
+//        final DoubleBinding receiveYBinding = new DoubleBinding() {
+//            {
+//                super.bind(receiver.yProperty(), receiver.heightProperty());
+//            }
+//
+//            @Override
+//            protected double computeValue() {
+//                return receiver.getY() + receiver.getHeight() / 2;
+//            }
+//        };
+//
+//        receiverConnector.layoutXProperty().bind(receiveXBinding);
+//        receiverConnector.layoutYProperty().bind(receiveYBinding);
 
         moveTo.xProperty().bind(startXBinding);
         moveTo.yProperty().bind(startYBinding);
@@ -136,7 +130,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                makeDraggable(receiveXBinding, receiveYBinding);
+                makeDraggable();
             }
         });
 
@@ -150,9 +144,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        return MouseEvent.impl_mouseEvent(x, y, screenX, screenY, MouseButton.PRIMARY, numClicks,
 //                false, false, false, false, false, false, false, false, false, eventType);
 //    }
-    private void makeDraggable(
-            final DoubleBinding receiveXBinding,
-            final DoubleBinding receiveYBinding) {
+    private void makeDraggable() {
 
         connectionPath.toFront();
         receiverConnector.toFront();
@@ -173,7 +165,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     final FlowNodeWindow w = (FlowNodeWindow) n;
 
                     ConnectionResult connResult =
-                            getSender().getFlow().tryConnect(
+                            flow.tryConnect(
                             getSender(), w.nodeSkinProperty().get().getModel(),
                             type);
 
@@ -210,16 +202,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 receiverConnector.toBack();
                 connectionPath.toBack();
 
-                receiverConnector.layoutXProperty().bind(receiveXBinding);
-                receiverConnector.layoutYProperty().bind(receiveYBinding);
-
-                receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent t) {
-                        makeDraggable(receiveXBinding, receiveYBinding);
-                    }
-                });
-
                 if (lastNode != null) {
                     lastNode.setEffect(null);
                     lastNode = null;
@@ -230,15 +212,17 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (n != null) {
-                    connection.setReceiverId(
-                            ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
+                    
+                    FlowNodeWindow w = (FlowNodeWindow) n;
 
                     receiverConnector.setFill(Color.BLACK);
-                    init();
-
-                } else {
-                    remove();
+                    
+                    FlowNode receiver = w.nodeSkinProperty().get().getModel();
+                    
+                    flow.connect(getSender(), receiver, type);
                 }
+                
+                remove();
             }
         });
 
@@ -322,6 +306,5 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         VFXNodeUtils.removeFromParent(connectionPath);
 //        VFXNodeUtils.removeFromParent(startConnector);
         VFXNodeUtils.removeFromParent(receiverConnector);
-        connection.getConnections().remove(connection);
     }
 }

@@ -72,38 +72,17 @@ public class Main extends Application {
     }
 
     public void workflowTest(Flow workflow) {
-
-        FlowNode n1 = workflow.newNode();
-        FlowNode n2 = workflow.newNode();
-        FlowNode n3 = workflow.newNode();
-        FlowNode n4 = workflow.newNode();
-        FlowNode n5 = workflow.newNode();
-
-        workflow.connect(n1, n2, "control");
-        workflow.connect(n2, n3, "control");
         
-        workflow.connect(n3, n4, "control");
-        workflow.connect(n4, n5, "control");
-
-        n1.setTitle("MyTitle 1");
-        n1.setWidth(300);
-        n1.setHeight(200);
-
-        n2.setTitle("MyTitle 2");
-        n2.setWidth(300);
-        n2.setHeight(200);
-
-        n3.setTitle("MyTitle 3");
-        n3.setWidth(300);
-        n3.setHeight(200);
-
-        n4.setTitle("MyTitle 4");
-        n4.setWidth(300);
-        n4.setHeight(200);
-        
-        n5.setTitle("MyTitle 5");
-        n5.setWidth(300);
-        n5.setHeight(200);
+        for(int i = 0; i < 10; i++) {
+            FlowNode n = workflow.newNode();
+            n.setTitle("Node " + i);
+            n.setWidth(300);
+            n.setHeight(200);
+            
+            n.setX((i%5)*(n.getWidth()+30));
+            
+            n.setY((i/5)*(n.getHeight()+30));
+        }
     }
 
     public void connectionTest() {

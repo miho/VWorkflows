@@ -312,4 +312,9 @@ class ConnectionsImpl implements Connections {
         
         return false;
     }
+
+    @Override
+    public boolean contains(String s, String r) {
+        return getAll(s, r).iterator().hasNext();
+    }
 }

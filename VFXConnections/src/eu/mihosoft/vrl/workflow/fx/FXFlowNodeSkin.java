@@ -121,6 +121,14 @@ public class FXFlowNodeSkin
 
         VFXNodeUtils.addToParent(getParent(), output);
         
+        output.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent t) {
+                output.toFront();
+            }
+        });
+        
         output.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
@@ -153,11 +161,21 @@ public class FXFlowNodeSkin
             @Override
             public void handle(MouseEvent t) {
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                output.toBack();
+            }
+        });
+        
+        output.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent t) {
+                output.toBack();
             }
         });
     }
 
     private void delegateEventsTo(Node src, final Node target) {
+        // link: https://forums.oracle.com/forums/thread.jspa?threadID=2425879
         EventHandler<MouseEvent> interceptHandler = new EventHandler<MouseEvent>() {
             //is the fixed copy fired already - controls the recursion
             boolean isEventCopyFired = false;
@@ -185,13 +203,6 @@ public class FXFlowNodeSkin
         //mouse pressed events deal with selection of items
         src.addEventFilter(MouseEvent.MOUSE_PRESSED, interceptHandler);
         src.addEventFilter(MouseEvent.MOUSE_DRAGGED, interceptHandler);
-    }
-
-    private MouseEvent createMousePressedEvent(double screenX, double screenY, double sceneX, double sceneY) {
-        final int numClicks = 1;
-
-        return MouseEvent.impl_mouseEvent(sceneX, sceneY, screenX, screenY, MouseButton.PRIMARY, numClicks,
-                false, false, false, false, false, true, false, false, false, MouseEvent.MOUSE_PRESSED);
     }
 
     private MouseEvent copyEvent(MouseEvent e) {

@@ -10,20 +10,14 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -96,31 +90,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             }
         };
 
-//        final DoubleBinding receiveXBinding = new DoubleBinding() {
-//            {
-//                super.bind(receiver.xProperty());
-//            }
-//
-//            @Override
-//            protected double computeValue() {
-//                return receiver.getX();
-//            }
-//        };
-//
-//        final DoubleBinding receiveYBinding = new DoubleBinding() {
-//            {
-//                super.bind(receiver.yProperty(), receiver.heightProperty());
-//            }
-//
-//            @Override
-//            protected double computeValue() {
-//                return receiver.getY() + receiver.getHeight() / 2;
-//            }
-//        };
-//
-//        receiverConnector.layoutXProperty().bind(receiveXBinding);
-//        receiverConnector.layoutYProperty().bind(receiveYBinding);
-
         moveTo.xProperty().bind(startXBinding);
         moveTo.yProperty().bind(startYBinding);
 
@@ -130,34 +99,15 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                System.out.println("EVT: " + t);
                 makeDraggable();
             }
         });
         
         receiverConnector.setLayoutX(getSender().getX() + getSender().getWidth());
         receiverConnector.setLayoutY(getSender().getY() + getSender().getHeight()/2.0);
-        
-        
-//        getParent().onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
-//
-//            @Override
-//            public void handle(MouseEvent t) {
-//                receiverConnector.setLayoutX(t.getSceneX());
-//                receiverConnector.setLayoutY(t.getSceneY());
-//            }
-//        });
 
     }
 
-//    private MouseEvent createMouseEvent(final Stage stage, double x, double y, final EventType<MouseEvent> eventType) {
-//        final double screenX = stage.getX() + x;
-//        final double screenY = stage.getX() + y;
-//        final int numClicks = eventType.equals(MouseEvent.MOUSE_CLICKED) ? 1 : 0;
-//
-//        return MouseEvent.impl_mouseEvent(x, y, screenX, screenY, MouseButton.PRIMARY, numClicks,
-//                false, false, false, false, false, false, false, false, false, eventType);
-//    }
     private void makeDraggable() {
 
         connectionPath.toFront();
@@ -177,7 +127,20 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                 if (n != null) {
                     final FlowNodeWindow w = (FlowNodeWindow) n;
+                    
+                    FlowNode model = w.nodeSkinProperty().get().getModel();
+                    
+                    // we cannot create a connection from us to us
+                    if (model == getSender()) {
+                        return;
+                    }
 
+//                    // only one connection between nodes
+//                    if (model.getFlow().getConnections(type).contains(
+//                            getSender().getId(), w.nodeSkinProperty().get().getModel().getId())) {
+//                        boolean error;
+//                    }
+                    
                     ConnectionResult connResult =
                             flow.tryConnect(
                             getSender(), w.nodeSkinProperty().get().getModel(),
@@ -185,7 +148,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     if (connResult.getStatus().isCompatible()) {
 
-                        DropShadow shadow = new DropShadow(30, Color.WHITE);
+                        DropShadow shadow = new DropShadow(20, Color.WHITE);
                         Glow effect = new Glow(0.5);
                         shadow.setInput(effect);
                         w.setEffect(shadow);
@@ -193,7 +156,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         receiverConnector.setFill(Color.GREEN);
                     } else {
 
-                        DropShadow shadow = new DropShadow(30, Color.RED);
+                        DropShadow shadow = new DropShadow(20, Color.RED);
                         Glow effect = new Glow(0.8);
                         effect.setInput(shadow);
                         w.setEffect(effect);

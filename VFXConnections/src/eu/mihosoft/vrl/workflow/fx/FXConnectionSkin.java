@@ -133,6 +133,22 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         lineTo.xProperty().bind(receiverConnector.layoutXProperty());
         lineTo.yProperty().bind(receiverConnector.layoutYProperty());
 
+        receiverConnector.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                receiverConnector.toFront();
+            }
+        });
+
+        receiverConnector.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                if (!t.isPrimaryButtonDown()) {
+                    receiverConnector.toBack();
+                }
+            }
+        });
+
         receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
@@ -179,7 +195,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     if (connResult.getStatus().isCompatible()) {
 
-                        DropShadow shadow = new DropShadow(30, Color.WHITE);
+                        DropShadow shadow = new DropShadow(20, Color.WHITE);
                         Glow effect = new Glow(0.5);
                         shadow.setInput(effect);
                         w.setEffect(shadow);
@@ -187,7 +203,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         receiverConnector.setFill(Color.GREEN);
                     } else {
 
-                        DropShadow shadow = new DropShadow(30, Color.RED);
+                        DropShadow shadow = new DropShadow(20, Color.RED);
                         Glow effect = new Glow(0.8);
                         effect.setInput(shadow);
                         w.setEffect(effect);

@@ -37,4 +37,6 @@ public interface Connections extends Model{
     
     public boolean isInputConnected(String id);
     public boolean isOutputConnected(String id);
+    
+    public boolean contains(String s, String r);
 }

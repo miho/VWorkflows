@@ -58,7 +58,7 @@ public class Main extends Application {
         root.setStyle("-fx-background-color: rgb(160, 160, 160);");
 
         Scene scene = new Scene(canvas, 800, 800);
-        
+
         Flow workflow = new DefaultWorkflow(
                 new FXFlowNodeSkinFactory(root),
                 new FXConnectionSkinFactory(root));
@@ -76,6 +76,8 @@ public class Main extends Application {
         FlowNode n1 = workflow.newNode();
         FlowNode n2 = workflow.newNode();
         FlowNode n3 = workflow.newNode();
+        FlowNode n4 = workflow.newNode();
+        FlowNode n5 = workflow.newNode();
 
         workflow.connect(n1, n2, "control");
         workflow.connect(n2, n3, "control");
@@ -87,10 +89,18 @@ public class Main extends Application {
         n2.setTitle("MyTitle 2");
         n2.setWidth(300);
         n2.setHeight(200);
-        
+
         n3.setTitle("MyTitle 3");
         n3.setWidth(300);
         n3.setHeight(200);
+
+        n4.setTitle("MyTitle 4");
+        n4.setWidth(300);
+        n4.setHeight(200);
+        
+        n5.setTitle("MyTitle 5");
+        n5.setWidth(300);
+        n5.setHeight(200);
     }
 
     public void connectionTest() {

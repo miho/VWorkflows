@@ -102,7 +102,7 @@ class ConnectionsImpl implements Connections {
     @Override
     public void setConnectionClass(Class<? extends Connection> cls) {
         try {
-            Constructor constructor = cls.getConstructor(String.class, String.class, String.class);
+            Constructor constructor = cls.getConstructor(Connections.class, String.class, String.class, String.class);
             throw new IllegalArgumentException("constructor missing: (String, String)");
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,9 +121,9 @@ class ConnectionsImpl implements Connections {
         Connection result = null;
 
         try {
-            Constructor constructor = getConnectionClass().getConstructor(String.class, String.class, String.class);
+            Constructor constructor = getConnectionClass().getConstructor(Connections.class, String.class, String.class, String.class);
             try {
-                result = (Connection) constructor.newInstance(id, s, r);
+                result = (Connection) constructor.newInstance(this, id, s, r);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -17,12 +17,14 @@ class ConnectionBase implements Connection {
     private String receiverId;
     private String id;
     private VisualizationRequest vReq;
+    private Connections connections;
 
 //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
     public ConnectionBase() {
     }
 
-    public ConnectionBase(String id, String senderId, String receiverId) {
+    public ConnectionBase(Connections connections, String id, String senderId, String receiverId) {
+        this.connections = connections;
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -36,6 +38,15 @@ class ConnectionBase implements Connection {
     @Override
     public void setSenderId(String id) {
         this.senderId = id;
+        
+        updateConnection();
+    }
+    
+    private void updateConnection() {
+        if (connections.get(getId(), getSenderId(), getReceiverId())!=null) {
+            connections.remove(this);
+            connections.add(this);
+        }
     }
 
     @Override
@@ -46,6 +57,8 @@ class ConnectionBase implements Connection {
     @Override
     public void setReceiverId(String id) {
         this.receiverId = id;
+        
+        updateConnection();
     }
 
     @Override
@@ -61,6 +74,8 @@ class ConnectionBase implements Connection {
     @Override
     public void setId(String id) {
         this.id = id;
+        
+        updateConnection();
     }
 
     /**
@@ -92,4 +107,12 @@ class ConnectionBase implements Connection {
 //    public ObjectProperty<?> skinProperty() {
 //        return skinProperty;
 //    }
+
+    /**
+     * @return the connections
+     */
+    @Override
+    public Connections getConnections() {
+        return connections;
+    }
 }

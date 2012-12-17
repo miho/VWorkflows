@@ -4,9 +4,11 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.fxwindows.CloseIcon;
-import eu.mihosoft.vrl.fxwindows.MinimizeIcon;
-import eu.mihosoft.vrl.fxwindows.Window;
+import jfxtras.labs.scene.control.window.CloseIcon;
+import jfxtras.labs.scene.control.window.MinimizeIcon;
+import jfxtras.labs.scene.control.window.Window;
+
+
 
 /**
  *

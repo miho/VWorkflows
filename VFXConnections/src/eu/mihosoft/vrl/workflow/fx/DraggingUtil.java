@@ -4,8 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.fxwindows.EventHandlerGroup;
-import eu.mihosoft.vrl.fxwindows.MouseEventHandlerGroup;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;

@@ -4,8 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
-import eu.mihosoft.vrl.fxwindows.Window;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
 import javafx.beans.binding.DoubleBinding;
@@ -20,6 +18,8 @@ import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import jfxtras.labs.scene.control.window.Window;
+import jfxtras.labs.util.NodeUtil;
 
 /**
  *
@@ -119,7 +119,7 @@ public class FXFlowNodeSkin
         output.layoutXProperty().bind(startXBinding);
         output.layoutYProperty().bind(startYBinding);
 
-        VFXNodeUtils.addToParent(getParent(), output);
+        NodeUtil.addToParent(getParent(), output);
         
         output.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
 
@@ -223,7 +223,7 @@ public class FXFlowNodeSkin
 
     private void removeOutputConnector() {
         if (output != null) {
-            VFXNodeUtils.removeFromParent(output);
+            NodeUtil.removeFromParent(output);
         }
     }
 
@@ -248,7 +248,7 @@ public class FXFlowNodeSkin
 //    }
     @Override
     public void remove() {
-        VFXNodeUtils.removeFromParent(node);
+        NodeUtil.removeFromParent(node);
         getModel().getFlow().remove(getModel());
     }
 
@@ -281,7 +281,7 @@ public class FXFlowNodeSkin
 
     @Override
     public void add() {
-        VFXNodeUtils.addToParent(getParent(), node);
+        NodeUtil.addToParent(getParent(), node);
     }
 
     private void removeListeners(FlowNode flowNode) {

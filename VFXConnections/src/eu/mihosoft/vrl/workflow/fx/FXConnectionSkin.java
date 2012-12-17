@@ -4,7 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
@@ -32,6 +31,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import jfxtras.labs.util.NodeUtil;
 
 /**
  *
@@ -176,7 +176,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         DraggingUtil.makeDraggable(receiverConnector, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                final Node n = VFXNodeUtils.getNode(
+                final Node n = NodeUtil.getNode(
                         getParent().getScene().getRoot(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
@@ -241,7 +241,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     lastNode = null;
                 }
 
-                Node n = VFXNodeUtils.getNode(
+                Node n = NodeUtil.getNode(
                         getParent().getScene().getRoot(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
@@ -324,9 +324,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
     @Override
     public void add() {
-        VFXNodeUtils.addToParent(getParent(), connectionPath);
+        NodeUtil.addToParent(getParent(), connectionPath);
 //        VFXNodeUtils.addToParent(getParent(), startConnector);
-        VFXNodeUtils.addToParent(getParent(), receiverConnector);
+        NodeUtil.addToParent(getParent(), receiverConnector);
 
 //        startConnector.toBack();
         receiverConnector.toBack();
@@ -335,9 +335,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
     @Override
     public void remove() {
-        VFXNodeUtils.removeFromParent(connectionPath);
+        NodeUtil.removeFromParent(connectionPath);
 //        VFXNodeUtils.removeFromParent(startConnector);
-        VFXNodeUtils.removeFromParent(receiverConnector);
+        NodeUtil.removeFromParent(receiverConnector);
         connection.getConnections().remove(connection);
     }
 }

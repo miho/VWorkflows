@@ -4,26 +4,15 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.fxwindows.ScalableContentPane;
-import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.ConnectionResult;
-import eu.mihosoft.vrl.workflow.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.ConnectionSkinFactory;
 import eu.mihosoft.vrl.workflow.Connections;
-import eu.mihosoft.vrl.workflow.ControlFlow;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.Flow;
 import eu.mihosoft.vrl.workflow.FlowNode;
-import eu.mihosoft.vrl.workflow.FlowNodeSkin;
-import eu.mihosoft.vrl.workflow.FlowNodeSkinFactory;
 import eu.mihosoft.vrl.workflow.VConnections;
-import eu.mihosoft.vrl.workflow.WorkFlow;
-import eu.mihosoft.vrl.workflow.fx.FXConnectionSkin;
 import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
-import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinFactory;
+import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -83,6 +72,11 @@ public class Main extends Application {
             
             n.setY((i/5)*(n.getHeight()+30));
         }
+        
+        FlowNode n = workflow.newNode();
+        FlowNode n2 = workflow.newNode();
+        
+        workflow.connect(n, n2, "control");
     }
 
     public void connectionTest() {

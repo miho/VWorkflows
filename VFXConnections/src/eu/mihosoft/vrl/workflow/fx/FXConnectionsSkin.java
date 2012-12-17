@@ -4,10 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.fxwindows.VFXNodeUtils;
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.ConnectionsSkin;
-import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;

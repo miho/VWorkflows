@@ -4,9 +4,9 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.fxwindows.Window;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import jfxtras.labs.scene.control.window.Window;
 
 /**
  *

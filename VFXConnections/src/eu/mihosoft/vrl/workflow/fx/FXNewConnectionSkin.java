@@ -25,6 +25,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import jfxtras.labs.util.NodeUtil;
+import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
@@ -113,7 +114,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         connectionPath.toFront();
         receiverConnector.toFront();
 
-        DraggingUtil.makeDraggable(receiverConnector, new EventHandler<MouseEvent>() {
+        MouseControlUtil.makeDraggable(receiverConnector, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 final Node n = NodeUtil.getNode(

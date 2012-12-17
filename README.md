@@ -1,4 +1,4 @@
-VFXConnections
+VWorkflows
 ==============
 
-Connection API for JavaFX and VFXWindows
+Workflow API with UI bindings for JavaFX

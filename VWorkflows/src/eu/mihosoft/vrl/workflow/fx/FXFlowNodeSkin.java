@@ -145,6 +145,7 @@ public class FXFlowNodeSkin
 
                 newConnectionSkin.add();
 
+                t.consume();
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
             }
         });
@@ -152,7 +153,9 @@ public class FXFlowNodeSkin
         output.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                t.consume();
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                
             }
         });
         
@@ -160,6 +163,7 @@ public class FXFlowNodeSkin
 
             @Override
             public void handle(MouseEvent t) {
+                t.consume();
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
                 output.toBack();
             }

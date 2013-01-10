@@ -15,7 +15,10 @@ import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
@@ -57,6 +60,13 @@ public class Main extends Application {
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        Rectangle rect = new Rectangle();
+        rect.setStroke(new Color(1, 1, 1, 1));
+        rect.setFill(new Color(0, 0, 0, 0.5));
+
+        MouseControlUtil.
+                addSelectionRectangleGesture(root, rect);
 
     }
 

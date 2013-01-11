@@ -251,7 +251,7 @@ public class FXFlowNodeSkin
     @Override
     public void remove() {
         removeOutputConnector();
-        NodeUtil.removeFromParent(node);
+        node.close();
         getModel().getFlow().remove(getModel());
     }
 

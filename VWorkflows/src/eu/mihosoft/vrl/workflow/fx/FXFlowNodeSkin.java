@@ -11,6 +11,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
@@ -120,15 +121,14 @@ public class FXFlowNodeSkin
         output.layoutYProperty().bind(startYBinding);
 
         NodeUtil.addToParent(getParent(), output);
-        
-        output.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
 
+        output.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 output.toFront();
             }
         });
-        
+
         output.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
@@ -155,12 +155,11 @@ public class FXFlowNodeSkin
             public void handle(MouseEvent t) {
                 t.consume();
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
-                
+
             }
         });
-        
-        output.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
 
+        output.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 t.consume();
@@ -168,9 +167,8 @@ public class FXFlowNodeSkin
                 output.toBack();
             }
         });
-        
-        output.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
 
+        output.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 output.toBack();
@@ -252,6 +250,7 @@ public class FXFlowNodeSkin
 //    }
     @Override
     public void remove() {
+        removeOutputConnector();
         NodeUtil.removeFromParent(node);
         getModel().getFlow().remove(getModel());
     }
@@ -364,6 +363,13 @@ public class FXFlowNodeSkin
                 getModel().setHeight((double) newVal);
             }
         };
+
+        node.onCloseActionProperty().set(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                modelProperty().get().getFlow().remove(modelProperty().get());
+            }
+        });
     }
 
     private void registerListeners(FlowNode flowNode) {

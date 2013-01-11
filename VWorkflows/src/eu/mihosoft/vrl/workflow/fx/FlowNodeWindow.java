@@ -6,6 +6,8 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import jfxtras.labs.scene.control.window.CloseIcon;
+import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
 
 /**
@@ -19,7 +21,8 @@ public class FlowNodeWindow extends Window{
         
         nodeSkinProperty().set(skin);
         
-        
+        getLeftIcons().add(new CloseIcon(this));
+        getLeftIcons().add(new MinimizeIcon(this));
     }
  
     /**

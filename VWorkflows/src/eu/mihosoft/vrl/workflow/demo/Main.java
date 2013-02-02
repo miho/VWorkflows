@@ -45,7 +45,11 @@ public class Main extends Application {
 
         ScalableContentPane canvas = new ScalableContentPane();
 
-        Pane root = canvas.getContentPane();
+//        Pane root = canvas.getContentPane();
+        
+        Pane root = new Pane();
+        
+        canvas.setContentPane(root);
 
         root.setStyle("-fx-background-color: rgb(160, 160, 160);");
 

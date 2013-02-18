@@ -51,7 +51,7 @@ public class Main extends Application {
         
         canvas.setContentPane(root);
 
-        root.setStyle("-fx-background-color: rgb(160, 160, 160);");
+        root.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
 
         Scene scene = new Scene(canvas, 800, 800);
 

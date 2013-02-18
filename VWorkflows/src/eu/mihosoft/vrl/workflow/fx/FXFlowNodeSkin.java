@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.NodeUtil;
@@ -114,6 +115,10 @@ public class FXFlowNodeSkin
         };
 
         Circle circle = new Circle(20);
+        
+        circle.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+        circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        circle.setStrokeWidth(3);
 
         output = circle;
 

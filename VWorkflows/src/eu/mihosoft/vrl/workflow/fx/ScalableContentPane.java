@@ -8,7 +8,9 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -44,7 +46,7 @@ public class ScalableContentPane extends Region {
     public void setContentPane(Pane contentPane) {
         contentPaneProperty.setValue(contentPane);
         contentPane.setManaged(false);
-//        initContentPaneListener();
+        initContentPaneListener();
 //        contentPane.setStyle("-fx-border-color: rgb(0,0,0);");
 
         contentScaleTransform = new Scale(1, 1);
@@ -153,47 +155,47 @@ public class ScalableContentPane extends Region {
             @Override
             public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
 //                System.out.println("b.w: " + t1.getWidth() + ", b.h: " + t1.getHeight());
-                layout();
+                requestLayout();
             }
         };
 
         final ChangeListener<Number> numberListener = new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-                layout();
+                requestLayout();
             }
         };
 
-//        getContentPane().getChildren().addListener(new ListChangeListener<Node>() {
-//            @Override
-//            public void onChanged(Change<? extends Node> c) {
-//
-//
-//                while (c.next()) {
-//                    if (c.wasPermutated()) {
-//                        for (int i = c.getFrom(); i < c.getTo(); ++i) {
-//                            //permutate
-//                        }
-//                    } else if (c.wasUpdated()) {
-//                        //update item
-//                    } else {
-//                        if (c.wasRemoved()) {
-//                            for (Node n : c.getRemoved()) {
-//                                n.boundsInLocalProperty().removeListener(boundsListener);
-//                                n.layoutXProperty().removeListener(numberListener);
-//                                n.layoutYProperty().removeListener(numberListener);
-//                            }
-//                        } else if (c.wasAdded()) {
-//                            for (Node n : c.getAddedSubList()) {
-//                                n.boundsInLocalProperty().addListener(boundsListener);
-//                                n.layoutXProperty().addListener(numberListener);
-//                                n.layoutYProperty().addListener(numberListener);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
+        getContentPane().getChildren().addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+
+
+                while (c.next()) {
+                    if (c.wasPermutated()) {
+                        for (int i = c.getFrom(); i < c.getTo(); ++i) {
+                            //permutate
+                        }
+                    } else if (c.wasUpdated()) {
+                        //update item
+                    } else {
+                        if (c.wasRemoved()) {
+                            for (Node n : c.getRemoved()) {
+                                n.boundsInLocalProperty().removeListener(boundsListener);
+                                n.layoutXProperty().removeListener(numberListener);
+                                n.layoutYProperty().removeListener(numberListener);
+                            }
+                        } else if (c.wasAdded()) {
+                            for (Node n : c.getAddedSubList()) {
+                                n.boundsInLocalProperty().addListener(boundsListener);
+                                n.layoutXProperty().addListener(numberListener);
+                                n.layoutYProperty().addListener(numberListener);
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**

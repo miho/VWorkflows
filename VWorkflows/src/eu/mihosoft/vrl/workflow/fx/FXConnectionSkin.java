@@ -72,6 +72,18 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
     private void init() {
 
+        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        connectionPath.setStrokeWidth(5);
+        
+        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        receiverConnector.setStrokeWidth(3);
+
+        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+
+
         final FlowNode sender = flow.getSender(connection);
         final FlowNode receiver = flow.getReceiver(connection);
 
@@ -201,7 +213,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         shadow.setInput(effect);
                         w.setEffect(shadow);
 
-                        receiverConnector.setFill(Color.GREEN);
+                        receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
                     } else {
 
                         DropShadow shadow = new DropShadow(20, Color.RED);
@@ -214,7 +226,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     lastNode = w;
                 } else {
-                    receiverConnector.setFill(Color.BLACK);
+                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
         }, null);
@@ -250,7 +262,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     connection.setReceiverId(
                             ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
 
-                    receiverConnector.setFill(Color.BLACK);
+                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                     init();
 
                 } else {

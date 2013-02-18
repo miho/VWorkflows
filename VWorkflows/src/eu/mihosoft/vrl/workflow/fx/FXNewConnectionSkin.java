@@ -66,6 +66,18 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     
 
     private void init() {
+        
+        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        connectionPath.setStrokeWidth(5);
+        
+        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        receiverConnector.setStrokeWidth(3);
+        
+//        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+//        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+//    
 
         final FlowNode sender = getSender();
 
@@ -154,7 +166,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         shadow.setInput(effect);
                         w.setEffect(shadow);
 
-                        receiverConnector.setFill(Color.GREEN);
+                        receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
                     } else {
 
                         DropShadow shadow = new DropShadow(20, Color.RED);
@@ -167,7 +179,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     lastNode = w;
                 } else {
-                    receiverConnector.setFill(Color.BLACK);
+                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
         }, null);
@@ -193,7 +205,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     
                     FlowNodeWindow w = (FlowNodeWindow) n;
 
-                    receiverConnector.setFill(Color.BLACK);
+                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                     
                     FlowNode receiver = w.nodeSkinProperty().get().getModel();
                     

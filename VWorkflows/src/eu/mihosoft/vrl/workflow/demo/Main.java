@@ -6,7 +6,9 @@ package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
-import eu.mihosoft.vrl.workflow.Flow;
+import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.FlowModel;
+import eu.mihosoft.vrl.workflow.FlowModelImpl;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.VConnections;
 import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
@@ -55,9 +57,11 @@ public class Main extends Application {
 
         Scene scene = new Scene(canvas, 800, 800);
 
-        Flow workflow = new DefaultWorkflow(
+        FlowController workflow = new DefaultWorkflow(
+                new FlowModelImpl(),
                 new FXFlowNodeSkinFactory(root),
                 new FXConnectionSkinFactory(root));
+
 
         workflowTest(workflow);
 
@@ -74,7 +78,7 @@ public class Main extends Application {
 
     }
 
-    public void workflowTest(Flow workflow) {
+    public void workflowTest(FlowController workflow) {
         
         for(int i = 0; i < 10; i++) {
             FlowNode n = workflow.newNode();

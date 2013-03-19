@@ -10,6 +10,6 @@ package eu.mihosoft.vrl.workflow;
  */
 public interface ConnectionSkinFactory {
 
-    ConnectionSkin createSkin(Connection c, Flow flow, String type);
+    ConnectionSkin createSkin(Connection c, FlowController flow, String type);
     
 }

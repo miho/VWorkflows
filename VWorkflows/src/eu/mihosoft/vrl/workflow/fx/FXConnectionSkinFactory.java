@@ -7,7 +7,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.ConnectionSkinFactory;
-import eu.mihosoft.vrl.workflow.Flow;
+import eu.mihosoft.vrl.workflow.FlowController;
 import javafx.scene.Parent;
 
 /**
@@ -22,7 +22,7 @@ public class FXConnectionSkinFactory implements ConnectionSkinFactory{
     }
     
     @Override
-    public ConnectionSkin createSkin(Connection c, Flow flow, String type) {
+    public ConnectionSkin createSkin(Connection c, FlowController flow, String type) {
         return new FXConnectionSkin(parent, c, flow, type);
     }
 }

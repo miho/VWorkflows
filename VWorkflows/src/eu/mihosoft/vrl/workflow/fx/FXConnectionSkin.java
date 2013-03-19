@@ -7,7 +7,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.Flow;
+import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -47,14 +47,14 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private MoveTo moveTo;
 //    private Shape startConnector;
     private Shape receiverConnector;
-    private Flow flow;
+    private FlowController flow;
     private Connection connection;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
 
-    public FXConnectionSkin(Parent parent, Connection connection, Flow flow, String type) {
+    public FXConnectionSkin(Parent parent, Connection connection, FlowController flow, String type) {
         setParent(parent);
         this.connection = connection;
         this.flow = flow;

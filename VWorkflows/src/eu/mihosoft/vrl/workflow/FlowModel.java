@@ -4,13 +4,15 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.Collection;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Flow {
+public interface FlowModel extends Model{
 
     public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType);
     
@@ -25,6 +27,7 @@ public interface Flow {
     
     public void addConnections(Connections connections, String flowType);
     public Connections getConnections(String flowType);
+    public ObservableMap<String,Connections> getAllConnections();
     
     public void setFlowNodeClass(Class<? extends FlowNode> cls);
     
@@ -33,7 +36,5 @@ public interface Flow {
     public FlowNode newNode(ValueObject obj);
     
     public FlowNode newNode();
-    
-    public void setNodeSkinFactory(FlowNodeSkinFactory factory);
-    public void setConnectionSkinFactory(ConnectionSkinFactory factory);
+
 }

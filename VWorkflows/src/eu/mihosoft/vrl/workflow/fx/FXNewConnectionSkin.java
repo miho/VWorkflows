@@ -7,7 +7,8 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.Flow;
+import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.FlowModel;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
@@ -40,13 +41,13 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private MoveTo moveTo;
 //    private Shape startConnector;
     private Shape receiverConnector;
-    private Flow flow;
+    private FlowModel flow;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
 
-    public FXNewConnectionSkin(Parent parent, FlowNode sender, Flow flow, String type) {
+    public FXNewConnectionSkin(Parent parent, FlowNode sender, FlowModel flow, String type) {
         setParent(parent);
         setSender(sender);
         

@@ -15,27 +15,27 @@ import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FlowBase implements Flow {
+public class FlowModelImpl implements FlowModel {
 
-    private Map<String, Connections> connections = new HashMap<>();
+    private ObservableMap<String, Connections> connections = 
+            FXCollections.observableHashMap();
     private ObservableList<FlowNode> observableNodes =
             FXCollections.observableArrayList();
     private Map<String, FlowNode> nodes = new HashMap<>();
     private Class<? extends FlowNode> flowNodeClass = FlowNodeBase.class;
-    private FlowNodeSkinFactory nodeSkinFactory;
-    private ConnectionSkinFactory connectionSkinFactory;
-    private Map<String, FlowNodeSkin> nodeSkins = new HashMap<>();
-    private Map<String, ConnectionSkin> connectionSkins = new HashMap<>();
 
+    // TODO duplicated code
     private static String connectionId(String id, String s, String r) {
         return "id=" + id + ";[" + s + "]->[" + r + "]";
     }
 
+    // TODO duplicated code
     private static String connectionId(Connection c) {
         return connectionId(c.getId(), c.getSenderId(), c.getReceiverId());
     }
@@ -65,9 +65,9 @@ public class FlowBase implements Flow {
 
         Connection connection = getConnections(type).add(s.getId(), r.getId());
 
-        if (connection != null) {
-            createConnectionSkin(connection, type);
-        }
+//        if (connection != null) {
+//            createConnectionSkin(connection, type);
+//        }
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -82,16 +82,16 @@ public class FlowBase implements Flow {
         FlowNode result = nodes.remove(n.getId());
         observableNodes.remove(n);
 
-        removeNodeSkin(n);
+//        removeNodeSkin(n);
 
-        for (Connections cns : getAllConnections()) {
+        for (Connections cns : getAllConnections().values()) {
 
             Collection<Connection> connectionsToRemove =
                     cns.getAllWith(n.getId());
 
             for (Connection c : connectionsToRemove) {
                 cns.remove(c);
-                removeConnectionSkin(c);
+//                removeConnectionSkin(c);
             }
 
         }
@@ -99,8 +99,9 @@ public class FlowBase implements Flow {
         return result;
     }
 
-    public Collection<Connections> getAllConnections() {
-        return connections.values();
+    @Override
+    public ObservableMap<String,Connections> getAllConnections() {
+        return connections;
     }
 
     @Override
@@ -121,7 +122,7 @@ public class FlowBase implements Flow {
     @Override
     public void setFlowNodeClass(Class<? extends FlowNode> cls) {
         try {
-            Constructor constructor = cls.getConstructor(Flow.class);
+            Constructor constructor = cls.getConstructor(FlowModel.class);
             throw new IllegalArgumentException("constructor missing: (String, String)");
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,7 +142,7 @@ public class FlowBase implements Flow {
         FlowNode result = null;
 
         try {
-            Constructor constructor = getFlowNodeClass().getConstructor(Flow.class);
+            Constructor constructor = getFlowNodeClass().getConstructor(FlowModel.class);
             try {
                 result = (FlowNode) constructor.newInstance(this);
                 result.setValueObject(obj);
@@ -160,7 +161,7 @@ public class FlowBase implements Flow {
                 nodes.put(id, result);
                 observableNodes.add(result);
 
-                createNodeSkin(result);
+//                createNodeSkin(result);
 
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -231,59 +232,69 @@ public class FlowBase implements Flow {
             }
         });
     }
-
-    private FlowNodeSkin createNodeSkin(FlowNode n) {
-        FlowNodeSkin skin = nodeSkinFactory.createSkin(n);
-
-        nodeSkins.put(n.getId(), skin);
-        skin.add();
-
-        return skin;
-    }
-
-    private ConnectionSkin createConnectionSkin(Connection c, String type) {
-        ConnectionSkin skin = connectionSkinFactory.createSkin(c, this, type);
-
-        connectionSkins.put(connectionId(c), skin);
-        skin.add();
-
-        return skin;
-    }
-
-    private void removeNodeSkin(FlowNode n) {
-        FlowNodeSkin skin = nodeSkins.remove(n.getId());
-
-        if (skin != null) {
-            skin.remove();
-        }
-    }
-
-    private void removeConnectionSkin(Connection c) {
-        ConnectionSkin skin = connectionSkins.remove(connectionId(c));
-
-        if (skin != null) {
-            skin.remove();
-        }
-    }
-
-    /**
-     * @param nodeSkinFactory the nodeSkinFactory to set
-     */
-    @Override
-    public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
-        this.nodeSkinFactory = nodeSkinFactory;
-    }
-
-    /**
-     * @param connectionSkinFactory the connectionSkinFactory to set
-     */
-    @Override
-    public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
-        this.connectionSkinFactory = connectionSkinFactory;
-    }
+//
+//    private FlowNodeSkin createNodeSkin(FlowNode n) {
+//        FlowNodeSkin skin = nodeSkinFactory.createSkin(n);
+//
+//        nodeSkins.put(n.getId(), skin);
+//        skin.add();
+//
+//        return skin;
+//    }
+//
+//    private ConnectionSkin createConnectionSkin(Connection c, String type) {
+//        ConnectionSkin skin = connectionSkinFactory.createSkin(c, this, type);
+//
+//        connectionSkins.put(connectionId(c), skin);
+//        skin.add();
+//
+//        return skin;
+//    }
+//
+//    private void removeNodeSkin(FlowNode n) {
+//        FlowNodeSkin skin = nodeSkins.remove(n.getId());
+//
+//        if (skin != null) {
+//            skin.remove();
+//        }
+//    }
+//
+//    private void removeConnectionSkin(Connection c) {
+//        ConnectionSkin skin = connectionSkins.remove(connectionId(c));
+//
+//        if (skin != null) {
+//            skin.remove();
+//        }
+//    }
+//
+//    /**
+//     * @param nodeSkinFactory the nodeSkinFactory to set
+//     */
+//    @Override
+//    public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
+//        this.nodeSkinFactory = nodeSkinFactory;
+//    }
+//
+//    /**
+//     * @param connectionSkinFactory the connectionSkinFactory to set
+//     */
+//    @Override
+//    public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
+//        this.connectionSkinFactory = connectionSkinFactory;
+//    }
 
     @Override
     public void addConnections(Connections connections, String flowType) {
         this.connections.put(flowType, connections);
+    }
+
+    @Override
+    public VisualizationRequest getVisualizationRequest() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setVisualizationRequest(VisualizationRequest vReq) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

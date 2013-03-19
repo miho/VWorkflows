@@ -40,7 +40,7 @@ class FlowNodeBase implements FlowNode {
     
     private VisualizationRequest vReq;
     
-    private Flow flow;
+    private FlowModel flow;
     
     private BooleanProperty outputProperty = new SimpleBooleanProperty(true); 
     private BooleanProperty inputProperty = new SimpleBooleanProperty(); 
@@ -48,7 +48,7 @@ class FlowNodeBase implements FlowNode {
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
 
-    public FlowNodeBase(Flow flow) {
+    public FlowNodeBase(FlowModel flow) {
         
         this.flow = flow;
         
@@ -293,7 +293,7 @@ class FlowNodeBase implements FlowNode {
      * @return the flow
      */
     @Override
-    public Flow getFlow() {
+    public FlowModel getFlow() {
         return flow;
     }
 

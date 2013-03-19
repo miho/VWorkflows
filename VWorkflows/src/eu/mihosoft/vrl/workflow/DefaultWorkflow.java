@@ -8,12 +8,14 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public final class DefaultWorkflow extends FlowBase {
+public final class DefaultWorkflow extends FlowControllerImpl {
 
-    public DefaultWorkflow(FlowNodeSkinFactory flowNodeSkinFactory,
+    public DefaultWorkflow(FlowModel model, FlowNodeSkinFactory flowNodeSkinFactory,
             ConnectionSkinFactory connectionSkinFactory) {
-        setNodeSkinFactory(flowNodeSkinFactory);
-        setConnectionSkinFactory(connectionSkinFactory);
+        
+        super(flowNodeSkinFactory, connectionSkinFactory);
+        
+        setModel(model);
         
         addConnections(VConnections.newConnections(), "control");
         addConnections(VConnections.newConnections(), "data");

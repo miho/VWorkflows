@@ -7,6 +7,8 @@ package eu.mihosoft.vrl.workflow.demo;
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.FlowFlowNode;
+import eu.mihosoft.vrl.workflow.FlowFlowNodeImpl;
 import eu.mihosoft.vrl.workflow.FlowModel;
 import eu.mihosoft.vrl.workflow.FlowModelImpl;
 import eu.mihosoft.vrl.workflow.FlowNode;
@@ -59,7 +61,6 @@ public class Main extends Application {
         Scene scene = new Scene(canvas, 800, 800);
 
         FlowController workflow = new DefaultWorkflow(
-                new FlowModelImpl(),
                 new FXFlowNodeSkinFactory(root),
                 new FXConnectionSkinFactory(root));
 
@@ -97,8 +98,9 @@ public class Main extends Application {
 
         workflow.connect(n1, n2, "control");
 
-        FlowController subFlow = workflow.newFlowNode();
-        FlowNode subFlowNode = (FlowNode) subFlow.getModel();
+        FlowController subFlow = workflow.newSubFlow();
+        
+        FlowNode subFlowNode = subFlow.getModel();
         subFlowNode.setTitle("SubFlow");
         subFlowNode.setWidth(300);
         subFlowNode.setHeight(200);

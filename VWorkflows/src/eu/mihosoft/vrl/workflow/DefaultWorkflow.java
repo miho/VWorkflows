@@ -10,12 +10,12 @@ package eu.mihosoft.vrl.workflow;
  */
 public final class DefaultWorkflow extends FlowControllerImpl {
 
-    public DefaultWorkflow(FlowModel model, FlowNodeSkinFactory flowNodeSkinFactory,
+    public DefaultWorkflow(FlowNodeSkinFactory flowNodeSkinFactory,
             ConnectionSkinFactory connectionSkinFactory) {
         
         super(flowNodeSkinFactory, connectionSkinFactory);
         
-        setModel(model);
+        setModel(new FlowFlowNodeImpl(null));
         
         addConnections(VConnections.newConnections(), "control");
         addConnections(VConnections.newConnections(), "data");

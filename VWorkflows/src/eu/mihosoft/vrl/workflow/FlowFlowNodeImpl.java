@@ -15,7 +15,7 @@ import javafx.collections.ObservableMap;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class FlowFlowNodeImpl implements FlowFlowNode {
+public class FlowFlowNodeImpl implements FlowFlowNode {
 
     private FlowNode node;
     private FlowModel flow;

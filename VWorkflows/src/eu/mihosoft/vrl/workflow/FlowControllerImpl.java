@@ -26,9 +26,9 @@ import javafx.collections.ObservableMap;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FlowControllerImpl implements FlowController {
+class FlowControllerImpl implements FlowController {
 
-    ObjectProperty<FlowModel> modelProperty = new SimpleObjectProperty<>();
+    ObjectProperty<FlowFlowNode> modelProperty = new SimpleObjectProperty<>();
     private ListChangeListener<FlowNode> nodesListener;
     private ListChangeListener<Connection> connectionsListener;
     private FlowNodeSkinFactory nodeSkinFactory;
@@ -275,12 +275,12 @@ public class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public void setModel(FlowModel flow) {
+    public void setModel(FlowFlowNode flow) {
         modelProperty.set(flow);
     }
 
     @Override
-    public FlowModel getModel() {
+    public FlowFlowNode getModel() {
         return modelProperty.get();
     }
 
@@ -290,7 +290,7 @@ public class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowController newFlowNode(ValueObject obj) {
+    public FlowController newSubFlow(ValueObject obj) {
         FlowFlowNode flowNode = getModel().newFlowNode(obj);
 
         FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
@@ -309,7 +309,7 @@ public class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowController newFlowNode() {
+    public FlowController newSubFlow() {
         FlowFlowNode flowNode = getModel().newFlowNode();
 
         FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());

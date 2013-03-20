@@ -13,9 +13,9 @@ import javafx.collections.ObservableList;
  */
 public interface FlowController {
 
-    public void setModel(FlowModel flow);
+    public void setModel(FlowFlowNode flow);
 
-    public FlowModel getModel();
+    public FlowFlowNode getModel();
 
     public ObjectProperty modelProperty();
 
@@ -43,9 +43,9 @@ public interface FlowController {
 
     public FlowNode newNode();
 
-    public FlowController newFlowNode(ValueObject obj);
+    public FlowController newSubFlow(ValueObject obj);
 
-    public FlowController newFlowNode();
+    public FlowController newSubFlow();
 
     public void setNodeSkinFactory(FlowNodeSkinFactory factory);
 

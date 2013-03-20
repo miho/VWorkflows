@@ -13,13 +13,14 @@ import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.VConnections;
 import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinFactory;
-import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
+//import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import jfxtras.labs.scene.layout.ScalableContentPane;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
@@ -43,14 +44,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        connectionTest();
+//        connectionTest();
 
         ScalableContentPane canvas = new ScalableContentPane();
 
 //        Pane root = canvas.getContentPane();
-        
+
         Pane root = new Pane();
-        
+
         canvas.setContentPane(root);
 
         root.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
@@ -68,7 +69,7 @@ public class Main extends Application {
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
+
         Rectangle rect = new Rectangle();
         rect.setStroke(new Color(1, 1, 1, 1));
         rect.setFill(new Color(0, 0, 0, 0.5));
@@ -79,22 +80,47 @@ public class Main extends Application {
     }
 
     public void workflowTest(FlowController workflow) {
-        
-        for(int i = 0; i < 10; i++) {
+
+        for (int i = 0; i < 10; i++) {
             FlowNode n = workflow.newNode();
             n.setTitle("Node " + i);
             n.setWidth(300);
             n.setHeight(200);
-            
-            n.setX((i%5)*(n.getWidth()+30));
-            
-            n.setY((i/5)*(n.getHeight()+30));
+
+            n.setX((i % 5) * (n.getWidth() + 30));
+
+            n.setY((i / 5) * (n.getHeight() + 30));
         }
-        
-        FlowNode n = workflow.newNode();
+
+        FlowNode n1 = workflow.newNode();
         FlowNode n2 = workflow.newNode();
+
+        workflow.connect(n1, n2, "control");
+
+        FlowController subFlow = workflow.newFlowNode();
+        FlowNode subFlowNode = (FlowNode) subFlow.getModel();
+        subFlowNode.setTitle("SubFlow");
+        subFlowNode.setWidth(300);
+        subFlowNode.setHeight(200);
+
+        FlowNode prevN = null;
         
-        workflow.connect(n, n2, "control");
+        for (int i = 0; i < 10; i++) {
+            FlowNode n = subFlow.newNode();
+            n.setTitle("Node " + i);
+            n.setWidth(300);
+            n.setHeight(200);
+
+            n.setX((i % 5) * (n.getWidth() + 30));
+
+            n.setY((i / 5) * (n.getHeight() + 30));
+            
+            if (prevN !=null) {
+                subFlow.connect(n, prevN, "control");
+            }
+            
+            prevN = n;
+        }
     }
 
     public void connectionTest() {

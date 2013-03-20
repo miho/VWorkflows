@@ -13,16 +13,22 @@ import javafx.scene.Parent;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FXFlowNodeSkinFactory implements FlowNodeSkinFactory{
+public class FXFlowNodeSkinFactory implements FlowNodeSkinFactory<FXSkin>{
     
-    private Parent parent;
+    private final Parent parent;
 
     public FXFlowNodeSkinFactory(Parent parent) {
         this.parent = parent;
+        System.out.println("parent: " + parent);
     }
     
     @Override
     public FlowNodeSkin createSkin(FlowNode n) {
         return  new FXFlowNodeSkin(parent, n);
+    }
+
+    @Override
+    public FlowNodeSkinFactory createChild(FXSkin parent) {
+        return new FXFlowNodeSkinFactory(parent.getContentNode());
     }
 }

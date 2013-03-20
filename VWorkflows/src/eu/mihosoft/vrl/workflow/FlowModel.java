@@ -37,8 +37,8 @@ public interface FlowModel extends Model{
     
     public FlowNode newNode();
     
-    public FlowNode newFlowNode(ValueObject obj);
+    public FlowFlowNode newFlowNode(ValueObject obj);
     
-    public FlowNode newFlowNode();
+    public FlowFlowNode newFlowNode();
 
 }

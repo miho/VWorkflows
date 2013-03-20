@@ -23,7 +23,7 @@ import javafx.collections.ObservableMap;
  */
 public class FlowModelImpl implements FlowModel {
 
-    private ObservableMap<String, Connections> connections = 
+    private ObservableMap<String, Connections> connections =
             FXCollections.observableHashMap();
     private ObservableList<FlowNode> observableNodes =
             FXCollections.observableArrayList();
@@ -100,7 +100,7 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public ObservableMap<String,Connections> getAllConnections() {
+    public ObservableMap<String, Connections> getAllConnections() {
         return connections;
     }
 
@@ -147,21 +147,7 @@ public class FlowModelImpl implements FlowModel {
                 result = (FlowNode) constructor.newInstance(this);
                 result.setValueObject(obj);
 
-                // search id:
-                String id = "0";
-                int count = 0;
-
-                while (nodes.containsKey(id)) {
-                    count++;
-                    id = "" + count;
-                }
-
-                result.setId(id);
-
-                nodes.put(id, result);
-                observableNodes.add(result);
-
-//                createNodeSkin(result);
+                result = newNode(result, obj);
 
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -172,7 +158,31 @@ public class FlowModelImpl implements FlowModel {
 
         return result;
     }
-    
+
+    private FlowNode newNode(FlowNode result, ValueObject obj) {
+
+        result.setValueObject(obj);
+
+        // search id:
+        String id = "0";
+        int count = 0;
+
+        while (nodes.containsKey(id)) {
+            count++;
+            id = "" + count;
+        }
+
+        result.setId(id);
+
+        nodes.put(id, result);
+        observableNodes.add(result);
+
+//                createNodeSkin(result);
+
+
+        return result;
+    }
+
     @Override
     public FlowNode newNode() {
         return newNode(new ValueObject() {
@@ -296,5 +306,75 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FlowFlowNode newFlowNode(ValueObject obj) {
+        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
+
+        return (FlowFlowNode) newNode(flowNode, obj);
+    }
+
+    @Override
+    public FlowFlowNode newFlowNode() {
+        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
+
+        return (FlowFlowNode) newNode(flowNode, new ValueObject() {
+            @Override
+            public FlowNode getParent() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public Object getValue() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setValue(Object o) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public ObjectProperty<Object> valueProperty() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompatibilityResult compatible(ValueObject other, String flowType) {
+                return new CompatibilityResult() {
+                    @Override
+                    public boolean isCompatible() {
+                        return true;
+                    }
+
+                    @Override
+                    public String getMessage() {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public String getStatus() {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                };
+            }
+
+            @Override
+            public VisualizationRequest getVisualizationRequest() {
+                return new VisualizationRequest() {
+                    @Override
+                    public String getStyle() {
+                        return "default";
+                    }
+
+                    @Override
+                    public String getOptions() {
+                        return "";
+                    }
+                };
+            }
+        }); // end newNode()
+
     }
 }

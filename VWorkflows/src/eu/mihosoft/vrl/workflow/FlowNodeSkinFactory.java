@@ -8,8 +8,10 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface FlowNodeSkinFactory {
+public interface FlowNodeSkinFactory<T extends Skin> {
 
     FlowNodeSkin createSkin(FlowNode n);
+    
+    FlowNodeSkinFactory createChild(T parent);
     
 }

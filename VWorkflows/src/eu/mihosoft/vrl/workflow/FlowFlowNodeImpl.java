@@ -244,4 +244,14 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     public void setOutput(boolean state) {
         node.setOutput(state);
     }
+
+    @Override
+    public FlowFlowNode newFlowNode(ValueObject obj) {
+        return flow.newFlowNode(obj);
+    }
+
+    @Override
+    public FlowFlowNode newFlowNode() {
+        return flow.newFlowNode();
+    }
 }

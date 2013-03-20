@@ -134,8 +134,8 @@ public class FlowControllerImpl implements FlowController {
                         public void onChanged(MapChangeListener.Change<? extends String, ? extends Connections> change) {
                             if (change.wasAdded()) {
                                 change.getValueAdded().getConnections().addListener(connectionsListener);
-                            } 
-                            
+                            }
+
                             if (change.wasRemoved()) {
                                 change.getValueAdded().getConnections().removeListener(connectionsListener);
                             }
@@ -287,5 +287,43 @@ public class FlowControllerImpl implements FlowController {
     @Override
     public ObjectProperty modelProperty() {
         return modelProperty;
+    }
+
+    @Override
+    public FlowController newFlowNode(ValueObject obj) {
+        FlowFlowNode flowNode = getModel().newFlowNode(obj);
+
+        FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
+
+        FlowController controller = new FlowControllerImpl(
+                nodeSkinFactory.createChild(skin),
+                connectionSkinFactory.createChild(skin));
+
+        controller.setModel(flowNode);
+
+        for (String connectionType : getAllConnections().keySet()) {
+            controller.addConnections(VConnections.newConnections(), connectionType);
+        }
+
+        return controller;
+    }
+
+    @Override
+    public FlowController newFlowNode() {
+        FlowFlowNode flowNode = getModel().newFlowNode();
+
+        FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
+
+        FlowController controller = new FlowControllerImpl(
+                nodeSkinFactory.createChild(skin),
+                connectionSkinFactory.createChild(skin));
+
+        controller.setModel(flowNode);
+
+        for (String connectionType : getAllConnections().keySet()) {
+            controller.addConnections(VConnections.newConnections(), connectionType);
+        }
+
+        return controller;
     }
 }

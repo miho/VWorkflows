@@ -33,7 +33,7 @@ public class FXFlowNodeSkin
 
     private ObjectProperty<FlowNode> modelProperty = new SimpleObjectProperty<>();
 //    private ObjectProperty<Flow> flowProperty = new SimpleObjectProperty<>();
-    private Window node;
+    private FlowNodeWindow node;
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private ChangeListener<String> modelTitleListener;
     private ChangeListener<Number> modelXListener;
@@ -238,6 +238,11 @@ public class FXFlowNodeSkin
     @Override
     public Window getNode() {
         return node;
+    }
+    
+    @Override
+    public Parent getContentNode() {
+        return node.getWorkflowContentPane();
     }
 
 //    @Override

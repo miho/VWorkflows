@@ -257,6 +257,11 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     public Path getNode() {
         return connectionPath;
     }
+    
+    @Override
+    public Parent getContentNode() {
+        return getParent();
+    }
 
     @Override
     public void setModel(Connection model) {

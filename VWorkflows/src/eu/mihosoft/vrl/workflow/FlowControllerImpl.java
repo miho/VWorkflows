@@ -259,6 +259,8 @@ class FlowControllerImpl implements FlowController {
     @Override
     public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
         this.nodeSkinFactory = nodeSkinFactory;
+        
+        // TODO build ui
     }
 
     /**
@@ -267,6 +269,8 @@ class FlowControllerImpl implements FlowController {
     @Override
     public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
         this.connectionSkinFactory = connectionSkinFactory;
+        
+        // TODO build ui
     }
 
     @Override

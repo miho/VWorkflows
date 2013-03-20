@@ -86,7 +86,7 @@ public class Main extends Application {
             return;
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 12; i++) {
 
             FlowNode n;
 

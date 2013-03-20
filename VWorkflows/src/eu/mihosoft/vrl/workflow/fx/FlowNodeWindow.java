@@ -29,12 +29,17 @@ public class FlowNodeWindow extends Window {
 
         setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 
+        
+        OptimizableContentPane parentContent = new OptimizableContentPane();
+        
         content = new ScalableContentPane();
+        
+        parentContent.getChildren().add(content);
 
         Pane root = new Pane();
         content.setContentPane(root);
 
-        super.setContentPane(content);
+        super.setContentPane(parentContent);
     }
 
     public Pane getWorkflowContentPane() {

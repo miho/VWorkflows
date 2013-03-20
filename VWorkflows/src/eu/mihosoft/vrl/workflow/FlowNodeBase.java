@@ -27,6 +27,7 @@ class FlowNodeBase implements FlowNode {
 //            FXCollections.observableArrayList();
 //    private ObservableList<Connector<FlowNode>> outputs =
 //            FXCollections.observableArrayList();
+    
     private ObservableList<FlowNode> children =
             FXCollections.observableArrayList();
     private StringProperty idProperty = new SimpleStringProperty();
@@ -45,10 +46,16 @@ class FlowNodeBase implements FlowNode {
     private BooleanProperty outputProperty = new SimpleBooleanProperty(true); 
     private BooleanProperty inputProperty = new SimpleBooleanProperty(); 
     
+    private static int counter = 0;
+    
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
 
     public FlowNodeBase(FlowModel flow) {
+        
+        counter++;
+        
+        System.out.println("COUNTER: " + counter);
         
         this.flow = flow;
         

@@ -4,16 +4,17 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import javafx.beans.property.BooleanProperty;
+import java.util.ArrayList;
+import java.util.Collection;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Transform;
-
 
 /**
  *
@@ -25,6 +26,7 @@ public class OptimizableContentPane extends StackPane {
     private Transform transform;
     private boolean optimizing = false;
     private boolean visibility = true;
+    private Collection<Node> detatched = new ArrayList<Node>();
 
     public OptimizableContentPane() {
         this.optimizationRule = new OptimizationRuleImpl();
@@ -52,6 +54,7 @@ public class OptimizableContentPane extends StackPane {
                 }
             }
         });
+
     }
 
     private synchronized void updateOptimizationRule() {
@@ -72,6 +75,16 @@ public class OptimizableContentPane extends StackPane {
             setVisible(visible);
         }
 
+        boolean attached = optimizationRule.attached(this, transform);
+
+        if (attached && !detatched.isEmpty()) {
+            getChildren().addAll(detatched);
+            detatched.clear();
+        } else if (!attached && detatched.isEmpty()) {
+            detatched.addAll(getChildren());
+            getChildren().removeAll(detatched);
+        }
+
         optimizing = false;
     }
 
@@ -89,9 +102,10 @@ public class OptimizableContentPane extends StackPane {
         this.optimizationRule = optimizationRule;
     }
 }
+
 class OptimizationRuleImpl implements OptimizationRule {
 
-    private DoubleProperty minSceneArea = new SimpleDoubleProperty(200);
+    private DoubleProperty minSceneArea = new SimpleDoubleProperty(500);
 
     @Override
     public boolean visible(OptimizableContentPane p, Transform t) {

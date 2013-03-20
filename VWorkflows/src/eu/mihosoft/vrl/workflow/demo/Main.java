@@ -65,7 +65,7 @@ public class Main extends Application {
                 new FXConnectionSkinFactory(root));
 
 
-        workflowTest(workflow);
+        workflowTest(workflow, 5);
 
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);
@@ -80,49 +80,59 @@ public class Main extends Application {
 
     }
 
-    public void workflowTest(FlowController workflow) {
+    public void workflowTest(FlowController workflow, int depth) {
 
-        for (int i = 0; i < 10; i++) {
-            FlowNode n = workflow.newNode();
-            n.setTitle("Node " + i);
-            n.setWidth(300);
-            n.setHeight(200);
-
-            n.setX((i % 5) * (n.getWidth() + 30));
-
-            n.setY((i / 5) * (n.getHeight() + 30));
+        if (depth < 1) {
+            return;
         }
 
-        FlowNode n1 = workflow.newNode();
-        FlowNode n2 = workflow.newNode();
-
-        workflow.connect(n1, n2, "control");
-
-        FlowController subFlow = workflow.newSubFlow();
-        
-        FlowNode subFlowNode = subFlow.getModel();
-        subFlowNode.setTitle("SubFlow");
-        subFlowNode.setWidth(300);
-        subFlowNode.setHeight(200);
-
-        FlowNode prevN = null;
-        
         for (int i = 0; i < 10; i++) {
-            FlowNode n = subFlow.newNode();
-            n.setTitle("Node " + i);
-            n.setWidth(300);
-            n.setHeight(200);
 
-            n.setX((i % 5) * (n.getWidth() + 30));
+            FlowNode n;
 
-            n.setY((i / 5) * (n.getHeight() + 30));
-            
-            if (prevN !=null) {
-                subFlow.connect(n, prevN, "control");
+            if (i % 2 == 0) {
+                FlowController subFlow = workflow.newSubFlow();
+                n = subFlow.getModel();
+                workflowTest(subFlow, depth - 1);
+
+            } else {
+                n = workflow.newNode();
+
             }
-            
-            prevN = n;
+
+            n.setTitle("Node " + i);
+            n.setWidth(300);
+            n.setHeight(200);
+
+            n.setX((i % 5) * (n.getWidth() + 30));
+            n.setY((i / 5) * (n.getHeight() + 30));
+
         }
+
+//        FlowController subFlow = workflow.newSubFlow();
+//        
+//        FlowNode subFlowNode = subFlow.getModel();
+//        subFlowNode.setTitle("SubFlow");
+//        subFlowNode.setWidth(300);
+//        subFlowNode.setHeight(200);
+//
+//        FlowNode prevN = null;
+//        
+//        for (int i = 0; i < 10; i++) {
+//            FlowNode n = subFlow.newNode();
+//            n.setTitle("SubNode " + i);
+//            n.setWidth(300);
+//            n.setHeight(200);
+//
+//            n.setX((i % 5) * (n.getWidth() + 30));
+//            n.setY((i / 5) * (n.getHeight() + 30));
+//            
+//            if (prevN !=null) {
+//                subFlow.connect(n, prevN, "control");
+//            }
+//            
+//            prevN = n;
+//        }
     }
 
     public void connectionTest() {

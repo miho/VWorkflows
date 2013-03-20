@@ -19,7 +19,6 @@ public class FXFlowNodeSkinFactory implements FlowNodeSkinFactory<FXSkin>{
 
     public FXFlowNodeSkinFactory(Parent parent) {
         this.parent = parent;
-        System.out.println("parent: " + parent);
     }
     
     @Override

@@ -26,7 +26,8 @@ public class OptimizableContentPane extends StackPane {
     private Transform transform;
     private boolean optimizing = false;
     private boolean visibility = true;
-    private Collection<Node> detatched = new ArrayList<Node>();
+    private boolean attached = true;
+    private Collection<Node> detatched = new ArrayList<>();
 
     public OptimizableContentPane() {
         this.optimizationRule = new OptimizationRuleImpl();
@@ -62,6 +63,11 @@ public class OptimizableContentPane extends StackPane {
         if (!visibility) {
             return;
         }
+        
+        // TODO why does synchronized not work here!
+        if (optimizing) {
+            return;
+        }
 
         optimizing = true;
 
@@ -75,14 +81,18 @@ public class OptimizableContentPane extends StackPane {
             setVisible(visible);
         }
 
-        boolean attached = optimizationRule.attached(this, transform);
+        boolean attachedReq = optimizationRule.attached(this, transform);
 
-        if (attached && !detatched.isEmpty()) {
-            getChildren().addAll(detatched);
-            detatched.clear();
-        } else if (!attached && detatched.isEmpty()) {
-            detatched.addAll(getChildren());
-            getChildren().removeAll(detatched);
+        if (attached != attachedReq) {
+            if (attachedReq) {
+                
+                getChildren().addAll(detatched);
+                detatched.clear();
+            } else {
+                detatched.addAll(getChildren());
+                getChildren().removeAll(detatched);
+            }
+            attached = attachedReq;
         }
 
         optimizing = false;
@@ -105,7 +115,8 @@ public class OptimizableContentPane extends StackPane {
 
 class OptimizationRuleImpl implements OptimizationRule {
 
-    private DoubleProperty minSceneArea = new SimpleDoubleProperty(500);
+    private DoubleProperty minSceneArea = new SimpleDoubleProperty(2000);
+    private DoubleProperty minSceneDimension = new SimpleDoubleProperty(50);
 
     @Override
     public boolean visible(OptimizableContentPane p, Transform t) {
@@ -113,7 +124,13 @@ class OptimizationRuleImpl implements OptimizationRule {
         Bounds bounds = p.getBoundsInLocal();
         bounds = p.localToScene(bounds);
 
-        return getMinSceneArea() <= bounds.getWidth() * bounds.getHeight();
+        boolean visible = getMinSceneArea() <= bounds.getWidth() * bounds.getHeight();
+        
+        if (visible) {
+            visible = Math.min(bounds.getWidth(), bounds.getHeight()) > getMinSceneDimension();
+        }
+        
+        return visible;
     }
 
     @Override
@@ -131,5 +148,17 @@ class OptimizationRuleImpl implements OptimizationRule {
 
     public double getMinSceneArea() {
         return minSceneArea.get();
+    }
+    
+    public DoubleProperty minSceneDimensionProperty() {
+        return minSceneDimension;
+    }
+
+    public void setMinSceneDimension(double s) {
+        minSceneDimension.set(s);
+    }
+
+    public double getMinSceneDimension() {
+        return minSceneDimension.get();
     }
 }

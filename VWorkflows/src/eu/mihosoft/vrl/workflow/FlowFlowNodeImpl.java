@@ -39,6 +39,11 @@ public class FlowFlowNodeImpl implements FlowFlowNode {
     public FlowNode remove(FlowNode n) {
         return flow.remove(n);
     }
+    
+    @Override
+    public void clear() {
+        flow.clear();
+    }
 
     @Override
     public ObservableList<FlowNode> getNodes() {

@@ -313,9 +313,4 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         NodeUtil.removeFromParent(receiverConnector);
     }
 
-    @Override
-    public void removeSkinOnly() {
-        NodeUtil.removeFromParent(connectionPath);
-        NodeUtil.removeFromParent(receiverConnector);
-    }
 }

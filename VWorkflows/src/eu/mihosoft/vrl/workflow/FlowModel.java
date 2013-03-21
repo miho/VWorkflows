@@ -20,6 +20,8 @@ public interface FlowModel extends Model{
 
     public FlowNode remove(FlowNode n);
     
+    public void clear();
+    
     public ObservableList<FlowNode> getNodes();
     
     public FlowNode getSender(Connection c);

@@ -366,10 +366,4 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         connection.getConnections().remove(connection);
     }
 
-    @Override
-    public void removeSkinOnly() {
-        System.out.println("remove: " + getModel().toString());
-        NodeUtil.removeFromParent(connectionPath);
-        NodeUtil.removeFromParent(receiverConnector);
-    }
 }

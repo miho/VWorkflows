@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,9 +77,23 @@ public class FlowModelImpl implements FlowModel {
     public ObservableList<FlowNode> getNodes() {
         return observableNodes;
     }
+    
+    @Override
+    public void clear() {
+        List<FlowNode> delList = new ArrayList<>(observableNodes);
+        
+        for (FlowNode n : delList) {
+            remove(n);
+        }
+    }
 
     @Override
     public FlowNode remove(FlowNode n) {
+        
+        if (n instanceof FlowModel) {
+            ((FlowModel)n).clear();
+        }
+        
         FlowNode result = nodes.remove(n.getId());
         observableNodes.remove(n);
 

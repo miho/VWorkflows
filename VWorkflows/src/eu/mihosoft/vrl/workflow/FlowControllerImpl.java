@@ -55,24 +55,25 @@ class FlowControllerImpl implements FlowController {
                         }
                     } else if (change.wasUpdated()) {
                         //update item
-                    } else {
-                        if (change.wasRemoved()) {
-                            // removed
-                            for (FlowNode n : change.getRemoved()) {
-                                if (nodeSkins.containsKey(n.getId())) {
-                                    removeNodeSkin(n);
-                                }
-
+                    } else if (change.wasRemoved()) {
+                        // removed
+                        for (FlowNode n : change.getRemoved()) {
+                            if (nodeSkins.containsKey(n.getId())) {
+                                removeNodeSkin(n);
+                                 System.out.println("remove node: " + n.getId());
                             }
-                        } else if (change.wasAdded()) {
-                            // added
-                            for (FlowNode n : change.getAddedSubList()) {
-                                if (!nodeSkins.containsKey(n.getId())) {
-                                    createNodeSkin(n);
-                                }
+
+                        }
+                    } else if (change.wasAdded()) {
+                        // added
+                        for (FlowNode n : change.getAddedSubList()) {
+                            if (!nodeSkins.containsKey(n.getId())) {
+                                createNodeSkin(n);
+                                 System.out.println("add node: " + n.getId());
                             }
                         }
                     }
+
                 } // end while change.next()
             }
         };
@@ -87,24 +88,23 @@ class FlowControllerImpl implements FlowController {
                         }
                     } else if (change.wasUpdated()) {
                         //update item
-                    } else {
-                        if (change.wasRemoved()) {
-                            // removed
-                            for (Connection n : change.getRemoved()) {
-                                if (connectionSkins.containsKey(n.getId())) {
-                                    removeConnectionSkin(n);
-                                }
-                            }
-                        } else if (change.wasAdded()) {
-                            // added
-                            for (Connection n : change.getAddedSubList()) {
-                                // TODO only control type possible, shall connection know its type?
-                                if (!connectionSkins.containsKey(n.getId())) {
-                                    createConnectionSkin(n, "control");
-                                }
+                    } else if (change.wasRemoved()) {
+                        // removed
+                        for (Connection n : change.getRemoved()) {
+                            removeConnectionSkin(n);
+                            System.out.println("remove skin: " + n);
+                        }
+                    } else if (change.wasAdded()) {
+                        // added
+                        for (Connection n : change.getAddedSubList()) {
+                            // TODO only control type possible, shall connection know its type?
+                            if (!connectionSkins.containsKey(n.getId())) {
+                                createConnectionSkin(n, "control");
+                                 System.out.println("add skin: " + n);
                             }
                         }
                     }
+
                 }
             }
         };
@@ -130,13 +130,6 @@ class FlowControllerImpl implements FlowController {
                     if (nodesListener != null) {
                         t1.getNodes().addListener(nodesListener);
                     }
-
-                    if (connectionsListener != null) {
-                        for (Connections conn : t1.getAllConnections().values()) {
-                            conn.getConnections().addListener(connectionsListener);
-                        }
-                    }
-
 
                     t1.getAllConnections().addListener(new MapChangeListener<String, Connections>() {
                         @Override
@@ -250,16 +243,15 @@ class FlowControllerImpl implements FlowController {
         FlowNodeSkin skin = nodeSkins.remove(n.getId());
 
         if (skin != null) {
-            skin.removeSkinOnly();
+            skin.remove();
         }
-       
     }
-    
+
     private void removeConnectionSkin(Connection c) {
         ConnectionSkin skin = connectionSkins.remove(connectionId(c));
 
         if (skin != null) {
-            skin.removeSkinOnly();
+            skin.remove();
         }
     }
 

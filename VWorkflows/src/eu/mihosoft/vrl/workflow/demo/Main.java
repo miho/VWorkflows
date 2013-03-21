@@ -67,7 +67,7 @@ public class Main extends Application {
         FlowController workflow = new DefaultWorkflow();
 
 
-        workflowTest(workflow, 5);
+        workflowTest(workflow, 6);
 
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);
@@ -82,6 +82,8 @@ public class Main extends Application {
 
         workflow.setNodeSkinFactory(new FXFlowNodeSkinFactory(root));
         workflow.setConnectionSkinFactory(new FXConnectionSkinFactory(root));
+        
+        workflow.getModel().setVisible(true);
 
     }
 

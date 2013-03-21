@@ -4,14 +4,10 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -36,6 +32,7 @@ class FlowControllerImpl implements FlowController {
     private Map<String, FlowNodeSkin> nodeSkins = new HashMap<>();
     private Map<String, ConnectionSkin> connectionSkins = new HashMap<>();
     private ObservableMap<String, FlowController> subControllers = FXCollections.observableHashMap();
+    private ChangeListener<Boolean> visibilityListener;
 
     public FlowControllerImpl(FlowNodeSkinFactory nodeSkinFactory, ConnectionSkinFactory connectionSkinFactory) {
         this.nodeSkinFactory = nodeSkinFactory;
@@ -115,9 +112,28 @@ class FlowControllerImpl implements FlowController {
             }
         };
 
+
+        visibilityListener = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+                
+                System.out.println("visible: " + t1 + " : " + getModel().isVisible());
+                
+                if (t1) {
+                    setNodeSkinFactory(nodeSkinFactory);
+                    setConnectionSkinFactory(connectionSkinFactory);
+                } else {
+                    removeUI();
+                }
+            }
+        };
+
         modelProperty.addListener(new ChangeListener<FlowModel>() {
             @Override
             public void changed(ObservableValue<? extends FlowModel> ov, FlowModel t, FlowModel t1) {
+
+                removeUI();
+
                 if (t != null) {
 
                     if (nodesListener != null) {
@@ -128,6 +144,10 @@ class FlowControllerImpl implements FlowController {
                         for (Connections conn : t.getAllConnections().values()) {
                             conn.getConnections().removeListener(connectionsListener);
                         }
+                    }
+
+                    if (visibilityListener != null) {
+                        t.visibleProperty().removeListener(visibilityListener);
                     }
                 }
 
@@ -149,6 +169,8 @@ class FlowControllerImpl implements FlowController {
                             }
                         }
                     });
+
+                    getModel().visibleProperty().addListener(visibilityListener);
                 }
             }
         });
@@ -233,6 +255,10 @@ class FlowControllerImpl implements FlowController {
             return null;
         }
 
+        if (getModel() != null && !getModel().isVisible()) {
+            return null;
+        }
+
         FlowNodeSkin skin = nodeSkinFactory.createSkin(n);
 
         nodeSkins.put(n.getId(), skin);
@@ -247,6 +273,9 @@ class FlowControllerImpl implements FlowController {
             return null;
         }
 
+        if (getModel() != null && !getModel().isVisible()) {
+            return null;
+        }
 
         ConnectionSkin skin = connectionSkinFactory.createSkin(c, this, type);
 
@@ -282,25 +311,54 @@ class FlowControllerImpl implements FlowController {
         }
     }
 
+    private void removeUI() {
+
+        List<FlowNodeSkin> nodeDelList = new ArrayList<>(nodeSkins.values());
+
+        for (FlowNodeSkin<FlowNode> nS : nodeDelList) {
+            nS.remove();
+        }
+        nodeSkins.clear();
+
+        List<ConnectionSkin> connectionDelList = 
+                new ArrayList<>(connectionSkins.values());
+
+        for (ConnectionSkin<Connection> cS : connectionDelList) {
+            cS.remove();
+        }
+
+        connectionSkins.clear();
+    }
+
     /**
      * @param nodeSkinFactory the nodeSkinFactory to set
      */
     @Override
     public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
+
         this.nodeSkinFactory = nodeSkinFactory;
 
+        if (nodeSkinFactory == null) {
+            removeUI();
 
-        for (FlowNode n : getNodes()) {
-            createNodeSkin(n);
+        } else {
+
+            for (FlowNode n : getNodes()) {
+                createNodeSkin(n);
+            }
         }
 
+        if (getModel() != null && !getModel().isVisible()) {
+            return;
+        }
 
         for (FlowController fC : subControllers.values()) {
 
             FlowNodeSkinFactory childNodeSkinFactory = null;
 
             if (nodeSkinFactory != null) {
-                childNodeSkinFactory = nodeSkinFactory.createChild(nodeSkins.get(fC.getModel().getId()));
+                childNodeSkinFactory = nodeSkinFactory.createChild(
+                        nodeSkins.get(fC.getModel().getId()));
             }
 
             fC.setNodeSkinFactory(childNodeSkinFactory);
@@ -312,22 +370,32 @@ class FlowControllerImpl implements FlowController {
      */
     @Override
     public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
+
         this.connectionSkinFactory = connectionSkinFactory;
 
-        for (Connections cns : getAllConnections().values()) {
-            for (Connection c : cns.getConnections()) {
+        if (connectionSkinFactory == null) {
+            removeUI();
+        } else {
+            for (Connections cns : getAllConnections().values()) {
+                for (Connection c : cns.getConnections()) {
 
-                // TODO allow other connection types
-                createConnectionSkin(c, "control");
+                    // TODO allow other connection types
+                    createConnectionSkin(c, "control");
+                }
             }
         }
-        
-         for (FlowController fC : subControllers.values()) {
+
+        if (getModel() != null && !getModel().isVisible()) {
+            return;
+        }
+
+        for (FlowController fC : subControllers.values()) {
 
             ConnectionSkinFactory childConnectionSkinFactory = null;
 
             if (connectionSkinFactory != null) {
-                childConnectionSkinFactory = connectionSkinFactory.createChild(nodeSkins.get(fC.getModel().getId()));
+                childConnectionSkinFactory = connectionSkinFactory.
+                        createChild(nodeSkins.get(fC.getModel().getId()));
             }
 
             fC.setConnectionSkinFactory(childConnectionSkinFactory);
@@ -368,7 +436,8 @@ class FlowControllerImpl implements FlowController {
         }
 
         if (connectionSkinFactory != null) {
-            childConnectionSkinFactory = connectionSkinFactory.createChild(skin);
+            childConnectionSkinFactory = 
+                    connectionSkinFactory.createChild(skin);
         }
 
         FlowController controller = new FlowControllerImpl(
@@ -378,7 +447,9 @@ class FlowControllerImpl implements FlowController {
         controller.setModel(flowNode);
 
         for (String connectionType : getAllConnections().keySet()) {
-            controller.addConnections(VConnections.newConnections(), connectionType);
+            controller.addConnections(
+                    VConnections.newConnections(),
+                    connectionType);
         }
 
         subControllers.put(flowNode.getId(), controller);
@@ -400,7 +471,8 @@ class FlowControllerImpl implements FlowController {
         }
 
         if (connectionSkinFactory != null) {
-            childConnectionSkinFactory = connectionSkinFactory.createChild(skin);
+            childConnectionSkinFactory = 
+                    connectionSkinFactory.createChild(skin);
         }
 
         FlowController controller = new FlowControllerImpl(
@@ -410,7 +482,8 @@ class FlowControllerImpl implements FlowController {
         controller.setModel(flowNode);
 
         for (String connectionType : getAllConnections().keySet()) {
-            controller.addConnections(VConnections.newConnections(), connectionType);
+            controller.addConnections(
+                    VConnections.newConnections(), connectionType);
         }
 
         subControllers.put(flowNode.getId(), controller);

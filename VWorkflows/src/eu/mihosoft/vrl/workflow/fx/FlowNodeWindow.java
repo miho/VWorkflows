@@ -4,12 +4,19 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.FlowModel;
+import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
+import jfxtras.labs.scene.control.window.WindowIcon;
 
 /**
  *
@@ -29,17 +36,18 @@ public class FlowNodeWindow extends Window {
 
         setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 
-        
+
         OptimizableContentPane parentContent = new OptimizableContentPane();
-        
+
         content = new ScalableContentPane();
-        
+
         parentContent.getChildren().add(content);
 
         Pane root = new Pane();
         content.setContentPane(root);
 
         super.setContentPane(parentContent);
+        addCollapseIcon(skin);
     }
 
     public Pane getWorkflowContentPane() {
@@ -51,5 +59,47 @@ public class FlowNodeWindow extends Window {
      */
     public final ObjectProperty<FXFlowNodeSkin> nodeSkinProperty() {
         return nodeSkinProperty;
+    }
+
+    private void addCollapseIcon(FXFlowNodeSkin skin) {
+
+        if (skin == null) {
+            return;
+        }
+
+        if (!(skin.getModel() instanceof FlowModel)) {
+            return;
+        }
+
+        final WindowIcon collapseIcon = new WindowIcon();
+
+        collapseIcon.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                FXFlowNodeSkin skin = nodeSkinProperty.get();
+                
+                if (skin != null) {
+                    FlowModel model = (FlowModel) skin.getModel();
+                    model.setVisible(!model.isVisible());
+                }
+            }
+        });
+
+        getRightIcons().add(collapseIcon);
+
+        if (skin.modelProperty() != null) {
+            skin.modelProperty().addListener(new ChangeListener<FlowNode>() {
+                @Override
+                public void changed(ObservableValue<? extends FlowNode> ov,
+                        FlowNode t, FlowNode t1) {
+                    if (t1 instanceof FlowModel) {
+                        getRightIcons().add(collapseIcon);
+                    } else {
+                        getRightIcons().remove(collapseIcon);
+                    }
+                }
+            });
+        }
+
     }
 }

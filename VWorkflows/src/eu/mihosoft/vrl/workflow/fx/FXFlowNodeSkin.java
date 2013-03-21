@@ -46,6 +46,7 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> nodeHeightListener;
     private Node output;
     private FXNewConnectionSkin newConnectionSkin;
+    private boolean removeSkinOnly = false;
 
     public FXFlowNodeSkin(Parent parent, FlowNode model) {
 
@@ -259,11 +260,10 @@ public class FXFlowNodeSkin
 //    }
     @Override
     public void remove() {
+        removeSkinOnly = true;
         removeOutputConnector();
-        node.close();
-//        getModel().getFlow().remove(getModel());
+        NodeUtil.removeFromParent(node);
     }
-
 
     @Override
     public final void setModel(FlowNode model) {
@@ -377,7 +377,9 @@ public class FXFlowNodeSkin
         node.onCloseActionProperty().set(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                modelProperty().get().getFlow().remove(modelProperty().get());
+                if (!removeSkinOnly) {
+                    modelProperty().get().getFlow().remove(modelProperty().get());
+                }
             }
         });
     }

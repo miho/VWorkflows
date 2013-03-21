@@ -13,6 +13,7 @@ import javafx.beans.property.ObjectProperty;
 public interface Skin<T extends Model> {
     public void add();
     public void remove();
+    public void removeSkinOnly();
     public void setModel(T model);
     public T getModel();
     public ObjectProperty<T> modelProperty();

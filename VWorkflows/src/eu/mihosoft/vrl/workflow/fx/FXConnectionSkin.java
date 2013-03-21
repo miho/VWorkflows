@@ -75,7 +75,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
         connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         connectionPath.setStrokeWidth(5);
-        
+
         receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
         receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         receiverConnector.setStrokeWidth(3);
@@ -189,8 +189,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         MouseControlUtil.makeDraggable(receiverConnector, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+
+                Parent root = getParent().getScene().getRoot();
+
+                // TODO why can root be null?
+                if (root == null) {
+                    return;
+                }
+
                 final Node n = NodeUtil.getNode(
-                        getParent().getScene().getRoot(),
+                        root,
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (lastNode != null) {
@@ -307,8 +315,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     public Path getNode() {
         return connectionPath;
     }
-    
-     @Override
+
+    @Override
     public Parent getContentNode() {
         return getParent();
     }
@@ -354,8 +362,14 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     @Override
     public void remove() {
         NodeUtil.removeFromParent(connectionPath);
-//        VFXNodeUtils.removeFromParent(startConnector);
         NodeUtil.removeFromParent(receiverConnector);
         connection.getConnections().remove(connection);
+    }
+
+    @Override
+    public void removeSkinOnly() {
+        System.out.println("remove: " + getModel().toString());
+        NodeUtil.removeFromParent(connectionPath);
+        NodeUtil.removeFromParent(receiverConnector);
     }
 }

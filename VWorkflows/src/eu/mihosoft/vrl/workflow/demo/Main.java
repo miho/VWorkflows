@@ -65,7 +65,7 @@ public class Main extends Application {
                 new FXConnectionSkinFactory(root));
 
 
-        workflowTest(workflow, 5);
+        workflowTest(workflow, 3);
 
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);

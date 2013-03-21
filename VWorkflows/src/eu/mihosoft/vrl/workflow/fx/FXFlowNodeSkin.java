@@ -116,7 +116,7 @@ public class FXFlowNodeSkin
         };
 
         Circle circle = new Circle(20);
-        
+
         circle.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
         circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         circle.setStrokeWidth(3);
@@ -212,7 +212,6 @@ public class FXFlowNodeSkin
 //        src.addEventFilter(MouseEvent.MOUSE_PRESSED, interceptHandler);
 //        src.addEventFilter(MouseEvent.MOUSE_DRAGGED, interceptHandler);
 //    }
-
 //    private MouseEvent copyEvent(MouseEvent e) {
 //        MouseEvent copy = MouseEvent.impl_mouseEvent(
 //                e.getSceneX(), e.getSceneY(),
@@ -228,7 +227,6 @@ public class FXFlowNodeSkin
 //                (EventType<MouseEvent>) e.getEventType());
 //        return copy;
 //    }
-
     private void removeOutputConnector() {
         if (output != null) {
             NodeUtil.removeFromParent(output);
@@ -239,7 +237,7 @@ public class FXFlowNodeSkin
     public Window getNode() {
         return node;
     }
-    
+
     @Override
     public Parent getContentNode() {
         return node.getWorkflowContentPane();
@@ -264,6 +262,12 @@ public class FXFlowNodeSkin
         removeOutputConnector();
         node.close();
         getModel().getFlow().remove(getModel());
+    }
+
+    @Override
+    public void removeSkinOnly() {
+        removeOutputConnector();
+        node.close();
     }
 
     @Override

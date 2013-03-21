@@ -59,16 +59,21 @@ class FlowControllerImpl implements FlowController {
                         if (change.wasRemoved()) {
                             // removed
                             for (FlowNode n : change.getRemoved()) {
-                                removeNodeSkin(n);
+                                if (nodeSkins.containsKey(n.getId())) {
+                                    removeNodeSkin(n);
+                                }
+
                             }
                         } else if (change.wasAdded()) {
                             // added
                             for (FlowNode n : change.getAddedSubList()) {
-                                createNodeSkin(n);
+                                if (!nodeSkins.containsKey(n.getId())) {
+                                    createNodeSkin(n);
+                                }
                             }
                         }
                     }
-                }
+                } // end while change.next()
             }
         };
 
@@ -86,13 +91,17 @@ class FlowControllerImpl implements FlowController {
                         if (change.wasRemoved()) {
                             // removed
                             for (Connection n : change.getRemoved()) {
-                                removeConnectionSkin(n);
+                                if (connectionSkins.containsKey(n.getId())) {
+                                    removeConnectionSkin(n);
+                                }
                             }
                         } else if (change.wasAdded()) {
                             // added
                             for (Connection n : change.getAddedSubList()) {
                                 // TODO only control type possible, shall connection know its type?
-                                createConnectionSkin(n, "control");
+                                if (!connectionSkins.containsKey(n.getId())) {
+                                    createConnectionSkin(n, "control");
+                                }
                             }
                         }
                     }
@@ -241,15 +250,16 @@ class FlowControllerImpl implements FlowController {
         FlowNodeSkin skin = nodeSkins.remove(n.getId());
 
         if (skin != null) {
-            skin.remove();
+            skin.removeSkinOnly();
         }
+       
     }
-
+    
     private void removeConnectionSkin(Connection c) {
         ConnectionSkin skin = connectionSkins.remove(connectionId(c));
 
         if (skin != null) {
-            skin.remove();
+            skin.removeSkinOnly();
         }
     }
 
@@ -259,7 +269,7 @@ class FlowControllerImpl implements FlowController {
     @Override
     public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
         this.nodeSkinFactory = nodeSkinFactory;
-        
+
         // TODO build ui
     }
 
@@ -269,7 +279,7 @@ class FlowControllerImpl implements FlowController {
     @Override
     public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
         this.connectionSkinFactory = connectionSkinFactory;
-        
+
         // TODO build ui
     }
 

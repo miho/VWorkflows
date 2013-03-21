@@ -12,7 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +33,7 @@ class ConnectionsImpl implements Connections {
             FXCollections.observableArrayList();
     private VisualizationRequest vReq;
 //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
+
 
     private static String connectionId(String id, String s, String r) {
         return "id=" + id + ";[" + s + "]->[" + r + "]";
@@ -290,26 +293,26 @@ class ConnectionsImpl implements Connections {
     @Override
     public boolean isInputConnected(String id) {
         Collection<Connection> connectionsWith = getAllWith(id);
-        
+
         for (Connection connection : connectionsWith) {
             if (connection.getReceiverId().equals(id)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
     @Override
     public boolean isOutputConnected(String id) {
         Collection<Connection> connectionsWith = getAllWith(id);
-        
+
         for (Connection connection : connectionsWith) {
             if (connection.getSenderId().equals(id)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 

@@ -4,9 +4,11 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import com.sun.javafx.collections.UnmodifiableObservableMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -17,8 +19,23 @@ import javafx.collections.ObservableMap;
  */
 public class FlowFlowNodeImpl implements FlowFlowNode {
 
-    private FlowNode node;
-    private FlowModel flow;
+    private final FlowNode node;
+    private final FlowModel flow;
+
+    @Override
+    public BooleanProperty visibleProperty() {
+        return flow.visibleProperty();
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        flow.setVisible(b);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return flow.isVisible();
+    }
 
     public FlowFlowNodeImpl(FlowModel parentFlow) {
         node = new FlowNodeBase(parentFlow);
@@ -39,7 +56,7 @@ public class FlowFlowNodeImpl implements FlowFlowNode {
     public FlowNode remove(FlowNode n) {
         return flow.remove(n);
     }
-    
+
     @Override
     public void clear() {
         flow.clear();
@@ -71,7 +88,7 @@ public class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public ObservableMap<String, Connections> getAllConnections() {
+    public UnmodifiableObservableMap<String, Connections> getAllConnections() {
         return flow.getAllConnections();
     }
 

@@ -4,7 +4,9 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
@@ -18,6 +20,7 @@ class ConnectionBase implements Connection {
     private String id;
     private VisualizationRequest vReq;
     private Connections connections;
+
 
 //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
     public ConnectionBase() {
@@ -38,12 +41,12 @@ class ConnectionBase implements Connection {
     @Override
     public void setSenderId(String id) {
         this.senderId = id;
-        
+
         updateConnection();
     }
-    
+
     private void updateConnection() {
-        if (connections.get(getId(), getSenderId(), getReceiverId())!=null) {
+        if (connections.get(getId(), getSenderId(), getReceiverId()) != null) {
             connections.remove(this);
             connections.add(this);
         }
@@ -57,7 +60,7 @@ class ConnectionBase implements Connection {
     @Override
     public void setReceiverId(String id) {
         this.receiverId = id;
-        
+
         updateConnection();
     }
 
@@ -74,7 +77,7 @@ class ConnectionBase implements Connection {
     @Override
     public void setId(String id) {
         this.id = id;
-        
+
         updateConnection();
     }
 

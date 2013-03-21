@@ -27,7 +27,6 @@ class FlowNodeBase implements FlowNode {
 //            FXCollections.observableArrayList();
 //    private ObservableList<Connector<FlowNode>> outputs =
 //            FXCollections.observableArrayList();
-    
     private ObservableList<FlowNode> children =
             FXCollections.observableArrayList();
     private StringProperty idProperty = new SimpleStringProperty();
@@ -38,27 +37,23 @@ class FlowNodeBase implements FlowNode {
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
-    
     private VisualizationRequest vReq;
-    
     private FlowModel flow;
-    
-    private BooleanProperty outputProperty = new SimpleBooleanProperty(true); 
-    private BooleanProperty inputProperty = new SimpleBooleanProperty(); 
-    
-    private static int counter = 0;
-    
+    private BooleanProperty outputProperty = new SimpleBooleanProperty(true);
+    private BooleanProperty inputProperty = new SimpleBooleanProperty();
+
+
+//    private static int counter = 0;
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
-
     public FlowNodeBase(FlowModel flow) {
-        
-        counter++;
-        
-        System.out.println("COUNTER: " + counter);
-        
+
+//        counter++;
+//        
+//        System.out.println("COUNTER: " + counter);
+
         this.flow = flow;
-        
+
         setValueObject(new ValueObject() {
             @Override
             public FlowNode getParent() {
@@ -267,7 +262,7 @@ class FlowNodeBase implements FlowNode {
     public ObjectProperty<ValueObject> valueObjectProperty() {
         return valueObjectProperty;
     }
-    
+
     @Override
     public VisualizationRequest getVisualizationRequest() {
         return vReq;
@@ -295,7 +290,6 @@ class FlowNodeBase implements FlowNode {
 //    public ObjectProperty<?> skinProperty() {
 //        return skinProperty;
 //    }
-
     /**
      * @return the flow
      */
@@ -319,22 +313,22 @@ class FlowNodeBase implements FlowNode {
     public BooleanProperty inputProperty() {
         return inputProperty;
     }
-    
+
     @Override
     public void setOutput(boolean state) {
         outputProperty.set(state);
     }
-    
+
     @Override
     public void setInput(boolean state) {
         inputProperty.set(state);
     }
-    
+
     @Override
     public boolean isOutput() {
         return outputProperty.get();
     }
-    
+
     @Override
     public boolean isInput() {
         return inputProperty.get();

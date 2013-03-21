@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import com.sun.javafx.collections.UnmodifiableObservableMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -24,12 +27,32 @@ import javafx.collections.ObservableMap;
  */
 public class FlowModelImpl implements FlowModel {
 
-    private ObservableMap<String, Connections> connections =
+    private final ObservableMap<String, Connections> connections =
             FXCollections.observableHashMap();
-    private ObservableList<FlowNode> observableNodes =
+    private final UnmodifiableObservableMap<String, Connections> readOnlyObservableConnections =
+            (UnmodifiableObservableMap<String, Connections>) FXCollections.unmodifiableObservableMap(connections);
+    private final ObservableList<FlowNode> observableNodes =
             FXCollections.observableArrayList();
-    private Map<String, FlowNode> nodes = new HashMap<>();
+    private final ObservableList<FlowNode> readOnlyObservableNodes =
+            FXCollections.unmodifiableObservableList(observableNodes);
+    private final Map<String, FlowNode> nodes = new HashMap<>();
     private Class<? extends FlowNode> flowNodeClass = FlowNodeBase.class;
+    private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
+
+    @Override
+    public BooleanProperty visibleProperty() {
+        return visibleProperty;
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        visibleProperty.set(b);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visibleProperty.get();
+    }
 
     // TODO duplicated code
     private static String connectionId(String id, String s, String r) {
@@ -61,8 +84,8 @@ public class FlowModelImpl implements FlowModel {
 //        nodes.put(s.getId(), s);
 //        nodes.put(r.getId(), r);
 
-        observableNodes.add(s);
-        observableNodes.add(r);
+//        observableNodes.add(s);
+//        observableNodes.add(r);
 
         Connection connection = getConnections(type).add(s.getId(), r.getId());
 
@@ -75,13 +98,13 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public ObservableList<FlowNode> getNodes() {
-        return observableNodes;
+        return readOnlyObservableNodes;
     }
-    
+
     @Override
     public void clear() {
         List<FlowNode> delList = new ArrayList<>(observableNodes);
-        
+
         for (FlowNode n : delList) {
             remove(n);
         }
@@ -89,11 +112,11 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public FlowNode remove(FlowNode n) {
-        
-        if (n instanceof FlowModel) {
-            ((FlowModel)n).clear();
-        }
-        
+
+//        if (n instanceof FlowModel) {
+//            ((FlowModel)n).clear();
+//        }
+
         FlowNode result = nodes.remove(n.getId());
         observableNodes.remove(n);
 
@@ -108,17 +131,17 @@ public class FlowModelImpl implements FlowModel {
                 cns.remove(c);
 //                removeConnectionSkin(c);
             }
-
         }
 
         return result;
     }
 
     @Override
-    public ObservableMap<String, Connections> getAllConnections() {
-        return connections;
+    public UnmodifiableObservableMap<String, Connections> getAllConnections() {
+        return readOnlyObservableConnections;
     }
 
+    //TODO unmodifiable connection object?
     @Override
     public Connections getConnections(String type) {
         return connections.get(type);
@@ -257,56 +280,6 @@ public class FlowModelImpl implements FlowModel {
             }
         });
     }
-//
-//    private FlowNodeSkin createNodeSkin(FlowNode n) {
-//        FlowNodeSkin skin = nodeSkinFactory.createSkin(n);
-//
-//        nodeSkins.put(n.getId(), skin);
-//        skin.add();
-//
-//        return skin;
-//    }
-//
-//    private ConnectionSkin createConnectionSkin(Connection c, String type) {
-//        ConnectionSkin skin = connectionSkinFactory.createSkin(c, this, type);
-//
-//        connectionSkins.put(connectionId(c), skin);
-//        skin.add();
-//
-//        return skin;
-//    }
-//
-//    private void removeNodeSkin(FlowNode n) {
-//        FlowNodeSkin skin = nodeSkins.remove(n.getId());
-//
-//        if (skin != null) {
-//            skin.remove();
-//        }
-//    }
-//
-//    private void removeConnectionSkin(Connection c) {
-//        ConnectionSkin skin = connectionSkins.remove(connectionId(c));
-//
-//        if (skin != null) {
-//            skin.remove();
-//        }
-//    }
-//
-//    /**
-//     * @param nodeSkinFactory the nodeSkinFactory to set
-//     */
-//    @Override
-//    public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
-//        this.nodeSkinFactory = nodeSkinFactory;
-//    }
-//
-//    /**
-//     * @param connectionSkinFactory the connectionSkinFactory to set
-//     */
-//    @Override
-//    public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
-//        this.connectionSkinFactory = connectionSkinFactory;
-//    }
 
     @Override
     public void addConnections(Connections connections, String flowType) {

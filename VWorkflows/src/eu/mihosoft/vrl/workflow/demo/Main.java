@@ -63,8 +63,8 @@ public class Main extends Application {
 //        FlowController workflow = new DefaultWorkflow(
 //                new FXFlowNodeSkinFactory(root),
 //                new FXConnectionSkinFactory(root));
-        
-         FlowController workflow = new DefaultWorkflow();
+
+        FlowController workflow = new DefaultWorkflow();
 
 
         workflowTest(workflow, 5);
@@ -80,6 +80,9 @@ public class Main extends Application {
         MouseControlUtil.
                 addSelectionRectangleGesture(root, rect);
 
+        workflow.setNodeSkinFactory(new FXFlowNodeSkinFactory(root));
+        workflow.setConnectionSkinFactory(new FXConnectionSkinFactory(root));
+
     }
 
     public void workflowTest(FlowController workflow, int depth) {
@@ -88,7 +91,9 @@ public class Main extends Application {
             return;
         }
 
-        for (int i = 0; i < 12; i++) {
+        FlowNode prevNode = null;
+
+        for (int i = 0; i < 11; i++) {
 
             FlowNode n;
 
@@ -96,6 +101,8 @@ public class Main extends Application {
                 FlowController subFlow = workflow.newSubFlow();
                 n = subFlow.getModel();
                 workflowTest(subFlow, depth - 1);
+
+
 
             } else {
                 n = workflow.newNode();
@@ -109,32 +116,13 @@ public class Main extends Application {
             n.setX((i % 5) * (n.getWidth() + 30));
             n.setY((i / 5) * (n.getHeight() + 30));
 
+            if (prevNode != null) {
+                workflow.connect(prevNode, n, "control");      
+            }
+            
+            prevNode = n;
         }
 
-//        FlowController subFlow = workflow.newSubFlow();
-//        
-//        FlowNode subFlowNode = subFlow.getModel();
-//        subFlowNode.setTitle("SubFlow");
-//        subFlowNode.setWidth(300);
-//        subFlowNode.setHeight(200);
-//
-//        FlowNode prevN = null;
-//        
-//        for (int i = 0; i < 10; i++) {
-//            FlowNode n = subFlow.newNode();
-//            n.setTitle("SubNode " + i);
-//            n.setWidth(300);
-//            n.setHeight(200);
-//
-//            n.setX((i % 5) * (n.getWidth() + 30));
-//            n.setY((i / 5) * (n.getHeight() + 30));
-//            
-//            if (prevN !=null) {
-//                subFlow.connect(n, prevN, "control");
-//            }
-//            
-//            prevN = n;
-//        }
     }
 
     public void connectionTest() {

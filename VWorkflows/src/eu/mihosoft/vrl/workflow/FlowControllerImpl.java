@@ -222,6 +222,11 @@ class FlowControllerImpl implements FlowController {
     }
 
     private FlowNodeSkin createNodeSkin(FlowNode n) {
+        
+        if (nodeSkinFactory == null) {
+            return null;
+        }
+        
         FlowNodeSkin skin = nodeSkinFactory.createSkin(n);
 
         nodeSkins.put(n.getId(), skin);
@@ -231,6 +236,12 @@ class FlowControllerImpl implements FlowController {
     }
 
     private ConnectionSkin createConnectionSkin(Connection c, String type) {
+        
+        if (connectionSkinFactory == null) {
+            return null;
+        }
+        
+        
         ConnectionSkin skin = connectionSkinFactory.createSkin(c, this, type);
 
         connectionSkins.put(connectionId(c), skin);
@@ -240,6 +251,11 @@ class FlowControllerImpl implements FlowController {
     }
 
     private void removeNodeSkin(FlowNode n) {
+        
+        if (nodeSkinFactory == null) {
+            return;
+        }
+        
         FlowNodeSkin skin = nodeSkins.remove(n.getId());
 
         if (skin != null) {
@@ -248,6 +264,11 @@ class FlowControllerImpl implements FlowController {
     }
 
     private void removeConnectionSkin(Connection c) {
+        
+        if (connectionSkinFactory == null) {
+            return;
+        }
+        
         ConnectionSkin skin = connectionSkins.remove(connectionId(c));
 
         if (skin != null) {
@@ -301,9 +322,20 @@ class FlowControllerImpl implements FlowController {
 
         FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
 
+       FlowNodeSkinFactory childNodeSkinFactory = null;
+        ConnectionSkinFactory childConnectionSkinFactory = null;
+        
+        if (nodeSkinFactory!=null) {
+            childNodeSkinFactory = nodeSkinFactory.createChild(skin);
+        }
+        
+        if (connectionSkinFactory!=null) {
+            childConnectionSkinFactory = connectionSkinFactory.createChild(skin);
+        }
+
         FlowController controller = new FlowControllerImpl(
-                nodeSkinFactory.createChild(skin),
-                connectionSkinFactory.createChild(skin));
+                childNodeSkinFactory,
+                childConnectionSkinFactory);
 
         controller.setModel(flowNode);
 
@@ -319,10 +351,21 @@ class FlowControllerImpl implements FlowController {
         FlowFlowNode flowNode = getModel().newFlowNode();
 
         FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
+        
+        FlowNodeSkinFactory childNodeSkinFactory = null;
+        ConnectionSkinFactory childConnectionSkinFactory = null;
+        
+        if (nodeSkinFactory!=null) {
+            childNodeSkinFactory = nodeSkinFactory.createChild(skin);
+        }
+        
+        if (connectionSkinFactory!=null) {
+            childConnectionSkinFactory = connectionSkinFactory.createChild(skin);
+        }
 
         FlowController controller = new FlowControllerImpl(
-                nodeSkinFactory.createChild(skin),
-                connectionSkinFactory.createChild(skin));
+                childNodeSkinFactory,
+                childConnectionSkinFactory);
 
         controller.setModel(flowNode);
 

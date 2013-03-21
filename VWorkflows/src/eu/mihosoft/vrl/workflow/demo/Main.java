@@ -60,9 +60,11 @@ public class Main extends Application {
 
         Scene scene = new Scene(canvas, 800, 800);
 
-        FlowController workflow = new DefaultWorkflow(
-                new FXFlowNodeSkinFactory(root),
-                new FXConnectionSkinFactory(root));
+//        FlowController workflow = new DefaultWorkflow(
+//                new FXFlowNodeSkinFactory(root),
+//                new FXConnectionSkinFactory(root));
+        
+         FlowController workflow = new DefaultWorkflow();
 
 
         workflowTest(workflow, 5);

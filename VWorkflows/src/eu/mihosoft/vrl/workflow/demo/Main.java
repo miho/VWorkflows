@@ -5,26 +5,19 @@
 package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.Connections;
-import eu.mihosoft.vrl.workflow.DefaultWorkflow;
-import eu.mihosoft.vrl.workflow.FlowController;
-import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.FlowFlowNode;
-import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.VConnections;
-import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
-import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinFactory;
-import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import jfxtras.labs.scene.layout.ScalableContentPane;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
@@ -44,49 +37,30 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    private MainWindowFXMLController controller;
 
     @Override
     public void start(Stage primaryStage) {
 
 //        connectionTest();
 
-        ScalableContentPane canvas = new ScalableContentPane();
-
-//        Pane root = canvas.getContentPane();
-
-        Pane root = new Pane();
-
-        canvas.setContentPane(root);
-
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
+        StackPane canvas = new StackPane();
 
         Scene scene = new Scene(canvas, 800, 800);
 
-////        FlowController workflow = new DefaultWorkflow(
-////                new FXFlowNodeSkinFactory(root),
-////                new FXConnectionSkinFactory(root));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainWindowFXML.fxml"));
 
-
-
-        FlowController workflow = new DefaultWorkflow();
-        workflowTest(workflow, 5, 5);
         try {
-            WorkflowIO.saveToXML(Paths.get("flow01.xml"), workflow.getModel());
+            fxmlLoader.load();
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
-        System.out.println("#Nodes: " + FlowFactory.numNodes());
 
+        controller = fxmlLoader.getController();
 
+        canvas.getChildren().add((Node) fxmlLoader.getRoot());
 
-        workflow = FlowFactory.newFlow();
-        try {
-            FlowFlowNode flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"));
-            workflow.setModel(flow);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
 
 
 
@@ -98,55 +72,12 @@ public class Main extends Application {
         rect.setStroke(new Color(1, 1, 1, 1));
         rect.setFill(new Color(0, 0, 0, 0.5));
 
-        MouseControlUtil.
-                addSelectionRectangleGesture(root, rect);
+//        MouseControlUtil.
+//                addSelectionRectangleGesture(root, rect);
 
 
 
-        workflow.getModel().setVisible(true);
 
-        workflow.setNodeSkinFactory(new FXFlowNodeSkinFactory(root));
-        workflow.setConnectionSkinFactory(new FXConnectionSkinFactory(root));
-
-    }
-
-    public void workflowTest(FlowController workflow, int depth, int width) {
-
-        if (depth < 1) {
-            return;
-        }
-
-        FlowNode prevNode = null;
-
-        for (int i = 0; i < width; i++) {
-
-            FlowNode n;
-
-            if (i % 2 == 0) {
-                FlowController subFlow = workflow.newSubFlow();
-                n = subFlow.getModel();
-                workflowTest(subFlow, depth - 1, width);
-
-
-
-            } else {
-                n = workflow.newNode();
-
-            }
-
-            n.setTitle("Node " + i);
-            n.setWidth(300);
-            n.setHeight(200);
-
-            n.setX((i % 5) * (n.getWidth() + 30));
-            n.setY((i / 5) * (n.getHeight() + 30));
-
-            if (prevNode != null) {
-                workflow.connect(prevNode, n, "control");
-            }
-
-            prevNode = n;
-        }
 
     }
 

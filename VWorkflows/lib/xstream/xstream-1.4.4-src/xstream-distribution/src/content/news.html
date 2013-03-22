@@ -1,0 +1,278 @@
+<html>
+<!--
+ Copyright (C) 2005, 2006 Joe Walnes.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2012, 2013 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 29. January 2005 by Joe Walnes
+ -->
+  <head>
+    <title>News</title>
+  </head>
+
+  <body>
+
+    <h2 id="1.4.4"><b>Jan 19, 2013</b> XStream 1.4.4 released</h2>
+
+      <p>Maintenance release 1.4.4 of XStream with bug fixes and small improvements.</p>
+
+      <ul>
+    	<li>DateConverter supports now localized formats.</li>
+      </ul>
+
+      <p>View the complete <a href="changes.html">change log</a> and <a href="download.html">download</a>.</p>
+
+      <p>Note, the next major release 1.5 will require Java 6.</p>
+
+    <h2 id="1.4.3"><b>Jul 17, 2012</b> XStream 1.4.3 released</h2>
+
+      <p>Maintenance release 1.4.3 of XStream with bug fixes and small improvements. Main changes:</p>
+
+      <ul>
+    	<li>Support java.util.concurrent.ConcurrentHashMap with the MapConverter.</li>
+    	<li>Support for Hibernate 4 with XStream's Hibernate module as default for Java 6 or higher.</li>
+      </ul>
+
+      <p>View the complete <a href="changes.html#1.4.3">change log</a> and <a href="download.html">download</a>.</p>
+
+
+    <h2 id="1.4.2"><b>Nov 3, 2011</b> XStream 1.4.2 released</h2>
+
+      <p>Maintenance release 1.4.2 of XStream with bug fixes and small improvements. Main changes:</p>
+
+      <ul>
+    	<li>XStream libraries can be used now directly in Android, therefore support of Java 1.4.2 has been stopped with the delivery.
+    	Anyone who needs a version for Java 1.4.2 can build it easily from source, this build is still supported and part of CI.</li>
+    	<li>New extended HierarchicalStreamReader interface with peekNextChild method. All XStream	readers implement the new
+    	interface (by Nikita Levyankov).</li>
+    	<li>Special support for Collections.EMPTY_LIST, Collections.EMPTY_SET and Collections.EMPTY_MAP and collections created
+    	with Collections.singletonList(), Collections.singletonSet() and Collections.singletonMap().</li>
+    	<li>Support additional parameters for XStreamConverter annotation (e.g. to declare a ToAttributedValueConverter).</li>
+      </ul>
+
+      <p>View the complete <a href="changes.html#1.4.2">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="1.4.1"><b>Aug 11, 2011</b> XStream 1.4.1 released</h2>
+
+      <p>Maintenance release 1.4.1 of XStream after turning out that it did not work in 1.4 with the new default
+      dependencies.  Therefore XStream is back with Xpp3 as default parser and refers additionally the XmlPullParser
+      API to enable the XppDriver that is used by default.</p>
+
+      <p>View the complete <a href="changes.html#1.4.1">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="1.4"><b>Aug 6, 2011</b> XStream 1.4 released</h2>
+
+      <p>Finally - XStream 1.4 is ready for delivery.  A lot of things have changed and improved, new features added.
+      Nevertheless we have maintain compatibility to the old versions:</p>
+      
+      <ul>
+      	<li>Detection of Java 7 and Android i.e. enabled enhanced mode and annotations for both environments out of the box</li>
+      	<li>Direct support of XmlPullParser factory and alternate kXML2 implementation</li>
+      	<li>Explicit drivers to select the StAX implementation</li>
+      	<li>New separate Hibernate module to support those managed instances (special thanks to Jaime Metcher)</li>
+      	<li>Support of implicit arrays and maps additionally to already existing implicit collection support</li>
+      	<li>Performance improvements (special thanks to Keith Kowalczykowski)</li>
+      	<li>Some new converters (for URI and one to write all fields but one as attributes)</li>
+      	<li>A lot of other enhancements and bug fixes</li>
+      </ul>
+
+      <p>View the complete <a href="changes.html#1.4">change log</a> and <a href="download.html">download</a>.</p>
+
+	<p>Thanks to this impressive list of <a href="team.html#contributors">contributors</a>.</p>
+      
+    <p class="hightlight">Note, that with version 1.4 the default parser has been changed from
+    <a href="faq.html#Compatibility_kXML2">Xpp3 to kXML2</a>.</p>
+      
+    <p class="hightlight">Note, that JDK 1.3 support has been officially dropped.  Nothing special has been done to
+    enforce this, but there is no longer any support.</p>
+
+    <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
+    value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
+    in case XStream will provide such values with its next major version.</p>
+
+    <h2 id="1.3.1"><b>Dec 6, 2008</b> XStream 1.3.1 released</h2>
+
+      <p>A new XStream maintenance version has been released.  The release contains some
+      bug fixes, some minor enhancements and support of new JDKs:</p>
+      
+      <ul>
+      	<li>Ability to alias package names</li>
+      	<li>Converters are only registered by default for types delivered with the JDK in use preventing
+      	unexpected incompatibilities</li>
+      	<li>Separation between user defined attributes and XStream attributes</li>
+      	<li>New mode for JSONWriter to drop JSON root node</li>
+      	<li>Support for FreeBSD's Diablo JDK.</li>
+      	<li>Enhanced persistence package and extended tutorial.</li>
+      </ul>
+
+      <p>View the complete <a href="changes.html#1.3.1">change log</a> and <a href="download.html">download</a>.</p>
+      
+    <p class="hightlight">Note, that XStream really supports by default now only types of the JDK in use.  Especially for
+    CGLIB this means that support of those proxies will have to be <a href="faq.html#Serialization_CGLIB">explicitly activated</a>
+    first. However, support for CGLIB proxies has been enhanced.</p>
+
+    <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
+    value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
+    in case XStream will provide such values with its next major version.</p>
+
+    <h2 id="1.3"><b>Feb 27, 2008</b> XStream 1.3 released</h2>
+    
+      <p>The XStream committers proudly present XStream 1.3.  This release contains some major
+      refactorings concerning Java annotations, improved XML support regarding encoding and 
+      character sets, some minor new features, deprecations and a lot of bug fixes:</p>
+      
+	  <ul>
+        <li>Annotation support is now implemented as Mapper and Annotations can either be processed
+        in advance or on-the-fly (see <a href="annotations-tutorial.html#AutoDetect">Annotations tutorial</a>
+        for limitations).</li>
+        <li>Improved encoding support for JSON and XML (including automated  support for XML headers).
+        Enforceable check for valid XML characters in the written stream.</li>
+        <li>Dedicated converters can now be configured for individual fields also using the XStream facade.</li>
+        <li>New converters for java.lang.StringBuilder, java.util.UUID, javax.xml.datatype.Duration,
+         and javax.swing.LookAndFeel. New generic converter for types using a java.beans.PropertyEditor.
+         Auto-instantiated SingleValueConverter for Java enums to support enum values as attributes.</li>
+        <li>XML elements are now sorted by default according their declaration with the fields defined in parent
+        classes first to improve support for type hierarchies in XML schemata.</li>
+        <li>A lot of bug fixes to improve JSON support for arbitrary types. Added section in 
+        <a href="faq.html#JSON">FAQ</a> for limitations and operation modes.</li>
+        <li>Native support for SAP VM.</li>
+        <li>All text-based files are now shipped with an appropriate license header to clean-up legal issues.</li>
+   	  </ul>
+   	  
+      <p>View the complete <a href="changes.html#1.3">change log</a> and <a href="download.html">download</a>.</p>
+
+    <p class="highlight">Note, to support a representation of null values in some way, it is absolutely necessary that each converter can handle a null
+    value in its marshalling methods.  If you have implemented your own custom converters, try to handle such a case also to prevent incompatibilities
+    in case XStream will provide such values with its next major version.</p>
+
+    <h2 id="1.2.2"><b>May 24, 2007</b> XStream 1.2.2 released</h2>
+    
+    <p>A maintenance release of XStream that contains a lot of bug fixes and has some minor highlights:
+    
+	  <ul>
+    	<li>JSON serialization and deserialization support with the help of the new JettisonMappedXmlDriver</li>
+        <li>Supports customized field sorting</li>
+        <li>Omitting fields at deserialization time</li>
+   	  </ul>
+      <p>View the complete <a href="changes.html#1.2.2">change log</a> and <a href="download.html">download</a>.</p>
+      
+    <p class="hightlight">Note, that next version of XStream will behave slightly different by default.  XStream emits
+    all fields in declaration order like Java serialization.  But in contrast to Java it will omit the fields of parent
+    classes last while Java serialization emits them first.  This makes it difficult to match a given XML schema that
+    defined inherited types or leads sometimes to obscure initialization problems.  However, XStream itself will not be
+    affected by the changed order of elements in the XML, any deserialization of current XML representations will work
+    fine.  Anyway we will provide with XStream 1.3 a FieldKeySorter implementation that mimics the old behaviour.  In
+    the meanwhile you can enforce the new field sorting by installing the NaturalFieldKeySorter.</p>
+
+    <h2 id="1.2.1"><b>Nov 11, 2006</b> XStream 1.2.1 released</h2>
+	  <ul>
+    	<li>Introduced DocumentWriter interface and generalized functionality for all writer implementations
+    	creating a DOM structure (DOM4J, DOM, JDom, Xom, Xpp3Dom).</li>
+        <li>Refactor of build system to use Maven 2.  Ant still supported on XStream Core.</li>
+        <li>Created separate XStream Benchmark module</li>
+   	  </ul>
+      <p>View the complete <a href="changes.html#1.2.1">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="project-lead-joehni"><b>Oct 10, 2006</b>Joe Walness announcing new XStream Project Lead</h2>
+      <p>I have been the XStream project lead, since it was open sourced 3 years ago. In that time, it has attracted some 
+      excellent developers who have formed the foundations of the user community, made all kinds of significant improvements 
+      and pushed out new releases. It's now approaching its 1000th commit.</p>
+
+	<p>The development community that has formed around XStream has been outstanding - more than I could ever have 
+	imagined. In particular, the following people have invested a lot of time into XStream, both from a technical and social point of 
+	view:</p>
+	<ul>
+		<li>J&ouml;rg Schaible</li>
+		<li>Mauro Talevi</li>
+		<li>Guilherme Silveira</li>
+		<li>Jason van Zyl</li>
+		<li>Me (well I have!)</li>
+	</ul>
+
+	<p>Recently I have been turning my attention to other things and XStream has been very much a self sustaining project. I've 
+	decided that the project would benefit from have a project lead who can invest a lot more time than I can currently offer.</p>
+
+	<p>So, the new XStream project lead will be J&ouml;rg Schaible, who along with Mauro Talevi and Guilherme Silveira will carry 
+	XStream forward. This has been happening for a long while anyway, it's just none of us ever realised or acknowledged it.</p>
+
+	<p>Of course, I'll still be lurking around, helping the transition, having loud mouth opinions and generally annoying people in any 
+	way I can... you haven't got rid of me that easily. ;) </p>
+
+	<p>I know J&ouml;rg, Mauro and Guilherme will be able carry XStream into the next generation (we have a lot of ambitious plans 
+	for XStream 2).</p>
+
+	<p>I'd also like to thank the 45(!) other <a href="team.html">contributers</a> to the XStream project, who have all helped 
+	make it what it is today. Finally, thanks to Graham Glass, who's Electric XML library formed a lot of the inspiration for XStream.</p>
+
+    <h2 id="1.2"><b>Aug 18, 2006</b> XStream 1.2 released</h2>
+	  <ul>
+        <li>Using attributes for fields (contributed by Paul Hammant and Ian Cartwright).</li>
+        <li>Aliasing of arbitrary attributes.</li>
+        <li>XStream can now serialize another XStream instance.</li>
+        <li>XStream has now the XStreamer, that serializes an object together with its XStream instance.</li>
+        <li>AnnotationConverter for fields (contributed by Guilherme Silveira).</li>
+        <li>PureJavaReflectionProvider supports now final fields starting with JDK 1.5</li>
+        <li>Any Collection type can now be declared implicit, the default implementation will be respected for unmarshalling.</li>
+        <li>XStream can now write all references as absolute XPath expression.</li>
+        <li>New SingeValueConverter allows light weight converters if the value can be represented by a unique string.</li>
+        <li>Aliasing of classes of a specific type.</li>
+        <li>Support for certain types of proxies generated with the CGLIB Enhancer.</li>
+        <li>Support for BEA JRockit starting with R25.1.0 (contributed by Henrik St&aring;hl of BEA).</li>
+        <li>Experimental binary reader and writer.</li>
+        <li>Experimental HierarichicalStreamCopier allows streams to be copied from one format to another without the overhead of serialization.</li>
+        <li>Experimental JSON support allows streams to be copied from one format to another without the overhead of serialization (contributed by Paul Hammant).</li>
+   	  </ul>
+      <p>View the complete <a href="changes.html#1.2">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="1.1.3"><b>Jan 13, 2006</b> XStream 1.1.3 released</h2>
+	  <ul>
+        <li>Added XStream.toXML(OutputStream) and XStream.fromXML(InputStream).</li>
+        <li>Ability to prevent fields from being serialized by calling XStream.omitField() or by implementing Mapper.shouldSerializeMember().</li>
+        <li>Added Converter for Enum, EnumMap and EnumSet</li>
+        <li>Added BeanConverter and ISO8601SqlTimestampConverter</li>
+        <li>Fixed support for IBM JVM (contributed by Gabor Liptak)</li>
+        <li>Enhanced mode support for Blackdown JDK.</li>
+   	  </ul>
+      <p>View the complete <a href="changes.html#1.1.3">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="1.1.2"><b>Apr 30, 2005</b> XStream 1.1.2 released</h2>
+      <p>Most popular feature requests implemented.</p>
+      <ul>
+        <li>Java 5 Enum support.</li>
+        <li>JavaBeanConverter for serialization using getters and setters.</li>
+        <li>Aliasing of fields.</li>
+        <li>StAX integration, with namespaces.</li>
+        <li>Improved support on JDK 1.3 and IBM JDK.</li>
+      </ul>
+      <p>View the complete <a href="changes.html#1.1.2">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="1.1.1"><b>Mar 7, 2005</b> XStream 1.1.1 released</h2>
+      <ul>
+		<li>Converters can be registered with a priority, allowing more <i>generic</i> filters to handle classes that don't have more specific converters.</li>
+		<li>Converters can now access underlying HierarchicalStreamReader/Writer implementations to make implementation specific calls.</li>
+		<li>Improved support for classes using ObjectInputFields and ObjectInputValidation to follow the serialization specification.</li>
+		<li>Default ClassLoader may be changed using XStream.setClassLoader().</li>
+		<li>Many bugfixes and performance enhancements.</li>
+      </ul>
+      <p>View the complete <a href="changes.html#1.1.1">change log</a> and <a href="download.html">download</a>.</p>
+
+    <h2 id="1.1"><b>Jan 15, 2005</b> XStream 1.1 released</h2>
+      <ul>
+        <li>Improved support for serializing objects as per the <a href="http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/serialTOC.html">Java Serialization</a> Specification:
+        <ul>
+            <li>Calls custom serialization methods, readObject(), writeObject(), readResolve() and writeReplace() in class, if defined.</li>
+            <li>Supports ObjectInputStream.getFields() and ObjectOutputStream.putFields() in custom serialization.</li>
+        </ul></li>
+        <li>Provides implementations of ObjectInputStream and ObjectOutputStream, allowing drop in replacements for standard serialization,
+        including support for streams of objects. [<a href="objectstream.html">More...</a>]</li>
+        <li>Reads and writes directly to most XML Java APIs: DOM, DOM4J, JDOM, XOM, Electric XML, StAX, Trax (write only), SAX (write only).
+        [<a href="javadoc/com/thoughtworks/xstream/io/xml/package-summary.html">More...</a>]</li>
+      </ul>
+      <p>View the complete <a href="changes.html#1.1">change log</a> and <a href="download.html">download</a>.</p>
+
+  </body>
+</html>

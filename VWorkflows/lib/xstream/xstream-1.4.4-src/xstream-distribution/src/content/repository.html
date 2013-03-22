@@ -1,0 +1,63 @@
+<html>
+<!--
+ Copyright (C) 2005, 2006 Joe Walnes.
+ Copyright (C) 2006, 2007, 2010, 2011 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 29. January 2005 by Joe Walnes
+ -->
+  <head>
+    <title>Source Repository</title>
+  </head>
+  <body>
+
+	<h2 id="modules">Modules</h2>
+
+	XStream project consists of several modules:
+	<ol>
+		<li>xstream - the core module</li>
+		<li>xstream-benchmark - the benchmark tool</li>
+		<li>xstream-distribution - the module contains the documentation and assembles the src and bin distributions</li>
+	</ol>
+	When you checkout the trunk you'll get all the modules, but you can just add the module you are interested in to the URL, e.g.
+		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk/[module]</pre></div>
+	to checkout out the single module separately.
+
+	<h2 id="browser">Browser</h2>
+
+	<p>You can use the browser to navigate within the sources <a href="http://fisheye.codehaus.org/browse/xstream/trunk/">online</a>
+	with the help of the FishEye installation on Codehaus.</p>
+
+    <h2 id="subversion">Subversion</h2>
+
+    XStream uses Subversion as the SCM.  See <a href="http://subversion.apache.org">Subversion website</a> for details and documentation on IDE integration.
+
+	<h2 id="webdav">WebDav Access</h2>
+
+	WebDav is an access protocol supported by SVN and being http-based is often allowed by corporate firewalls.
+
+	<h3 id="webdav-anon">Anonymous Access</h3>
+
+		<div class="Source"><pre>svn co http://svn.codehaus.org/xstream/trunk</pre></div>
+		
+		<p>
+		You might also use this URL to <a href="http://svn.codehaus.org/xstream/trunk">browse the repository</a> in a simple manner.
+		</p>
+
+	<h3 id="webdav-auth">Committer Access</h3>
+
+		<div class="Source"><pre>svn co https://svn.codehaus.org/xstream/trunk</pre></div>
+
+		<p>
+		This access protocol is available to all, but only developers can commit changes.
+		</p>
+		<p>
+		Developers require a LDAP password for Codehaus username (contact Bob at the Haus to get assigned a password if you don't have one).
+		</p>
+
+  </body>
+</html>

@@ -1,0 +1,103 @@
+<html>
+<!--
+ Copyright (C) 2005, 2006 Joe Walnes.
+ Copyright (C) 2006, 2007 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 29. January 2005 by Joe Walnes
+ -->
+  <head>
+    <title>About Versioning</title>
+  </head>
+  <body>
+
+    <p>The XStream project follows strict rules that govern its use of version
+    numbers.  The version number of a release indicates how that release
+    is compatible with previous and future releases.</p>
+
+    <p>Version numbers have the form
+    <var>major</var>.<var>minor</var>.<var>patch</var>.  A major
+    version identifies the product stage of the project.  Two libraries with 
+    different major version are designed to work together in the same 
+    application.  This implies a major change in the API - either by not 
+    sharing the same types or using a different package name.</p>
+    
+    <p>The minor version number identifies the API version.  A release that
+    changes the API in a way that breaks backwards compatibility will increment
+    the minor version number and reset the patch version to zero.  The patch 
+    version number identifies the backwards compatible revision of the API.  A
+    change in the minor version will still be mostly backward compatible, but 
+    may need some compatibility settings or slight migration adjustments.  The
+    patch version number identifies revisions that do not change the API 
+    although new API elements may occur or existing API may be deprecated to
+    prepare users for the next release with a change in the minor version.  A 
+    release that fixes bugs or refactors implementation details without changing
+    the API will have the same minor and major versions as the previous release
+    and increment the patch number.</p>
+
+    <p>A hypothetical example:</p>
+    <table summary="Hypothetical examples for version numbering">
+      <tr><td>1.0.0</td><td>First release</td></tr>
+      <tr><td>1.0.1</td><td>Improves Javadoc comments, fixes bug</td></tr>
+      <tr><td>1.1.0</td><td>Adds new API elements, may cause some migration</td></tr>
+      <tr><td>1.1.1</td><td>Adds new API elements, deprecates some API elements</td></tr>
+      <tr><td>1.1.2</td><td>Fixes bugs</td></tr>
+      <tr><td>1.2.0</td><td>Adds new API, needs some migration effort and removes deprecated elements</td></tr>
+      <tr><td>2.0.0</td><td>Complete API redesign, can be used simultanly with 1.x series.</td></tr>
+      <tr><td>2.0.1</td><td>Deprecates API, fixes bugs</td></tr>
+      <tr><td>2.1.0</td><td>Adds new API elements</td></tr>
+      <tr><td>etc.</td><td>etc.</td></tr>
+    </table>
+
+    <h2 id="rc">Release Candidates</h2>
+
+    <p>Before a new major or minor release, XStream will make release
+    candidate (RC) packages available so that users can test them against
+    their own code.  There will be one or more release candidates given the
+    version <var>major</var>.<var>minor</var>.0 RC<var>n</var>, where the
+    major and minor version numbers identify the upcoming release and RC1
+    identifies the first candidate release, RC2 the second, and so on.</p>
+
+    <p>A release candidate does not guarantee backward compatibility with
+    new API features introduced by any previous RC of the same upcoming
+    version.
+    A major version RC can change/remove API features introduced in a
+    previous RC for the same major version;  a minor version RC can change
+    API features introduced by any previous RC of the same upcoming minor
+    version but guarantees backward compatibility with the previous minor
+    version.</p>
+
+    <h2 id="snapshots">Development Snapshots</h2>
+
+    <p>During development, the the developers may publish snapshot packages
+    from time to time.  These are not guaranteed to be complete:
+    Although the unit tests will all pass the snapshot will probably contain
+    failing acceptance tests that describe planned or requested features that
+    have not yet been implemented.  Snapshots are identified by the UTC time
+    at which the package was built.  The timestamp has the form 
+    <var>VERSION-YYYYMMDD.hhmmss-n</var>, where VERSION is the upcoming
+    version, YYYY is the (four-digit) year, MM the month, DD the day, hh the
+    hour, mm the minute, ss the second and n a sequential number.</p>
+
+    <h2 id="internal">Internal Classes</h2>
+
+    <p>Many classes are for internal use only and not designed to be used by
+    end users. These are exempt from the versioning rules above.</p>
+
+    <p>Such classes are clearly marked as internal in the source code
+    headers and are excluded from the published JavaDoc.</p>
+
+    <h2 id="versioning">Versioning and Deprecation</h2>
+
+    <p>A patch release might deprecate some API features.  Deprecated features
+    will not actually be removed until the next minor release.
+    A release will never remove API features that have not been deprecated in
+    a previous release.
+    </p>
+
+  </body>
+</html>

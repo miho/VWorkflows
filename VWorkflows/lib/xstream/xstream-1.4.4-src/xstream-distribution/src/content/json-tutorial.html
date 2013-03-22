@@ -1,0 +1,159 @@
+<html>
+<!--
+ Copyright (C) 2007, 2008, 2010, 2012 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 22. May 2007 by Joerg Schaible
+ -->
+  <head>
+    <title>JSON Tutorial</title>
+  </head>
+  <body>
+  
+<p>Due to XStream's flexible architecture, handling of JSON mappings is as easy as handling of XML documents. All you
+have to do is to initialize XStream object with an appropriate driver and you are ready to serialize your objects to
+(and from) JSON.</p>
+
+<p>XStream currently delivers two drivers for JSON: The 
+<a href="javadoc/com/thoughtworks/xstream/io/json/JsonHierarchicalStreamDriver.html">JsonHierarchicalStreamDriver</a>
+and the <a href="javadoc/com/thoughtworks/xstream/io/json/JettisonMappedXmlDriver.html">JettisonMappedXmlDriver</a>.
+The first one does not have an additional dependency, but can only be used to write XML, while the second one is based
+on Jettison and can also deserialize JSON to Java objects again.  However, since the JettisonMappedXmlDriver transforms
+plain XML into JSON, you might get better JSON strings with the JsonHierarchicalStreamDriver, because this driver knows
+often about the type of the written data and can act properly.</p>
+
+<p class="highlight">One word of warning. JSON is made for an easy data transfer between systems and languages.  It's 
+syntax offers much less possibilities to express certain data structures.  It supports name/value pairs of primitive
+data types, arrays and lists and allows to nest them - but that's it! No references, no possibility for meta data
+(attributes), no properties with same names (as generated for implicit collections), etc. Therefore do not expect
+wonders.  XStream (and Jettison) try their best, but the procedure to convert any kind of object into JSON is a lossy
+transformation and especially deserialization will not be possible for any construct. See also
+<a href="faq.html#JSON_limitations">FAQ</a>.</p>
+
+<p>Since JSON has no possibility to express references, you should always set the NO_REFERENCES mode writing JSON.</p>
+
+<h1 id="jettison">Jettison driver</h1>
+
+<p>Jettison driver uses <a href="http://jettison.codehaus.org/">Jettison</a> StAX parser to read and write data in JSON
+format. It is available in XStream since version 1.2.2 and is implemented in 
+<code>com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver</code> class.  To successfully use this driver you need
+to have the Jettison project and <a href="http://stax.codehaus.org/">StAX API</a> in your classpath (see reference for 
+<a href="download.html#optional-deps">optional dependencies</a>).</p>
+		
+<p>Alternatively you can download JARs manually.</p>
+ 
+<p>Here are a few simple examples:</p>
+
+<h2 id="jettison-write">Write to JSON with the Jettison-based implementation</h2>
+
+<p>The following example:</p>
+
+<div class="Source Java"><pre>package com.thoughtworks.xstream.json.test;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+
+public class WriteTest {
+
+	public static void main(String[] args) {
+
+        Product product = new Product("Banana", "123", 23.00);
+        XStream xstream = new XStream(new JettisonMappedXmlDriver());
+        xstream.setMode(XStream.NO_REFERENCES);
+        xstream.alias("product", Product.class);
+
+        System.out.println(xstream.toXML(product));		
+		
+	}
+
+}</pre></div>
+
+<p>produces the following JSON document:</p>
+
+<div class="Source Java"><pre>{"product":{"name":"Banana","id":123,"price":23.0}}</pre></div>
+
+<p>As you can see, all standard XStream features (such as aliases) can be used with this driver.</p>	
+
+<p class="highlight">Note that Jettison will  try to detect numerical values and omit the quotes.  Since Jettison
+cannot know about the original data type, it has to guess.  Hence it will therefore also write the value of the id
+field as numeric value in future.</p>
+
+<h2 id="json-write">Write to JSON with the self-contained JSON driver</h2>
+
+<p>The only difference to the example above is the line with the initialization:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream(new JsonHierarchicalStreamDriver());</pre></div>
+
+<p>The output is as follows:</p>
+
+<div class="Source Java"><pre>{"product": {
+  "name": "Banana",
+  "id": "123",
+  "price": 23.0
+}}</pre></div>
+
+<p>While the difference because of line feeds is immediately obvious, you have to note also the value of the
+<em>id</em> element.  This time the driver knew about the string value and therefore quotes were generated.</p>
+
+<h2 id="json-dropping-root">Write to JSON with the self-contained JSON driver dropping the root</h2>
+
+<p>Sometimes the root node in the generated JSON is superfluous, since its name is caused by the Java type
+of the written object that has no meaning in JSON and increases only the nesting level of the structure. Therefore
+it is possible to drop this root by initializing the internally used 
+<a href="javadoc/com/thoughtworks/xstream/io/json/JsonWriter.html">JsonWriter</a> in a different mode. 
+Again, the only difference to the example above is the line with the initialization:</p>
+
+<div class="Source Java"><pre>XStream xstream = new XStream(new JsonHierarchicalStreamDriver() {
+    public HierarchicalStreamWriter createWriter(Writer writer) {
+        return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
+    }
+});</pre></div>
+
+<p>The output is as follows:</p>
+
+<div class="Source Java"><pre>{
+  "name": "Banana",
+  "id": "123",
+  "price": 23.0
+}</pre></div>
+
+<p class="highlight">Note, that it is now possible to create invalid JSON if XStream should marshal a single object
+with a single value to JSON (like String, int, URL, ...). JSON requires that the root is actually an object, but by
+dropping the root all that is generated is a single value. You can force the JsonWriter to throw a ConversionException
+in this case, see Javadoc of the JsonWriter.</p>
+
+<h2 id="jettison-read">Read from JSON</h2>
+
+<p>The following code:</p>
+
+<div class="Source Java"><pre>package com.thoughtworks.xstream.json.test;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+
+public class ReadTest {
+
+	public static void main(String[] args) {
+		String json = "{\"product\":{\"name\":\"Banana\",\"id\":123"
+		    + ",\"price\":23.0}}";
+		    
+		XStream xstream = new XStream(new JettisonMappedXmlDriver());
+		xstream.alias("product", Product.class);
+		Product product = (Product)xstream.fromXML(json);
+		System.out.println(product.getName());
+	}
+
+}</pre></div>
+
+<p>serializes JSON document created with preceding example back to Java object. It prints:</p>
+
+<div class="Source Java"><pre>Banana</pre></div>
+
+<p>as a result.</p>
+  
+</body>
+</html>

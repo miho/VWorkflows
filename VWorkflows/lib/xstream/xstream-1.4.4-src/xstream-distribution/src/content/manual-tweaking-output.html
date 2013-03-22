@@ -1,0 +1,285 @@
+<html>
+<!--
+ Copyright (C) 2005, 2006 Joe Walnes.
+ Copyright (C) 2006, 2007, 2008, 2011 XStream committers.
+ All rights reserved.
+ 
+ The software in this package is published under the terms of the BSD
+ style license a copy of which has been included with this distribution in
+ the LICENSE.txt file.
+ 
+ Created on 29. January 2005 by Joe Walnes
+ -->
+    <head>
+        <title>Tweaking the Output</title>
+    </head>
+    <body>
+
+        <p>Out of the box, XStream is able to serialize most objects without the need for custom mappings to be setup.
+        The XML produced is clean, however sometimes it's desirable to make tweaks to it. The most common use for this is
+        when using XStream to read configuration files and some more human-friendly XML is needed.</p>
+
+        <!-- ************ -->
+
+        <h1 id="Configuration">Modification by configuration</h1>
+        
+        <p>A big part of the standard output of XStream can be configured. It is possible to set aliases for class types
+        and field names that are mapped to XML tag or attribute names. Objects that can be represented as simple string
+        value can be written as attributes. It is possible to omit fields or to flatten the structure for collections.</p>
+
+        <!-- .................. -->
+        
+        <h2 id="Configuration_Aliases">Aliases</h2>
+
+        <p>Aliases offer a simple way to use different tag or attribute names in the XML.  The simplest and most commonly
+        used tweak in XStream is to alias a fully qualified class to a shorter name.  Another use case is a different field name
+        for a class member.  Aliases can be set for following elements:</p>
+
+		<ul>
+			<li>Class types mapped to XML tags</li>
+			<li>Package names mapped to XML tags</li>
+			<li>Field names mapped to XML tags</li>
+			<li>Internal attributes names of XStream</li>
+		</ul>        
+
+		<p>The bold elements in the following example are affected:</p>
+
+<div class="Source XML"><pre>&lt;<b>cat</b>&gt;
+  &lt;<b>age</b>&gt;4&lt;/<b>age</b>&gt;
+  &lt;<b>name</b>&gt;Garfield&lt;/<b>name</b>&gt;
+  &lt;<b>owner</b> <b>type</b>="<b>StandardPerson</b>"&gt;
+    &lt;<b>name</b>&gt;Jon Arbuckle&lt;/<b>name</b>&gt;
+  &lt;/<b>owner</b>&gt;
+&lt;/<b>cat</b>&gt;</pre></div>
+
+        <p>Have a look at the <a href="alias-tutorial.html">Alias Tutorial</a> for examples.</p>
+
+        <!-- .................. -->
+
+        <h2 id="Configuration_Attributes">Attributes</h2>
+
+        <p>XML is quite clumsy to read for fields in separate tags that can represent their content in a short single
+        string value.  In such a case attributes can help to shorten the XML and increase readability:</p>
+
+<div class="Source XML"><pre>&lt;cat <b>age="4" name="Garfield"</b>&gt;
+  &lt;owner class="StandardPerson" <b>name="Jon Arbuckle"</b>/&gt;
+&lt;/cat&gt;</pre></div>
+
+        <p>Attributes are also presented in the <a href="alias-tutorial.html">Alias Tutorial</a>.</p>
+          
+        <!-- .................. -->
+
+        <h2 id="Configuration_OmitField">Omitted Fields</h2>
+		
+		<p>For a proper deserialization XStream has to write the complete object graph into XML that is referenced by a
+		single object.  Therefore XStream has to find a representation that contains all aspects to recreate the 
+		objects.</p>
+		
+		<p>However, some parts might be superfluous e.g. if a member field is lazy initialized and its content
+		can be easily recreated.  In such a case a field can be omitted using
+		<a href="javadoc/com/thoughtworks/xstream/XStream.html">XStream.omitField(Class, String)</a>.</p>
+          
+        <!-- .................. -->
+
+        <h2 id="Configuration_ImplicitCollection">Implicit Collections, Arrays and Maps</h2>
+		
+		<p>Another use case are collections, arrays and maps.  If a class has a field that is a one of those types, by
+		default all of its elements are embedded in an element that represents the container object itself.  By
+		configuring the XStream with the
+		<a href="javadoc/com/thoughtworks/xstream/XStream.html#addImplicitCollection">XStream.addImplicitCollection()</a>,
+		<a href="javadoc/com/thoughtworks/xstream/XStream.html#addImplicitArray">XStream.addImplicitArray()</a>, and
+		<a href="javadoc/com/thoughtworks/xstream/XStream.html#addImplicitMap">XStream.addImplicitMap()</a> methods it
+		is possible to keep the elements directly as child of the class and the surrounding tag for the container object
+		is omitted.  It is even possible to declare more than one implicit collection, array or map for a class, but
+		the elements must then be distinguishable to populate the different containers correctly at deserialization.</p>
+		
+		<p>In the following example the Java type representing the farm may have two containers, one for cats and one
+		for dogs:</p>
+		
+<div class="Source XML"><pre>&lt;farm&gt;
+  &lt;<b>cat</b>&gt;Garfield&lt;/<b>cat</b>&gt;
+  &lt;<b>cat</b>&gt;Arlene&lt;/<b>cat</b>&gt;
+  &lt;<b>cat</b>&gt;Nermal&lt;/<b>cat</b>&gt;
+  &lt;<b>dog</b>&gt;Odie&lt;/<b>dog</b>&gt;
+&lt;/farm&gt;</pre></div>
+
+		<p>The container might be a Collection, Array, or even a Map.  In the latter case a member field of the value
+		must have been defined, that is used as key in the deserialized map.</p>
+          
+        <!-- .................. -->
+
+        <h2 id="Configuration_FieldOrder">Field order</h2>
+        
+        <p>XStream is delivered with a lot of <a href="converters.html">converters</a> for standard types.
+        Nevertheless most objects are processed by converters based on reflection.  They will write the fields of a
+        class in the sequence they are defined.  It is possible to implement an algorithm for a different sequence or
+        use an implementation that allows to define the sequence for each type separately using a
+        <a href="javadoc/com/thoughtworks/xstream/converters/reflection/FieldKeySorter.html">FieldKeySorter</a>.
+        Similar functionality exists for Java Beans with the
+        <a href="javadoc/com/thoughtworks/xstream/converters/javabean/PropertySorter.html">PropertySorter</a>.</p>
+
+        <!-- .................. -->
+        
+        <h2 id="Configuration_Format">Output Format</h2>
+        
+        <p>XStream writes and reads XML by default.  However, the I/O layer is separated from the model and you can
+        use implementations for other formats as well.  A reader/writer pair is typically managed by a <a
+        href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>. XStream
+        is delivering additional drivers for <a href="json-tutorial.html">JSON</a> and a compact binary format (see <a
+        href="javadoc/com/thoughtworks/xstream/io/binary/BinaryStreamDriver.html">BinaryStreamDriver</a>).  There are
+        also drivers to write an object graph into a DOM structure instead of a text based stream (available for W3C
+        DOM, DOM4J, JDOM, XOM, and XPP DOM).</p>
+		
+        <!-- ************ -->
+        
+        <h1 id="Enhancing">Enhancing XStream</h1>
+        
+        <p>Sometimes customization is simply not enough to tweak the output. Depending on the use case it is fortunate to
+        use specialized converters for own types, mapper implementations that control naming of things more globally or
+        use specialized writers to influence the complete output.</p>
+
+        <!-- .................. -->
+
+        <h2 id="Specialized_Converters">Specialized Converters</h2>
+
+        <p>Not all converters that are part of the XStream package are automatically registered.  Some will only make
+        sense for special types, others have parameters to tweak the behaviour.  Most useful in the table of 
+        <a href="converters.html">converters</a> are the JavaBeanConverter, ToStringConverter, and
+        ToAttributedValueConverter.  Not to mention the separate Hibernate package of XStream.</p>
+
+        <p>As example can the ToAttributedValueConverter be used to define the owner's name directly as text value:</p>
+
+<div class="Source XML"><pre>&lt;cat age="4" name="Garfield"&gt;
+  &lt;owner class="StandardPerson"&gt;<b>Jon Arbuckle</b>&lt;/&gt;
+&lt;/cat&gt;</pre></div>
+
+        <p>Attributes are also presented in the <a href="alias-tutorial.html">Alias Tutorial</a>.</p>
+
+        <!-- .................. -->
+
+        <h2 id="Enhancing_Converters">Custom Converters</h2>
+
+        <p>Sometimes the object to serialize contains fields or elements, that have no friendly representation for 
+        human beings e.g. if a long value represents in reality a time stamp.  In such cases XStream supports custom
+        converters for arbitrary types.  Have a look at the <a href="converter-tutorial.html">Converter Tutorial</a>
+        for advanced possibilities.  Note, that a custom converter is not different to one that is delivered by
+        XStream.  It's simply your code.</p>
+
+        <!-- .................. -->
+
+        <h2 id="Enhancing_Mappers">Custom Mappers</h2>
+
+        <p>In case of global adjustments it can be helpful to implement an own mapper.  A mapper is used to name things
+        and map between the name in the Java world to the name used in the XML representation.  The alias mechanism
+        described above is implemented as such a mapper that can be configured.  A typical use case is dropping all
+        prefixes for field names like underscores in the resulting XML or omitting the package part of class names.</p>
+        
+        <p class="highlight">However, keep in mind that the algorithm must work in both directions to support deserialization.</p>
+
+        <!-- .................. -->
+
+        <h2 id="Enhancing_Name_Coder">Custom Name Coders</h2>
+
+        <p>Names used e.g. in XML for attributes and element tags might contain characters or character sequences that
+        violate the syntax of the output format.  Instead of using different aliases for such names that depend on the
+        output format, you may use a NameCoder implementation that transforms an internally used name to an external
+        form.  For XML we use e.g. a NameCoder that encodes '$' characters, while the one used in JSON performs no
+        operation at all.</p>
+        
+        <p class="highlight">Again, keep in mind that the algorithm of the name coder must support encoding and
+        decoding of the names.</p>
+
+        <!-- .................. -->
+
+        <h2 id="Enhancing_Writer">Custom Writer</h2>
+
+        <p>A custom writer can be used to affect the output completely.  XStream itself delivers solutions for different
+        use cases like the <a href="javadoc/com/thoughtworks/xstream/io/xml/CompactWriter.html">CompactWriter</a>
+        that does not insert any white spaces between the XML tags.</p>
+        
+        <p>Another use case for such a writer is a wrapper to drop unwanted XML elements that XStream omits on its own. 
+        Especially if the written XML is not used for deserialization it can be useful to ignore internal attributes by
+        a custom writer</p>
+		
+        <!-- ************ -->
+        
+        <h1 id="OwnCode">Tweaking the own implementation</h1>
+        
+        <p>As shown, XStream can be configured and enhanced in multiple way, but sometimes it is easier to tweak the
+        implementation of the serialized classes:</p>
+        
+        <ul>
+        	<li>Declaring a field transparent will omit it automatically from the processing</li>
+        	<li>Implementing a readResolve method that can be used to initialize additional fields</li>
+        	<li>Usage of annotations</li>
+        </ul>
+		
+        <!-- ************ -->
+        
+        <h1 id="Processing">Preprocessing or postprocessing</h1>
+
+        <h2 id="Processing_XSLT">XML Transformations</h2>
+
+		<p>Never forget, you're dealing with XML! It is easy to transform XML with an XSLT. XStream is delivered with a SAXSource
+		implementation, that allows an XStream instance to be the source of a XML transformer.</p>
+
+        <h3>Example</h3>
+		<p>Look at the following stylesheet:</p>
+
+<div class="Source XML"><pre>
+&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="xml" omit-xml-declaration="yes" indent="no"/&gt;
+  &lt;xsl:template match="/cat"&gt;
+    &lt;xsl:copy&gt;
+      &lt;xsl:apply-templates select="mName"/&gt;
+    &lt;/xsl:copy&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre></div>
+
+		<p>It is used here to remove the age of the cat on the fly (assuming XSLT is a string with the stylesheet above):</p>
+		
+<div class="Source Java"><pre>
+XStream xstream = new XStream();
+xstream.alias("cat", Cat.class);
+
+TraxSource <b>traxSource</b> = new TraxSource(new Cat(4, "Garfield"), <b>xstream</b>);
+Writer buffer = new StringWriter();
+Transformer transformer = TransformerFactory.newInstance().newTransformer(
+    new StreamSource(new StringReader(XSLT)));
+transformer.transform(<b>traxSource</b>, new StreamResult(buffer));</pre></div>
+
+        <p>The result in the buffer:</p>
+
+<div class="Source XML"><pre>&lt;cat&gt;
+  &lt;mName&gt;Garfield&lt;/mName&gt;
+&lt;/cat&gt;</pre></div>
+
+        <h2 id="Processing_Copier">Format Conversion</h2>
+
+		<p>XStream is designed to transform Java objects into a specific format and recreate these objects again.
+		However, XStream's readers and writers are based on an event model that can be used easily to convert the pure
+		data between formats.  XStream contains the <a href="javadoc/com/thoughtworks/xstream/io/copy/HierarchicalStreamCopier.html">HierarchicalStreamCopier</a>
+		tool that utilizes a reader and a writer of XStream to perform the conversion:</p>
+
+<div class="Source Java"><pre>
+HierarchicalStreamCopier copier = new HierarchicalStreramCopier();
+HierarchicalStreamDriver binaryDriver = new BinaryDriver();
+HierarchicalStreamDriver jsonDriver = new JettisonMappedXmlDriver();
+
+// transform a org.dom4j.Document into a binary stream of XStream
+ByteArrayOutputStream baos = new ByteArrayOutputStream();
+copier.copy(new Dom4JDriver.createReader(dom4JDocument), binaryDriver.createWriter(baos));
+byte[] data = baos.getBytes();
+
+// transform binary XStream data into JSON
+StringWriter strWriter = new StringWriter();
+copier.copy(binaryDriver.createReader(data), jsonDriver.createWriter(strWriter));
+String json = strWriter.toString();
+
+// transform JSON into XML:
+strWriter = new StringWriter();
+copier.copy(jsonDriver.createReader(new StringReader(json)), new PrettyPrintWriter(strWriter));
+String xml = strWriter.toString();</pre></div>
+
+    </body>
+</html>

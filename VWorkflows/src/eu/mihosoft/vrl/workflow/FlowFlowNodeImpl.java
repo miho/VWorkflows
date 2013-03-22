@@ -5,22 +5,24 @@
 package eu.mihosoft.vrl.workflow;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FlowFlowNodeImpl implements FlowFlowNode {
+class FlowFlowNodeImpl implements FlowFlowNode {
 
     private final FlowNode node;
-    private final FlowModel flow;
+    private final FlowModelImpl flow;
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -38,7 +40,18 @@ public class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     public FlowFlowNodeImpl(FlowModel parentFlow) {
-        node = new FlowNodeBase(parentFlow);
+
+        FlowFlowNode pFlow = null;
+
+        if (parentFlow != null) {
+            if (!(parentFlow instanceof FlowFlowNode)) {
+                throw new IllegalArgumentException("Only " + FlowFlowNode.class.getName() + " objects are supported. Given type: " + parentFlow.getClass());
+            } else {
+                pFlow = (FlowFlowNode) parentFlow;
+            }
+        }
+
+        node = new FlowNodeBase(pFlow);
         flow = new FlowModelImpl();
     }
 
@@ -103,23 +116,13 @@ public class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public FlowNode newNode(ValueObject obj) {
-        return flow.newNode(obj);
-    }
-
-    @Override
-    public FlowNode newNode() {
-        return flow.newNode();
-    }
-
-    @Override
     public VisualizationRequest getVisualizationRequest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -233,7 +236,7 @@ public class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public FlowModel getFlow() {
+    public FlowFlowNode getFlow() {
         return node.getFlow();
     }
 
@@ -269,11 +272,45 @@ public class FlowFlowNodeImpl implements FlowFlowNode {
 
     @Override
     public FlowFlowNode newFlowNode(ValueObject obj) {
-        return flow.newFlowNode(obj);
+        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
+
+        return (FlowFlowNode) flow.newNode(flowNode, obj);
     }
 
     @Override
     public FlowFlowNode newFlowNode() {
-        return flow.newFlowNode();
+        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
+
+        return (FlowFlowNode) flow.newNode(flowNode, new EmptyValueObject()); // end newNode()
+
+    }
+    
+    @Override
+    public FlowNode newNode(ValueObject obj) {
+
+        FlowNode result = null;
+
+        try {
+            Constructor constructor = getFlowNodeClass().getConstructor(FlowFlowNode.class);
+            try {
+                result = (FlowNode) constructor.newInstance(this);
+                result.setValueObject(obj);
+
+                result = flow.newNode(result, obj);
+
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (NoSuchMethodException | SecurityException ex) {
+            Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
+    }
+    
+    @Override
+    public FlowNode newNode() {
+        return newNode(new EmptyValueObject());
     }
 }
+

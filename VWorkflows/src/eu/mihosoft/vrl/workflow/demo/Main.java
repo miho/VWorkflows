@@ -7,15 +7,17 @@ package eu.mihosoft.vrl.workflow.demo;
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
-import eu.mihosoft.vrl.workflow.FlowFlowNodeImpl;
-import eu.mihosoft.vrl.workflow.FlowModel;
-import eu.mihosoft.vrl.workflow.FlowModelImpl;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.VConnections;
 import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinFactory;
-//import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
+import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -60,14 +62,33 @@ public class Main extends Application {
 
         Scene scene = new Scene(canvas, 800, 800);
 
-//        FlowController workflow = new DefaultWorkflow(
-//                new FXFlowNodeSkinFactory(root),
-//                new FXConnectionSkinFactory(root));
+////        FlowController workflow = new DefaultWorkflow(
+////                new FXFlowNodeSkinFactory(root),
+////                new FXConnectionSkinFactory(root));
+
+
 
         FlowController workflow = new DefaultWorkflow();
+        workflowTest(workflow, 5, 5);
+        try {
+            WorkflowIO.saveToXML(Paths.get("flow01.xml"), workflow.getModel());
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("#Nodes: " + FlowFactory.numNodes());
 
 
-        workflowTest(workflow, 6);
+
+        workflow = FlowFactory.newFlow();
+        try {
+            FlowFlowNode flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"));
+            workflow.setModel(flow);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
+
 
         primaryStage.setTitle("VFXConnection Demo!");
         primaryStage.setScene(scene);
@@ -80,14 +101,16 @@ public class Main extends Application {
         MouseControlUtil.
                 addSelectionRectangleGesture(root, rect);
 
+
+
+        workflow.getModel().setVisible(true);
+
         workflow.setNodeSkinFactory(new FXFlowNodeSkinFactory(root));
         workflow.setConnectionSkinFactory(new FXConnectionSkinFactory(root));
-        
-        workflow.getModel().setVisible(true);
 
     }
 
-    public void workflowTest(FlowController workflow, int depth) {
+    public void workflowTest(FlowController workflow, int depth, int width) {
 
         if (depth < 1) {
             return;
@@ -95,14 +118,14 @@ public class Main extends Application {
 
         FlowNode prevNode = null;
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < width; i++) {
 
             FlowNode n;
 
             if (i % 2 == 0) {
                 FlowController subFlow = workflow.newSubFlow();
                 n = subFlow.getModel();
-                workflowTest(subFlow, depth - 1);
+                workflowTest(subFlow, depth - 1, width);
 
 
 
@@ -119,9 +142,9 @@ public class Main extends Application {
             n.setY((i / 5) * (n.getHeight() + 30));
 
             if (prevNode != null) {
-                workflow.connect(prevNode, n, "control");      
+                workflow.connect(prevNode, n, "control");
             }
-            
+
             prevNode = n;
         }
 
@@ -129,7 +152,7 @@ public class Main extends Application {
 
     public void connectionTest() {
 
-        Connections connections = VConnections.newConnections();
+        Connections connections = VConnections.newConnections("default");
 
         connections.add("1out", "2in");
         connections.add("3out", "4out");

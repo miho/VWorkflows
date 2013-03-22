@@ -4,7 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.workflow.FlowModel;
+import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -67,7 +67,7 @@ public class FlowNodeWindow extends Window {
             return;
         }
 
-        if (!(skin.getModel() instanceof FlowModel)) {
+        if (!(skin.getModel() instanceof FlowFlowNode)) {
             return;
         }
 
@@ -79,7 +79,7 @@ public class FlowNodeWindow extends Window {
                 FXFlowNodeSkin skin = nodeSkinProperty.get();
                 
                 if (skin != null) {
-                    FlowModel model = (FlowModel) skin.getModel();
+                    FlowFlowNode model = (FlowFlowNode) skin.getModel();
                     model.setVisible(!model.isVisible());
                 }
             }
@@ -92,7 +92,7 @@ public class FlowNodeWindow extends Window {
                 @Override
                 public void changed(ObservableValue<? extends FlowNode> ov,
                         FlowNode t, FlowNode t1) {
-                    if (t1 instanceof FlowModel) {
+                    if (t1 instanceof FlowFlowNode) {
                         getRightIcons().add(collapseIcon);
                     } else {
                         getRightIcons().remove(collapseIcon);

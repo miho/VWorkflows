@@ -12,10 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,6 +21,7 @@ import javafx.collections.ObservableList;
  */
 class ConnectionsImpl implements Connections {
 
+    private String type;
     private Map<String, Connection> connections = new HashMap<>();
     private Class<? extends Connection> connectionClass = ConnectionBase.class;
 //    Map<String, Integer> senders = new HashMap<>();
@@ -32,7 +29,15 @@ class ConnectionsImpl implements Connections {
     private ObservableList<Connection> observableConnections =
             FXCollections.observableArrayList();
     private VisualizationRequest vReq;
-//    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
+
+    //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
+    
+    
+    public ConnectionsImpl(String type) {
+        this.type = type;
+    }
+    
+    
 
 
     private static String connectionId(String id, String s, String r) {
@@ -48,11 +53,7 @@ class ConnectionsImpl implements Connections {
 
         checkUniqueness(c);
 
-//        incSenderCounter(c.getSenderId());
-//        incReceiverCounter(c.getReceiverId());
-
         connections.put(connectionId(c), c);
-
         observableConnections.add(c);
     }
 
@@ -72,6 +73,14 @@ class ConnectionsImpl implements Connections {
 
         add(c);
 
+        return c;
+    }
+    
+    @Override
+    public Connection add(String id, String s, String r, VisualizationRequest vReq) {
+        Connection c = createConnection(id, s, r);
+        c.setVisualizationRequest(vReq);
+        add(c);
         return c;
     }
 
@@ -105,7 +114,7 @@ class ConnectionsImpl implements Connections {
     @Override
     public void setConnectionClass(Class<? extends Connection> cls) {
         try {
-            Constructor constructor = cls.getConstructor(Connections.class, String.class, String.class, String.class);
+            Constructor constructor = cls.getConstructor(Connections.class, String.class, String.class, String.class, String.class);
             throw new IllegalArgumentException("constructor missing: (String, String)");
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,9 +133,9 @@ class ConnectionsImpl implements Connections {
         Connection result = null;
 
         try {
-            Constructor constructor = getConnectionClass().getConstructor(Connections.class, String.class, String.class, String.class);
+            Constructor constructor = getConnectionClass().getConstructor(Connections.class, String.class, String.class, String.class, String.class);
             try {
-                result = (Connection) constructor.newInstance(this, id, s, r);
+                result = (Connection) constructor.newInstance(this, id, s, r, type);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -319,5 +328,29 @@ class ConnectionsImpl implements Connections {
     @Override
     public boolean contains(String s, String r) {
         return getAll(s, r).iterator().hasNext();
+    }
+
+    /**
+     * @return the type
+     */
+    @Override
+    public String getType() {
+        return type;
+    }
+    
+    @Override
+    public String toString() {
+
+        StringBuilder result = new StringBuilder();
+        
+        result.append("[ type: ").append(getType()).append('\n');
+        
+        for (Connection connection : observableConnections) {
+            result.append(" --> ").append(connection.toString()).append('\n');
+        }
+        
+        result.append("]");
+        
+        return result.toString();
     }
 }

@@ -18,22 +18,22 @@ public final class DefaultWorkflow extends FlowControllerImpl {
 
         super(flowNodeSkinFactory, connectionSkinFactory);
 
-        setModel(new FlowFlowNodeImpl(null));
+        setModel(FlowFactory.newFlowModel());
 
-        addConnections(VConnections.newConnections(), "control");
-        addConnections(VConnections.newConnections(), "data");
-        addConnections(VConnections.newConnections(), "event");
+        addConnections(VConnections.newConnections("control"), "control");
+        addConnections(VConnections.newConnections("data"), "data");
+        addConnections(VConnections.newConnections("event"), "event");
     }
 
     public DefaultWorkflow() {
 
         super(null, null);
 
-        setModel(new FlowFlowNodeImpl(null));
+        setModel(FlowFactory.newFlowModel());
 
-        addConnections(VConnections.newConnections(), "control");
-        addConnections(VConnections.newConnections(), "data");
-        addConnections(VConnections.newConnections(), "event");
+        addConnections(VConnections.newConnections("control"), "control");
+        addConnections(VConnections.newConnections("data"), "data");
+        addConnections(VConnections.newConnections("event"), "event");
     }
 }
 

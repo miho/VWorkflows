@@ -4,6 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import com.sun.javafx.UnmodifiableArrayList;
+import java.util.Collection;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 
@@ -46,6 +48,8 @@ public interface FlowController {
     public FlowController newSubFlow(ValueObject obj);
 
     public FlowController newSubFlow();
+    
+    public Collection<FlowController> getSubControllers();
 
     public void setNodeSkinFactory(FlowNodeSkinFactory factory);
 

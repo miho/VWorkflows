@@ -18,6 +18,7 @@ class ConnectionBase implements Connection {
     private String senderId;
     private String receiverId;
     private String id;
+    private String type;
     private VisualizationRequest vReq;
     private Connections connections;
 
@@ -26,11 +27,12 @@ class ConnectionBase implements Connection {
     public ConnectionBase() {
     }
 
-    public ConnectionBase(Connections connections, String id, String senderId, String receiverId) {
+    public ConnectionBase(Connections connections, String id, String senderId, String receiverId, String type) {
         this.connections = connections;
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
+        this.type = type;
     }
 
     @Override
@@ -118,4 +120,13 @@ class ConnectionBase implements Connection {
     public Connections getConnections() {
         return connections;
     }
+
+    /**
+     * @return the type
+     */
+    @Override
+    public String getType() {
+        return type;
+    }
+
 }

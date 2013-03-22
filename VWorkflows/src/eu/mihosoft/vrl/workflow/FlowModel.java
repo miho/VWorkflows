@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface FlowModel extends Model, VisibleState{
+interface FlowModel extends Model, VisibleState{
 
     public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType);
     
@@ -34,12 +34,7 @@ public interface FlowModel extends Model, VisibleState{
     
     public Class<? extends FlowNode> getFlowNodeClass();
     
-    public FlowNode newNode(ValueObject obj);
-    
-    public FlowNode newNode();
-    
-    public FlowFlowNode newFlowNode(ValueObject obj);
-    
-    public FlowFlowNode newFlowNode();
+
+
 
 }

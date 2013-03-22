@@ -10,8 +10,8 @@ package eu.mihosoft.vrl.workflow;
  */
 public class VConnections {
     
-    public static Connections newConnections() {
-        return new ConnectionsImpl();
+    public static Connections newConnections(String type) {
+        return new ConnectionsImpl(type);
     }
     
     public static void printConnections(Connections connections) {

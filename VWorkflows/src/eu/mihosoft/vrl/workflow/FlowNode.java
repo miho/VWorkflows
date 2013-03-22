@@ -53,7 +53,7 @@ public interface FlowNode extends Model {
     public ValueObject getValueObject();
     public ObjectProperty<ValueObject> valueObjectProperty();
     
-    public FlowModel getFlow();
+    public FlowFlowNode getFlow();
 
     /**
      * @return the inputProperty

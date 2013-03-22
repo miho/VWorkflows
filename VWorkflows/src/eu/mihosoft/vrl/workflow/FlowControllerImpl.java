@@ -5,6 +5,8 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,9 +118,9 @@ class FlowControllerImpl implements FlowController {
         visibilityListener = new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
-                
-                System.out.println("visible: " + t1 + " : " + getModel().isVisible());
-                
+
+                System.out.println("visible: " + t1 + " : " + getModel().isVisible() + " : " + getModel().getId());
+
                 if (t1) {
                     setNodeSkinFactory(nodeSkinFactory);
                     setConnectionSkinFactory(connectionSkinFactory);
@@ -320,7 +322,7 @@ class FlowControllerImpl implements FlowController {
         }
         nodeSkins.clear();
 
-        List<ConnectionSkin> connectionDelList = 
+        List<ConnectionSkin> connectionDelList =
                 new ArrayList<>(connectionSkins.values());
 
         for (ConnectionSkin<Connection> cS : connectionDelList) {
@@ -373,6 +375,8 @@ class FlowControllerImpl implements FlowController {
 
         this.connectionSkinFactory = connectionSkinFactory;
 
+//        System.out.println(">> setting skinfactory for " + getModel().getId() + " : " + connectionSkinFactory);
+
         if (connectionSkinFactory == null) {
             removeUI();
         } else {
@@ -381,6 +385,8 @@ class FlowControllerImpl implements FlowController {
 
                     // TODO allow other connection types
                     createConnectionSkin(c, "control");
+
+//                    System.out.println(" --> skin for " + c);
                 }
             }
         }
@@ -410,6 +416,12 @@ class FlowControllerImpl implements FlowController {
     @Override
     public void setModel(FlowFlowNode flow) {
         modelProperty.set(flow);
+
+        for (FlowNode n : flow.getNodes()) {
+            if (n instanceof FlowFlowNode) {
+                newSubFlow((FlowFlowNode) n);
+            }
+        }
     }
 
     @Override
@@ -422,9 +434,7 @@ class FlowControllerImpl implements FlowController {
         return modelProperty;
     }
 
-    @Override
-    public FlowController newSubFlow(ValueObject obj) {
-        FlowFlowNode flowNode = getModel().newFlowNode(obj);
+    private FlowController newSubFlow(FlowFlowNode flowNode) {
 
         FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
 
@@ -436,7 +446,7 @@ class FlowControllerImpl implements FlowController {
         }
 
         if (connectionSkinFactory != null) {
-            childConnectionSkinFactory = 
+            childConnectionSkinFactory =
                     connectionSkinFactory.createChild(skin);
         }
 
@@ -447,9 +457,11 @@ class FlowControllerImpl implements FlowController {
         controller.setModel(flowNode);
 
         for (String connectionType : getAllConnections().keySet()) {
-            controller.addConnections(
-                    VConnections.newConnections(),
-                    connectionType);
+            if (flowNode.getConnections(connectionType) == null) {
+                controller.addConnections(
+                        VConnections.newConnections(connectionType),
+                        connectionType);
+            }
         }
 
         subControllers.put(flowNode.getId(), controller);
@@ -458,36 +470,19 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
+    public FlowController newSubFlow(ValueObject obj) {
+        return newSubFlow(getModel().newFlowNode(obj));
+    }
+
+    @Override
     public FlowController newSubFlow() {
         FlowFlowNode flowNode = getModel().newFlowNode();
 
-        FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
+        return newSubFlow(flowNode);
+    }
 
-        FlowNodeSkinFactory childNodeSkinFactory = null;
-        ConnectionSkinFactory childConnectionSkinFactory = null;
-
-        if (nodeSkinFactory != null) {
-            childNodeSkinFactory = nodeSkinFactory.createChild(skin);
-        }
-
-        if (connectionSkinFactory != null) {
-            childConnectionSkinFactory = 
-                    connectionSkinFactory.createChild(skin);
-        }
-
-        FlowController controller = new FlowControllerImpl(
-                childNodeSkinFactory,
-                childConnectionSkinFactory);
-
-        controller.setModel(flowNode);
-
-        for (String connectionType : getAllConnections().keySet()) {
-            controller.addConnections(
-                    VConnections.newConnections(), connectionType);
-        }
-
-        subControllers.put(flowNode.getId(), controller);
-
-        return controller;
+    @Override
+    public Collection<FlowController> getSubControllers() {
+        return Collections.unmodifiableCollection(subControllers.values());
     }
 }

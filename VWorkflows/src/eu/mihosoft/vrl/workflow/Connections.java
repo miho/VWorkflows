@@ -11,17 +11,19 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Connections extends Model{
+public interface Connections extends Model {
 
     public void add(Connection c);
+
+    public Connection add(String s, String r);
+
+    public Connection add(String id, String s, String r, VisualizationRequest vReq);
 
     public void remove(Connection c);
 
     public Connection get(String id, String s, String r);
 
     public Iterable<Connection> getAll(String s, String r);
-
-    public Connection add(String s, String r);
 
     public void remove(String id, String s, String r);
 
@@ -34,9 +36,12 @@ public interface Connections extends Model{
     public ObservableList<Connection> getConnections();
 
     public Collection<Connection> getAllWith(String id);
-    
+
     public boolean isInputConnected(String id);
+
     public boolean isOutputConnected(String id);
-    
+
     public boolean contains(String s, String r);
+
+    public String getType();
 }

@@ -66,6 +66,7 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
+        
         CompatibilityResult result = r.getValueObject().
                 compatible(s.getValueObject(), type);
 
@@ -174,30 +175,9 @@ public class FlowModelImpl implements FlowModel {
         return flowNodeClass;
     }
 
-    @Override
-    public FlowNode newNode(ValueObject obj) {
+    
 
-        FlowNode result = null;
-
-        try {
-            Constructor constructor = getFlowNodeClass().getConstructor(FlowModel.class);
-            try {
-                result = (FlowNode) constructor.newInstance(this);
-                result.setValueObject(obj);
-
-                result = newNode(result, obj);
-
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (NoSuchMethodException | SecurityException ex) {
-            Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return result;
-    }
-
-    private FlowNode newNode(FlowNode result, ValueObject obj) {
+     FlowNode newNode(FlowNode result, ValueObject obj) {
 
         result.setValueObject(obj);
 
@@ -221,65 +201,7 @@ public class FlowModelImpl implements FlowModel {
         return result;
     }
 
-    @Override
-    public FlowNode newNode() {
-        return newNode(new ValueObject() {
-            @Override
-            public FlowNode getParent() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public Object getValue() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setValue(Object o) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public ObjectProperty<Object> valueProperty() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompatibilityResult compatible(ValueObject other, String flowType) {
-                return new CompatibilityResult() {
-                    @Override
-                    public boolean isCompatible() {
-                        return true;
-                    }
-
-                    @Override
-                    public String getMessage() {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-
-                    @Override
-                    public String getStatus() {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-                };
-            }
-
-            @Override
-            public VisualizationRequest getVisualizationRequest() {
-                return new VisualizationRequest() {
-                    @Override
-                    public String getStyle() {
-                        return "default";
-                    }
-
-                    @Override
-                    public String getOptions() {
-                        return "";
-                    }
-                };
-            }
-        });
-    }
+    
 
     @Override
     public void addConnections(Connections connections, String flowType) {
@@ -296,73 +218,5 @@ public class FlowModelImpl implements FlowModel {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public FlowFlowNode newFlowNode(ValueObject obj) {
-        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
-
-        return (FlowFlowNode) newNode(flowNode, obj);
-    }
-
-    @Override
-    public FlowFlowNode newFlowNode() {
-        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
-
-        return (FlowFlowNode) newNode(flowNode, new ValueObject() {
-            @Override
-            public FlowNode getParent() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public Object getValue() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setValue(Object o) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public ObjectProperty<Object> valueProperty() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompatibilityResult compatible(ValueObject other, String flowType) {
-                return new CompatibilityResult() {
-                    @Override
-                    public boolean isCompatible() {
-                        return true;
-                    }
-
-                    @Override
-                    public String getMessage() {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-
-                    @Override
-                    public String getStatus() {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-                };
-            }
-
-            @Override
-            public VisualizationRequest getVisualizationRequest() {
-                return new VisualizationRequest() {
-                    @Override
-                    public String getStyle() {
-                        return "default";
-                    }
-
-                    @Override
-                    public String getOptions() {
-                        return "";
-                    }
-                };
-            }
-        }); // end newNode()
-
-    }
+    
 }

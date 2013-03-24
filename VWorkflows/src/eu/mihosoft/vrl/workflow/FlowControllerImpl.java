@@ -103,10 +103,10 @@ class FlowControllerImpl implements FlowController {
                         // added
                         for (Connection n : change.getAddedSubList()) {
                             // TODO only control type possible, shall connection know its type?
-                            if (!connectionSkins.containsKey(n.getId())) {
+//                            if (!connectionSkins.containsKey(n.getId())) {
                                 createConnectionSkin(n, "control");
 //                                 System.out.println("add skin: " + n);
-                            }
+//                            }
                         }
                     }
 
@@ -144,6 +144,7 @@ class FlowControllerImpl implements FlowController {
 
                     if (connectionsListener != null) {
                         for (Connections conn : t.getAllConnections().values()) {
+                            System.out.println("listener for conn-type removed: " + conn.getType());
                             conn.getConnections().removeListener(connectionsListener);
                         }
                     }
@@ -158,6 +159,10 @@ class FlowControllerImpl implements FlowController {
                     if (nodesListener != null) {
                         t1.getNodes().addListener(nodesListener);
                     }
+                    
+                    for (Connections conn : t1.getAllConnections().values()) {
+                            conn.getConnections().addListener(connectionsListener);
+                    }
 
                     t1.getAllConnections().addListener(new MapChangeListener<String, Connections>() {
                         @Override
@@ -167,7 +172,7 @@ class FlowControllerImpl implements FlowController {
                             }
 
                             if (change.wasRemoved()) {
-                                change.getValueAdded().getConnections().removeListener(connectionsListener);
+                                change.getValueRemoved().getConnections().removeListener(connectionsListener);
                             }
                         }
                     });

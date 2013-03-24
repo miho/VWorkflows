@@ -275,6 +275,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                 } else {
                     remove();
+                    connection.getConnections().remove(connection);
                 }
             }
         });

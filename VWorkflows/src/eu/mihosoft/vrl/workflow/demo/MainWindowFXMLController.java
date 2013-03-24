@@ -93,7 +93,7 @@ public class MainWindowFXMLController implements Initializable {
         System.out.print(" >> generate workflow");
 
         workflow = new DefaultWorkflow();
-        workflowTest(workflow, 3, 3);
+        workflowTest(workflow, 5, 10);
 
         System.out.println(" [done]");
 
@@ -156,7 +156,7 @@ public class MainWindowFXMLController implements Initializable {
 
     private void updateUI() {
         
-//        rootPane.getChildren().clear();
+        rootPane.getChildren().clear();
         
         if (workflow == null) {
             return;

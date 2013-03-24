@@ -106,7 +106,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         lineTo.xProperty().bind(receiverConnector.layoutXProperty());
         lineTo.yProperty().bind(receiverConnector.layoutYProperty());
-        
+
         makeDraggable();
 
         receiverConnector.setLayoutX(getSender().getX() + getSender().getWidth());
@@ -123,13 +123,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             @Override
             public void handle(MouseEvent t) {
 
-//                Parent root = getParent().getScene().getRoot();
-//
-//                if (root == null) {
-//                    return;
-//                }
-
-
                 final Node n = NodeUtil.getNode(
                         getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
@@ -144,10 +137,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     FlowNode model = w.nodeSkinProperty().get().getModel();
 
-                    // we cannot create a connection from us to us
-                    if (model == getSender()) {
-                        return;
-                    }
+//                    // we cannot create a connection from us to us
+//                    if (model == getSender()) {
+//                        return;
+//                    }
 
 //                    // only one connection between nodes
 //                    if (model.getFlow().getConnections(type).contains(
@@ -183,7 +176,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
-        },  new EventHandler<MouseEvent>() {
+        }, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 receiverConnector.layoutXProperty().unbind();
@@ -311,5 +304,4 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         NodeUtil.removeFromParent(connectionPath);
         NodeUtil.removeFromParent(receiverConnector);
     }
-
 }

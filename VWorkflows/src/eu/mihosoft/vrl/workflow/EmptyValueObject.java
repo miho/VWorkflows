@@ -37,7 +37,7 @@ public class EmptyValueObject implements ValueObject {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {
-                return true;
+                return other!=EmptyValueObject.this;
             }
 
             @Override

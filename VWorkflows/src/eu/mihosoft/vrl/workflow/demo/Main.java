@@ -71,12 +71,8 @@ public class Main extends Application {
         Rectangle rect = new Rectangle();
         rect.setStroke(new Color(1, 1, 1, 1));
         rect.setFill(new Color(0, 0, 0, 0.5));
-
-//        MouseControlUtil.
-//                addSelectionRectangleGesture(root, rect);
-
-
-
+        MouseControlUtil.
+                addSelectionRectangleGesture(controller.getRootPane(), rect);
 
 
     }

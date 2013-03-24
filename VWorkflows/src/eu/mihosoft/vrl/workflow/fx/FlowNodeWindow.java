@@ -13,10 +13,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.scene.control.window.WindowIcon;
+import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
@@ -48,6 +51,8 @@ public class FlowNodeWindow extends Window {
 
         super.setContentPane(parentContent);
         addCollapseIcon(skin);
+        
+//        addSelectionRectangle(skin, root);
     }
 
     public Pane getWorkflowContentPane() {
@@ -77,7 +82,7 @@ public class FlowNodeWindow extends Window {
             @Override
             public void handle(ActionEvent t) {
                 FXFlowNodeSkin skin = nodeSkinProperty.get();
-                
+
                 if (skin != null) {
                     FlowFlowNode model = (FlowFlowNode) skin.getModel();
                     model.setVisible(!model.isVisible());
@@ -101,5 +106,19 @@ public class FlowNodeWindow extends Window {
             });
         }
 
+    }
+
+    private void addSelectionRectangle(FXFlowNodeSkin skin, Pane root) {
+        if (skin == null) {
+            return;
+        }
+        if (!(skin.getModel() instanceof FlowFlowNode)) {
+            return;
+        }
+        Rectangle rect = new Rectangle();
+        rect.setStroke(new Color(1, 1, 1, 1));
+        rect.setFill(new Color(0, 0, 0, 0.5));
+        MouseControlUtil.
+                addSelectionRectangleGesture(root, rect);
     }
 }

@@ -31,7 +31,6 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-import jfxtras.labs.util.NodeUtil;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
@@ -162,12 +161,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             }
         });
 
-        receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                makeDraggable(receiveXBinding, receiveYBinding);
-            }
-        });
+
+        makeDraggable(receiveXBinding, receiveYBinding);
+
+
+//        receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent t) {
+//                makeDraggable(receiveXBinding, receiveYBinding);
+//            }
+//        });
 
     }
 
@@ -190,15 +193,15 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             @Override
             public void handle(MouseEvent t) {
 
-                Parent root = getParent().getScene().getRoot();
+//                Parent root = getParent().getScene().getRoot();
 
-                // TODO why can root be null?
-                if (root == null) {
-                    return;
-                }
+//                // TODO why can root be null?
+//                if (root == null) {
+//                    return;
+//                }
 
                 final Node n = NodeUtil.getNode(
-                        root,
+                        getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (lastNode != null) {
@@ -237,7 +240,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
-        }, null);
+        }, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                receiverConnector.layoutXProperty().unbind();
+                receiverConnector.layoutYProperty().unbind();
+            }
+        });
+
+        receiverConnector.layoutXProperty().bind(receiveXBinding);
+        receiverConnector.layoutYProperty().bind(receiveYBinding);
 
 
         receiverConnector.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
@@ -250,12 +262,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 receiverConnector.layoutXProperty().bind(receiveXBinding);
                 receiverConnector.layoutYProperty().bind(receiveYBinding);
 
-                receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent t) {
-                        makeDraggable(receiveXBinding, receiveYBinding);
-                    }
-                });
+//                receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent t) {
+//                        makeDraggable(receiveXBinding, receiveYBinding);
+//                    }
+//                });
 
                 if (lastNode != null) {
                     lastNode.setEffect(null);
@@ -263,7 +275,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 }
 
                 Node n = NodeUtil.getNode(
-                        getParent().getScene().getRoot(),
+                        getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (n != null) {

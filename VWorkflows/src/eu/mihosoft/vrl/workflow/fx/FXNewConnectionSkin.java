@@ -25,7 +25,6 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import jfxtras.labs.util.NodeUtil;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
@@ -107,13 +106,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         lineTo.xProperty().bind(receiverConnector.layoutXProperty());
         lineTo.yProperty().bind(receiverConnector.layoutYProperty());
-
-        receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                makeDraggable();
-            }
-        });
+        
+        makeDraggable();
 
         receiverConnector.setLayoutX(getSender().getX() + getSender().getWidth());
         receiverConnector.setLayoutY(getSender().getY() + getSender().getHeight() / 2.0);
@@ -129,15 +123,15 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             @Override
             public void handle(MouseEvent t) {
 
-                Parent root = getParent().getScene().getRoot();
-
-                if (root == null) {
-                    return;
-                }
+//                Parent root = getParent().getScene().getRoot();
+//
+//                if (root == null) {
+//                    return;
+//                }
 
 
                 final Node n = NodeUtil.getNode(
-                        root,
+                        getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (lastNode != null) {
@@ -189,8 +183,13 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
-        }, null);
-
+        },  new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                receiverConnector.layoutXProperty().unbind();
+                receiverConnector.layoutYProperty().unbind();
+            }
+        });
 
         receiverConnector.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
@@ -205,7 +204,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 }
 
                 Node n = NodeUtil.getNode(
-                        getParent().getScene().getRoot(),
+                        getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (n != null) {

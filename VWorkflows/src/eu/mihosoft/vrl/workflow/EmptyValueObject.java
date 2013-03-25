@@ -33,7 +33,7 @@ public class EmptyValueObject implements ValueObject {
     }
 
     @Override
-    public CompatibilityResult compatible(ValueObject other, String flowType) {
+    public CompatibilityResult compatible(final ValueObject other, String flowType) {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {

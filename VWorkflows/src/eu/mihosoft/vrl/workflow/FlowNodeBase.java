@@ -275,4 +275,22 @@ class FlowNodeBase implements FlowNode {
     public boolean isInput() {
         return inputProperty.get();
     }
+
+    @Override
+    public String getGlobalId() {
+       String id = getId();
+       
+       if (getFlow() ==null) {
+           return id;
+       }
+       
+       FlowNode parent = getFlow();
+       
+       while (parent.getFlow()!=null) {
+           id = parent.getGlobalId() + ":" + id;
+           parent = parent.getFlow();
+       }
+       
+       return id;
+    }
 }

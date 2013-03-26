@@ -93,7 +93,7 @@ public class MainWindowFXMLController implements Initializable {
         System.out.print(" >> generate workflow");
 
         workflow = new DefaultWorkflow();
-        workflowTest(workflow, 5, 10);
+        workflowTest(workflow, 3, 3);
 
         System.out.println(" [done]");
 
@@ -139,6 +139,7 @@ public class MainWindowFXMLController implements Initializable {
             }
 
             n.setTitle("Node " + i);
+            System.out.println("n: " + n.getGlobalId());
             n.setWidth(300);
             n.setHeight(200);
 

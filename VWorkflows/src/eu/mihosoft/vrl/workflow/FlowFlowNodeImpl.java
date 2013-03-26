@@ -312,5 +312,10 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     public FlowNode newNode() {
         return newNode(new EmptyValueObject());
     }
+
+    @Override
+    public String getGlobalId() {
+        return node.getGlobalId();
+    }
 }
 

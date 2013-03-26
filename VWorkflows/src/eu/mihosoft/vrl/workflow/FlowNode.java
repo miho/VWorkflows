@@ -23,8 +23,22 @@ public interface FlowNode extends Model {
     
     public StringProperty idProperty();
     
+    /**
+     * Defines the local id of this node.
+     * @param id id to set
+     */
     public void setId(String id);
+    /**
+     * Returns the local id of this node.
+     * @return 
+     */
     public String getId();
+    
+    /**
+     * Returns the global id of this node
+     * @return global id of this node
+     */
+    public String getGlobalId();
 
     public DoubleProperty xProperty();
     public DoubleProperty yProperty();

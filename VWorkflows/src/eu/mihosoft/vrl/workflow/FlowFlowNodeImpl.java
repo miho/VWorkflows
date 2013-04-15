@@ -41,6 +41,8 @@ class FlowFlowNodeImpl implements FlowFlowNode {
 
     public FlowFlowNodeImpl(FlowModel parentFlow) {
 
+        flow = new FlowModelImpl();
+        
         FlowFlowNode pFlow = null;
 
         if (parentFlow != null) {
@@ -49,10 +51,15 @@ class FlowFlowNodeImpl implements FlowFlowNode {
             } else {
                 pFlow = (FlowFlowNode) parentFlow;
             }
+            if (parentFlow.getIdGenerator()==null) {
+                throw new IllegalStateException("Please define an id generator before creating subflows!");
+            }
+            
+            setIdGenerator(parentFlow.getIdGenerator().newChild());
         }
 
         node = new FlowNodeBase(pFlow);
-        flow = new FlowModelImpl();
+        
     }
 
     @Override
@@ -313,9 +320,19 @@ class FlowFlowNodeImpl implements FlowFlowNode {
         return newNode(new EmptyValueObject());
     }
 
+//    @Override
+//    public String getGlobalId() {
+//        return node.getGlobalId();
+//    }
+
     @Override
-    public String getGlobalId() {
-        return node.getGlobalId();
+    public void setIdGenerator(IdGenerator generator) {
+        flow.setIdGenerator(generator);
+    }
+
+    @Override
+    public IdGenerator getIdGenerator() {
+        return flow.getIdGenerator();
     }
 }
 

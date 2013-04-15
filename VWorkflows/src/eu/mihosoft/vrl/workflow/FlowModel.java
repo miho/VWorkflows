@@ -34,7 +34,8 @@ interface FlowModel extends Model, VisibleState{
     
     public Class<? extends FlowNode> getFlowNodeClass();
     
-
+    public void setIdGenerator(IdGenerator generator);
+    public IdGenerator getIdGenerator();
 
 
 }

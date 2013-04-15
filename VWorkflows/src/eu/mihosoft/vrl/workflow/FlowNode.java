@@ -38,7 +38,7 @@ public interface FlowNode extends Model {
      * Returns the global id of this node
      * @return global id of this node
      */
-    public String getGlobalId();
+//    public String getGlobalId();
 
     public DoubleProperty xProperty();
     public DoubleProperty yProperty();

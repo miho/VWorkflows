@@ -6,10 +6,10 @@ package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.EmptyValueObject;
-import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
+import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.VConnections;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class WorkflowIO {
 
-    public static FlowFlowNode loadFromXML(Path p) throws IOException {
+    public static FlowFlowNode loadFromXML(Path p, IdGenerator generator) throws IOException {
 
         XStream xstream = new XStream();
 
@@ -41,7 +41,7 @@ public class WorkflowIO {
             xml.append(line).append("\n");
         }
 
-        return flowFromPersistentFlow((Flow) xstream.fromXML(xml.toString()));
+        return flowFromPersistentFlow((Flow) xstream.fromXML(xml.toString()), generator);
     }
 
     private static void configureStream(XStream xstream) {
@@ -121,21 +121,23 @@ public class WorkflowIO {
         }
     }
 
-    public static FlowFlowNode flowFromPersistentFlow(Flow flow) {
-        return createFlowFromPersistent(flow, null);
+    public static FlowFlowNode flowFromPersistentFlow(Flow flow, IdGenerator generator) {
+        return createFlowFromPersistent(flow, null, generator);
     }
 
-    private static FlowFlowNode createFlowFromPersistent(Flow flow, FlowFlowNode parent) {
+    private static FlowFlowNode createFlowFromPersistent(Flow flow, FlowFlowNode parent, IdGenerator generator) {
 
         FlowFlowNode result = null;
 
         if (parent == null) {
             result = FlowFactory.newFlowModel();
+            result.setIdGenerator(generator);
         } else {
             result = parent.newFlowNode();
         }
 
         result.setId(flow.getId());
+        generator.addId(flow.getId());
         result.setTitle(flow.getTitle());
         result.setX(flow.getX());
         result.setY(flow.getY());
@@ -161,19 +163,20 @@ public class WorkflowIO {
         }
 
         for (Node n : flow.getNodes()) {
-            addFlowNode(result, n);
+            addFlowNode(result, n, generator);
         }
 
         return result;
     }
 
-    private static void addFlowNode(FlowFlowNode flow, Node node) {
+    private static void addFlowNode(FlowFlowNode flow, Node node, IdGenerator generator) {
 
         if (node instanceof Flow) {
-            createFlowFromPersistent((Flow) node, flow);
+            createFlowFromPersistent((Flow) node, flow, generator);
         } else {
             FlowNode result = flow.newNode();
             result.setId(node.getId());
+            generator.addId(node.getId());
             result.setTitle(node.getTitle());
             result.setX(node.getX());
             result.setY(node.getY());

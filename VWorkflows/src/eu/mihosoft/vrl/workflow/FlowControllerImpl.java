@@ -35,6 +35,7 @@ class FlowControllerImpl implements FlowController {
     private Map<String, ConnectionSkin> connectionSkins = new HashMap<>();
     private ObservableMap<String, FlowController> subControllers = FXCollections.observableHashMap();
     private ChangeListener<Boolean> visibilityListener;
+    private IdGenerator idGenerator;
 
     public FlowControllerImpl(FlowNodeSkinFactory nodeSkinFactory, ConnectionSkinFactory connectionSkinFactory) {
         this.nodeSkinFactory = nodeSkinFactory;
@@ -44,6 +45,8 @@ class FlowControllerImpl implements FlowController {
     }
 
     private void init() {
+
+        setIdGenerator(new IdGeneratorImpl());
 
         nodesListener = new ListChangeListener<FlowNode>() {
             @Override
@@ -104,7 +107,7 @@ class FlowControllerImpl implements FlowController {
                         for (Connection n : change.getAddedSubList()) {
                             // TODO only control type possible, shall connection know its type?
 //                            if (!connectionSkins.containsKey(n.getId())) {
-                                createConnectionSkin(n, "control");
+                            createConnectionSkin(n, "control");
 //                                 System.out.println("add skin: " + n);
 //                            }
                         }
@@ -156,12 +159,14 @@ class FlowControllerImpl implements FlowController {
 
                 if (t1 != null) {
 
+                    _updateIdGenerator();
+
                     if (nodesListener != null) {
                         t1.getNodes().addListener(nodesListener);
                     }
-                    
+
                     for (Connections conn : t1.getAllConnections().values()) {
-                            conn.getConnections().addListener(connectionsListener);
+                        conn.getConnections().addListener(connectionsListener);
                     }
 
                     t1.getAllConnections().addListener(new MapChangeListener<String, Connections>() {
@@ -181,7 +186,10 @@ class FlowControllerImpl implements FlowController {
                 }
             }
         });
+    }
 
+    private void _updateIdGenerator() {
+        getModel().setIdGenerator(idGenerator);
     }
 
     // TODO duplicated code
@@ -208,6 +216,11 @@ class FlowControllerImpl implements FlowController {
     @Override
     public ObservableList<FlowNode> getNodes() {
         return getModel().getNodes();
+    }
+
+    @Override
+    public NodeLookup newNodeLookup() {
+        return new NodeLookupImpl(getModel());
     }
 
     @Override
@@ -427,6 +440,7 @@ class FlowControllerImpl implements FlowController {
                 newSubFlow((FlowFlowNode) n);
             }
         }
+
     }
 
     @Override
@@ -459,6 +473,8 @@ class FlowControllerImpl implements FlowController {
                 childNodeSkinFactory,
                 childConnectionSkinFactory);
 
+        controller.setIdGenerator(idGenerator);
+
         controller.setModel(flowNode);
 
         for (String connectionType : getAllConnections().keySet()) {
@@ -489,5 +505,15 @@ class FlowControllerImpl implements FlowController {
     @Override
     public Collection<FlowController> getSubControllers() {
         return Collections.unmodifiableCollection(subControllers.values());
+    }
+
+    @Override
+    public void setIdGenerator(IdGenerator generator) {
+        this.idGenerator = generator;
+    }
+
+    @Override
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
     }
 }

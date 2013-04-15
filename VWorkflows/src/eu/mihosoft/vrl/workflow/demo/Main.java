@@ -71,7 +71,7 @@ public class Main extends Application {
         MouseControlUtil.
                 addSelectionRectangleGesture(controller.getRootPane(), rect);
 
-
+        Playground.search01();
     }
 
     public void connectionTest() {

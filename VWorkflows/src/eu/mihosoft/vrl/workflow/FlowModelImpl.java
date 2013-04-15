@@ -38,6 +38,7 @@ public class FlowModelImpl implements FlowModel {
     private final Map<String, FlowNode> nodes = new HashMap<>();
     private Class<? extends FlowNode> flowNodeClass = FlowNodeBase.class;
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
+    private IdGenerator idGenerator;
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -180,13 +181,19 @@ public class FlowModelImpl implements FlowModel {
         result.setValueObject(obj);
 
         // search id:
-        String id = "0";
-        int count = 0;
-
-        while (nodes.containsKey(id)) {
-            count++;
-            id = "" + count;
+//        String id = "0";
+//        int count = 0;
+//
+//        while (nodes.containsKey(id)) {
+//            count++;
+//            id = "" + count;
+//        }
+        
+        if (getIdGenerator()==null) {
+            throw new IllegalStateException("Please define an idgenerator before creating nodes!");
         }
+        
+        String id = getIdGenerator().newId();
 
         result.setId(id);
 
@@ -212,5 +219,21 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * @return the idGenerator
+     */
+    @Override
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
+    }
+
+    /**
+     * @param idGenerator the idGenerator to set
+     */
+    @Override
+    public void setIdGenerator(IdGenerator idGenerator) {
+        this.idGenerator = idGenerator;
     }
 }

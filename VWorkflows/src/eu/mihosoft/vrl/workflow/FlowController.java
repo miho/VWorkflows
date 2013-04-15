@@ -15,6 +15,8 @@ import javafx.collections.ObservableList;
 public interface FlowController {
 
     public void setModel(FlowFlowNode flow);
+    
+    public NodeLookup newNodeLookup();
 
     public FlowFlowNode getModel();
 
@@ -53,4 +55,7 @@ public interface FlowController {
     public void setNodeSkinFactory(FlowNodeSkinFactory factory);
 
     public void setConnectionSkinFactory(ConnectionSkinFactory factory);
+    
+    public void setIdGenerator(IdGenerator generator);
+    public IdGenerator getIdGenerator();
 }

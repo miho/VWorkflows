@@ -9,6 +9,7 @@ import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
+import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinFactory;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
@@ -59,7 +60,8 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow = FlowFactory.newFlow();
         try {
-            FlowFlowNode flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"));
+            System.out.println("IDGEN: " + workflow.getIdGenerator());
+            FlowFlowNode flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"), workflow.getIdGenerator());
             workflow.setModel(flow);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,7 +141,7 @@ public class MainWindowFXMLController implements Initializable {
             }
 
             n.setTitle("Node " + i);
-            System.out.println("n: " + n.getGlobalId());
+//            System.out.println("n: " + n.getGlobalId());
             n.setWidth(300);
             n.setHeight(200);
 

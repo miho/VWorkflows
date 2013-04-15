@@ -61,10 +61,7 @@ public class Main extends Application {
 
         canvas.getChildren().add((Node) fxmlLoader.getRoot());
 
-
-
-
-        primaryStage.setTitle("VFXConnection Demo!");
+        primaryStage.setTitle("VWorkflows Demo!");
         primaryStage.setScene(scene);
         primaryStage.show();
 

@@ -334,5 +334,15 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     public IdGenerator getIdGenerator() {
         return flow.getIdGenerator();
     }
+
+    @Override
+    public void setNodeLookup(NodeLookup nodeLookup) {
+        flow.setNodeLookup(nodeLookup);
+    }
+
+    @Override
+    public NodeLookup getNodeLookup() {
+        return flow.getNodeLookup();
+    }
 }
 

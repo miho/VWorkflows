@@ -60,7 +60,6 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow = FlowFactory.newFlow();
         try {
-            System.out.println("IDGEN: " + workflow.getIdGenerator());
             FlowFlowNode flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"), workflow.getIdGenerator());
             workflow.setModel(flow);
         } catch (IOException ex) {
@@ -95,7 +94,7 @@ public class MainWindowFXMLController implements Initializable {
         System.out.print(" >> generate workflow");
 
         workflow = new DefaultWorkflow();
-        workflowTest(workflow, 3, 3);
+        workflowTest(workflow, 3, 6);
 
         System.out.println(" [done]");
 
@@ -132,16 +131,17 @@ public class MainWindowFXMLController implements Initializable {
                 FlowController subFlow = workflow.newSubFlow();
                 n = subFlow.getModel();
                 workflowTest(subFlow, depth - 1, width);
-
-
-
             } else {
                 n = workflow.newNode();
 
             }
 
-            n.setTitle("Node " + i);
-//            System.out.println("n: " + n.getGlobalId());
+//            n.setTitle("Node " + i);
+            n.setTitle("Node " + n.getId());
+            
+            
+            System.out.println("n: " + n.getId());
+            
             n.setWidth(300);
             n.setHeight(200);
 

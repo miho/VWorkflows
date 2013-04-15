@@ -117,6 +117,50 @@ public class NodeUtil {
         return null;
     }
     
+    /**
+     * Returns the deepest node at the given location that is an instance of the
+     * specified class object. The search is performed recursively until either
+     * a node has been found or a leaf node is reached.
+     *
+     * @param p parent node
+     * @param sceneX x coordinate
+     * @param sceneY y coordinate
+     * @param nodeClass node class to search for
+     * @return a node that contains the specified screen coordinates and is an
+     * instance of the specified class or <code>null</code> if no such node
+     * exist
+     */
+    public static Node getDeepestNode(Parent p, double sceneX, double sceneY, Class<?> nodeClass) {
+
+        // dammit! javafx uses "wrong" children order.
+        List<Node> rightOrder = new ArrayList<>();
+        rightOrder.addAll(p.getChildrenUnmodifiable());
+        Collections.reverse(rightOrder);
+
+        for (Node n : rightOrder) {
+            boolean contains = n.contains(n.sceneToLocal(sceneX, sceneY));
+
+            if (contains) {
+                
+                Node result = null;
+
+                if (n instanceof Parent) {
+                    result = getDeepestNode((Parent) n, sceneX, sceneY, nodeClass);
+                }
+                
+                if (result == null) {
+                    result = n;
+                }
+                
+                if (nodeClass.isAssignableFrom(result.getClass())) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    }
+    
     public static List<Node> nodesWithParent(Parent p, List<Node> nodes) {
         List<Node> result = new ArrayList<>();
         

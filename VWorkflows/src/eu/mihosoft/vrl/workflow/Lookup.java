@@ -8,6 +8,6 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface NodeLookup extends Lookup<FlowNode>{
-    
+public interface Lookup<T> {
+    public T getById(String id);
 }

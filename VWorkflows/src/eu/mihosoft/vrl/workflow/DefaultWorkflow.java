@@ -4,9 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
@@ -17,8 +14,10 @@ public final class DefaultWorkflow extends FlowControllerImpl {
             ConnectionSkinFactory connectionSkinFactory) {
 
         super(flowNodeSkinFactory, connectionSkinFactory);
-
-        setModel(FlowFactory.newFlowModel());
+        
+        FlowFlowNode model = FlowFactory.newFlowModel();
+        setNodeLookup(new NodeLookupImpl(model));
+        setModel(model);
 
         addConnections(VConnections.newConnections("control"), "control");
         addConnections(VConnections.newConnections("data"), "data");
@@ -29,7 +28,9 @@ public final class DefaultWorkflow extends FlowControllerImpl {
 
         super(null, null);
 
-        setModel(FlowFactory.newFlowModel());
+        FlowFlowNode model = FlowFactory.newFlowModel();
+        setNodeLookup(new NodeLookupImpl(model));
+        setModel(model);
 
         addConnections(VConnections.newConnections("control"), "control");
         addConnections(VConnections.newConnections("data"), "data");

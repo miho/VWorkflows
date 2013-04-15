@@ -39,6 +39,7 @@ public class FlowModelImpl implements FlowModel {
     private Class<? extends FlowNode> flowNodeClass = FlowNodeBase.class;
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
     private IdGenerator idGenerator;
+    private NodeLookup nodeLookup;
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -150,13 +151,13 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {
-        return nodes.get(c.getSenderId());
+    public FlowNode getSender(Connection c) {       
+        return getNodeLookup().getById(c.getSenderId());
     }
 
     @Override
     public FlowNode getReceiver(Connection c) {
-        return nodes.get(c.getReceiverId());
+        return  getNodeLookup().getById(c.getReceiverId());
     }
 
     @Override
@@ -235,5 +236,19 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public void setIdGenerator(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
+    }
+
+    /**
+     * @return the nodeLookup
+     */
+    public NodeLookup getNodeLookup() {
+        return nodeLookup;
+    }
+
+    /**
+     * @param nodeLookup the nodeLookup to set
+     */
+    public void setNodeLookup(NodeLookup nodeLookup) {
+        this.nodeLookup = nodeLookup;
     }
 }

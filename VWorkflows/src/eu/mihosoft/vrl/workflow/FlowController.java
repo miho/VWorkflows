@@ -16,7 +16,9 @@ public interface FlowController {
 
     public void setModel(FlowFlowNode flow);
     
-    public NodeLookup newNodeLookup();
+    public void setNodeLookup(NodeLookup nodeLookup);
+    
+    public NodeLookup getNodeLookup();
 
     public FlowFlowNode getModel();
 

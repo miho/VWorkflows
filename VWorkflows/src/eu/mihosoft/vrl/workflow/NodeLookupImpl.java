@@ -20,27 +20,28 @@ public class NodeLookupImpl implements NodeLookup {
     }
 
     @Override
-    public FlowNode getNodeById(String globalId) {
-        return getNodeByGlobalId(root, globalId);
+    public FlowNode getById(String globalId) {
+
+        FlowNode result = getNodeByGlobalId(root, globalId);
+
+        return result;
     }
 
-    private FlowNode getNodeByGlobalId(FlowFlowNode parent, String id) {
-
-        List<FlowFlowNode> subFlows = new ArrayList<>();
+    private FlowNode getNodeByGlobalId(FlowModel parent, String id) {
 
         for (FlowNode n : parent.getNodes()) {
             if (n.getId().equals(id)) {
                 return n;
             }
 
-            if (n instanceof FlowFlowNode) {
-                subFlows.add((FlowFlowNode) n);
+            if (n instanceof FlowModel) {
+               FlowNode result = getNodeByGlobalId((FlowModel)n, id);
+               if (result!=null) {
+                   return result;
+               }
             }
         }
 
-        for (FlowFlowNode subFlow : subFlows) {
-            return getNodeByGlobalId(subFlow, id);
-        }
 
         return null;
     }

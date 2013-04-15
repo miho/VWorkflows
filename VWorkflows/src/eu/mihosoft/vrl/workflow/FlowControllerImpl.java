@@ -36,6 +36,7 @@ class FlowControllerImpl implements FlowController {
     private ObservableMap<String, FlowController> subControllers = FXCollections.observableHashMap();
     private ChangeListener<Boolean> visibilityListener;
     private IdGenerator idGenerator;
+    private NodeLookup nodeLookup;
 
     public FlowControllerImpl(FlowNodeSkinFactory nodeSkinFactory, ConnectionSkinFactory connectionSkinFactory) {
         this.nodeSkinFactory = nodeSkinFactory;
@@ -45,7 +46,8 @@ class FlowControllerImpl implements FlowController {
     }
 
     private void init() {
-
+        
+                
         setIdGenerator(new IdGeneratorImpl());
 
         nodesListener = new ListChangeListener<FlowNode>() {
@@ -160,6 +162,7 @@ class FlowControllerImpl implements FlowController {
                 if (t1 != null) {
 
                     _updateIdGenerator();
+                    _updateNodeLookup();
 
                     if (nodesListener != null) {
                         t1.getNodes().addListener(nodesListener);
@@ -192,6 +195,14 @@ class FlowControllerImpl implements FlowController {
         getModel().setIdGenerator(idGenerator);
     }
 
+    private void _updateNodeLookup() {
+        if (nodeLookup == null) {
+            setNodeLookup(new NodeLookupImpl(getModel()));
+        }
+
+        getModel().setNodeLookup(getNodeLookup());
+    }
+
     // TODO duplicated code
     private static String connectionId(String id, String s, String r) {
         return "id=" + id + ";[" + s + "]->[" + r + "]";
@@ -216,11 +227,6 @@ class FlowControllerImpl implements FlowController {
     @Override
     public ObservableList<FlowNode> getNodes() {
         return getModel().getNodes();
-    }
-
-    @Override
-    public NodeLookup newNodeLookup() {
-        return new NodeLookupImpl(getModel());
     }
 
     @Override
@@ -474,8 +480,11 @@ class FlowControllerImpl implements FlowController {
                 childConnectionSkinFactory);
 
         controller.setIdGenerator(idGenerator);
+        controller.setNodeLookup(getNodeLookup());
 
         controller.setModel(flowNode);
+
+
 
         for (String connectionType : getAllConnections().keySet()) {
             if (flowNode.getConnections(connectionType) == null) {
@@ -515,5 +524,21 @@ class FlowControllerImpl implements FlowController {
     @Override
     public IdGenerator getIdGenerator() {
         return idGenerator;
+    }
+
+    /**
+     * @return the nodeLookup
+     */
+    @Override
+    public NodeLookup getNodeLookup() {
+        return nodeLookup;
+    }
+
+    /**
+     * @param nodeLookup the nodeLookup to set
+     */
+    @Override
+    public void setNodeLookup(NodeLookup nodeLookup) {
+        this.nodeLookup = nodeLookup;
     }
 }

@@ -123,7 +123,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             @Override
             public void handle(MouseEvent t) {
 
-                final Node n = NodeUtil.getNode(
+                final Node n = NodeUtil.getDeepestNode(
                         getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
@@ -196,7 +196,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     lastNode = null;
                 }
 
-                Node n = NodeUtil.getNode(
+                Node n = NodeUtil.getDeepestNode(
                         getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 

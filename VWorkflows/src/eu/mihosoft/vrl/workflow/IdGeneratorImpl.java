@@ -15,6 +15,12 @@ class IdGeneratorImpl implements IdGenerator{
     
     private Set<String> ids = new HashSet<>();
 
+    public IdGeneratorImpl() {
+        //
+    }
+    
+    
+
     @Override
     public void addId(String id) {
         ids.add(id);

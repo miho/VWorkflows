@@ -8,7 +8,6 @@ import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.NodeLookup;
-import eu.mihosoft.vrl.workflow.NodeLookupImpl;
 
 /**
  *
@@ -30,9 +29,9 @@ public class Playground {
         
         String globalId = sn1.getId();
         
-        NodeLookup lookup = flow.newNodeLookup();
+        NodeLookup lookup = flow.getNodeLookup();
         
-        System.out.println("lookup: " + lookup.getNodeById(globalId));
+        System.out.println("lookup: " + lookup.getById(globalId));
         System.out.println("   sn1: " + sn1);
 
     }

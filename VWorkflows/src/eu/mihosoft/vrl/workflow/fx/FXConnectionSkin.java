@@ -200,7 +200,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                    return;
 //                }
 
-                final Node n = NodeUtil.getNode(
+                final Node n = NodeUtil.getDeepestNode(
                         getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
@@ -274,13 +274,15 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     lastNode = null;
                 }
 
-                Node n = NodeUtil.getNode(
+                Node n = NodeUtil.getDeepestNode(
                         getParent(),
                         t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (n != null) {
                     connection.setReceiverId(
                             ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
+                    
+                    System.out.println("REC-ID: " + connection.getReceiverId());
 
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                     init();

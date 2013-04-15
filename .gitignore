@@ -1,9 +1,7 @@
 *.class
 
 # Package Files #
-*.jar
-*.war
-*.ear
+
 /VFXConnections/nbproject/private/
 /VFXConnections/build/
 /VFXConnections/dist/

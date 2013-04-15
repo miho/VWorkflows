@@ -66,7 +66,7 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
-        
+
         CompatibilityResult result = r.getValueObject().
                 compatible(s.getValueObject(), type);
 
@@ -175,9 +175,7 @@ public class FlowModelImpl implements FlowModel {
         return flowNodeClass;
     }
 
-    
-
-     FlowNode newNode(FlowNode result, ValueObject obj) {
+    FlowNode newNode(FlowNode result, ValueObject obj) {
 
         result.setValueObject(obj);
 
@@ -201,8 +199,6 @@ public class FlowModelImpl implements FlowModel {
         return result;
     }
 
-    
-
     @Override
     public void addConnections(Connections connections, String flowType) {
         this.connections.put(flowType, connections);
@@ -217,6 +213,4 @@ public class FlowModelImpl implements FlowModel {
     public void setVisualizationRequest(VisualizationRequest vReq) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    
 }

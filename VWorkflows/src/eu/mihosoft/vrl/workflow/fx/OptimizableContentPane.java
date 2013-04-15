@@ -30,7 +30,7 @@ public class OptimizableContentPane extends StackPane {
     private Collection<Node> detatched = new ArrayList<>();
 
     public OptimizableContentPane() {
-        this.optimizationRule = new OptimizationRuleImpl();
+        this.optimizationRule = new DefaultOptimizationRuleImpl();
 
         localToSceneTransformProperty().addListener(new ChangeListener<Transform>() {
             @Override
@@ -113,10 +113,10 @@ public class OptimizableContentPane extends StackPane {
     }
 }
 
-class OptimizationRuleImpl implements OptimizationRule {
+class DefaultOptimizationRuleImpl implements OptimizationRule {
 
-    private DoubleProperty minSceneArea = new SimpleDoubleProperty(2000);
-    private DoubleProperty minSceneDimension = new SimpleDoubleProperty(50);
+    private final DoubleProperty minSceneArea = new SimpleDoubleProperty(2000);
+    private final DoubleProperty minSceneDimension = new SimpleDoubleProperty(50);
 
     @Override
     public boolean visible(OptimizableContentPane p, Transform t) {

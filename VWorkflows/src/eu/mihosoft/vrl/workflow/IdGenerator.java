@@ -11,7 +11,7 @@ import java.util.Set;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public interface IdGenerator {
-    public void addId(String id);
+    public String addId(String id);
     public void addIds(IdGenerator generator);
     public String newId();
     public Set<String> getIds();

@@ -15,6 +15,7 @@ public interface ConnectorValueObject {
     public Object getValue();
     public void setValue(Object o);
     public ObjectProperty<Object> valueProperty();
-    public CompatibilityResult compatible(ConnectorValueObject other, String flowTpe);
-    public VisualizationRequest getVisualizationRequest();
+    public CompatibilityResult compatible(ConnectorValueObject other);
+    public String getConnectionType();
+//    public VisualizationRequest getVisualizationRequest();
 }

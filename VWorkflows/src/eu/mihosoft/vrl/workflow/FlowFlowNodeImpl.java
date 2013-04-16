@@ -346,28 +346,43 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public Connector newInput(String event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Connector newInput(String connectionType) {
+       return node.newInput(connectionType);
     }
 
     @Override
-    public Connector newInput(String myId, String control) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Connector newInput(String myId, String connectionType) {
+        return node.newInput(myId, connectionType);
     }
 
     @Override
-    public Connector newOutput(String control) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Connector newOutput(String connectionType) {
+        return node.newOutput(connectionType);
     }
 
     @Override
-    public Connector newOutput(String myId, String control) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Connector newOutput(String myId, String connectionType) {
+        return node.newOutput(myId, connectionType);
     }
 
     @Override
     public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
         return node.visualizationRequestProperty();
+    }
+
+    @Override
+    public void setConnectorIdGenerator(IdGenerator generator) {
+        this.node.setConnectorIdGenerator(generator);
+    }
+
+    @Override
+    public IdGenerator getConnectorIdGenerator() {
+        return this.node.getConnectorIdGenerator();
+    }
+
+    @Override
+    public ObjectProperty<IdGenerator> idGeneratorProperty() {
+        return this.node.idGeneratorProperty();
     }
 }
 

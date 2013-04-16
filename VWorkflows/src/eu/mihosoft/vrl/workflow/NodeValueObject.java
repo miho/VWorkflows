@@ -16,5 +16,5 @@ public interface NodeValueObject {
     public void setValue(Object o);
     public ObjectProperty<Object> valueProperty();
     public CompatibilityResult compatible(NodeValueObject other, String flowTpe);
-    public VisualizationRequest getVisualizationRequest();
+//    public VisualizationRequest getVisualizationRequest();
 }

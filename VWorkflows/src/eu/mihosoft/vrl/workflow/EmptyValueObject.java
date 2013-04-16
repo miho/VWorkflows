@@ -52,18 +52,18 @@ public class EmptyValueObject implements NodeValueObject {
         };
     }
 
-    @Override
-    public VisualizationRequest getVisualizationRequest() {
-        return new VisualizationRequest() {
-            @Override
-            public String getStyle() {
-                return "default";
-            }
-
-            @Override
-            public String getOptions() {
-                return "";
-            }
-        };
-    }
+//    @Override
+//    public VisualizationRequest getVisualizationRequest() {
+//        return new VisualizationRequest() {
+//            @Override
+//            public String getStyle() {
+//                return "default";
+//            }
+//
+//            @Override
+//            public String getOptions() {
+//                return "";
+//            }
+//        };
+//    }
 }

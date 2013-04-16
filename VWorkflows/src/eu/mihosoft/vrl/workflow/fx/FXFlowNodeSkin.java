@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
 import javafx.beans.binding.DoubleBinding;
@@ -44,12 +45,15 @@ public class FXFlowNodeSkin
     private Node output;
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
+    private FlowController controller;
 
-    public FXFlowNodeSkin(Parent parent, FlowNode model) {
+    public FXFlowNodeSkin(Parent parent, FlowNode model, FlowController controller) {
 
         setParent(parent);
         setModel(model);
-
+        
+        this.controller = controller;
+        
         init();
     }
 
@@ -144,8 +148,7 @@ public class FXFlowNodeSkin
 
                 newConnectionSkin =
                         new FXNewConnectionSkin(
-                        getParent(), getModel(),
-                        getModel().getFlow(), "control");
+                        getParent(), getModel(), getController(), "control");
 
                 newConnectionSkin.add();
 
@@ -396,5 +399,19 @@ public class FXFlowNodeSkin
         node.prefWidthProperty().addListener(nodeWidthListener);
         node.prefHeightProperty().addListener(nodeHeightListener);
 
+    }
+
+    /**
+     * @return the controller
+     */
+    public FlowController getController() {
+        return controller;
+    }
+
+    /**
+     * @param controller the controller to set
+     */
+    public void setController(FlowController controller) {
+        this.controller = controller;
     }
 }

@@ -41,16 +41,18 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //    private Shape startConnector;
     private Shape receiverConnector;
     private FlowFlowNode flow;
+    private FlowController flowController;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
 
-    public FXNewConnectionSkin(Parent parent, FlowNode sender, FlowFlowNode flow, String type) {
+    public FXNewConnectionSkin(Parent parent, FlowNode sender, FlowController controller, String type) {
         setParent(parent);
         setSender(sender);
 
-        this.flow = flow;
+        this.flowController = controller;
+        this.flow = controller.getModel();
         this.type = type;
 
 //        startConnector = new Circle(20);
@@ -136,6 +138,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     final FlowNodeWindow w = (FlowNodeWindow) n;
 
                     FlowNode model = w.nodeSkinProperty().get().getModel();
+                    
+                    
+                    System.out.println("ID: " + model.getId() + ": " + model);
 
 //                    // we cannot create a connection from us to us
 //                    if (model == getSender()) {
@@ -303,5 +308,16 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     public void remove() {
         NodeUtil.removeFromParent(connectionPath);
         NodeUtil.removeFromParent(receiverConnector);
+    }
+
+    @Override
+    public FlowController getController() {
+        return flowController;
+    }
+
+    @Override
+    public void setController(FlowController flow) {
+        this.flowController = flow;
+        this.flow = flow.getModel();
     }
 }

@@ -52,20 +52,8 @@ class DummySkinFactoryImpl implements SkinFactory<ConnectionSkin,FlowNodeSkin> {
     }
 
     @Override
-    public FlowNodeSkin createSkin(FlowNode n) {
+    public FlowNodeSkin createSkin(FlowNode n, FlowController flow) {
         return null;
     }
-
-    @Override
-    public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public FlowNodeSkinLookup getNodeSkinLookup() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-   
 }
 

@@ -9,20 +9,15 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -30,7 +25,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import javafx.stage.Stage;
+import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
@@ -46,7 +41,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private MoveTo moveTo;
 //    private Shape startConnector;
     private Shape receiverConnector;
-    private FlowController flow;
+    private FlowController controller;
     private Connection connection;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
@@ -56,7 +51,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     public FXConnectionSkin(Parent parent, Connection connection, FlowController flow, String type) {
         setParent(parent);
         this.connection = connection;
-        this.flow = flow;
+        this.controller = flow;
         this.type = type;
 
 //        startConnector = new Circle(20);
@@ -83,53 +78,68 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 
 
-        final FlowNode sender = flow.getSender(connection);
-        final FlowNode receiver = flow.getReceiver(connection);
+//        final FlowNode sender = getController().getSender(connection);
+//        final FlowNode receiver = getController().getReceiver(connection);
 
-        setSender(sender);
-        setReceiver(receiver);
+        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getSenderId());
+        final Window senderWindow = senderSkin.getNode();
+
+        final FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getReceiverId());
+        final Window receiverWindow = receiverSkin.getNode();
+
+        setSender(getController().getNodeLookup().getById(connection.getSenderId()));
+        setReceiver(getController().getNodeLookup().getById(connection.getReceiverId()));
+
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(sender.xProperty(), sender.widthProperty());
+                super.bind(senderWindow.layoutXProperty(), senderWindow.widthProperty());
             }
 
             @Override
             protected double computeValue() {
-                return sender.getX() + sender.getWidth();
+
+                return senderWindow.getLayoutX() + senderWindow.getWidth();
+
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(sender.yProperty(), sender.heightProperty(), receiver.heightProperty());
+                super.bind(senderWindow.layoutYProperty(), senderWindow.heightProperty(), receiverWindow.heightProperty());
             }
 
             @Override
             protected double computeValue() {
-                return sender.getY() + sender.getHeight() / 2;
+                return senderWindow.getLayoutY() + senderWindow.getHeight() / 2;
             }
         };
 
         final DoubleBinding receiveXBinding = new DoubleBinding() {
             {
-                super.bind(receiver.xProperty());
+                super.bind(receiverWindow.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
-                return receiver.getX();
+//                return receiverWindow.getLayoutX();
+
+                Point2D location = NodeUtil.transformCoordinates(
+                        receiverWindow.getBoundsInParent().getMinX(),
+                        receiverWindow.getBoundsInParent().getMinY(), receiverWindow.getParent(), getParent());
+
+                return location.getX();
             }
         };
 
         final DoubleBinding receiveYBinding = new DoubleBinding() {
             {
-                super.bind(receiver.yProperty(), receiver.heightProperty());
+                super.bind(receiverWindow.layoutYProperty(), receiverWindow.heightProperty());
             }
 
             @Override
             protected double computeValue() {
-                return receiver.getY() + receiver.getHeight() / 2;
+                return receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2;
             }
         };
 
@@ -281,7 +291,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 if (n != null) {
                     connection.setReceiverId(
                             ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
-                    
+
                     System.out.println("REC-ID: " + connection.getReceiverId());
 
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
@@ -383,5 +393,19 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
         }
+    }
+
+    /**
+     * @return the controller
+     */
+    public FlowController getController() {
+        return controller;
+    }
+
+    /**
+     * @param controller the controller to set
+     */
+    public void setController(FlowController controller) {
+        this.controller = controller;
     }
 }

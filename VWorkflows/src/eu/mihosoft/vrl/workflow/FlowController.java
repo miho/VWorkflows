@@ -15,9 +15,9 @@ import javafx.collections.ObservableList;
 public interface FlowController {
 
     public void setModel(FlowFlowNode flow);
-    
+
     public void setNodeLookup(NodeLookup nodeLookup);
-    
+
     public NodeLookup getNodeLookup();
 
     public FlowFlowNode getModel();
@@ -51,11 +51,17 @@ public interface FlowController {
     public FlowController newSubFlow(ValueObject obj);
 
     public FlowController newSubFlow();
-    
+
     public Collection<FlowController> getSubControllers();
 
-   public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory);
-    
+    public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory);
+
     public void setIdGenerator(IdGenerator generator);
+
     public IdGenerator getIdGenerator();
+
+    public FlowNodeSkin getNodeSkinById(String id);
+    
+    public FlowNodeSkinLookup getNodeSkinLookup();
+    public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup);
 }

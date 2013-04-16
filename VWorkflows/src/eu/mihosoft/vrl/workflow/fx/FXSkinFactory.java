@@ -9,7 +9,6 @@ import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
-import eu.mihosoft.vrl.workflow.FlowNodeSkinLookup;
 import eu.mihosoft.vrl.workflow.Skin;
 import eu.mihosoft.vrl.workflow.SkinFactory;
 import javafx.scene.Parent;
@@ -21,17 +20,16 @@ import javafx.scene.Parent;
 public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSkin> {
 
     private final Parent parent;
-    private FlowNodeSkinLookup skinLookup;
 
     public FXSkinFactory(Parent parent) {
         this.parent = parent;
     }
 
     @Override
-    public FlowNodeSkin createSkin(FlowNode n) {
-        return new FXFlowNodeSkin(parent, n);
+    public FlowNodeSkin createSkin(FlowNode n, FlowController flow) {
+        return new FXFlowNodeSkin(parent, n, flow);
     }
-    
+
     @Override
     public ConnectionSkin createSkin(Connection c, FlowController flow, String type) {
         return new FXConnectionSkin(parent, c, flow, type);
@@ -41,19 +39,8 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
 
         FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode());
-        result.setNodeSkinLookup(skinLookup);
 
         return result;
-    }
-
-    @Override
-    public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup) {
-        this.skinLookup = skinLookup;
-    }
-
-    @Override
-    public FlowNodeSkinLookup getNodeSkinLookup() {
-        return this.skinLookup;
     }
 
 }

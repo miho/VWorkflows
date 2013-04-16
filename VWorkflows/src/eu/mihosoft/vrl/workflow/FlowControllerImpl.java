@@ -36,6 +36,7 @@ class FlowControllerImpl implements FlowController {
     private ChangeListener<Boolean> visibilityListener;
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
+    private FlowNodeSkinLookup nodeSkinLookup;
 
     public FlowControllerImpl(SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory) {
         this.skinFactory = skinFactory;
@@ -47,6 +48,7 @@ class FlowControllerImpl implements FlowController {
         
                 
         setIdGenerator(new IdGeneratorImpl());
+        setNodeSkinLookup(new FlowNodeSkinLookupImpl(this));
 
         nodesListener = new ListChangeListener<FlowNode>() {
             @Override
@@ -282,7 +284,7 @@ class FlowControllerImpl implements FlowController {
             return null;
         }
 
-        FlowNodeSkin skin = skinFactory.createSkin(n);
+        FlowNodeSkin skin = skinFactory.createSkin(n, this);
 
         nodeSkins.put(n.getId(), skin);
         skin.add();
@@ -360,7 +362,7 @@ class FlowControllerImpl implements FlowController {
     public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory) {
 
         this.skinFactory = skinFactory;
-
+        
         if (skinFactory == null) {
             removeUI();
 
@@ -396,6 +398,17 @@ class FlowControllerImpl implements FlowController {
 
             fC.setSkinFactory(childNodeSkinFactory);
         }
+    }
+    
+    
+    @Override
+    public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup) {
+        this.nodeSkinLookup = skinLookup;
+    }
+    
+    @Override
+    public FlowNodeSkinLookup getNodeSkinLookup() {
+        return this.nodeSkinLookup;
     }
 
     @Override
@@ -437,11 +450,10 @@ class FlowControllerImpl implements FlowController {
 
         FlowController controller = new FlowControllerImpl(childFactory);
 
-        controller.setIdGenerator(idGenerator);
+        controller.setIdGenerator(getIdGenerator());
         controller.setNodeLookup(getNodeLookup());
-
+        controller.setNodeSkinLookup(getNodeSkinLookup());
         controller.setModel(flowNode);
-
 
 
         for (String connectionType : getAllConnections().keySet()) {
@@ -499,5 +511,11 @@ class FlowControllerImpl implements FlowController {
     public void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
     }
+
+    @Override
+    public FlowNodeSkin getNodeSkinById(String id) {
+        return nodeSkins.get(id);
+    }
+
 
 }

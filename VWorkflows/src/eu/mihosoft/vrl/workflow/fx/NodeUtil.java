@@ -3,6 +3,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -40,6 +41,83 @@ public class NodeUtil {
      */
     static public double screenY(Node node) {
         return node.localToScene(node.getBoundsInLocal()).getMinY() + node.getScene().getY() + node.getScene().getWindow().getY();
+    }
+
+    static public Point2D transformCoordinates(double x, double y, Node from, Node to) {
+
+//        List<Parent> commonParents = getCommonAncestors(from, to);
+//
+//        if (commonParents.isEmpty()) {
+//            throw new IllegalArgumentException("the specified nodes do not have a common ancestor!");
+//        }
+//
+//        Parent commonParent = commonParents.get(0);
+//
+//
+//        // from -> commonParent
+//        from.sc        
+        
+        // from -> scene
+        Point2D fromInSceneCoordinates = new Point2D(
+                x*from.localToSceneTransformProperty().get().getMxx(),
+                y*from.localToSceneTransformProperty().get().getMyy());
+        
+        
+//        // scene -> to
+        return new Point2D(
+                fromInSceneCoordinates.getX()/to.getLocalToSceneTransform().getMxx(),
+                fromInSceneCoordinates.getY()/to.getLocalToSceneTransform().getMyy());
+        
+//        return fromInSceneCoordinates;
+    }
+
+    /**
+     * Returns all common ancestors of the specified nodes.
+     *
+     * @param n1 first scene graph node
+     * @param n2 second scene graph node
+     * @return a list that contains all common ancestors of the specified nodes
+     */
+    static public List<Parent> getCommonAncestors(Node n1, Node n2) {
+        Parent p = null;
+
+        List<Parent> n1Parents = getParents(n1);
+        List<Parent> n2Parents = getParents(n2);
+
+        n1Parents.retainAll(n2Parents);
+
+        return n1Parents;
+    }
+
+    /**
+     * Returns all ancestors of the specified node.
+     *
+     * @param n scene graph node
+     * @return a list that contains all ancestors of the specified node
+     */
+    public static List<Parent> getParents(Node n) {
+
+        return getParents(n, null);
+    }
+    
+    /**
+     * Returns all ancestors of the specified node till the specified one is reached.
+     *
+     * @param n scene graph node
+     * @param parent scene graph parent 
+     * @return a list that contains all ancestors of the specified node
+     */
+    public static List<Parent> getParents(Node n, Parent parent) {
+        List<Parent> nParents = new ArrayList<>();
+
+        Parent p = n.getParent();
+
+        while (p != null && p != parent) {
+            nParents.add(p);
+            p = p.getParent();
+        }
+
+        return nParents;
     }
 
     /**
@@ -116,7 +194,7 @@ public class NodeUtil {
 
         return null;
     }
-    
+
     /**
      * Returns the deepest node at the given location that is an instance of the
      * specified class object. The search is performed recursively until either
@@ -141,17 +219,17 @@ public class NodeUtil {
             boolean contains = n.contains(n.sceneToLocal(sceneX, sceneY));
 
             if (contains) {
-                
+
                 Node result = null;
 
                 if (n instanceof Parent) {
                     result = getDeepestNode((Parent) n, sceneX, sceneY, nodeClass);
                 }
-                
+
                 if (result == null) {
                     result = n;
                 }
-                
+
                 if (nodeClass.isAssignableFrom(result.getClass())) {
                     return result;
                 }
@@ -160,29 +238,28 @@ public class NodeUtil {
 
         return null;
     }
-    
+
     public static List<Node> nodesWithParent(Parent p, List<Node> nodes) {
         List<Node> result = new ArrayList<>();
-        
-        for(Node n : nodes) {
+
+        for (Node n : nodes) {
             if (p.equals(n.getParent())) {
                 result.add(n);
             }
         }
-        
+
         return result;
     }
-    
+
     public static List<Node> nodesThatImplement(List<Node> nodes, Class<?> cls) {
         List<Node> result = new ArrayList<>();
-        
-        for(Node n : nodes) {
+
+        for (Node n : nodes) {
             if (cls.isAssignableFrom(n.getClass())) {
                 result.add(n);
             }
         }
-        
+
         return result;
-    } 
-    
+    }
 }

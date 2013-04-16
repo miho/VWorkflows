@@ -11,4 +11,5 @@ package eu.mihosoft.vrl.workflow;
 public interface SkinFactory<T extends Skin, V extends Skin> extends ConnectionSkinFactory<T>, FlowNodeSkinFactory<V> {
 
     SkinFactory<T, V> createChild(Skin parent);
+
 }

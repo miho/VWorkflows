@@ -180,15 +180,6 @@ public class FlowModelImpl implements FlowModel {
     FlowNode newNode(FlowNode result, ValueObject obj) {
 
         result.setValueObject(obj);
-
-        // search id:
-//        String id = "0";
-//        int count = 0;
-//
-//        while (nodes.containsKey(id)) {
-//            count++;
-//            id = "" + count;
-//        }
         
         if (getIdGenerator()==null) {
             throw new IllegalStateException("Please define an idgenerator before creating nodes!");
@@ -200,10 +191,7 @@ public class FlowModelImpl implements FlowModel {
 
         nodes.put(id, result);
         observableNodes.add(result);
-
-//                createNodeSkin(result);
-
-
+        
         return result;
     }
 
@@ -241,6 +229,7 @@ public class FlowModelImpl implements FlowModel {
     /**
      * @return the nodeLookup
      */
+    @Override
     public NodeLookup getNodeLookup() {
         return nodeLookup;
     }
@@ -248,6 +237,7 @@ public class FlowModelImpl implements FlowModel {
     /**
      * @param nodeLookup the nodeLookup to set
      */
+    @Override
     public void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
     }

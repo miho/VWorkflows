@@ -25,7 +25,10 @@ public class Node {
     public Node() {
     }
 
-    public Node(String id, String title, double x, double y, double width, double height, ValueObject valueObject, VisualizationRequest vReq) {
+    public Node(String id, String title,
+            double x, double y, double width, double height,
+            ValueObject valueObject, VisualizationRequest vReq) {
+        
         this.x = x;
         this.y = y;
         this.width = width;

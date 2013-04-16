@@ -16,4 +16,6 @@ public interface Skin<T extends Model> {
     public void setModel(T model);
     public T getModel();
     public ObjectProperty<T> modelProperty();
+    public FlowController getController();
+    public void setController(FlowController flow);
 }

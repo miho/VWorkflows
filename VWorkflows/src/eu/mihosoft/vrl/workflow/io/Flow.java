@@ -27,7 +27,11 @@ public class Flow extends Node{
         this.nodes = nodes;
     }
 
-    public Flow(Flow parent,String id, List<String> connectionTypes, List<Connection> connections, List<Node> nodes, String title, double x, double y, double width, double height, ValueObject valueObject, boolean visible, VisualizationRequest vReq) {
+    public Flow(Flow parent,String id, List<String> connectionTypes,
+            List<Connection> connections, List<Node> nodes, String title,
+            double x, double y, double width, double height,
+            ValueObject valueObject, boolean visible, VisualizationRequest vReq) {
+        
         super(id, title, x, y, width, height, valueObject, vReq);
         this.connectionTypes = connectionTypes;
         this.connections = connections;

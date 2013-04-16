@@ -56,7 +56,6 @@ public class WorkflowIO {
     public static void saveToXML(Path p, FlowFlowNode flow) throws IOException {
         XStream xstream = new XStream();
 
-
         configureStream(xstream);
 
         String xml = xstream.toXML(toPersistentNode(flow, null));
@@ -121,11 +120,13 @@ public class WorkflowIO {
         }
     }
 
-    public static FlowFlowNode flowFromPersistentFlow(Flow flow, IdGenerator generator) {
+    public static FlowFlowNode flowFromPersistentFlow(
+            Flow flow, IdGenerator generator) {
         return createFlowFromPersistent(flow, null, generator);
     }
 
-    private static FlowFlowNode createFlowFromPersistent(Flow flow, FlowFlowNode parent, IdGenerator generator) {
+    private static FlowFlowNode createFlowFromPersistent(
+            Flow flow, FlowFlowNode parent, IdGenerator generator) {
 
         FlowFlowNode result = null;
 
@@ -182,7 +183,7 @@ public class WorkflowIO {
             result.setY(node.getY());
             result.setWidth(node.getWidth());
             result.setHeight(node.getHeight());
-            result.setValueObject(flow.getValueObject());
+            result.setValueObject(node.getValueObject());
             result.setVisualizationRequest(node.getVReq());
         }
     }

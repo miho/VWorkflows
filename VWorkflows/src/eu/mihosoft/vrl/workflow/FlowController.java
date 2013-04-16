@@ -54,9 +54,7 @@ public interface FlowController {
     
     public Collection<FlowController> getSubControllers();
 
-    public void setNodeSkinFactory(FlowNodeSkinFactory factory);
-
-    public void setConnectionSkinFactory(ConnectionSkinFactory factory);
+   public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory);
     
     public void setIdGenerator(IdGenerator generator);
     public IdGenerator getIdGenerator();

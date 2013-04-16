@@ -29,8 +29,7 @@ class FlowControllerImpl implements FlowController {
     ObjectProperty<FlowFlowNode> modelProperty = new SimpleObjectProperty<>();
     private ListChangeListener<FlowNode> nodesListener;
     private ListChangeListener<Connection> connectionsListener;
-    private FlowNodeSkinFactory nodeSkinFactory;
-    private ConnectionSkinFactory connectionSkinFactory;
+    private SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory;
     private Map<String, FlowNodeSkin> nodeSkins = new HashMap<>();
     private Map<String, ConnectionSkin> connectionSkins = new HashMap<>();
     private ObservableMap<String, FlowController> subControllers = FXCollections.observableHashMap();
@@ -38,9 +37,8 @@ class FlowControllerImpl implements FlowController {
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
 
-    public FlowControllerImpl(FlowNodeSkinFactory nodeSkinFactory, ConnectionSkinFactory connectionSkinFactory) {
-        this.nodeSkinFactory = nodeSkinFactory;
-        this.connectionSkinFactory = connectionSkinFactory;
+    public FlowControllerImpl(SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory) {
+        this.skinFactory = skinFactory;
 
         init();
     }
@@ -127,8 +125,7 @@ class FlowControllerImpl implements FlowController {
                 System.out.println("visible: " + t1 + " : " + getModel().isVisible() + " : " + getModel().getId());
 
                 if (t1) {
-                    setNodeSkinFactory(nodeSkinFactory);
-                    setConnectionSkinFactory(connectionSkinFactory);
+                    setSkinFactory(skinFactory);
                 } else {
                     removeUI();
                 }
@@ -277,7 +274,7 @@ class FlowControllerImpl implements FlowController {
 
     private FlowNodeSkin createNodeSkin(FlowNode n) {
 
-        if (nodeSkinFactory == null) {
+        if (skinFactory == null) {
             return null;
         }
 
@@ -285,7 +282,7 @@ class FlowControllerImpl implements FlowController {
             return null;
         }
 
-        FlowNodeSkin skin = nodeSkinFactory.createSkin(n);
+        FlowNodeSkin skin = skinFactory.createSkin(n);
 
         nodeSkins.put(n.getId(), skin);
         skin.add();
@@ -295,7 +292,7 @@ class FlowControllerImpl implements FlowController {
 
     private ConnectionSkin createConnectionSkin(Connection c, String type) {
 
-        if (connectionSkinFactory == null) {
+        if (skinFactory == null) {
             return null;
         }
 
@@ -303,7 +300,7 @@ class FlowControllerImpl implements FlowController {
             return null;
         }
 
-        ConnectionSkin skin = connectionSkinFactory.createSkin(c, this, type);
+        ConnectionSkin skin = skinFactory.createSkin(c, this, type);
 
         connectionSkins.put(connectionId(c), skin);
         skin.add();
@@ -313,7 +310,7 @@ class FlowControllerImpl implements FlowController {
 
     private void removeNodeSkin(FlowNode n) {
 
-        if (nodeSkinFactory == null) {
+        if (skinFactory == null) {
             return;
         }
 
@@ -326,7 +323,7 @@ class FlowControllerImpl implements FlowController {
 
     private void removeConnectionSkin(Connection c) {
 
-        if (connectionSkinFactory == null) {
+        if (skinFactory == null) {
             return;
         }
 
@@ -360,11 +357,11 @@ class FlowControllerImpl implements FlowController {
      * @param nodeSkinFactory the nodeSkinFactory to set
      */
     @Override
-    public void setNodeSkinFactory(FlowNodeSkinFactory nodeSkinFactory) {
+    public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory) {
 
-        this.nodeSkinFactory = nodeSkinFactory;
+        this.skinFactory = skinFactory;
 
-        if (nodeSkinFactory == null) {
+        if (skinFactory == null) {
             removeUI();
 
         } else {
@@ -372,38 +369,7 @@ class FlowControllerImpl implements FlowController {
             for (FlowNode n : getNodes()) {
                 createNodeSkin(n);
             }
-        }
-
-        if (getModel() != null && !getModel().isVisible()) {
-            return;
-        }
-
-        for (FlowController fC : subControllers.values()) {
-
-            FlowNodeSkinFactory childNodeSkinFactory = null;
-
-            if (nodeSkinFactory != null) {
-                childNodeSkinFactory = nodeSkinFactory.createChild(
-                        nodeSkins.get(fC.getModel().getId()));
-            }
-
-            fC.setNodeSkinFactory(childNodeSkinFactory);
-        }
-    }
-
-    /**
-     * @param connectionSkinFactory the connectionSkinFactory to set
-     */
-    @Override
-    public void setConnectionSkinFactory(ConnectionSkinFactory connectionSkinFactory) {
-
-        this.connectionSkinFactory = connectionSkinFactory;
-
-//        System.out.println(">> setting skinfactory for " + getModel().getId() + " : " + connectionSkinFactory);
-
-        if (connectionSkinFactory == null) {
-            removeUI();
-        } else {
+            
             for (Connections cns : getAllConnections().values()) {
                 for (Connection c : cns.getConnections()) {
 
@@ -421,14 +387,14 @@ class FlowControllerImpl implements FlowController {
 
         for (FlowController fC : subControllers.values()) {
 
-            ConnectionSkinFactory childConnectionSkinFactory = null;
+            SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> childNodeSkinFactory = null;
 
-            if (connectionSkinFactory != null) {
-                childConnectionSkinFactory = connectionSkinFactory.
-                        createChild(nodeSkins.get(fC.getModel().getId()));
+            if (skinFactory != null) {
+                childNodeSkinFactory = skinFactory.createChild(
+                        nodeSkins.get(fC.getModel().getId()));
             }
 
-            fC.setConnectionSkinFactory(childConnectionSkinFactory);
+            fC.setSkinFactory(childNodeSkinFactory);
         }
     }
 
@@ -463,21 +429,13 @@ class FlowControllerImpl implements FlowController {
 
         FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
 
-        FlowNodeSkinFactory childNodeSkinFactory = null;
-        ConnectionSkinFactory childConnectionSkinFactory = null;
+        SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> childFactory = null;
 
-        if (nodeSkinFactory != null) {
-            childNodeSkinFactory = nodeSkinFactory.createChild(skin);
+        if (skinFactory != null) {
+            childFactory = skinFactory.createChild(skin);
         }
 
-        if (connectionSkinFactory != null) {
-            childConnectionSkinFactory =
-                    connectionSkinFactory.createChild(skin);
-        }
-
-        FlowController controller = new FlowControllerImpl(
-                childNodeSkinFactory,
-                childConnectionSkinFactory);
+        FlowController controller = new FlowControllerImpl(childFactory);
 
         controller.setIdGenerator(idGenerator);
         controller.setNodeLookup(getNodeLookup());
@@ -541,4 +499,5 @@ class FlowControllerImpl implements FlowController {
     public void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
     }
+
 }

@@ -11,7 +11,11 @@ package eu.mihosoft.vrl.workflow;
 public interface FlowNodeSkinFactory<T extends Skin> {
 
     FlowNodeSkin createSkin(FlowNode n);
+
+//    FlowNodeSkinFactory createChild(T parent);
+
+    public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup);
     
-    FlowNodeSkinFactory createChild(T parent);
+    public FlowNodeSkinLookup getNodeSkinLookup();
     
 }

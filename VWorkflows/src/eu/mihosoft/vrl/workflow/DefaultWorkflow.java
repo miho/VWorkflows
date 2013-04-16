@@ -10,10 +10,9 @@ package eu.mihosoft.vrl.workflow;
  */
 public final class DefaultWorkflow extends FlowControllerImpl {
 
-    public DefaultWorkflow(FlowNodeSkinFactory flowNodeSkinFactory,
-            ConnectionSkinFactory connectionSkinFactory) {
+    public DefaultWorkflow(SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory) {
 
-        super(flowNodeSkinFactory, connectionSkinFactory);
+        super(skinFactory);
         
         FlowFlowNode model = FlowFactory.newFlowModel();
         setNodeLookup(new NodeLookupImpl(model));
@@ -26,7 +25,7 @@ public final class DefaultWorkflow extends FlowControllerImpl {
 
     public DefaultWorkflow() {
 
-        super(null, null);
+        super(null);
 
         FlowFlowNode model = FlowFactory.newFlowModel();
         setNodeLookup(new NodeLookupImpl(model));
@@ -38,20 +37,14 @@ public final class DefaultWorkflow extends FlowControllerImpl {
     }
 }
 
-class DummyFlowNodeSkinFactoryImpl implements FlowNodeSkinFactory<Skin> {
+
+
+class DummySkinFactoryImpl implements SkinFactory<ConnectionSkin,FlowNodeSkin> {
 
     @Override
-    public FlowNodeSkin createSkin(FlowNode n) {
-        return null;
+    public SkinFactory<ConnectionSkin, FlowNodeSkin> createChild(Skin parent) {
+        return this;
     }
-
-    @Override
-    public FlowNodeSkinFactory createChild(Skin parent) {
-        return new DummyFlowNodeSkinFactoryImpl();
-    }
-}
-
-class DummyConnectionSkinFactoryImpl implements ConnectionSkinFactory<Skin> {
 
     @Override
     public ConnectionSkin createSkin(Connection c, FlowController flow, String type) {
@@ -59,7 +52,20 @@ class DummyConnectionSkinFactoryImpl implements ConnectionSkinFactory<Skin> {
     }
 
     @Override
-    public ConnectionSkinFactory createChild(Skin parent) {
-        return new DummyConnectionSkinFactoryImpl();
+    public FlowNodeSkin createSkin(FlowNode n) {
+        return null;
     }
+
+    @Override
+    public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FlowNodeSkinLookup getNodeSkinLookup() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+   
 }
+

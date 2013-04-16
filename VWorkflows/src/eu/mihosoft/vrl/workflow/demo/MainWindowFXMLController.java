@@ -10,8 +10,7 @@ import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.IdGenerator;
-import eu.mihosoft.vrl.workflow.fx.FXConnectionSkinFactory;
-import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinFactory;
+import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.IOException;
 import java.net.URL;
@@ -167,7 +166,6 @@ public class MainWindowFXMLController implements Initializable {
         
         workflow.getModel().setVisible(true);
 
-        workflow.setNodeSkinFactory(new FXFlowNodeSkinFactory(rootPane));
-        workflow.setConnectionSkinFactory(new FXConnectionSkinFactory(rootPane));
+        workflow.setSkinFactory(new FXSkinFactory(rootPane));
     }
 }

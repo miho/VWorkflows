@@ -13,16 +13,14 @@ import eu.mihosoft.vrl.workflow.io.Node;
 public class FlowFactory {
 
     public static FlowController newFlow() {
-        FlowController flow = new FlowControllerImpl(null, null);
+        FlowController flow = new FlowControllerImpl(null);
 
         return flow;
     }
 
     public static FlowController newFlow(
-            FlowNodeSkinFactory<?> nodeSkinFactory,
-            ConnectionSkinFactory<?> connectionSkinFactory) {
-        FlowController flow = new FlowControllerImpl(nodeSkinFactory,
-                connectionSkinFactory);
+            SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory) {
+        FlowController flow = new FlowControllerImpl(skinFactory);
 
         return flow;
     }

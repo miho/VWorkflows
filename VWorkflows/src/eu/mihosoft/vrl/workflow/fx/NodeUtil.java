@@ -43,32 +43,22 @@ public class NodeUtil {
         return node.localToScene(node.getBoundsInLocal()).getMinY() + node.getScene().getY() + node.getScene().getWindow().getY();
     }
 
-    static public Point2D transformCoordinates(double x, double y, Node from, Node to) {
-
-//        List<Parent> commonParents = getCommonAncestors(from, to);
-//
-//        if (commonParents.isEmpty()) {
-//            throw new IllegalArgumentException("the specified nodes do not have a common ancestor!");
-//        }
-//
-//        Parent commonParent = commonParents.get(0);
-//
-//
-//        // from -> commonParent
-//        from.sc        
+    static public Point2D transformCoordinates(double x, double y, Node from, Node to) { 
+        
+        if (from == to) {
+            return new Point2D(x, y);
+        }
         
         // from -> scene
         Point2D fromInSceneCoordinates = new Point2D(
-                x*from.localToSceneTransformProperty().get().getMxx(),
-                y*from.localToSceneTransformProperty().get().getMyy());
-        
+                (x)*from.localToSceneTransformProperty().get().getMxx(),
+                (y)*from.localToSceneTransformProperty().get().getMyy());
         
 //        // scene -> to
         return new Point2D(
-                fromInSceneCoordinates.getX()/to.getLocalToSceneTransform().getMxx(),
-                fromInSceneCoordinates.getY()/to.getLocalToSceneTransform().getMyy());
-        
-//        return fromInSceneCoordinates;
+                (fromInSceneCoordinates.getX()+from.localToSceneTransformProperty().get().getTx())/to.getLocalToSceneTransform().getMxx(),
+                (fromInSceneCoordinates.getY()+from.localToSceneTransformProperty().get().getTy())/to.getLocalToSceneTransform().getMyy());
+
     }
 
     /**

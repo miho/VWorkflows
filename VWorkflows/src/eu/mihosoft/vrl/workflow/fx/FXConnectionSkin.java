@@ -122,7 +122,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
             @Override
             protected double computeValue() {
-//                return receiverWindow.getLayoutX();
 
                 Point2D location = NodeUtil.transformCoordinates(
                         receiverWindow.getBoundsInParent().getMinX(),
@@ -139,7 +138,17 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
             @Override
             protected double computeValue() {
-                return receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2;
+
+                if (receiverWindow.getParent() == getParent()) {
+                    return receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2;
+                }
+
+                Point2D location = NodeUtil.transformCoordinates(
+                        0,
+                        receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2, receiverWindow.getParent(), getParent());
+
+
+                return location.getY();
             }
         };
 

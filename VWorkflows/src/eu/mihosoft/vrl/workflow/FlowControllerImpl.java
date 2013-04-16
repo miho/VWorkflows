@@ -213,14 +213,14 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
-        return getModel().tryConnect(s, r, type);
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        return getModel().tryConnect(s, r);
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult connect(Connector s, Connector r) {
 
-        return getModel().connect(s, r, type);
+        return getModel().connect(s, r);
     }
 
     @Override

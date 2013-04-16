@@ -95,6 +95,9 @@ public interface FlowNode extends Model {
 
     public Connector newOutput(String myId, String connectionType);
     
+    public Connector getInputById(String id);
+    public Connector getOutputById(String id);
+    
     public void setConnectorIdGenerator(IdGenerator generator);
     public IdGenerator getConnectorIdGenerator();
     public ObjectProperty<IdGenerator> idGeneratorProperty();

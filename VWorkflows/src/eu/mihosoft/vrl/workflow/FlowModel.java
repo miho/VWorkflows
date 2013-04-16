@@ -13,9 +13,9 @@ import javafx.collections.ObservableList;
  */
 interface FlowModel extends Model, VisibleState{
 
-    public ConnectionResult tryConnect(Connector s, Connector r, String flowType);
+    public ConnectionResult tryConnect(Connector s, Connector r);
     
-    public ConnectionResult connect(Connector s, Connector r, String flowType);
+    public ConnectionResult connect(Connector s, Connector r);
 
     public FlowNode remove(FlowNode n);
     

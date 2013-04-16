@@ -63,13 +63,13 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType) {
-        return flow.tryConnect(s, r, flowType);
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        return flow.tryConnect(s, r);
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String flowType) {
-        return flow.connect(s, r, flowType);
+    public ConnectionResult connect(Connector s, Connector r) {
+        return flow.connect(s, r);
     }
 
     @Override
@@ -383,6 +383,16 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     @Override
     public ObjectProperty<IdGenerator> idGeneratorProperty() {
         return this.node.idGeneratorProperty();
+    }
+
+    @Override
+    public Connector getInputById(String id) {
+        return node.getInputById(id);
+    }
+
+    @Override
+    public Connector getOutputById(String id) {
+        return node.getOutputById(id);
     }
 }
 

@@ -20,6 +20,7 @@ public interface Connector extends Model {
     public void setId(String id);
     public String getId();
     public StringProperty idProperty();
+    public String getGlobalId();
     
     public void setParent(FlowNode parent);
     public FlowNode getParent();

@@ -82,5 +82,12 @@ class ConnectorImpl implements Connector {
     public ObjectProperty<FlowNode> parentProperty() {
         return this.parentProperty;
     }
+
+    @Override
+    public String getGlobalId() {
+        return "[node:="+getParent().getId()+"::conn:="+getId()+"]";
+    }
+    
+    
     
 }

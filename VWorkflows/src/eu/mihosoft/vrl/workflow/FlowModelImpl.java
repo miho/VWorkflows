@@ -6,7 +6,6 @@ package eu.mihosoft.vrl.workflow;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,18 +68,18 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult tryConnect(Connector s, Connector r) {
 
         CompatibilityResult result = r.getValueObject().
-                compatible(s.getValueObject(), type);
+                compatible(s.getValueObject());
 
         return new ConnectionResultImpl(result, null);
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult connect(Connector s, Connector r) {
 
-        ConnectionResult result = tryConnect(s, r, type);
+        ConnectionResult result = tryConnect(s, r);
 
         if (!result.getStatus().isCompatible()) {
             return result;
@@ -92,7 +91,7 @@ public class FlowModelImpl implements FlowModel {
 //        observableNodes.add(s);
 //        observableNodes.add(r);
 
-        Connection connection = getConnections(type).add(s.getId(), r.getId());
+        Connection connection = getConnections(s.getValueObject().getConnectionType()).add(s.getGlobalId(), r.getGlobalId());
 
 //        if (connection != null) {
 //            createConnectionSkin(connection, type);
@@ -248,4 +247,6 @@ public class FlowModelImpl implements FlowModel {
     public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
         return this.vReq;
     }
+
+    
 }

@@ -24,9 +24,9 @@ public interface FlowController {
 
     public ObjectProperty modelProperty();
 
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType);
+    public ConnectionResult tryConnect(Connector s, Connector r);
 
-    public ConnectionResult connect(FlowNode s, FlowNode r, String flowType);
+    public ConnectionResult connect(Connector s, Connector r);
 
     public FlowNode remove(FlowNode n);
 

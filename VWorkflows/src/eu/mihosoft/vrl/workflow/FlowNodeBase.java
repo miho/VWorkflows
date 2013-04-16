@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 
+
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
@@ -349,6 +350,28 @@ class FlowNodeBase implements FlowNode {
     @Override
     public ObjectProperty<IdGenerator> idGeneratorProperty() {
        return this.idGeneratorProperty();
+    }
+
+    @Override
+    public Connector getInputById(String id) {
+        for(Connector i : inputs) {
+            if (i.getId().equals(id)) {
+                return i;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public Connector getOutputById(String id) {
+        for(Connector o : outputs) {
+            if (o.getId().equals(id)) {
+                return o;
+            }
+        }
+        
+        return null;
     }
 }
 

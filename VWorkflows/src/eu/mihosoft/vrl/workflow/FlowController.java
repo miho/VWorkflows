@@ -44,11 +44,11 @@ public interface FlowController {
 
     public Class<? extends FlowNode> getFlowNodeClass();
 
-    public FlowNode newNode(ValueObject obj);
+    public FlowNode newNode(NodeValueObject obj);
 
     public FlowNode newNode();
 
-    public FlowController newSubFlow(ValueObject obj);
+    public FlowController newSubFlow(NodeValueObject obj);
 
     public FlowController newSubFlow();
 

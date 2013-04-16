@@ -4,7 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.ValueObject;
+import eu.mihosoft.vrl.workflow.NodeValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 
 /**
@@ -18,7 +18,7 @@ public class Node {
     private double width;
     private double height;
     private String title;
-    private ValueObject valueObject;
+    private NodeValueObject valueObject;
     private VisualizationRequest vReq;
     private String id;
 
@@ -27,7 +27,7 @@ public class Node {
 
     public Node(String id, String title,
             double x, double y, double width, double height,
-            ValueObject valueObject, VisualizationRequest vReq) {
+            NodeValueObject valueObject, VisualizationRequest vReq) {
         
         this.x = x;
         this.y = y;
@@ -112,14 +112,14 @@ public class Node {
     /**
      * @return the valueObject
      */
-    public ValueObject getValueObject() {
+    public NodeValueObject getValueObject() {
         return valueObject;
     }
 
     /**
      * @param valueObject the valueObject to set
      */
-    public void setValueObject(ValueObject valueObject) {
+    public void setValueObject(NodeValueObject valueObject) {
         this.valueObject = valueObject;
     }
 

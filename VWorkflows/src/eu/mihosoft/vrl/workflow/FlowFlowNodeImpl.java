@@ -124,12 +124,12 @@ class FlowFlowNodeImpl implements FlowFlowNode {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return null;
+        return node.getVisualizationRequest();
     }
 
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.setVisualizationRequest(vReq);
     }
 
     @Override
@@ -228,17 +228,17 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public void setValueObject(ValueObject obj) {
+    public void setValueObject(NodeValueObject obj) {
         node.setValueObject(obj);
     }
 
     @Override
-    public ValueObject getValueObject() {
+    public NodeValueObject getValueObject() {
         return node.getValueObject();
     }
 
     @Override
-    public ObjectProperty<ValueObject> valueObjectProperty() {
+    public ObjectProperty<NodeValueObject> valueObjectProperty() {
         return node.valueObjectProperty();
     }
 
@@ -278,7 +278,7 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public FlowFlowNode newFlowNode(ValueObject obj) {
+    public FlowFlowNode newFlowNode(NodeValueObject obj) {
         FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
 
         return (FlowFlowNode) flow.newNode(flowNode, obj);
@@ -293,7 +293,7 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
     
     @Override
-    public FlowNode newNode(ValueObject obj) {
+    public FlowNode newNode(NodeValueObject obj) {
 
         FlowNode result = null;
 
@@ -343,6 +343,31 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     @Override
     public NodeLookup getNodeLookup() {
         return flow.getNodeLookup();
+    }
+
+    @Override
+    public Connector newInput(String event) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Connector newInput(String myId, String control) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Connector newOutput(String control) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Connector newOutput(String myId, String control) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
+        return node.visualizationRequestProperty();
     }
 }
 

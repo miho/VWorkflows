@@ -10,12 +10,11 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Model {
-    
-    public VisualizationRequest getVisualizationRequest();
+public interface Connector extends Model {
 
-    public void setVisualizationRequest(VisualizationRequest vReq);
-    
-    public ObjectProperty<VisualizationRequest> visualizationRequestProperty();
+    public void setValueObject(ConnectorValueObject obj);
 
+    public ConnectorValueObject getValueObject();
+
+    public ObjectProperty<ConnectorValueObject> valueObjectProperty();
 }

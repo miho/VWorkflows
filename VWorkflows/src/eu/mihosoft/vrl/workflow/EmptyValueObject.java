@@ -10,7 +10,7 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class EmptyValueObject implements ValueObject {
+public class EmptyValueObject implements NodeValueObject {
 
     @Override
     public FlowNode getParent() {
@@ -33,7 +33,7 @@ public class EmptyValueObject implements ValueObject {
     }
 
     @Override
-    public CompatibilityResult compatible(final ValueObject other, String flowType) {
+    public CompatibilityResult compatible(final NodeValueObject other, String flowType) {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {

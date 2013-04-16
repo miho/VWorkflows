@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.FlowController;
@@ -35,6 +36,18 @@ public class Playground {
         
         System.out.println("lookup: " + lookup.getById(globalId));
         System.out.println("   sn1: " + sn1);
+        
+        
+                
+        Connector input1 = n1.newInput("event");
+        
+        Connector input2 = n1.newInput("myId", "control"); // throws exception if id exists
+        
+        Connector output1= n1.newOutput("control");
+        
+        Connector output2= n1.newOutput("myId" ,"control");
+        
+        
 
     }
     

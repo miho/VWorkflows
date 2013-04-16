@@ -13,8 +13,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
 /**
@@ -35,19 +33,18 @@ class FlowNodeBase implements FlowNode {
     private DoubleProperty yProperty = new SimpleDoubleProperty();
     private DoubleProperty widthProperty = new SimpleDoubleProperty();
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
-    private ObjectProperty<ValueObject> valueObjectProperty =
+    private ObjectProperty<NodeValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
-    private VisualizationRequest vReq;
+    private ObjectProperty<VisualizationRequest> vReq = new SimpleObjectProperty<>();
     private FlowFlowNode flow;
     private BooleanProperty outputProperty = new SimpleBooleanProperty(true);
     private BooleanProperty inputProperty = new SimpleBooleanProperty();
-    static int numInstances = 0;
-//     private ObjectProperty<Skin> skinProperty =
-//            new SimpleObjectProperty<>();
-
+    
+    private ObservableList<Connector> inputs = FXCollections.observableArrayList();
+    private ObservableList<Connector> outputs = FXCollections.observableArrayList();
+    
+    
     public FlowNodeBase(FlowFlowNode flow) {
-
-        numInstances++;
 
         this.flow = flow;
 
@@ -191,23 +188,23 @@ class FlowNodeBase implements FlowNode {
     }
 
     @Override
-    public ValueObject getValueObject() {
+    public NodeValueObject getValueObject() {
         return valueObjectProperty.get();
     }
 
     @Override
-    public void setValueObject(ValueObject o) {
+    public final void setValueObject(NodeValueObject o) {
         valueObjectProperty.set(o);
     }
 
     @Override
-    public ObjectProperty<ValueObject> valueObjectProperty() {
+    public ObjectProperty<NodeValueObject> valueObjectProperty() {
         return valueObjectProperty;
     }
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return vReq;
+        return this.vReq.get();
     }
 
     /**
@@ -215,7 +212,7 @@ class FlowNodeBase implements FlowNode {
      */
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vReq = vReq;
+        this.vReq.set(vReq);
     }
 
 //    @Override
@@ -293,4 +290,31 @@ class FlowNodeBase implements FlowNode {
 //       
 //       return id;
 //    }
+
+    @Override
+    public Connector newInput(String event) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO implement
+    }
+
+    @Override
+    public Connector newInput(String myId, String control) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO implement
+    }
+
+    @Override
+    public Connector newOutput(String control) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO implement
+    }
+
+    @Override
+    public Connector newOutput(String myId, String control) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO implement
+    }
+
+    @Override
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
+        return this.vReq;
+    }
+
+
 }

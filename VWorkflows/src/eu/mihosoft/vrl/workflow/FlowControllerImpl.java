@@ -263,7 +263,7 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowNode newNode(ValueObject obj) {
+    public FlowNode newNode(NodeValueObject obj) {
 
 
         return getModel().newNode(obj);
@@ -470,7 +470,7 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowController newSubFlow(ValueObject obj) {
+    public FlowController newSubFlow(NodeValueObject obj) {
         return newSubFlow(getModel().newFlowNode(obj));
     }
 

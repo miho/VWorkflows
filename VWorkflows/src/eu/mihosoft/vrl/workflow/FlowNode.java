@@ -63,9 +63,9 @@ public interface FlowNode extends Model {
 //    public ObservableList<Connector<FlowNode>> getInputs();
 //    public ObservableList<Connector<FlowNode>> getOutputs();
     
-    public void setValueObject(ValueObject obj);
-    public ValueObject getValueObject();
-    public ObjectProperty<ValueObject> valueObjectProperty();
+    public void setValueObject(NodeValueObject obj);
+    public NodeValueObject getValueObject();
+    public ObjectProperty<NodeValueObject> valueObjectProperty();
     
     public FlowFlowNode getFlow();
 
@@ -86,5 +86,13 @@ public interface FlowNode extends Model {
     void setInput(boolean state);
 
     void setOutput(boolean state);
+
+    public Connector newInput(String event);
+
+    public Connector newInput(String myId, String control);
+
+    public Connector newOutput(String control);
+
+    public Connector newOutput(String myId, String control);
     
 }

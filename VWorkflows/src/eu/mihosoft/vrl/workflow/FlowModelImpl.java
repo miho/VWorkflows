@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -40,6 +41,7 @@ public class FlowModelImpl implements FlowModel {
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
+    private ObjectProperty<VisualizationRequest> vReq = new SimpleObjectProperty<>();
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -177,7 +179,7 @@ public class FlowModelImpl implements FlowModel {
         return flowNodeClass;
     }
 
-    FlowNode newNode(FlowNode result, ValueObject obj) {
+    FlowNode newNode(FlowNode result, NodeValueObject obj) {
 
         result.setValueObject(obj);
         
@@ -202,12 +204,12 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.vReq.get();
     }
 
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.vReq.set(vReq);
     }
 
     /**
@@ -240,5 +242,10 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
+    }
+
+    @Override
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
+        return this.vReq;
     }
 }

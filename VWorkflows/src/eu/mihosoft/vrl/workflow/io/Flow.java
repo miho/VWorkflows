@@ -4,7 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.ValueObject;
+import eu.mihosoft.vrl.workflow.NodeValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class Flow extends Node{
     public Flow(Flow parent,String id, List<String> connectionTypes,
             List<Connection> connections, List<Node> nodes, String title,
             double x, double y, double width, double height,
-            ValueObject valueObject, boolean visible, VisualizationRequest vReq) {
+            NodeValueObject valueObject, boolean visible, VisualizationRequest vReq) {
         
         super(id, title, x, y, width, height, valueObject, vReq);
         this.connectionTypes = connectionTypes;

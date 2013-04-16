@@ -38,7 +38,6 @@ public final class DefaultWorkflow extends FlowControllerImpl {
 }
 
 
-
 class DummySkinFactoryImpl implements SkinFactory<ConnectionSkin,FlowNodeSkin> {
 
     @Override

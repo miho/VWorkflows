@@ -43,21 +43,23 @@ public class NodeUtil {
         return node.localToScene(node.getBoundsInLocal()).getMinY() + node.getScene().getY() + node.getScene().getWindow().getY();
     }
 
-    static public Point2D transformCoordinates(double x, double y, Node from, Node to) { 
-        
+    static public Point2D transformCoordinates(double x, double y, Node from, Node to) {
+
         if (from == to) {
             return new Point2D(x, y);
         }
-        
+
         // from -> scene
         Point2D fromInSceneCoordinates = new Point2D(
-                (x)*from.localToSceneTransformProperty().get().getMxx(),
-                (y)*from.localToSceneTransformProperty().get().getMyy());
-        
-//        // scene -> to
+                (x) * from.localToSceneTransformProperty().get().getMxx(),
+                (y) * from.localToSceneTransformProperty().get().getMyy());
+
+        // scene -> to
         return new Point2D(
-                (fromInSceneCoordinates.getX()+from.localToSceneTransformProperty().get().getTx())/to.getLocalToSceneTransform().getMxx(),
-                (fromInSceneCoordinates.getY()+from.localToSceneTransformProperty().get().getTy())/to.getLocalToSceneTransform().getMyy());
+                (fromInSceneCoordinates.getX() + from.localToSceneTransformProperty().get().getTx())
+                / to.getLocalToSceneTransform().getMxx(),
+                (fromInSceneCoordinates.getY() + from.localToSceneTransformProperty().get().getTy())
+                / to.getLocalToSceneTransform().getMyy());
 
     }
 
@@ -71,8 +73,8 @@ public class NodeUtil {
     static public List<Parent> getCommonAncestors(Node n1, Node n2) {
         Parent p = null;
 
-        List<Parent> n1Parents = getParents(n1);
-        List<Parent> n2Parents = getParents(n2);
+        List<Parent> n1Parents = getAncestors(n1);
+        List<Parent> n2Parents = getAncestors(n2);
 
         n1Parents.retainAll(n2Parents);
 
@@ -85,19 +87,20 @@ public class NodeUtil {
      * @param n scene graph node
      * @return a list that contains all ancestors of the specified node
      */
-    public static List<Parent> getParents(Node n) {
+    public static List<Parent> getAncestors(Node n) {
 
-        return getParents(n, null);
+        return getAncestors(n, null);
     }
-    
+
     /**
-     * Returns all ancestors of the specified node till the specified one is reached.
+     * Returns all ancestors of the specified node till the specified one is
+     * reached.
      *
      * @param n scene graph node
-     * @param parent scene graph parent 
+     * @param parent scene graph parent
      * @return a list that contains all ancestors of the specified node
      */
-    public static List<Parent> getParents(Node n, Parent parent) {
+    public static List<Parent> getAncestors(Node n, Parent parent) {
         List<Parent> nParents = new ArrayList<>();
 
         Parent p = n.getParent();
@@ -142,6 +145,25 @@ public class NodeUtil {
             ((Group) p).getChildren().add(n);
         } else if (p instanceof Pane) {
             ((Pane) p).getChildren().add(n);
+        } else {
+            throw new IllegalArgumentException("Unsupported parent: " + p);
+        }
+    }
+    
+    /**
+     * Adds the given node to the specified parent.
+     *
+     * @param p parent
+     * @param n node
+     *
+     * @throws IllegalArgumentException if an unsupported parent class has been
+     * specified or the parent is <code>null</code>
+     */
+    public static void addToParent(Parent p, Node n, int index) {
+        if (p instanceof Group) {
+            ((Group) p).getChildren().add(index, n);
+        } else if (p instanceof Pane) {
+            ((Pane) p).getChildren().add(index, n);
         } else {
             throw new IllegalArgumentException("Unsupported parent: " + p);
         }

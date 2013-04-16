@@ -41,6 +41,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private MoveTo moveTo;
 //    private Shape startConnector;
     private Shape receiverConnector;
+    private Window receiverWindow;
     private FlowController controller;
     private Connection connection;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
@@ -85,7 +86,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         final Window senderWindow = senderSkin.getNode();
 
         final FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getReceiverId());
-        final Window receiverWindow = receiverSkin.getNode();
+        receiverWindow = receiverSkin.getNode();
 
         setSender(getController().getNodeLookup().getById(connection.getSenderId()));
         setReceiver(getController().getNodeLookup().getById(connection.getReceiverId()));
@@ -133,7 +134,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         final DoubleBinding receiveYBinding = new DoubleBinding() {
             {
-                super.bind(receiverWindow.layoutYProperty(), receiverWindow.heightProperty());
+                super.bind(
+                        receiverWindow.layoutYProperty(),
+                        receiverWindow.heightProperty()
+                        );
             }
 
             @Override
@@ -145,15 +149,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                 Point2D location = NodeUtil.transformCoordinates(
                         0,
-                        receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2, receiverWindow.getParent(), getParent());
+                        receiverWindow.getLayoutY(),
+                        receiverWindow.getParent(), getParent());
+                
+                double height = 
+                        receiverWindow.getHeight() 
+                        * receiverWindow.getParent().localToSceneTransformProperty().get().getMyy();
 
-
-                return location.getY();
+                return location.getY() + height /2;
             }
         };
-
-//        startConnector.layoutXProperty().bind(startXBinding);
-//        startConnector.layoutYProperty().bind(startYBinding);
 
         receiverConnector.layoutXProperty().bind(receiveXBinding);
         receiverConnector.layoutYProperty().bind(receiveYBinding);
@@ -175,7 +180,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             @Override
             public void handle(MouseEvent t) {
                 if (!t.isPrimaryButtonDown()) {
-                    receiverConnector.toBack();
+//                    receiverConnector.toBack();
                 }
             }
         });
@@ -183,24 +188,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         makeDraggable(receiveXBinding, receiveYBinding);
 
-
-//        receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent t) {
-//                makeDraggable(receiveXBinding, receiveYBinding);
-//            }
-//        });
-
     }
 
-//    private MouseEvent createMouseEvent(final Stage stage, double x, double y, final EventType<MouseEvent> eventType) {
-//        final double screenX = stage.getX() + x;
-//        final double screenY = stage.getX() + y;
-//        final int numClicks = eventType.equals(MouseEvent.MOUSE_CLICKED) ? 1 : 0;
-//
-//        return MouseEvent.impl_mouseEvent(x, y, screenX, screenY, MouseButton.PRIMARY, numClicks,
-//                false, false, false, false, false, false, false, false, false, eventType);
-//    }
     private void makeDraggable(
             final DoubleBinding receiveXBinding,
             final DoubleBinding receiveYBinding) {
@@ -300,8 +289,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 if (n != null) {
                     connection.setReceiverId(
                             ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
-
-                    System.out.println("REC-ID: " + connection.getReceiverId());
 
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                     init();
@@ -407,6 +394,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     /**
      * @return the controller
      */
+    @Override
     public FlowController getController() {
         return controller;
     }
@@ -414,6 +402,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     /**
      * @param controller the controller to set
      */
+    @Override
     public void setController(FlowController controller) {
         this.controller = controller;
     }

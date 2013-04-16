@@ -4,8 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import javafx.beans.property.ObjectProperty;
-
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>

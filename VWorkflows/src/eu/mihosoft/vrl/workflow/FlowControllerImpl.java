@@ -10,8 +10,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,10 +28,10 @@ import javafx.collections.ObservableMap;
  */
 class FlowControllerImpl implements FlowController {
 
-    ObjectProperty<FlowFlowNode> modelProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<FlowFlowNode> modelProperty = new SimpleObjectProperty<>();
     private ListChangeListener<FlowNode> nodesListener;
     private ListChangeListener<Connection> connectionsListener;
-    private SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory;
+    private SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory;
     private Map<String, FlowNodeSkin> nodeSkins = new HashMap<>();
     private Map<String, ConnectionSkin> connectionSkins = new HashMap<>();
     private ObservableMap<String, FlowController> subControllers = FXCollections.observableHashMap();
@@ -37,18 +39,21 @@ class FlowControllerImpl implements FlowController {
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
     private FlowNodeSkinLookup nodeSkinLookup;
+//    private NodeController nodeController;
 
-    public FlowControllerImpl(SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory) {
+    public FlowControllerImpl(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory) {
         this.skinFactory = skinFactory;
 
         init();
     }
 
     private void init() {
-        
-                
+
+
         setIdGenerator(new IdGeneratorImpl());
         setNodeSkinLookup(new FlowNodeSkinLookupImpl(this));
+
+//        this.nodeController = new NodeControllerImpl();
 
         nodesListener = new ListChangeListener<FlowNode>() {
             @Override
@@ -78,7 +83,9 @@ class FlowControllerImpl implements FlowController {
                         // added
                         for (FlowNode n : change.getAddedSubList()) {
                             if (!nodeSkins.containsKey(n.getId())) {
-                                createNodeSkin(n);
+                                
+                                FlowNodeSkin nodeSkin = createNodeSkin(n);
+                                
 //                                 System.out.println("add node: " + n.getId());
                             }
                         }
@@ -133,10 +140,11 @@ class FlowControllerImpl implements FlowController {
                 }
             }
         };
+        
 
-        modelProperty.addListener(new ChangeListener<FlowModel>() {
+        modelProperty.addListener(new ChangeListener<FlowFlowNode>() {
             @Override
-            public void changed(ObservableValue<? extends FlowModel> ov, FlowModel t, FlowModel t1) {
+            public void changed(ObservableValue<? extends FlowFlowNode> ov, FlowFlowNode t, FlowFlowNode t1) {
 
                 removeUI();
 
@@ -185,6 +193,8 @@ class FlowControllerImpl implements FlowController {
                     });
 
                     getModel().visibleProperty().addListener(visibilityListener);
+                    
+//                    nodeController.setModel(t1);
                 }
             }
         });
@@ -213,14 +223,14 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
-        return getModel().tryConnect(s, r, type);
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        return getModel().tryConnect(s, r);
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult connect(Connector s, Connector r) {
 
-        return getModel().connect(s, r, type);
+        return getModel().connect(s, r);
     }
 
     @Override
@@ -243,12 +253,12 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {
+    public Connector getSender(Connection c) {
         return getModel().getSender(c);
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
+    public Connector getReceiver(Connection c) {
         return getModel().getReceiver(c);
     }
 
@@ -263,7 +273,7 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowNode newNode(ValueObject obj) {
+    public FlowNode newNode(NodeValueObject obj) {
 
 
         return getModel().newNode(obj);
@@ -362,7 +372,7 @@ class FlowControllerImpl implements FlowController {
     public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory) {
 
         this.skinFactory = skinFactory;
-        
+
         if (skinFactory == null) {
             removeUI();
 
@@ -371,7 +381,7 @@ class FlowControllerImpl implements FlowController {
             for (FlowNode n : getNodes()) {
                 createNodeSkin(n);
             }
-            
+
             for (Connections cns : getAllConnections().values()) {
                 for (Connection c : cns.getConnections()) {
 
@@ -399,13 +409,12 @@ class FlowControllerImpl implements FlowController {
             fC.setSkinFactory(childNodeSkinFactory);
         }
     }
-    
-    
+
     @Override
     public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup) {
         this.nodeSkinLookup = skinLookup;
     }
-    
+
     @Override
     public FlowNodeSkinLookup getNodeSkinLookup() {
         return this.nodeSkinLookup;
@@ -455,7 +464,6 @@ class FlowControllerImpl implements FlowController {
         controller.setNodeSkinLookup(getNodeSkinLookup());
         controller.setModel(flowNode);
 
-
         for (String connectionType : getAllConnections().keySet()) {
             if (flowNode.getConnections(connectionType) == null) {
                 controller.addConnections(
@@ -470,7 +478,7 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowController newSubFlow(ValueObject obj) {
+    public FlowController newSubFlow(NodeValueObject obj) {
         return newSubFlow(getModel().newFlowNode(obj));
     }
 
@@ -517,5 +525,147 @@ class FlowControllerImpl implements FlowController {
         return nodeSkins.get(id);
     }
 
-
+//    @Override
+//    public void setModel(FlowNode node) {
+//        if (node instanceof FlowFlowNode) {
+//            setModel((FlowFlowNode) node);
+//        } else {
+//            throw new IllegalArgumentException("Unsupported flow node object specified!");
+//        }
+//    }
+//
+//    @Override
+//    public void setSkin(FlowNodeSkin skin) {
+//        this.nodeController.setSkin(skin);
+//    }
+//
+//    @Override
+//    public FlowNodeSkin getSkin() {
+//        return this.nodeController.getSkin();
+//    }
+//
+//    @Override
+//    public ObjectProperty<FlowNodeSkin> skinProperty() {
+//        return this.nodeController.skinProperty();
+//    }
+//
+//    @Override
+//    public StringProperty titleProperty() {
+//        return this.nodeController.titleProperty();
+//    }
+//
+//    @Override
+//    public void setTitle(String title) {
+//        this.nodeController.setTitle(title);
+//    }
+//
+//    @Override
+//    public String getTitle() {
+//        return this.nodeController.getTitle();
+//    }
+//
+//    @Override
+//    public DoubleProperty xProperty() {
+//        return this.nodeController.xProperty();
+//    }
+//
+//    @Override
+//    public DoubleProperty yProperty() {
+//        return this.nodeController.yProperty();
+//    }
+//
+//    @Override
+//    public void setX(double x) {
+//        this.nodeController.setX(x);
+//    }
+//
+//    @Override
+//    public void setY(double y) {
+//        this.nodeController.setY(y);
+//    }
+//
+//    @Override
+//    public double getX() {
+//        return this.nodeController.getX();
+//    }
+//
+//    @Override
+//    public double getY() {
+//        return this.nodeController.getY();
+//    }
+//
+//    @Override
+//    public DoubleProperty widthProperty() {
+//        return this.nodeController.widthProperty();
+//    }
+//
+//    @Override
+//    public DoubleProperty heightProperty() {
+//        return this.nodeController.heightProperty();
+//    }
+//
+//    @Override
+//    public void setWidth(double w) {
+//        this.nodeController.setWidth(w);
+//    }
+//
+//    @Override
+//    public void setHeight(double h) {
+//        this.nodeController.setHeight(h);
+//    }
+//
+//    @Override
+//    public double getWidth() {
+//        return this.nodeController.getWidth();
+//    }
+//
+//    @Override
+//    public double getHeight() {
+//        return this.nodeController.getHeight();
+//    }
+//
+//    @Override
+//    public Connector newInput(String connectionType) {
+//        return this.nodeController.newInput(connectionType);
+//    }
+//
+//    @Override
+//    public Connector newInput(String myId, String connectionType) {
+//        return this.nodeController.newInput(myId, connectionType);
+//    }
+//
+//    @Override
+//    public Connector newOutput(String connectionType) {
+//        return this.nodeController.newOutput(connectionType);
+//    }
+//
+//    @Override
+//    public Connector newOutput(String myId, String connectionType) {
+//        return this.nodeController.newOutput(myId, connectionType);
+//    }
+//
+//    @Override
+//    public Connector getInputById(String id) {
+//        return this.nodeController.getInputById(id);
+//    }
+//
+//    @Override
+//    public Connector getOutputById(String id) {
+//        return this.nodeController.getOutputById(id);
+//    }
+//
+//    @Override
+//    public void setConnectorIdGenerator(IdGenerator generator) {
+//        this.nodeController.setConnectorIdGenerator(generator);
+//    }
+//
+//    @Override
+//    public IdGenerator getConnectorIdGenerator() {
+//        return this.nodeController.getConnectorIdGenerator();
+//    }
+//
+//    @Override
+//    public ObjectProperty<IdGenerator> connectorIdGeneratorProperty() {
+//        return this.nodeController.connectorIdGeneratorProperty();
+//    }
 }

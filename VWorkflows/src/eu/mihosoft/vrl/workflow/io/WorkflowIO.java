@@ -5,6 +5,7 @@
 package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.EmptyValueObject;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
@@ -101,7 +102,8 @@ public class WorkflowIO {
                     node.getHeight(),
                     node.getValueObject(),
                     flow.isVisible(),
-                    node.getVisualizationRequest());
+                    node.getVisualizationRequest(),
+                    node.getInputs(), node.getOutputs());
 
             for (FlowNode n : flow.getNodes()) {
                 nodeList.add(toPersistentNode(n, pFlow));
@@ -116,7 +118,9 @@ public class WorkflowIO {
                     node.getWidth(),
                     node.getHeight(),
                     node.getValueObject(),
-                    node.getVisualizationRequest());
+                    node.getVisualizationRequest(),
+                    node.getInputs(),
+                    node.getOutputs());
         }
     }
 
@@ -185,6 +189,15 @@ public class WorkflowIO {
             result.setHeight(node.getHeight());
             result.setValueObject(node.getValueObject());
             result.setVisualizationRequest(node.getVReq());
+
+            // add connectors
+            for (Connector i : node.getInputs()) {
+                result.getInputs().add(i);
+            }
+            
+            for (Connector o : node.getOutputs()) {
+                result.getOutputs().add(o);
+            }
         }
     }
 

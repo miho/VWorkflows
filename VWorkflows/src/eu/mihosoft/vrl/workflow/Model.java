@@ -4,7 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 
 /**
@@ -17,11 +16,6 @@ public interface Model {
 
     public void setVisualizationRequest(VisualizationRequest vReq);
     
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty();
 
-
-//    public void setSkin(Skin<?> skin);
-//
-//    public Skin<?> getSkin();
-//
-//    public ObjectProperty<?> skinProperty();
 }

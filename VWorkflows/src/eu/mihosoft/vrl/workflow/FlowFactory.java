@@ -31,8 +31,4 @@ public class FlowFactory {
         return result;
     }
     
-    public static int numNodes() {
-        return FlowNodeBase.numInstances;
-    }
-    
 }

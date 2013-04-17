@@ -4,8 +4,10 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.ValueObject;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.NodeValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import java.util.List;
 
 /**
  *
@@ -18,17 +20,20 @@ public class Node {
     private double width;
     private double height;
     private String title;
-    private ValueObject valueObject;
+    private NodeValueObject valueObject;
     private VisualizationRequest vReq;
     private String id;
+    private List<Connector> inputs;
+    private List<Connector> outputs;
 
     public Node() {
     }
 
     public Node(String id, String title,
             double x, double y, double width, double height,
-            ValueObject valueObject, VisualizationRequest vReq) {
-        
+            NodeValueObject valueObject, VisualizationRequest vReq,
+            List<Connector> inputs, List<Connector> outputs) {
+
         this.x = x;
         this.y = y;
         this.width = width;
@@ -37,6 +42,9 @@ public class Node {
         this.valueObject = valueObject;
         this.vReq = vReq;
         this.id = id;
+        
+        this.inputs = inputs;
+        this.outputs = outputs;
     }
 
     /**
@@ -112,14 +120,14 @@ public class Node {
     /**
      * @return the valueObject
      */
-    public ValueObject getValueObject() {
+    public NodeValueObject getValueObject() {
         return valueObject;
     }
 
     /**
      * @param valueObject the valueObject to set
      */
-    public void setValueObject(ValueObject valueObject) {
+    public void setValueObject(NodeValueObject valueObject) {
         this.valueObject = valueObject;
     }
 
@@ -149,5 +157,33 @@ public class Node {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * @return the inputs
+     */
+    public List<Connector> getInputs() {
+        return inputs;
+    }
+
+    /**
+     * @param inputs the inputs to set
+     */
+    public void setInputs(List<Connector> inputs) {
+        this.inputs = inputs;
+    }
+
+    /**
+     * @return the outputs
+     */
+    public List<Connector> getOutputs() {
+        return outputs;
+    }
+
+    /**
+     * @param outputs the outputs to set
+     */
+    public void setOutputs(List<Connector> outputs) {
+        this.outputs = outputs;
     }
 }

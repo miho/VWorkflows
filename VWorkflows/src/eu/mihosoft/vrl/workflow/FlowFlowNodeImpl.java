@@ -63,13 +63,13 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType) {
-        return flow.tryConnect(s, r, flowType);
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        return flow.tryConnect(s, r);
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String flowType) {
-        return flow.connect(s, r, flowType);
+    public ConnectionResult connect(Connector s, Connector r) {
+        return flow.connect(s, r);
     }
 
     @Override
@@ -88,12 +88,12 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {
+    public Connector getSender(Connection c) {
         return flow.getSender(c);
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
+    public Connector getReceiver(Connection c) {
         return flow.getReceiver(c);
     }
 
@@ -124,12 +124,12 @@ class FlowFlowNodeImpl implements FlowFlowNode {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return null;
+        return node.getVisualizationRequest();
     }
 
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.setVisualizationRequest(vReq);
     }
 
     @Override
@@ -228,17 +228,17 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public void setValueObject(ValueObject obj) {
+    public void setValueObject(NodeValueObject obj) {
         node.setValueObject(obj);
     }
 
     @Override
-    public ValueObject getValueObject() {
+    public NodeValueObject getValueObject() {
         return node.getValueObject();
     }
 
     @Override
-    public ObjectProperty<ValueObject> valueObjectProperty() {
+    public ObjectProperty<NodeValueObject> valueObjectProperty() {
         return node.valueObjectProperty();
     }
 
@@ -278,7 +278,7 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public FlowFlowNode newFlowNode(ValueObject obj) {
+    public FlowFlowNode newFlowNode(NodeValueObject obj) {
         FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
 
         return (FlowFlowNode) flow.newNode(flowNode, obj);
@@ -293,7 +293,7 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
     
     @Override
-    public FlowNode newNode(ValueObject obj) {
+    public FlowNode newNode(NodeValueObject obj) {
 
         FlowNode result = null;
 
@@ -343,6 +343,66 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     @Override
     public NodeLookup getNodeLookup() {
         return flow.getNodeLookup();
+    }
+
+    @Override
+    public Connector newInput(String connectionType) {
+       return node.newInput(connectionType);
+    }
+
+    @Override
+    public Connector newInput(String myId, String connectionType) {
+        return node.newInput(myId, connectionType);
+    }
+
+    @Override
+    public Connector newOutput(String connectionType) {
+        return node.newOutput(connectionType);
+    }
+
+    @Override
+    public Connector newOutput(String myId, String connectionType) {
+        return node.newOutput(myId, connectionType);
+    }
+
+    @Override
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
+        return node.visualizationRequestProperty();
+    }
+
+    @Override
+    public void setConnectorIdGenerator(IdGenerator generator) {
+        this.node.setConnectorIdGenerator(generator);
+    }
+
+    @Override
+    public IdGenerator getConnectorIdGenerator() {
+        return this.node.getConnectorIdGenerator();
+    }
+
+    @Override
+    public ObjectProperty<IdGenerator> connectorIdGeneratorProperty() {
+        return this.node.connectorIdGeneratorProperty();
+    }
+
+    @Override
+    public Connector getInputById(String id) {
+        return node.getInputById(id);
+    }
+
+    @Override
+    public Connector getOutputById(String id) {
+        return node.getOutputById(id);
+    }
+
+    @Override
+    public ObservableList<Connector> getInputs() {
+        return this.node.getInputs();
+    }
+
+    @Override
+    public ObservableList<Connector> getOutputs() {
+        return this.node.getOutputs();
     }
 }
 

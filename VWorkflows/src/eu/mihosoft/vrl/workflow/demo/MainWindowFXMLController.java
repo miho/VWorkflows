@@ -96,8 +96,6 @@ public class MainWindowFXMLController implements Initializable {
         workflowTest(workflow, 3, 6);
 
         System.out.println(" [done]");
-
-        System.out.println(" --> #nodes: " + FlowFactory.numNodes());
         
         updateUI();
     }
@@ -147,9 +145,9 @@ public class MainWindowFXMLController implements Initializable {
             n.setX((i % 5) * (n.getWidth() + 30));
             n.setY((i / 5) * (n.getHeight() + 30));
 
-            if (prevNode != null) {
-                workflow.connect(prevNode, n, "control");
-            }
+//            if (prevNode != null) {
+//                workflow.connect(prevNode, n, "control");
+//            }
 
             prevNode = n;
         }

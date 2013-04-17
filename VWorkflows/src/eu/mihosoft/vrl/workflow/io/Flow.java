@@ -4,7 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.ValueObject;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.NodeValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import java.util.List;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class Flow extends Node{
+public class Flow extends Node {
+
     private List<Connection> connections;
     private List<Node> nodes;
     private List<String> connectionTypes;
@@ -27,12 +29,12 @@ public class Flow extends Node{
         this.nodes = nodes;
     }
 
-    public Flow(Flow parent,String id, List<String> connectionTypes,
+    public Flow(Flow parent, String id, List<String> connectionTypes,
             List<Connection> connections, List<Node> nodes, String title,
             double x, double y, double width, double height,
-            ValueObject valueObject, boolean visible, VisualizationRequest vReq) {
-        
-        super(id, title, x, y, width, height, valueObject, vReq);
+            NodeValueObject valueObject, boolean visible, VisualizationRequest vReq, List<Connector> inputs, List<Connector> outputs) {
+
+        super(id, title, x, y, width, height, valueObject, vReq, inputs, outputs);
         this.connectionTypes = connectionTypes;
         this.connections = connections;
         this.nodes = nodes;
@@ -109,6 +111,4 @@ public class Flow extends Node{
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-    
-    
 }

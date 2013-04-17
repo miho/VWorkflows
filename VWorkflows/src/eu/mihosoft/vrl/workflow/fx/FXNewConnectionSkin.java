@@ -7,6 +7,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
@@ -33,8 +34,8 @@ import jfxtras.labs.util.event.MouseControlUtil;
  */
 public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
-    private ObjectProperty<FlowNode> senderProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<FlowNode> receiverProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
     private Path connectionPath;
     private LineTo lineTo;
     private MoveTo moveTo;
@@ -47,7 +48,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private String type;
     private Node lastNode;
 
-    public FXNewConnectionSkin(Parent parent, FlowNode sender, FlowController controller, String type) {
+    public FXNewConnectionSkin(Parent parent, Connector sender, FlowController controller, String type) {
         setParent(parent);
         setSender(sender);
 
@@ -79,7 +80,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //    
 
-        final FlowNode sender = getSender();
+        final FlowNode sender = getSender().getParent();
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
@@ -111,8 +112,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         makeDraggable();
 
-        receiverConnector.setLayoutX(getSender().getX() + getSender().getWidth());
-        receiverConnector.setLayoutY(getSender().getY() + getSender().getHeight() / 2.0);
+        receiverConnector.setLayoutX(sender.getX() + sender.getWidth());
+        receiverConnector.setLayoutY(sender.getY() + sender.getHeight() / 2.0);
 
     }
 
@@ -127,7 +128,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                 final Node n = NodeUtil.getDeepestNode(
                         getParent(),
-                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
+                        t.getSceneX(), t.getSceneY(), ConnectorNode.class);
 
                 if (lastNode != null) {
                     lastNode.setEffect(null);
@@ -135,7 +136,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 }
 
                 if (n != null) {
-                    final FlowNodeWindow w = (FlowNodeWindow) n;
+                    final ConnectorNode w = (ConnectorNode) n;
 
                     FlowNode model = w.nodeSkinProperty().get().getModel();
                     
@@ -155,8 +156,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     ConnectionResult connResult =
                             flow.tryConnect(
-                            getSender(), w.nodeSkinProperty().get().getModel(),
-                            type);
+                            getSender(), w.getConnector());
 
                     if (connResult.getStatus().isCompatible()) {
 
@@ -207,13 +207,13 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                 if (n != null) {
 
-                    FlowNodeWindow w = (FlowNodeWindow) n;
+                    ConnectorNode w = (ConnectorNode) n;
 
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
 
-                    FlowNode receiver = w.nodeSkinProperty().get().getModel();
+                    Connector receiver = w.getConnector();
 
-                    flow.connect(getSender(), receiver, type);
+                    flow.connect(getSender(), receiver);
                 }
 
                 remove();
@@ -227,32 +227,32 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     }
 
     @Override
-    public FlowNode getSender() {
+    public Connector getSender() {
         return senderProperty.get();
     }
 
     @Override
-    public final void setSender(FlowNode n) {
+    public final void setSender(Connector n) {
         senderProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<FlowNode> senderProperty() {
+    public ObjectProperty<Connector> senderProperty() {
         return senderProperty;
     }
 
     @Override
-    public FlowNode getReceiver() {
+    public Connector getReceiver() {
         return receiverProperty.get();
     }
 
     @Override
-    public void setReceiver(FlowNode n) {
+    public void setReceiver(Connector n) {
         receiverProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<FlowNode> receiverProperty() {
+    public ObjectProperty<Connector> receiverProperty() {
         return receiverProperty;
     }
 

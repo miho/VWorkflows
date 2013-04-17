@@ -16,25 +16,25 @@ public interface FlowController {
 
     public void setModel(FlowFlowNode flow);
 
+    public FlowFlowNode getModel();
+
+    public ObjectProperty<FlowFlowNode> modelProperty();
+
     public void setNodeLookup(NodeLookup nodeLookup);
 
     public NodeLookup getNodeLookup();
 
-    public FlowFlowNode getModel();
+    public ConnectionResult tryConnect(Connector s, Connector r);
 
-    public ObjectProperty modelProperty();
-
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType);
-
-    public ConnectionResult connect(FlowNode s, FlowNode r, String flowType);
+    public ConnectionResult connect(Connector s, Connector r);
 
     public FlowNode remove(FlowNode n);
 
     public ObservableList<FlowNode> getNodes();
 
-    public FlowNode getSender(Connection c);
+    public Connector getSender(Connection c);
 
-    public FlowNode getReceiver(Connection c);
+    public Connector getReceiver(Connection c);
 
     public void addConnections(Connections connections, String flowType);
 
@@ -44,11 +44,11 @@ public interface FlowController {
 
     public Class<? extends FlowNode> getFlowNodeClass();
 
-    public FlowNode newNode(ValueObject obj);
+    public FlowNode newNode(NodeValueObject obj);
 
     public FlowNode newNode();
 
-    public FlowController newSubFlow(ValueObject obj);
+    public FlowController newSubFlow(NodeValueObject obj);
 
     public FlowController newSubFlow();
 
@@ -61,7 +61,8 @@ public interface FlowController {
     public IdGenerator getIdGenerator();
 
     public FlowNodeSkin getNodeSkinById(String id);
-    
+
     public FlowNodeSkinLookup getNodeSkinLookup();
+
     public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup);
 }

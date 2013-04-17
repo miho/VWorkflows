@@ -7,6 +7,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.beans.binding.DoubleBinding;
@@ -34,8 +35,8 @@ import jfxtras.labs.util.event.MouseControlUtil;
  */
 public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
-    private ObjectProperty<FlowNode> senderProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<FlowNode> receiverProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
     private Path connectionPath;
     private LineTo lineTo;
     private MoveTo moveTo;
@@ -79,17 +80,23 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 
 
-//        final FlowNode sender = getController().getSender(connection);
-//        final FlowNode receiver = getController().getReceiver(connection);
-
-        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getSenderId());
+        final Connector sender = getController().getSender(connection);
+        final Connector receiver = getController().getReceiver(connection);
+        
+        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(sender.getParent().getId());
+        final FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(receiver.getParent().getId());
+        
         final Window senderWindow = senderSkin.getNode();
-
-        final FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
+//
+//        final FXConnectorSkin senderSkin = (FXConnectorSkin) getController().getSender(connection);
+//        final Window senderWindow = senderSkin.getNode();
+//
+//        final FXConnectorSkin receiverSkin =  (FXConnectorSkin) getController().getReciever(connection);
+//        receiverWindow = receiverSkin.getController().get;
 
-        setSender(getController().getNodeLookup().getById(connection.getSenderId()));
-        setReceiver(getController().getNodeLookup().getById(connection.getReceiverId()));
+        setSender(getController().getSender(connection));
+        setReceiver(getController().getReceiver(connection));
 
 
         DoubleBinding startXBinding = new DoubleBinding() {
@@ -210,7 +217,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                 final Node n = NodeUtil.getDeepestNode(
                         getParent(),
-                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
+                        t.getSceneX(), t.getSceneY(), ConnectorNode.class);
 
                 if (lastNode != null) {
                     lastNode.setEffect(null);
@@ -218,19 +225,18 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 }
 
                 if (n != null) {
-                    final FlowNodeWindow w = (FlowNodeWindow) n;
+                    final ConnectorNode targetConnector = (ConnectorNode) n;
 
                     ConnectionResult connResult =
-                            getSender().getFlow().tryConnect(
-                            getSender(), w.nodeSkinProperty().get().getModel(),
-                            type);
+                            getSender().getParent().getFlow().tryConnect(
+                            getSender(), targetConnector.getConnector());
 
                     if (connResult.getStatus().isCompatible()) {
 
                         DropShadow shadow = new DropShadow(20, Color.WHITE);
                         Glow effect = new Glow(0.5);
                         shadow.setInput(effect);
-                        w.setEffect(shadow);
+                        targetConnector.setEffect(shadow);
 
                         receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
                     } else {
@@ -238,12 +244,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         DropShadow shadow = new DropShadow(20, Color.RED);
                         Glow effect = new Glow(0.8);
                         effect.setInput(shadow);
-                        w.setEffect(effect);
+                        targetConnector.setEffect(effect);
 
                         receiverConnector.setFill(Color.RED);
                     }
 
-                    lastNode = w;
+                    lastNode = targetConnector;
                 } else {
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
@@ -303,32 +309,32 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     @Override
-    public FlowNode getSender() {
+    public Connector getSender() {
         return senderProperty.get();
     }
 
     @Override
-    public final void setSender(FlowNode n) {
+    public final void setSender(Connector n) {
         senderProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<FlowNode> senderProperty() {
+    public ObjectProperty<Connector> senderProperty() {
         return senderProperty;
     }
 
     @Override
-    public FlowNode getReceiver() {
+    public Connector getReceiver() {
         return receiverProperty.get();
     }
 
     @Override
-    public void setReceiver(FlowNode n) {
+    public void setReceiver(Connector n) {
         receiverProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<FlowNode> receiverProperty() {
+    public ObjectProperty<Connector> receiverProperty() {
         return receiverProperty;
     }
 

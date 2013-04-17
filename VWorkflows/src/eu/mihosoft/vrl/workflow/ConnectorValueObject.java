@@ -10,11 +10,12 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface ValueObject {
-    public FlowNode getParent();
+public interface ConnectorValueObject {
+    public Connector getParent();
     public Object getValue();
     public void setValue(Object o);
     public ObjectProperty<Object> valueProperty();
-    public CompatibilityResult compatible(ValueObject other, String flowTpe);
-    public VisualizationRequest getVisualizationRequest();
+    public CompatibilityResult compatible(ConnectorValueObject other);
+    public String getConnectionType();
+//    public VisualizationRequest getVisualizationRequest();
 }

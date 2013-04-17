@@ -19,7 +19,7 @@ class ConnectionBase implements Connection {
     private String receiverId;
     private String id;
     private String type;
-    private VisualizationRequest vReq;
+    private ObjectProperty<VisualizationRequest> vReq = new SimpleObjectProperty<>();
     private Connections connections;
 
 
@@ -88,7 +88,7 @@ class ConnectionBase implements Connection {
      */
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return vReq;
+        return vReq.get();
     }
 
     /**
@@ -96,7 +96,7 @@ class ConnectionBase implements Connection {
      */
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vReq = vReq;
+        this.vReq.set(vReq);
     }
 //    @Override
 //    public void setSkin(Skin<?> skin) {
@@ -127,6 +127,11 @@ class ConnectionBase implements Connection {
     @Override
     public String getType() {
         return type;
+    }
+
+    @Override
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
+        return this.vReq;
     }
 
 }

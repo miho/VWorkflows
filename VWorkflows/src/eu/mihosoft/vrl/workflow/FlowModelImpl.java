@@ -6,7 +6,6 @@ package eu.mihosoft.vrl.workflow;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +16,7 @@ import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -40,6 +40,7 @@ public class FlowModelImpl implements FlowModel {
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
+    private ObjectProperty<VisualizationRequest> vReq = new SimpleObjectProperty<>();
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -67,18 +68,18 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult tryConnect(Connector s, Connector r) {
 
         CompatibilityResult result = r.getValueObject().
-                compatible(s.getValueObject(), type);
+                compatible(s.getValueObject());
 
         return new ConnectionResultImpl(result, null);
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult connect(Connector s, Connector r) {
 
-        ConnectionResult result = tryConnect(s, r, type);
+        ConnectionResult result = tryConnect(s, r);
 
         if (!result.getStatus().isCompatible()) {
             return result;
@@ -90,7 +91,7 @@ public class FlowModelImpl implements FlowModel {
 //        observableNodes.add(s);
 //        observableNodes.add(r);
 
-        Connection connection = getConnections(type).add(s.getId(), r.getId());
+        Connection connection = getConnections(s.getValueObject().getConnectionType()).add(s.getGlobalId(), r.getGlobalId());
 
 //        if (connection != null) {
 //            createConnectionSkin(connection, type);
@@ -151,13 +152,13 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {       
-        return getNodeLookup().getById(c.getSenderId());
+    public Connector getSender(Connection c) {       
+        return ConnectorUtil.getOutput(this, c.getSenderId());
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
-        return  getNodeLookup().getById(c.getReceiverId());
+    public Connector getReceiver(Connection c) {
+        return ConnectorUtil.getInput(this, c.getReceiverId());
     }
 
     @Override
@@ -177,7 +178,7 @@ public class FlowModelImpl implements FlowModel {
         return flowNodeClass;
     }
 
-    FlowNode newNode(FlowNode result, ValueObject obj) {
+    FlowNode newNode(FlowNode result, NodeValueObject obj) {
 
         result.setValueObject(obj);
         
@@ -202,12 +203,12 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.vReq.get();
     }
 
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.vReq.set(vReq);
     }
 
     /**
@@ -241,4 +242,11 @@ public class FlowModelImpl implements FlowModel {
     public void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
     }
+
+    @Override
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
+        return this.vReq;
+    }
+
+    
 }

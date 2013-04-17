@@ -22,8 +22,9 @@ class IdGeneratorImpl implements IdGenerator{
     
 
     @Override
-    public void addId(String id) {
+    public String addId(String id) {
         ids.add(id);
+        return id;
     }
 
     @Override

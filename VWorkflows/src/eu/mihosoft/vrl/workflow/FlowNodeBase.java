@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import com.sun.javafx.UnmodifiableArrayList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -13,9 +14,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
+
+
+
 
 /**
  *
@@ -35,23 +37,22 @@ class FlowNodeBase implements FlowNode {
     private DoubleProperty yProperty = new SimpleDoubleProperty();
     private DoubleProperty widthProperty = new SimpleDoubleProperty();
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
-    private ObjectProperty<ValueObject> valueObjectProperty =
+    private ObjectProperty<NodeValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
-    private VisualizationRequest vReq;
+    private ObjectProperty<VisualizationRequest> vReq = new SimpleObjectProperty<>();
     private FlowFlowNode flow;
     private BooleanProperty outputProperty = new SimpleBooleanProperty(true);
     private BooleanProperty inputProperty = new SimpleBooleanProperty();
-    static int numInstances = 0;
-//     private ObjectProperty<Skin> skinProperty =
-//            new SimpleObjectProperty<>();
+    private ObservableList<Connector> inputs = FXCollections.observableArrayList();
+    private ObservableList<Connector> outputs = FXCollections.observableArrayList();
+    private ObjectProperty<IdGenerator> connectorIdGeneratorProperty = new SimpleObjectProperty<>();
 
     public FlowNodeBase(FlowFlowNode flow) {
-
-        numInstances++;
 
         this.flow = flow;
 
         setValueObject(new EmptyValueObject());
+        setConnectorIdGenerator(new IdGeneratorImpl());
 
 //        inputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
 //            @Override
@@ -191,23 +192,23 @@ class FlowNodeBase implements FlowNode {
     }
 
     @Override
-    public ValueObject getValueObject() {
+    public NodeValueObject getValueObject() {
         return valueObjectProperty.get();
     }
 
     @Override
-    public void setValueObject(ValueObject o) {
+    public final void setValueObject(NodeValueObject o) {
         valueObjectProperty.set(o);
     }
 
     @Override
-    public ObjectProperty<ValueObject> valueObjectProperty() {
+    public ObjectProperty<NodeValueObject> valueObjectProperty() {
         return valueObjectProperty;
     }
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return vReq;
+        return this.vReq.get();
     }
 
     /**
@@ -215,7 +216,7 @@ class FlowNodeBase implements FlowNode {
      */
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vReq = vReq;
+        this.vReq.set(vReq);
     }
 
 //    @Override
@@ -293,4 +294,255 @@ class FlowNodeBase implements FlowNode {
 //       
 //       return id;
 //    }
+    @Override
+    public ObjectProperty<VisualizationRequest> visualizationRequestProperty() {
+        return this.vReq;
+    }
+
+    @Override
+    public Connector newInput(String event) {
+        Connector c = new ConnectorImpl();
+        c.setParent(this);
+        c.setId(getConnectorIdGenerator().newId());
+        c.setValueObject(new InputValueObject(event));
+        this.inputs.add(c);
+        return c;
+    }
+
+    @Override
+    public Connector newInput(String myId, String control) {
+        Connector c = new ConnectorImpl();
+        c.setParent(this);
+        c.setId(getConnectorIdGenerator().addId(myId));
+        c.setValueObject(new InputValueObject(control));
+        this.inputs.add(c);
+        return c;
+    }
+
+    @Override
+    public Connector newOutput(String control) {
+        Connector c = new ConnectorImpl();
+        c.setParent(this);
+        c.setId(getConnectorIdGenerator().newId());
+        c.setValueObject(new OutputValueObject(control));
+        this.outputs.add(c);
+        return c;
+    }
+
+    @Override
+    public Connector newOutput(String myId, String control) {
+        Connector c = new ConnectorImpl();
+        c.setParent(this);
+        c.setId(getConnectorIdGenerator().addId(myId));
+        c.setValueObject(new OutputValueObject(control));
+        this.outputs.add(c);
+        return c;
+    }
+
+    @Override
+    public final void setConnectorIdGenerator(IdGenerator generator) {
+        this.connectorIdGeneratorProperty().set(generator);
+    }
+
+    @Override
+    public IdGenerator getConnectorIdGenerator() {
+        return this.connectorIdGeneratorProperty().get();
+    }
+
+    @Override
+    public ObjectProperty<IdGenerator> connectorIdGeneratorProperty() {
+       return this.connectorIdGeneratorProperty;
+    }
+
+    @Override
+    public Connector getInputById(String id) {
+        for(Connector i : inputs) {
+            if (i.getId().equals(id)) {
+                return i;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public Connector getOutputById(String id) {
+        for(Connector o : outputs) {
+            if (o.getId().equals(id)) {
+                return o;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public ObservableList<Connector> getInputs() {
+        return inputs;
+    }
+
+    @Override
+    public ObservableList<Connector> getOutputs() {
+        return outputs;
+    }
+}
+
+class InputValueObject implements ConnectorValueObject {
+
+    private ObjectProperty<Connector> parentProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Object> valueProperty = new SimpleObjectProperty<>();
+    private String connectionType;
+
+    public InputValueObject() {
+    }
+
+    public InputValueObject(String connectionType) {
+        this.connectionType = connectionType;
+    }
+
+    @Override
+    public Connector getParent() {
+        return parentProperty.get();
+    }
+
+    @Override
+    public Object getValue() {
+        return valueProperty.get();
+    }
+
+    @Override
+    public void setValue(Object o) {
+        this.valueProperty.set(o);
+    }
+
+    @Override
+    public ObjectProperty<Object> valueProperty() {
+        return this.valueProperty;
+    }
+
+    @Override
+    public CompatibilityResult compatible(final ConnectorValueObject other) {
+
+        return new CompatibilityResult() {
+            @Override
+            public boolean isCompatible() {
+                boolean differentParents = other.getParent().getParent() != InputValueObject.this.getParent().getParent();
+                boolean differentConnector = other.getParent() != InputValueObject.this.getParent();
+                boolean sameConnectionType = other.getConnectionType().equals(connectionType);
+                boolean otherIsInput = other instanceof InputValueObject;
+
+                return differentParents && differentConnector && sameConnectionType && otherIsInput;
+            }
+
+            @Override
+            public String getMessage() {
+                return "NO MSG";
+            }
+
+            @Override
+            public String getStatus() {
+                return "NO STATUS";
+            }
+        };
+
+    }
+
+//    @Override
+//    public VisualizationRequest getVisualizationRequest() {
+//        throw new UnsupportedOperationException("Not supported yet."); // TODO implement
+//    }
+    /**
+     * @return the connectionType
+     */
+    @Override
+    public String getConnectionType() {
+        return connectionType;
+    }
+
+    /**
+     * @param connectionType the connectionType to set
+     */
+    public void setConnectionType(String connectionType) {
+        this.connectionType = connectionType;
+    }
+}
+
+class OutputValueObject implements ConnectorValueObject {
+
+    private ObjectProperty<Connector> parentProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Object> valueProperty = new SimpleObjectProperty<>();
+    private String connectionType;
+
+    public OutputValueObject() {
+    }
+
+    public OutputValueObject(String connectionType) {
+        this.connectionType = connectionType;
+    }
+
+    @Override
+    public Connector getParent() {
+        return parentProperty.get();
+    }
+
+    @Override
+    public Object getValue() {
+        return valueProperty.get();
+    }
+
+    @Override
+    public void setValue(Object o) {
+        this.valueProperty.set(o);
+    }
+
+    @Override
+    public ObjectProperty<Object> valueProperty() {
+        return this.valueProperty;
+    }
+
+    @Override
+    public CompatibilityResult compatible(final ConnectorValueObject other) {
+
+        return new CompatibilityResult() {
+            @Override
+            public boolean isCompatible() {
+                boolean differentParents = other.getParent().getParent() != OutputValueObject.this.getParent().getParent();
+                boolean differentConnector = other.getParent() != OutputValueObject.this.getParent();
+                boolean sameConnectionType = other.getConnectionType().equals(connectionType);
+                boolean otherIsOutput = other instanceof OutputValueObject;
+
+                return differentParents && differentConnector && sameConnectionType && otherIsOutput;
+            }
+
+            @Override
+            public String getMessage() {
+                return "NO MSG";
+            }
+
+            @Override
+            public String getStatus() {
+                return "NO STATUS";
+            }
+        };
+
+    }
+
+//    @Override
+//    public VisualizationRequest getVisualizationRequest() {
+//        throw new UnsupportedOperationException("Not supported yet."); // TODO implement
+//    }
+    /**
+     * @return the connectionType
+     */
+    @Override
+    public String getConnectionType() {
+        return connectionType;
+    }
+
+    /**
+     * @param connectionType the connectionType to set
+     */
+    public void setConnectionType(String connectionType) {
+        this.connectionType = connectionType;
+    }
 }

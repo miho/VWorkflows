@@ -344,5 +344,10 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     public NodeLookup getNodeLookup() {
         return flow.getNodeLookup();
     }
+
+    @Override
+    public ObservableList<String> getConnectionTypes() {
+        return node.getConnectionTypes();
+    }
 }
 

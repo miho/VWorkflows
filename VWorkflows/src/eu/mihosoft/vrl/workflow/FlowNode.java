@@ -87,4 +87,6 @@ public interface FlowNode extends Model {
 
     void setOutput(boolean state);
     
+    ObservableList<String> getConnectionTypes();
+    
 }

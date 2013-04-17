@@ -42,6 +42,8 @@ class FlowNodeBase implements FlowNode {
     private BooleanProperty outputProperty = new SimpleBooleanProperty(true);
     private BooleanProperty inputProperty = new SimpleBooleanProperty();
     static int numInstances = 0;
+    private ObservableList<String> connectionTypes = FXCollections.observableArrayList();
+    
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
 
@@ -196,7 +198,7 @@ class FlowNodeBase implements FlowNode {
     }
 
     @Override
-    public void setValueObject(ValueObject o) {
+    public final void setValueObject(ValueObject o) {
         valueObjectProperty.set(o);
     }
 
@@ -293,4 +295,9 @@ class FlowNodeBase implements FlowNode {
 //       
 //       return id;
 //    }
+
+    @Override
+    public ObservableList<String> getConnectionTypes() {
+        return connectionTypes;
+    }
 }

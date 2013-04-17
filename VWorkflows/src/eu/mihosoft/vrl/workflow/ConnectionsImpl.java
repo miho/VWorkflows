@@ -36,9 +36,6 @@ class ConnectionsImpl implements Connections {
     public ConnectionsImpl(String type) {
         this.type = type;
     }
-    
-    
-
 
     private static String connectionId(String id, String s, String r) {
         return "id=" + id + ";[" + s + "]->[" + r + "]";
@@ -115,7 +112,7 @@ class ConnectionsImpl implements Connections {
     public void setConnectionClass(Class<? extends Connection> cls) {
         try {
             Constructor constructor = cls.getConstructor(Connections.class, String.class, String.class, String.class, String.class);
-            throw new IllegalArgumentException("constructor missing: (String, String)");
+            throw new IllegalArgumentException("constructor missing: (Connections, String, String, String)");
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -15,6 +15,7 @@ public interface ValueObject {
     public Object getValue();
     public void setValue(Object o);
     public ObjectProperty<Object> valueProperty();
-    public CompatibilityResult compatible(ValueObject other, String flowTpe);
+    // assumes we are receiver
+    public CompatibilityResult compatible(ValueObject sender, String flowTpe);
     public VisualizationRequest getVisualizationRequest();
 }

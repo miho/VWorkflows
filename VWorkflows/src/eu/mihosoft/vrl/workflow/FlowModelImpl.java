@@ -84,17 +84,7 @@ public class FlowModelImpl implements FlowModel {
             return result;
         }
 
-//        nodes.put(s.getId(), s);
-//        nodes.put(r.getId(), r);
-
-//        observableNodes.add(s);
-//        observableNodes.add(r);
-
         Connection connection = getConnections(type).add(s.getId(), r.getId());
-
-//        if (connection != null) {
-//            createConnectionSkin(connection, type);
-//        }
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }

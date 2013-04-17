@@ -12,9 +12,20 @@ import javafx.beans.property.ObjectProperty;
  */
 public class EmptyValueObject implements ValueObject {
 
+    private FlowNode parent; 
+
+    public EmptyValueObject() {
+    }
+    
+    
+
+    public EmptyValueObject(FlowNode parent) {
+        this.parent = parent;
+    }
+
     @Override
     public FlowNode getParent() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return parent;
     }
 
     @Override
@@ -33,11 +44,20 @@ public class EmptyValueObject implements ValueObject {
     }
 
     @Override
-    public CompatibilityResult compatible(final ValueObject other, String flowType) {
+    public CompatibilityResult compatible(final ValueObject sender, final String flowType) {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {
-                return other!=EmptyValueObject.this;
+                boolean differentObjects = sender!=EmptyValueObject.this;
+                boolean compatibleType = getParent().isInputOfType(flowType);
+                
+                System.out.println(
+                        "DIFF: " + differentObjects 
+                        + ", COMPTYPE" + compatibleType 
+                        + "1:" + getParent().getId() 
+                        + ", 2:" + sender.getParent().getId() + ", type: " + flowType);
+                
+                return differentObjects && compatibleType;
             }
 
             @Override
@@ -65,5 +85,12 @@ public class EmptyValueObject implements ValueObject {
                 return "";
             }
         };
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(FlowNode parent) {
+        this.parent = parent;
     }
 }

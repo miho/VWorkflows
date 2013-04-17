@@ -39,21 +39,19 @@ class FlowNodeBase implements FlowNode {
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
     private FlowFlowNode flow;
-    private BooleanProperty outputProperty = new SimpleBooleanProperty(true);
-    private BooleanProperty inputProperty = new SimpleBooleanProperty();
     static int numInstances = 0;
-    private ObservableList<String> connectionTypes = FXCollections.observableArrayList();
-    
+    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
+    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
+
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
-
     public FlowNodeBase(FlowFlowNode flow) {
 
         numInstances++;
 
         this.flow = flow;
 
-        setValueObject(new EmptyValueObject());
+        setValueObject(new EmptyValueObject(this));
 
 //        inputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
 //            @Override
@@ -242,40 +240,42 @@ class FlowNodeBase implements FlowNode {
         return flow;
     }
 
-    /**
-     * @return the outputProperty
-     */
     @Override
-    public BooleanProperty outputProperty() {
-        return outputProperty;
-    }
-
-    /**
-     * @return the inputProperty
-     */
-    @Override
-    public BooleanProperty inputProperty() {
-        return inputProperty;
+    public void setOutput(boolean state, String type) {
+        if (state && !outputTypes.contains(type)) {
+            outputTypes.add(type);
+        } else if (!state) {
+            outputTypes.remove(type);
+        }
     }
 
     @Override
-    public void setOutput(boolean state) {
-        outputProperty.set(state);
+    public void setInput(boolean state, String type) {
+        if (state && !inputTypes.contains(type)) {
+            inputTypes.add(type);
+        } else if (!state) {
+            inputTypes.remove(type);
+        }
     }
 
     @Override
-    public void setInput(boolean state) {
-        inputProperty.set(state);
+    public boolean isInputOfType(String type) {
+        return inputTypes.contains(type);
+    }
+
+    @Override
+    public boolean isOutputOfType(String type) {
+        return outputTypes.contains(type);
     }
 
     @Override
     public boolean isOutput() {
-        return outputProperty.get();
+        return !outputTypes.isEmpty();
     }
 
     @Override
     public boolean isInput() {
-        return inputProperty.get();
+        return !inputTypes.isEmpty();
     }
 
 //    @Override
@@ -295,9 +295,13 @@ class FlowNodeBase implements FlowNode {
 //       
 //       return id;
 //    }
+    @Override
+    public ObservableList<String> getInputTypes() {
+        return inputTypes;
+    }
 
     @Override
-    public ObservableList<String> getConnectionTypes() {
-        return connectionTypes;
+    public ObservableList<String> getOutputTypes() {
+        return outputTypes;
     }
 }

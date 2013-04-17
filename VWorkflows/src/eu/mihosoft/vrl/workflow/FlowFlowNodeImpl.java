@@ -247,10 +247,7 @@ class FlowFlowNodeImpl implements FlowFlowNode {
         return node.getFlow();
     }
 
-    @Override
-    public BooleanProperty inputProperty() {
-        return node.inputProperty();
-    }
+   
 
     @Override
     public boolean isInput() {
@@ -263,21 +260,6 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public BooleanProperty outputProperty() {
-        return node.outputProperty();
-    }
-
-    @Override
-    public void setInput(boolean state) {
-        node.setInput(state);
-    }
-
-    @Override
-    public void setOutput(boolean state) {
-        node.setOutput(state);
-    }
-
-    @Override
     public FlowFlowNode newFlowNode(ValueObject obj) {
         FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
 
@@ -287,8 +269,14 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     @Override
     public FlowFlowNode newFlowNode() {
         FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
+        
+        EmptyValueObject valObj = new EmptyValueObject();
 
-        return (FlowFlowNode) flow.newNode(flowNode, new EmptyValueObject()); // end newNode()
+        FlowFlowNode result = (FlowFlowNode) flow.newNode(flowNode, valObj); // end newNode()
+        
+        valObj.setParent(result);
+        
+        return result;
 
     }
     
@@ -317,7 +305,10 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     
     @Override
     public FlowNode newNode() {
-        return newNode(new EmptyValueObject());
+        EmptyValueObject valObj = new EmptyValueObject();
+        FlowNode result = newNode(valObj);
+        valObj.setParent(result);
+        return result;
     }
 
 //    @Override
@@ -346,8 +337,33 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public ObservableList<String> getConnectionTypes() {
-        return node.getConnectionTypes();
+    public ObservableList<String> getInputTypes() {
+        return node.getInputTypes();
+    }
+
+    @Override
+    public ObservableList<String> getOutputTypes() {
+        return node.getOutputTypes();
+    }
+
+    @Override
+    public boolean isInputOfType(String type) {
+        return node.isInputOfType(type);
+    }
+
+    @Override
+    public boolean isOutputOfType(String type) {
+        return node.isOutputOfType(type);
+    }
+
+    @Override
+    public void setInput(boolean state, String type) {
+        this.node.setInput(state, type);
+    }
+
+    @Override
+    public void setOutput(boolean state, String type) {
+        this.node.setOutput(state, type);
     }
 }
 

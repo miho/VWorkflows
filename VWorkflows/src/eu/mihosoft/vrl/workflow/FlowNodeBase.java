@@ -339,17 +339,17 @@ class FlowNodeBase implements FlowNode {
 
     @Override
     public final void setConnectorIdGenerator(IdGenerator generator) {
-        this.idGeneratorProperty().set(generator);
+        this.connectorIdGeneratorProperty().set(generator);
     }
 
     @Override
     public IdGenerator getConnectorIdGenerator() {
-        return this.idGeneratorProperty().get();
+        return this.connectorIdGeneratorProperty().get();
     }
 
     @Override
-    public ObjectProperty<IdGenerator> idGeneratorProperty() {
-       return this.idGeneratorProperty();
+    public ObjectProperty<IdGenerator> connectorIdGeneratorProperty() {
+       return this.connectorIdGeneratorProperty();
     }
 
     @Override

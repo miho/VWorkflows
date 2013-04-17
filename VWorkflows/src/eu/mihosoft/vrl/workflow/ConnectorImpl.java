@@ -85,7 +85,7 @@ class ConnectorImpl implements Connector {
 
     @Override
     public String getGlobalId() {
-        return "[node:="+getParent().getId()+"::conn:="+getId()+"]";
+        return ConnectorUtil.globalId(this);
     }
     
     

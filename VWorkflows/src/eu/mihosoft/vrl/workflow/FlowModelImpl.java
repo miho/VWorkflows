@@ -152,13 +152,13 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {       
-        return getNodeLookup().getById(c.getSenderId());
+    public Connector getSender(Connection c) {       
+        return ConnectorUtil.getOutput(this, c.getSenderId());
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
-        return  getNodeLookup().getById(c.getReceiverId());
+    public Connector getReceiver(Connection c) {
+        return ConnectorUtil.getInput(this, c.getReceiverId());
     }
 
     @Override

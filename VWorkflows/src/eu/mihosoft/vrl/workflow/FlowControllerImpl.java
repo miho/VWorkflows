@@ -243,12 +243,12 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {
+    public Connector getSender(Connection c) {
         return getModel().getSender(c);
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
+    public Connector getReceiver(Connection c) {
         return getModel().getReceiver(c);
     }
 

@@ -16,13 +16,13 @@ public interface FlowController {
 
     public void setModel(FlowFlowNode flow);
 
+    public FlowFlowNode getModel();
+
+    public ObjectProperty<FlowFlowNode> modelProperty();
+
     public void setNodeLookup(NodeLookup nodeLookup);
 
     public NodeLookup getNodeLookup();
-
-    public FlowFlowNode getModel();
-
-    public ObjectProperty modelProperty();
 
     public ConnectionResult tryConnect(Connector s, Connector r);
 
@@ -32,9 +32,9 @@ public interface FlowController {
 
     public ObservableList<FlowNode> getNodes();
 
-    public FlowNode getSender(Connection c);
+    public Connector getSender(Connection c);
 
-    public FlowNode getReceiver(Connection c);
+    public Connector getReceiver(Connection c);
 
     public void addConnections(Connections connections, String flowType);
 
@@ -61,7 +61,8 @@ public interface FlowController {
     public IdGenerator getIdGenerator();
 
     public FlowNodeSkin getNodeSkinById(String id);
-    
+
     public FlowNodeSkinLookup getNodeSkinLookup();
+
     public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup);
 }

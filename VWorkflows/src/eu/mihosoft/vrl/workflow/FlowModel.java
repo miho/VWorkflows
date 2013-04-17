@@ -23,8 +23,8 @@ interface FlowModel extends Model, VisibleState{
     
     public ObservableList<FlowNode> getNodes();
     
-    public FlowNode getSender(Connection c);
-    public FlowNode getReceiver(Connection c);
+    public Connector getSender(Connection c);
+    public Connector getReceiver(Connection c);
     
     public void addConnections(Connections connections, String flowType);
     public Connections getConnections(String flowType);

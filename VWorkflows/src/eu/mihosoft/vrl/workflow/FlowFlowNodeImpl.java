@@ -88,12 +88,12 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {
+    public Connector getSender(Connection c) {
         return flow.getSender(c);
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
+    public Connector getReceiver(Connection c) {
         return flow.getReceiver(c);
     }
 
@@ -381,8 +381,8 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     }
 
     @Override
-    public ObjectProperty<IdGenerator> idGeneratorProperty() {
-        return this.node.idGeneratorProperty();
+    public ObjectProperty<IdGenerator> connectorIdGeneratorProperty() {
+        return this.node.connectorIdGeneratorProperty();
     }
 
     @Override

@@ -71,8 +71,21 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         connectionPath.setStrokeWidth(5);
 
-        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
-        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+//        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+
+        if (type.equals("control")) {
+            receiverConnector.setFill(new Color(1.0, 1.0, 0.0, 0.75));
+            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        } else if (type.equals("data")) {
+            receiverConnector.setFill(new Color(0.1, 0.1, 0.1, 0.5));
+            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        } else if (type.equals("event")) {
+            receiverConnector.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        }
+
+
         receiverConnector.setStrokeWidth(3);
 
 //        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
@@ -138,8 +151,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     final FlowNodeWindow w = (FlowNodeWindow) n;
 
                     FlowNode model = w.nodeSkinProperty().get().getModel();
-                    
-                    
+
+
                     System.out.println("ID: " + model.getId() + ": " + model);
 
 //                    // we cannot create a connection from us to us
@@ -165,7 +178,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         shadow.setInput(effect);
                         w.setEffect(shadow);
 
-                        receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
+//                        receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
                     } else {
 
                         DropShadow shadow = new DropShadow(20, Color.RED);
@@ -173,12 +186,12 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         effect.setInput(shadow);
                         w.setEffect(effect);
 
-                        receiverConnector.setFill(Color.RED);
+//                        receiverConnector.setFill(Color.RED);
                     }
 
                     lastNode = w;
                 } else {
-                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+//                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
         }, new EventHandler<MouseEvent>() {

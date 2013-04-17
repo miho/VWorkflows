@@ -12,12 +12,10 @@ import javafx.beans.property.ObjectProperty;
  */
 public class EmptyValueObject implements ValueObject {
 
-    private FlowNode parent; 
+    private FlowNode parent;
 
     public EmptyValueObject() {
     }
-    
-    
 
     public EmptyValueObject(FlowNode parent) {
         this.parent = parent;
@@ -48,16 +46,10 @@ public class EmptyValueObject implements ValueObject {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {
-                boolean differentObjects = sender!=EmptyValueObject.this;
+                boolean differentObjects = sender != EmptyValueObject.this;
                 boolean compatibleType = getParent().isInputOfType(flowType)
                         && sender.getParent().isOutputOfType(flowType);
-                
-//                System.out.println(
-//                        "DIFF: " + differentObjects 
-//                        + ", COMPTYPE" + compatibleType 
-//                        + "1:" + getParent().getId() 
-//                        + ", 2:" + sender.getParent().getId() + ", type: " + flowType);
-                
+
                 return differentObjects && compatibleType;
             }
 

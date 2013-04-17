@@ -431,6 +431,7 @@ public class FXFlowNodeSkin
     /**
      * @return the controller
      */
+    @Override
     public FlowController getController() {
         return controller;
     }
@@ -438,6 +439,7 @@ public class FXFlowNodeSkin
     /**
      * @param controller the controller to set
      */
+    @Override
     public void setController(FlowController controller) {
         this.controller = controller;
     }

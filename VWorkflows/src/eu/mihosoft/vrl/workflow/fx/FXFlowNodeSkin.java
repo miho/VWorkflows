@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
@@ -12,6 +13,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -46,14 +48,16 @@ public class FXFlowNodeSkin
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
     private FlowController controller;
+    private ListChangeListener<Connector> inputsListener;
+    private ListChangeListener<Connector> outputsListener;
 
     public FXFlowNodeSkin(Parent parent, FlowNode model, FlowController controller) {
 
         setParent(parent);
         setModel(model);
-        
+
         this.controller = controller;
-        
+
         init();
     }
 
@@ -65,8 +69,11 @@ public class FXFlowNodeSkin
         node.setLayoutY(getModel().getY());
         node.setPrefWidth(getModel().getWidth());
         node.setPrefHeight(getModel().getHeight());
+        
+        initConnectorListeners();
 
         registerListeners(getModel());
+        registerConnectorListeners(getModel());
 
         modelProperty.addListener(new ChangeListener<FlowNode>() {
             @Override
@@ -74,6 +81,9 @@ public class FXFlowNodeSkin
 
                 removeListeners(oldVal);
                 registerListeners(newVal);
+                unregisterConnectorListeners(oldVal);
+                registerConnectorListeners(newVal);
+
             }
         });
 
@@ -84,14 +94,30 @@ public class FXFlowNodeSkin
         getModel().outputProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) {
+
                 if (newVal) {
                     addOutputConnector();
                 } else {
                     removeOutputConnector();
                 }
+
             }
         });
 
+    }
+
+    private void registerConnectorListeners(FlowNode n) {
+        if (n != null) {
+            n.getInputs().addListener(inputsListener);
+            n.getOutputs().addListener(outputsListener);
+        }
+    }
+
+    private void unregisterConnectorListeners(FlowNode n) {
+        if (n != null) {
+            n.getInputs().removeListener(inputsListener);
+            n.getOutputs().removeListener(outputsListener);
+        }
     }
 
     private void addOutputConnector() {
@@ -146,9 +172,10 @@ public class FXFlowNodeSkin
 //                    return;
 //                }
 
-                newConnectionSkin =
-                        new FXNewConnectionSkin(
-                        getParent(), getModel(), getController(), "control");
+                // TODO implement this
+//                newConnectionSkin =
+//                        new FXNewConnectionSkin(
+//                        getParent(), getModel(), getController(), );
 
                 newConnectionSkin.add();
 
@@ -413,5 +440,82 @@ public class FXFlowNodeSkin
      */
     public void setController(FlowController controller) {
         this.controller = controller;
+    }
+
+    private void initConnectorListeners() {
+        inputsListener = new ListChangeListener<Connector>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Connector> change) {
+                while (change.next()) {
+                    if (change.wasPermutated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            //permutate
+                        }
+                    } else if (change.wasUpdated()) {
+                        //update item
+                    } else if (change.wasRemoved()) {
+                        // removed
+                        for (Connector c : change.getRemoved()) {
+//                            if (nodeSkins.containsKey(n.getId())) {
+//
+//                            }
+//
+//                            if (n instanceof FlowModel) {
+//                                subControllers.remove(n.getId());
+//                            }
+                        }
+                    } else if (change.wasAdded()) {
+                        // added
+                        for (Connector c : change.getAddedSubList()) {
+//                            if (!nodeSkins.containsKey(n.getId())) {
+//                                
+//                                FlowNodeSkin nodeSkin = createNodeSkin(n);
+//                                
+////                                 System.out.println("add node: " + n.getId());
+//                            }
+                        }
+                    }
+
+                } // end while change.next()
+            }
+        };
+
+
+        outputsListener = new ListChangeListener<Connector>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Connector> change) {
+                while (change.next()) {
+                    if (change.wasPermutated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            //permutate
+                        }
+                    } else if (change.wasUpdated()) {
+                        //update item
+                    } else if (change.wasRemoved()) {
+                        // removed
+                        for (Connector c : change.getRemoved()) {
+//                            if (nodeSkins.containsKey(n.getId())) {
+//
+//                            }
+//
+//                            if (n instanceof FlowModel) {
+//                                subControllers.remove(n.getId());
+//                            }
+                        }
+                    } else if (change.wasAdded()) {
+                        // added
+                        for (Connector c : change.getAddedSubList()) {
+//                            if (!nodeSkins.containsKey(n.getId())) {
+//                                
+//                                FlowNodeSkin nodeSkin = createNodeSkin(n);
+//                                
+////                                 System.out.println("add node: " + n.getId());
+//                            }
+                        }
+                    }
+
+                } // end while change.next()
+            }
+        };
     }
 }

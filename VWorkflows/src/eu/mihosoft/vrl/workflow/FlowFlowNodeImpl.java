@@ -394,5 +394,15 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     public Connector getOutputById(String id) {
         return node.getOutputById(id);
     }
+
+    @Override
+    public ObservableList<Connector> getInputs() {
+        return this.node.getInputs();
+    }
+
+    @Override
+    public ObservableList<Connector> getOutputs() {
+        return this.node.getOutputs();
+    }
 }
 

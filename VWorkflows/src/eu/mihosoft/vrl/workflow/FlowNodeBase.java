@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import com.sun.javafx.UnmodifiableArrayList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -14,6 +15,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 
 
 
@@ -349,7 +351,7 @@ class FlowNodeBase implements FlowNode {
 
     @Override
     public ObjectProperty<IdGenerator> connectorIdGeneratorProperty() {
-       return this.connectorIdGeneratorProperty();
+       return this.connectorIdGeneratorProperty;
     }
 
     @Override
@@ -372,6 +374,16 @@ class FlowNodeBase implements FlowNode {
         }
         
         return null;
+    }
+
+    @Override
+    public ObservableList<Connector> getInputs() {
+        return inputs;
+    }
+
+    @Override
+    public ObservableList<Connector> getOutputs() {
+        return outputs;
     }
 }
 

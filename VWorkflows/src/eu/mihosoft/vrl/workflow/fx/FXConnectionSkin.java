@@ -229,7 +229,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     ConnectionResult connResult =
                             getSender().getParent().getFlow().tryConnect(
-                            getSender(), targetConnector.nodeSkinProperty().get().getModel());
+                            getSender(), targetConnector.getConnector());
 
                     if (connResult.getStatus().isCompatible()) {
 

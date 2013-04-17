@@ -17,6 +17,7 @@ class NodeControllerImpl implements NodeController{
     
     private ObjectProperty<FlowNode> modepProperty = new SimpleObjectProperty<>();
     private ObjectProperty<FlowNodeSkin> skinProperty = new SimpleObjectProperty<>();
+   
 
     @Override
     public void setModel(FlowNode node) {

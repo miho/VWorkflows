@@ -1,6 +1,10 @@
 *.class
 
 # Package Files #
-*.jar
-*.war
-*.ear
+
+/VFXConnections/nbproject/private/
+/VFXConnections/build/
+/VFXConnections/dist/
+/VWorkflows/nbproject/private/
+/VWorkflows/build/
+/VWorkflows/dist/

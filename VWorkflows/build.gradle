@@ -1,0 +1,48 @@
+apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.5'
+}
+
+dependencies {
+    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
+    compile "com.thoughtworks.xstream:xstream:1.4.4"
+    // compile project('..:VRLInstrumentation')    
+    // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/']
+        }
+        
+        resources {
+            srcDirs = ['src/']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['test/']
+        }
+    }
+}
+
+javafx {
+    mainClass "eu.mihosoft.vrl.workflow.demo.Main"
+}
+
+jfxDeploy {
+    packaging = "image"
+}
+
+
+

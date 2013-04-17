@@ -45,9 +45,9 @@ public class MainWindowFXMLController implements Initializable {
         canvas.setContentPane(root);
 
         root.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
-        
+
         contentPane.getChildren().add(canvas);
-        
+
         rootPane = root;
     }
     private Pane rootPane;
@@ -72,11 +72,11 @@ public class MainWindowFXMLController implements Initializable {
 
     @FXML
     public void onSaveAction(ActionEvent e) {
-        
+
         if (workflow == null) {
             return;
         }
-        
+
         System.out.print(" >> saving workflow as xml");
         try {
             WorkflowIO.saveToXML(Paths.get("flow01.xml"), workflow.getModel());
@@ -89,7 +89,7 @@ public class MainWindowFXMLController implements Initializable {
 
     @FXML
     public void onGenerateAction(ActionEvent e) {
-        
+
         System.out.print(" >> generate workflow");
 
         workflow = new DefaultWorkflow();
@@ -98,10 +98,9 @@ public class MainWindowFXMLController implements Initializable {
         System.out.println(" [done]");
 
         System.out.println(" --> #nodes: " + FlowFactory.numNodes());
-        
+
         updateUI();
     }
-    
     @FXML
     public Pane contentPane;
 
@@ -111,8 +110,6 @@ public class MainWindowFXMLController implements Initializable {
     public Pane getRootPane() {
         return rootPane;
     }
-
-  
 
     public void workflowTest(FlowController workflow, int depth, int width) {
 
@@ -132,15 +129,19 @@ public class MainWindowFXMLController implements Initializable {
                 workflowTest(subFlow, depth - 1, width);
             } else {
                 n = workflow.newNode();
-
             }
 
 //            n.setTitle("Node " + i);
             n.setTitle("Node " + n.getId());
-            
-            
-            System.out.println("n: " + n.getId());
-            
+
+            if (i % 2 == 0) {
+                n.setInput(true, "control");
+                n.setOutput(true, "control");
+            } else {
+                n.setInput(true, "data");
+                n.setOutput(true, "data");
+            }
+
             n.setWidth(300);
             n.setHeight(200);
 
@@ -157,13 +158,13 @@ public class MainWindowFXMLController implements Initializable {
     }
 
     private void updateUI() {
-        
+
         rootPane.getChildren().clear();
-        
+
         if (workflow == null) {
             return;
         }
-        
+
         workflow.getModel().setVisible(true);
 
         workflow.setSkinFactory(new FXSkinFactory(rootPane));

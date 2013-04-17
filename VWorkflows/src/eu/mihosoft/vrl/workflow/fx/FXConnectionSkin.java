@@ -48,6 +48,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
+    private boolean valid;
 
     public FXConnectionSkin(Parent parent, Connection connection, FlowController flow, String type) {
         setParent(parent);
@@ -71,8 +72,21 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         connectionPath.setStrokeWidth(5);
 
-        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
-        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+//        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        receiverConnector.setStrokeWidth(3);
+
+        if (type.equals("control")) {
+            receiverConnector.setFill(new Color(1.0, 1.0, 0.0, 0.75));
+            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        } else if (type.equals("data")) {
+            receiverConnector.setFill(new Color(0.1, 0.1, 0.1, 0.5));
+            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        } else if (type.equals("event")) {
+            receiverConnector.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        }
+
         receiverConnector.setStrokeWidth(3);
 
         connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
@@ -136,8 +150,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             {
                 super.bind(
                         receiverWindow.layoutYProperty(),
-                        receiverWindow.heightProperty()
-                        );
+                        receiverWindow.heightProperty());
             }
 
             @Override
@@ -151,12 +164,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         0,
                         receiverWindow.getLayoutY(),
                         receiverWindow.getParent(), getParent());
-                
-                double height = 
-                        receiverWindow.getHeight() 
+
+                double height =
+                        receiverWindow.getHeight()
                         * receiverWindow.getParent().localToSceneTransformProperty().get().getMyy();
 
-                return location.getY() + height /2;
+                return location.getY() + height / 2;
             }
         };
 
@@ -217,6 +230,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     lastNode = null;
                 }
 
+                valid = true;
+
                 if (n != null) {
                     final FlowNodeWindow w = (FlowNodeWindow) n;
 
@@ -233,6 +248,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         w.setEffect(shadow);
 
                         receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
+                        valid = true;
                     } else {
 
                         DropShadow shadow = new DropShadow(20, Color.RED);
@@ -241,9 +257,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         w.setEffect(effect);
 
                         receiverConnector.setFill(Color.RED);
+                        valid = false;
                     }
 
                     lastNode = w;
+
                 } else {
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
@@ -264,6 +282,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             @Override
             public void handle(MouseEvent t) {
 
+                if (lastNode != null) {
+                    lastNode.setEffect(null);
+                    lastNode = null;
+                }
+
+                if (!valid) {
+                    init();
+                    return;
+                }
+
                 receiverConnector.toBack();
                 connectionPath.toBack();
 
@@ -277,10 +305,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                    }
 //                });
 
-                if (lastNode != null) {
-                    lastNode.setEffect(null);
-                    lastNode = null;
-                }
+
 
                 Node n = NodeUtil.getDeepestNode(
                         getParent(),

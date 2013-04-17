@@ -49,13 +49,14 @@ public class EmptyValueObject implements ValueObject {
             @Override
             public boolean isCompatible() {
                 boolean differentObjects = sender!=EmptyValueObject.this;
-                boolean compatibleType = getParent().isInputOfType(flowType);
+                boolean compatibleType = getParent().isInputOfType(flowType)
+                        && sender.getParent().isOutputOfType(flowType);
                 
-                System.out.println(
-                        "DIFF: " + differentObjects 
-                        + ", COMPTYPE" + compatibleType 
-                        + "1:" + getParent().getId() 
-                        + ", 2:" + sender.getParent().getId() + ", type: " + flowType);
+//                System.out.println(
+//                        "DIFF: " + differentObjects 
+//                        + ", COMPTYPE" + compatibleType 
+//                        + "1:" + getParent().getId() 
+//                        + ", 2:" + sender.getParent().getId() + ", type: " + flowType);
                 
                 return differentObjects && compatibleType;
             }

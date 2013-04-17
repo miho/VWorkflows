@@ -7,11 +7,14 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -42,18 +45,19 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> nodeYListener;
     private ChangeListener<Number> nodeWidthListener;
     private ChangeListener<Number> nodeHeightListener;
-    private Node output;
+//    private Node output;
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
     private FlowController controller;
+    private Map<String, Node> outputs = new HashMap<>();
 
     public FXFlowNodeSkin(Parent parent, FlowNode model, FlowController controller) {
 
         setParent(parent);
         setModel(model);
-        
+
         this.controller = controller;
-        
+
         init();
     }
 
@@ -77,24 +81,39 @@ public class FXFlowNodeSkin
             }
         });
 
-        if (getModel().isOutput()) {
-            addOutputConnector();
+        for (String type : getModel().getOutputTypes()) {
+            addOutputConnector(type);
         }
 
-        getModel().outputProperty().addListener(new ChangeListener<Boolean>() {
+        getModel().getOutputTypes().addListener(new ListChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) {
-                if (newVal) {
-                    addOutputConnector();
-                } else {
-                    removeOutputConnector();
-                }
+            public void onChanged(ListChangeListener.Change<? extends String> change) {
+                while (change.next()) {
+                    if (change.wasPermutated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            //permutate
+                        }
+                    } else if (change.wasUpdated()) {
+                        //update item
+                    } else if (change.wasRemoved()) {
+                        // removed
+                        for (String type : change.getRemoved()) {
+                            removeOutputConnector(type);
+                        }
+                    } else if (change.wasAdded()) {
+                        // added
+                        for (String type : change.getAddedSubList()) {
+                            addOutputConnector(type);
+                        }
+                    }
+
+                } // end while change.next()
             }
         });
 
     }
 
-    private void addOutputConnector() {
+    private void addOutputConnector(final String type) {
         DoubleBinding startXBinding = new DoubleBinding() {
             {
                 super.bind(node.layoutXProperty(), node.widthProperty());
@@ -119,11 +138,20 @@ public class FXFlowNodeSkin
 
         Circle circle = new Circle(20);
 
-        circle.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
-        circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        if (type.equals("control")) {
+            circle.setFill(new Color(1.0, 1.0, 0.0, 0.75));
+            circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        } else if (type.equals("data")) {
+            circle.setFill(new Color(0.1, 0.1, 0.1, 0.5));
+            circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        } else if (type.equals("event")) {
+            circle.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+            circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+        }
+
         circle.setStrokeWidth(3);
 
-        output = circle;
+        final Node output = circle;
 
         output.layoutXProperty().bind(startXBinding);
         output.layoutYProperty().bind(startYBinding);
@@ -148,7 +176,7 @@ public class FXFlowNodeSkin
 
                 newConnectionSkin =
                         new FXNewConnectionSkin(
-                        getParent(), getModel(), getController(), "control");
+                        getParent(), getModel(), getController(), type);
 
                 newConnectionSkin.add();
 
@@ -181,6 +209,8 @@ public class FXFlowNodeSkin
                 output.toBack();
             }
         });
+
+        outputs.put(type, output);
     }
 
 //    private void delegateEventsTo(Node src, final Node target) {
@@ -228,7 +258,8 @@ public class FXFlowNodeSkin
 //                (EventType<MouseEvent>) e.getEventType());
 //        return copy;
 //    }
-    private void removeOutputConnector() {
+    private void removeOutputConnector(String type) {
+        Node output = outputs.get(type);
         if (output != null) {
             NodeUtil.removeFromParent(output);
         }
@@ -261,7 +292,9 @@ public class FXFlowNodeSkin
     @Override
     public void remove() {
         removeSkinOnly = true;
-        removeOutputConnector();
+        for (String type : outputs.keySet()) {
+            removeOutputConnector(type);
+        }
         NodeUtil.removeFromParent(node);
     }
 

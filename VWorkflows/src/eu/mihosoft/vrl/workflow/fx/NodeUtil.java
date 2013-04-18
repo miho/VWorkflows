@@ -45,7 +45,7 @@ public class NodeUtil {
 
     static public Point2D transformCoordinates(double x, double y, Node from, Node to) {
 
-        if (from == to) {
+        if (from == to || from ==null || to == null) {
             return new Point2D(x, y);
         }
 

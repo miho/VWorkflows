@@ -112,7 +112,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
-        
+
         addToClipboard();
 
         setSender(getController().getNodeLookup().getById(connection.getSenderId()));
@@ -168,6 +168,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
             @Override
             protected double computeValue() {
+
+                if (receiverWindow.getParent() == null) {
+                    return 0;
+                }
 
                 if (receiverWindow.getParent() == getParent()) {
                     return receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2;
@@ -486,7 +490,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                                     return prevWindow.getLayoutY() - 100;
                                 }
                             };
-                            
+
 //                            clipboard.layoutXProperty().unbind();
 //                            clipboard.layoutYProperty().unbind();
 //

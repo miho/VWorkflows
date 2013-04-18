@@ -6,9 +6,8 @@ package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
-import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.FlowNode;
 import eu.mihosoft.vrl.workflow.NodeLookup;
 import eu.mihosoft.vrl.workflow.VConnections;
 
@@ -20,15 +19,15 @@ public class Playground {
 
     public static void search01() {
 
-        VFlow flow = FlowFactory.newFlow();
+        FlowController flow = new DefaultWorkflow();
 
-        VNode n1 = flow.newNode();
-        VNode n2 = flow.newNode();
+        FlowNode n1 = flow.newNode();
+        FlowNode n2 = flow.newNode();
 
-        VFlow subFlow = flow.newSubFlow();
+        FlowController subFlow = flow.newSubFlow();
 
-        VNode sn1 = subFlow.newNode();
-        VNode sn2 = subFlow.newNode();
+        FlowNode sn1 = subFlow.newNode();
+        FlowNode sn2 = subFlow.newNode();
         
         String globalId = sn1.getId();
         

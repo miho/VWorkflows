@@ -7,9 +7,9 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VFlowModel;
-import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.FlowFlowNode;
+import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,21 +33,21 @@ import jfxtras.labs.util.event.MouseControlUtil;
  */
 public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
-    private ObjectProperty<VNode> senderProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<VNode> receiverProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<FlowNode> senderProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<FlowNode> receiverProperty = new SimpleObjectProperty<>();
     private Path connectionPath;
     private LineTo lineTo;
     private MoveTo moveTo;
 //    private Shape startConnector;
     private Shape receiverConnector;
-    private VFlowModel flow;
-    private VFlow flowController;
+    private FlowFlowNode flow;
+    private FlowController flowController;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
 
-    public FXNewConnectionSkin(Parent parent, VNode sender, VFlow controller, String type) {
+    public FXNewConnectionSkin(Parent parent, FlowNode sender, FlowController controller, String type) {
         setParent(parent);
         setSender(sender);
 
@@ -92,7 +92,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //    
 
-        final VNode sender = getSender();
+        final FlowNode sender = getSender();
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
@@ -150,7 +150,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 if (n != null) {
                     final FlowNodeWindow w = (FlowNodeWindow) n;
 
-                    VNode model = w.nodeSkinProperty().get().getModel();
+                    FlowNode model = w.nodeSkinProperty().get().getModel();
 
 //                    // we cannot create a connection from us to us
 //                    if (model == getSender()) {
@@ -215,7 +215,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
 
-                    VNode receiver = w.nodeSkinProperty().get().getModel();
+                    FlowNode receiver = w.nodeSkinProperty().get().getModel();
 
                     flow.connect(getSender(), receiver, type);
                 }
@@ -231,32 +231,32 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     }
 
     @Override
-    public VNode getSender() {
+    public FlowNode getSender() {
         return senderProperty.get();
     }
 
     @Override
-    public final void setSender(VNode n) {
+    public final void setSender(FlowNode n) {
         senderProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<VNode> senderProperty() {
+    public ObjectProperty<FlowNode> senderProperty() {
         return senderProperty;
     }
 
     @Override
-    public VNode getReceiver() {
+    public FlowNode getReceiver() {
         return receiverProperty.get();
     }
 
     @Override
-    public void setReceiver(VNode n) {
+    public void setReceiver(FlowNode n) {
         receiverProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<VNode> receiverProperty() {
+    public ObjectProperty<FlowNode> receiverProperty() {
         return receiverProperty;
     }
 
@@ -315,12 +315,12 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     }
 
     @Override
-    public VFlow getController() {
+    public FlowController getController() {
         return flowController;
     }
 
     @Override
-    public void setController(VFlow flow) {
+    public void setController(FlowController flow) {
         this.flowController = flow;
         this.flow = flow.getModel();
     }

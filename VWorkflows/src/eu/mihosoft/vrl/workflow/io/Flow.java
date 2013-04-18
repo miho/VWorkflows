@@ -12,24 +12,24 @@ import java.util.List;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class PersistentFlow extends PersistentNode {
+public class Flow extends Node {
 
-    private List<PersistentConnection> connections;
-    private List<PersistentNode> nodes;
+    private List<Connection> connections;
+    private List<Node> nodes;
     private List<String> connectionTypes;
-    private PersistentFlow parent;
+    private Flow parent;
     private boolean visible;
 
-    public PersistentFlow() {
+    public Flow() {
     }
 
-    public PersistentFlow(List<PersistentConnection> connections, List<PersistentNode> nodes) {
+    public Flow(List<Connection> connections, List<Node> nodes) {
         this.connections = connections;
         this.nodes = nodes;
     }
 
-    public PersistentFlow(PersistentFlow parent, String id, List<String> connectionTypes,
-            List<PersistentConnection> connections, List<PersistentNode> nodes, String title,
+    public Flow(Flow parent, String id, List<String> connectionTypes,
+            List<Connection> connections, List<Node> nodes, String title,
             double x, double y, double width, double height,
             ValueObject valueObject, boolean visible, VisualizationRequest vReq,
             List<String> inputTypes, List<String> outputTypes) {
@@ -46,28 +46,28 @@ public class PersistentFlow extends PersistentNode {
     /**
      * @return the connections
      */
-    public List<PersistentConnection> getConnections() {
+    public List<Connection> getConnections() {
         return connections;
     }
 
     /**
      * @param connections the connections to set
      */
-    public void setConnections(List<PersistentConnection> connections) {
+    public void setConnections(List<Connection> connections) {
         this.connections = connections;
     }
 
     /**
      * @return the nodes
      */
-    public List<PersistentNode> getNodes() {
+    public List<Node> getNodes() {
         return nodes;
     }
 
     /**
      * @param nodes the nodes to set
      */
-    public void setNodes(List<PersistentNode> nodes) {
+    public void setNodes(List<Node> nodes) {
         this.nodes = nodes;
     }
 
@@ -88,14 +88,14 @@ public class PersistentFlow extends PersistentNode {
     /**
      * @return the parent
      */
-    public PersistentFlow getParent() {
+    public Flow getParent() {
         return parent;
     }
 
     /**
      * @param parent the parent to set
      */
-    public void setParent(PersistentFlow parent) {
+    public void setParent(Flow parent) {
         this.parent = parent;
     }
 

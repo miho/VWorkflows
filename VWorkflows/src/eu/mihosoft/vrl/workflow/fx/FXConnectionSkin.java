@@ -7,8 +7,8 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.FlowNode;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -41,15 +41,15 @@ import jfxtras.labs.util.event.MouseControlUtil;
  */
 public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
-    private ObjectProperty<VNode> senderProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<VNode> receiverProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<FlowNode> senderProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<FlowNode> receiverProperty = new SimpleObjectProperty<>();
     private Path connectionPath;
     private LineTo lineTo;
     private MoveTo moveTo;
 //    private Shape startConnector;
     private Shape receiverConnector;
     private Window receiverWindow;
-    private VFlow controller;
+    private FlowController controller;
     private Connection connection;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
@@ -59,7 +59,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Window clipboard;
     private Window prevWindow;
 
-    public FXConnectionSkin(Parent parent, Connection connection, VFlow flow, String type, Window clipboard) {
+    public FXConnectionSkin(Parent parent, Connection connection, FlowController flow, String type, Window clipboard) {
         setParent(parent);
         this.connection = connection;
         this.controller = flow;
@@ -343,32 +343,32 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     @Override
-    public VNode getSender() {
+    public FlowNode getSender() {
         return senderProperty.get();
     }
 
     @Override
-    public final void setSender(VNode n) {
+    public final void setSender(FlowNode n) {
         senderProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<VNode> senderProperty() {
+    public ObjectProperty<FlowNode> senderProperty() {
         return senderProperty;
     }
 
     @Override
-    public VNode getReceiver() {
+    public FlowNode getReceiver() {
         return receiverProperty.get();
     }
 
     @Override
-    public void setReceiver(VNode n) {
+    public void setReceiver(FlowNode n) {
         receiverProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<VNode> receiverProperty() {
+    public ObjectProperty<FlowNode> receiverProperty() {
         return receiverProperty;
     }
 
@@ -438,7 +438,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
      * @return the controller
      */
     @Override
-    public VFlow getController() {
+    public FlowController getController() {
         return controller;
     }
 
@@ -446,7 +446,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
      * @param controller the controller to set
      */
     @Override
-    public void setController(VFlow controller) {
+    public void setController(FlowController controller) {
         this.controller = controller;
     }
 

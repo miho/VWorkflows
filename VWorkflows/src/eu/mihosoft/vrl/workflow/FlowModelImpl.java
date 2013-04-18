@@ -137,24 +137,17 @@ public class FlowModelImpl implements FlowModel {
     //TODO unmodifiable connection object?
     @Override
     public Connections getConnections(String type) {
-        Connections result = connections.get(type);
-
-        if (result == null) {
-            addConnections(VConnections.newConnections(type), type);
-            result = connections.get(type);
-        }
-
-        return result;
+        return connections.get(type);
     }
 
     @Override
-    public VNode getSender(Connection c) {
+    public VNode getSender(Connection c) {       
         return getNodeLookup().getById(c.getSenderId());
     }
 
     @Override
     public VNode getReceiver(Connection c) {
-        return getNodeLookup().getById(c.getReceiverId());
+        return  getNodeLookup().getById(c.getReceiverId());
     }
 
     @Override
@@ -177,18 +170,18 @@ public class FlowModelImpl implements FlowModel {
     VNode newNode(VNode result, ValueObject obj) {
 
         result.setValueObject(obj);
-
-        if (getIdGenerator() == null) {
+        
+        if (getIdGenerator()==null) {
             throw new IllegalStateException("Please define an idgenerator before creating nodes!");
         }
-
+        
         String id = getIdGenerator().newId();
 
         result.setId(id);
 
         nodes.put(id, result);
         observableNodes.add(result);
-
+        
         return result;
     }
 

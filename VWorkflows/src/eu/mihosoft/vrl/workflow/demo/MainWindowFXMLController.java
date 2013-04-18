@@ -5,10 +5,10 @@
 package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
-import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.FlowFlowNode;
-import eu.mihosoft.vrl.workflow.FlowNode;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class MainWindowFXMLController implements Initializable {
         rootPane = root;
     }
     private Pane rootPane;
-    private FlowController workflow;
+    private VFlow workflow;
 
     @FXML
     public void onLoadAction(ActionEvent e) {
@@ -63,7 +63,7 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow = FlowFactory.newFlow();
         try {
-            FlowFlowNode flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"), workflow.getIdGenerator());
+            VFlowModel flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"), workflow.getIdGenerator());
             workflow.setModel(flow);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,22 +118,22 @@ public class MainWindowFXMLController implements Initializable {
         return rootPane;
     }
 
-    public void workflowTest(FlowController workflow, int depth, int width) {
+    public void workflowTest(VFlow workflow, int depth, int width) {
 
         if (depth < 1) {
             return;
         }
 
-        FlowNode prevNode = null;
+        VNode prevNode = null;
 
         for (int i = 0; i < width; i++) {
             
             counter++;
 
-            FlowNode n;
+            VNode n;
 
             if (i % 2 == 0) {
-                FlowController subFlow = workflow.newSubFlow();
+                VFlow subFlow = workflow.newSubFlow();
                 n = subFlow.getModel();
                 workflowTest(subFlow, depth - 1, width);
             } else {

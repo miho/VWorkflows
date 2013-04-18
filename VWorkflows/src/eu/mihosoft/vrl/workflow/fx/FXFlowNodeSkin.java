@@ -4,8 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.workflow.FlowController;
-import eu.mihosoft.vrl.workflow.FlowNode;
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.FlowNodeSkin;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +30,9 @@ import jfxtras.labs.util.NodeUtil;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class FXFlowNodeSkin
-        implements FXSkin<FlowNode, Window>, FlowNodeSkin<FlowNode> {
+        implements FXSkin<VNode, Window>, FlowNodeSkin<VNode> {
 
-    private ObjectProperty<FlowNode> modelProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<VNode> modelProperty = new SimpleObjectProperty<>();
 //    private ObjectProperty<Flow> flowProperty = new SimpleObjectProperty<>();
     private FlowNodeWindow node;
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
@@ -48,10 +48,10 @@ public class FXFlowNodeSkin
 //    private Node output;
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
-    private FlowController controller;
+    private VFlow controller;
     private Map<String, Node> outputs = new HashMap<>();
 
-    public FXFlowNodeSkin(Parent parent, FlowNode model, FlowController controller) {
+    public FXFlowNodeSkin(Parent parent, VNode model, VFlow controller) {
 
         setParent(parent);
         setModel(model);
@@ -72,9 +72,9 @@ public class FXFlowNodeSkin
 
         registerListeners(getModel());
 
-        modelProperty.addListener(new ChangeListener<FlowNode>() {
+        modelProperty.addListener(new ChangeListener<VNode>() {
             @Override
-            public void changed(ObservableValue<? extends FlowNode> ov, FlowNode oldVal, FlowNode newVal) {
+            public void changed(ObservableValue<? extends VNode> ov, VNode oldVal, VNode newVal) {
 
                 removeListeners(oldVal);
                 registerListeners(newVal);
@@ -244,17 +244,17 @@ public class FXFlowNodeSkin
     }
 
     @Override
-    public final void setModel(FlowNode model) {
+    public final void setModel(VNode model) {
         modelProperty.set(model);
     }
 
     @Override
-    public final FlowNode getModel() {
+    public final VNode getModel() {
         return modelProperty.get();
     }
 
     @Override
-    public final ObjectProperty<FlowNode> modelProperty() {
+    public final ObjectProperty<VNode> modelProperty() {
         return modelProperty;
     }
 
@@ -275,7 +275,7 @@ public class FXFlowNodeSkin
         NodeUtil.addToParent(getParent(), node);
     }
 
-    private void removeListeners(FlowNode flowNode) {
+    private void removeListeners(VNode flowNode) {
         flowNode.titleProperty().removeListener(modelTitleListener);
         flowNode.xProperty().removeListener(modelXListener);
         flowNode.yProperty().removeListener(modelYListener);
@@ -362,7 +362,7 @@ public class FXFlowNodeSkin
         });
     }
 
-    private void registerListeners(FlowNode flowNode) {
+    private void registerListeners(VNode flowNode) {
 
         initListeners();
 
@@ -383,7 +383,7 @@ public class FXFlowNodeSkin
      * @return the controller
      */
     @Override
-    public FlowController getController() {
+    public VFlow getController() {
         return controller;
     }
 
@@ -391,7 +391,7 @@ public class FXFlowNodeSkin
      * @param controller the controller to set
      */
     @Override
-    public void setController(FlowController controller) {
+    public void setController(VFlow controller) {
         this.controller = controller;
     }
 }

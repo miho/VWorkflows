@@ -4,14 +4,13 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class Connection {
+public class PersistentConnection {
     
     private String id;
     private String senderId;
@@ -20,10 +19,10 @@ public class Connection {
     
     private VisualizationRequest vReq;
 
-    public Connection() {
+    public PersistentConnection() {
     }
 
-    public Connection(String id, String senderId, String receiverId, String type, VisualizationRequest vReq) {
+    public PersistentConnection(String id, String senderId, String receiverId, String type, VisualizationRequest vReq) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;

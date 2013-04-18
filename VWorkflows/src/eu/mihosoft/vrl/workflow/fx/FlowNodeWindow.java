@@ -4,8 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.workflow.FlowFlowNode;
-import eu.mihosoft.vrl.workflow.FlowNode;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -72,7 +72,7 @@ public class FlowNodeWindow extends Window {
             return;
         }
 
-        if (!(skin.getModel() instanceof FlowFlowNode)) {
+        if (!(skin.getModel() instanceof VFlowModel)) {
             return;
         }
 
@@ -84,7 +84,7 @@ public class FlowNodeWindow extends Window {
                 FXFlowNodeSkin skin = nodeSkinProperty.get();
 
                 if (skin != null) {
-                    FlowFlowNode model = (FlowFlowNode) skin.getModel();
+                    VFlowModel model = (VFlowModel) skin.getModel();
                     model.setVisible(!model.isVisible());
                 }
             }
@@ -93,11 +93,11 @@ public class FlowNodeWindow extends Window {
         getRightIcons().add(collapseIcon);
 
         if (skin.modelProperty() != null) {
-            skin.modelProperty().addListener(new ChangeListener<FlowNode>() {
+            skin.modelProperty().addListener(new ChangeListener<VNode>() {
                 @Override
-                public void changed(ObservableValue<? extends FlowNode> ov,
-                        FlowNode t, FlowNode t1) {
-                    if (t1 instanceof FlowFlowNode) {
+                public void changed(ObservableValue<? extends VNode> ov,
+                        VNode t, VNode t1) {
+                    if (t1 instanceof VFlowModel) {
                         getRightIcons().add(collapseIcon);
                     } else {
                         getRightIcons().remove(collapseIcon);
@@ -112,7 +112,7 @@ public class FlowNodeWindow extends Window {
         if (skin == null) {
             return;
         }
-        if (!(skin.getModel() instanceof FlowFlowNode)) {
+        if (!(skin.getModel() instanceof VFlowModel)) {
             return;
         }
         Rectangle rect = new Rectangle();

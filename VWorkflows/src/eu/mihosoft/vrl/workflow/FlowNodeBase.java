@@ -23,13 +23,13 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class VNodeImpl implements VNode {
+class FlowNodeBase implements FlowNode {
 
 //    private ObservableList<Connector<FlowNode>> inputs =
 //            FXCollections.observableArrayList();
 //    private ObservableList<Connector<FlowNode>> outputs =
 //            FXCollections.observableArrayList();
-    private ObservableList<VNode> children =
+    private ObservableList<FlowNode> children =
             FXCollections.observableArrayList();
     private StringProperty idProperty = new SimpleStringProperty();
     private StringProperty titleProperty = new SimpleStringProperty();
@@ -40,14 +40,14 @@ class VNodeImpl implements VNode {
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
-    private VFlowModel flow;
+    private FlowFlowNode flow;
     static int numInstances = 0;
     private ObservableList<String> inputTypes = FXCollections.observableArrayList();
     private ObservableList<String> outputTypes = FXCollections.observableArrayList();
 
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
-    public VNodeImpl(VFlowModel flow) {
+    public FlowNodeBase(FlowFlowNode flow) {
 
         numInstances++;
 
@@ -60,7 +60,7 @@ class VNodeImpl implements VNode {
             @Override
             public void changed(ObservableValue<? extends ValueObject> ov, ValueObject t, ValueObject t1) {
                 if (t1!=null) {
-                    t1.setParent(VNodeImpl.this);
+                    t1.setParent(FlowNodeBase.this);
                 }
             }
         });
@@ -198,7 +198,7 @@ class VNodeImpl implements VNode {
     }
 
     @Override
-    public ObservableList<VNode> getChildren() {
+    public ObservableList<FlowNode> getChildren() {
         return children;
     }
 
@@ -248,7 +248,7 @@ class VNodeImpl implements VNode {
      * @return the flow
      */
     @Override
-    public VFlowModel getFlow() {
+    public FlowFlowNode getFlow() {
         return flow;
     }
 

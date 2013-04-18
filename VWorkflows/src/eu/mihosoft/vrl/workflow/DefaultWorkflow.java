@@ -14,7 +14,7 @@ public final class DefaultWorkflow extends FlowControllerImpl {
 
         super(skinFactory);
         
-        VFlowModel model = FlowFactory.newFlowModel();
+        FlowFlowNode model = FlowFactory.newFlowModel();
         setNodeLookup(new NodeLookupImpl(model));
         setModel(model);
 
@@ -27,7 +27,7 @@ public final class DefaultWorkflow extends FlowControllerImpl {
 
         super(null);
 
-        VFlowModel model = FlowFactory.newFlowModel();
+        FlowFlowNode model = FlowFactory.newFlowModel();
         setNodeLookup(new NodeLookupImpl(model));
         setModel(model);
 
@@ -46,12 +46,12 @@ class DummySkinFactoryImpl implements SkinFactory<ConnectionSkin,FlowNodeSkin> {
     }
 
     @Override
-    public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
+    public ConnectionSkin createSkin(Connection c, FlowController flow, String type) {
         return null;
     }
 
     @Override
-    public FlowNodeSkin createSkin(VNode n, VFlow flow) {
+    public FlowNodeSkin createSkin(FlowNode n, FlowController flow) {
         return null;
     }
 }

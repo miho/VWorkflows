@@ -8,6 +8,6 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface NodeFactory<T extends VNode, V extends Skin<T>> {
+public interface NodeFactory<T extends FlowNode, V extends Skin<T>> {
     public T newNode();
 }

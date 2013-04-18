@@ -8,9 +8,9 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface NodeSkinFactory<T extends Skin> {
+public interface FlowNodeSkinFactory<T extends Skin> {
 
-    FlowNodeSkin createSkin(VNode n, VFlow controller);
+    FlowNodeSkin createSkin(FlowNode n, FlowController controller);
 
     
 }

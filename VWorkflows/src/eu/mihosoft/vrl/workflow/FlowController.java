@@ -12,47 +12,47 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface VFlow {
+public interface FlowController {
 
-    public void setModel(VFlowModel flow);
+    public void setModel(FlowFlowNode flow);
 
     public void setNodeLookup(NodeLookup nodeLookup);
 
     public NodeLookup getNodeLookup();
 
-    public VFlowModel getModel();
+    public FlowFlowNode getModel();
 
     public ObjectProperty modelProperty();
 
-    public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
+    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType);
 
-    public ConnectionResult connect(VNode s, VNode r, String flowType);
+    public ConnectionResult connect(FlowNode s, FlowNode r, String flowType);
 
-    public VNode remove(VNode n);
+    public FlowNode remove(FlowNode n);
 
-    public ObservableList<VNode> getNodes();
+    public ObservableList<FlowNode> getNodes();
 
-    public VNode getSender(Connection c);
+    public FlowNode getSender(Connection c);
 
-    public VNode getReceiver(Connection c);
+    public FlowNode getReceiver(Connection c);
 
     public void addConnections(Connections connections, String flowType);
 
     public Connections getConnections(String flowType);
 
-    public void setFlowNodeClass(Class<? extends VNode> cls);
+    public void setFlowNodeClass(Class<? extends FlowNode> cls);
 
-    public Class<? extends VNode> getFlowNodeClass();
+    public Class<? extends FlowNode> getFlowNodeClass();
 
-    public VNode newNode(ValueObject obj);
+    public FlowNode newNode(ValueObject obj);
 
-    public VNode newNode();
+    public FlowNode newNode();
 
-    public VFlow newSubFlow(ValueObject obj);
+    public FlowController newSubFlow(ValueObject obj);
 
-    public VFlow newSubFlow();
+    public FlowController newSubFlow();
 
-    public Collection<VFlow> getSubControllers();
+    public Collection<FlowController> getSubControllers();
 
     public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory);
 

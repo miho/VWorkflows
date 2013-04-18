@@ -19,9 +19,9 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class VFlowModelImpl implements VFlowModel {
+class FlowFlowNodeImpl implements FlowFlowNode {
 
-    private final VNode node;
+    private final FlowNode node;
     private final FlowModelImpl flow;
 
     @Override
@@ -39,17 +39,17 @@ class VFlowModelImpl implements VFlowModel {
         return flow.isVisible();
     }
 
-    public VFlowModelImpl(FlowModel parentFlow) {
+    public FlowFlowNodeImpl(FlowModel parentFlow) {
 
         flow = new FlowModelImpl();
         
-        VFlowModel pFlow = null;
+        FlowFlowNode pFlow = null;
 
         if (parentFlow != null) {
-            if (!(parentFlow instanceof VFlowModel)) {
-                throw new IllegalArgumentException("Only " + VFlowModel.class.getName() + " objects are supported. Given type: " + parentFlow.getClass());
+            if (!(parentFlow instanceof FlowFlowNode)) {
+                throw new IllegalArgumentException("Only " + FlowFlowNode.class.getName() + " objects are supported. Given type: " + parentFlow.getClass());
             } else {
-                pFlow = (VFlowModel) parentFlow;
+                pFlow = (FlowFlowNode) parentFlow;
             }
             if (parentFlow.getIdGenerator()==null) {
                 throw new IllegalStateException("Please define an id generator before creating subflows!");
@@ -58,22 +58,22 @@ class VFlowModelImpl implements VFlowModel {
             setIdGenerator(parentFlow.getIdGenerator().newChild());
         }
 
-        node = new VNodeImpl(pFlow);
+        node = new FlowNodeBase(pFlow);
         
     }
 
     @Override
-    public ConnectionResult tryConnect(VNode s, VNode r, String flowType) {
+    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String flowType) {
         return flow.tryConnect(s, r, flowType);
     }
 
     @Override
-    public ConnectionResult connect(VNode s, VNode r, String flowType) {
+    public ConnectionResult connect(FlowNode s, FlowNode r, String flowType) {
         return flow.connect(s, r, flowType);
     }
 
     @Override
-    public VNode remove(VNode n) {
+    public FlowNode remove(FlowNode n) {
         return flow.remove(n);
     }
 
@@ -83,17 +83,17 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public ObservableList<VNode> getNodes() {
+    public ObservableList<FlowNode> getNodes() {
         return flow.getNodes();
     }
 
     @Override
-    public VNode getSender(Connection c) {
+    public FlowNode getSender(Connection c) {
         return flow.getSender(c);
     }
 
     @Override
-    public VNode getReceiver(Connection c) {
+    public FlowNode getReceiver(Connection c) {
         return flow.getReceiver(c);
     }
 
@@ -113,12 +113,12 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public void setFlowNodeClass(Class<? extends VNode> cls) {
+    public void setFlowNodeClass(Class<? extends FlowNode> cls) {
         flow.setFlowNodeClass(cls);
     }
 
     @Override
-    public Class<? extends VNode> getFlowNodeClass() {
+    public Class<? extends FlowNode> getFlowNodeClass() {
         return flow.getFlowNodeClass();
     }
 
@@ -223,7 +223,7 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public ObservableList<VNode> getChildren() {
+    public ObservableList<FlowNode> getChildren() {
         return node.getChildren();
     }
 
@@ -243,7 +243,7 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public VFlowModel getFlow() {
+    public FlowFlowNode getFlow() {
         return node.getFlow();
     }
 
@@ -260,19 +260,19 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public VFlowModel newFlowNode(ValueObject obj) {
-        VFlowModel flowNode = new VFlowModelImpl(this);
+    public FlowFlowNode newFlowNode(ValueObject obj) {
+        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
 
-        return (VFlowModel) flow.newNode(flowNode, obj);
+        return (FlowFlowNode) flow.newNode(flowNode, obj);
     }
 
     @Override
-    public VFlowModel newFlowNode() {
-        VFlowModel flowNode = new VFlowModelImpl(this);
+    public FlowFlowNode newFlowNode() {
+        FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
         
         DefaultValueObject valObj = new DefaultValueObject();
 
-        VFlowModel result = (VFlowModel) flow.newNode(flowNode, valObj); // end newNode()
+        FlowFlowNode result = (FlowFlowNode) flow.newNode(flowNode, valObj); // end newNode()
         
         valObj.setParent(result);
         
@@ -281,14 +281,14 @@ class VFlowModelImpl implements VFlowModel {
     }
     
     @Override
-    public VNode newNode(ValueObject obj) {
+    public FlowNode newNode(ValueObject obj) {
 
-        VNode result = null;
+        FlowNode result = null;
 
         try {
-            Constructor constructor = getFlowNodeClass().getConstructor(VFlowModel.class);
+            Constructor constructor = getFlowNodeClass().getConstructor(FlowFlowNode.class);
             try {
-                result = (VNode) constructor.newInstance(this);
+                result = (FlowNode) constructor.newInstance(this);
                 result.setValueObject(obj);
 
                 result = flow.newNode(result, obj);
@@ -304,9 +304,9 @@ class VFlowModelImpl implements VFlowModel {
     }
     
     @Override
-    public VNode newNode() {
+    public FlowNode newNode() {
         DefaultValueObject valObj = new DefaultValueObject();
-        VNode result = newNode(valObj);
+        FlowNode result = newNode(valObj);
         valObj.setParent(result);
         return result;
     }

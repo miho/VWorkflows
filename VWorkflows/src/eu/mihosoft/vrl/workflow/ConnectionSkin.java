@@ -12,15 +12,15 @@ import javafx.beans.property.ObjectProperty;
  */
 public interface ConnectionSkin<T extends Connection> extends Skin<Connection> {
 
-    public VNode getSender();
+    public FlowNode getSender();
 
-    public void setSender(VNode n);
+    public void setSender(FlowNode n);
 
-    public ObjectProperty<VNode> senderProperty();
+    public ObjectProperty<FlowNode> senderProperty();
 
-    public VNode getReceiver();
+    public FlowNode getReceiver();
 
-    public void setReceiver(VNode n);
+    public void setReceiver(FlowNode n);
 
-    public ObjectProperty<VNode> receiverProperty();
+    public ObjectProperty<FlowNode> receiverProperty();
 }

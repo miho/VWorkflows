@@ -198,7 +198,11 @@ public class FXFlowNodeSkin
             @Override
             public void handle(MouseEvent t) {
                 t.consume();
-                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                try {
+                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                } catch (Exception ex) {
+                    // TODO exception is not critical here (node already removed)
+                }
                 output.toBack();
             }
         });
@@ -213,51 +217,6 @@ public class FXFlowNodeSkin
         outputs.put(type, output);
     }
 
-//    private void delegateEventsTo(Node src, final Node target) {
-//        // link: https://forums.oracle.com/forums/thread.jspa?threadID=2425879
-//        EventHandler<MouseEvent> interceptHandler = new EventHandler<MouseEvent>() {
-//            //is the fixed copy fired already - controls the recursion
-//            boolean isEventCopyFired = false;
-//
-//            @Override
-//            public void handle(MouseEvent e) {
-//                try {
-//                    if (!isEventCopyFired) {
-//                        isEventCopyFired = true; //prevents further recursion
-//                        //copy the original event but set the appropriate isShiftDown and isControlDown flags
-//                        MouseEvent copy = copyEvent(e);
-//
-//                        MouseEvent.fireEvent(target, copy); //this causes a recursion 
-//
-//                        e.consume(); //consume the original event, because we fired a copy
-//
-//                        //turn off the flag for the next event
-//                        isEventCopyFired = false;
-//                    }
-//                } catch (Exception ex) {//impl_ methods can be removed in the future, ensure we don't break event handling 
-//                    ex.printStackTrace(System.err);
-//                }
-//            }
-//        };
-//        //mouse pressed events deal with selection of items
-//        src.addEventFilter(MouseEvent.MOUSE_PRESSED, interceptHandler);
-//        src.addEventFilter(MouseEvent.MOUSE_DRAGGED, interceptHandler);
-//    }
-//    private MouseEvent copyEvent(MouseEvent e) {
-//        MouseEvent copy = MouseEvent.impl_mouseEvent(
-//                e.getSceneX(), e.getSceneY(),
-//                e.getScreenX(), e.getScreenY(),
-//                e.getButton(), e.getClickCount(),
-//                e.isShiftDown(), e.isControlDown(),
-//                e.isAltDown(), e.isMetaDown(),
-//                MouseEvent.impl_getPopupTrigger(e),
-//                e.isPrimaryButtonDown(),
-//                e.isMiddleButtonDown(),
-//                e.isSecondaryButtonDown(),
-//                e.isSynthesized(),
-//                (EventType<MouseEvent>) e.getEventType());
-//        return copy;
-//    }
     private void removeOutputConnector(String type) {
         Node output = outputs.get(type);
         if (output != null) {
@@ -275,20 +234,6 @@ public class FXFlowNodeSkin
         return node.getWorkflowContentPane();
     }
 
-//    @Override
-//    public final void setFlow(V flow) {
-//        flowProperty.set(flow);
-//    }
-//
-//    @Override
-//    public final V getFlow() {
-//        return flowProperty.get();
-//    }
-//    
-//    @Override
-//    public ObjectProperty<V> flowProperty() {
-//        return flowProperty;
-//    }
     @Override
     public void remove() {
         removeSkinOnly = true;
@@ -437,6 +382,7 @@ public class FXFlowNodeSkin
     /**
      * @return the controller
      */
+    @Override
     public FlowController getController() {
         return controller;
     }
@@ -444,6 +390,7 @@ public class FXFlowNodeSkin
     /**
      * @param controller the controller to set
      */
+    @Override
     public void setController(FlowController controller) {
         this.controller = controller;
     }

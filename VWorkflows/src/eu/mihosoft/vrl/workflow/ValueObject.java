@@ -12,6 +12,7 @@ import javafx.beans.property.ObjectProperty;
  */
 public interface ValueObject {
     public FlowNode getParent();
+    public void setParent(FlowNode p);
     public Object getValue();
     public void setValue(Object o);
     public ObjectProperty<Object> valueProperty();

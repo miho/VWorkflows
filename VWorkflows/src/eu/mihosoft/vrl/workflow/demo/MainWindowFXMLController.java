@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
+import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowFactory;
@@ -142,15 +143,16 @@ public class MainWindowFXMLController implements Initializable {
                 n.setOutput(true, "data");
             }
 
+
             n.setWidth(300);
             n.setHeight(200);
 
             n.setX((i % 5) * (n.getWidth() + 30));
             n.setY((i / 5) * (n.getHeight() + 30));
 
-            if (prevNode != null) {
-                workflow.connect(prevNode, n, "control");
-            }
+//            if (prevNode != null) {
+//                workflow.connect(prevNode, n, "control");
+//            }
 
             prevNode = n;
         }

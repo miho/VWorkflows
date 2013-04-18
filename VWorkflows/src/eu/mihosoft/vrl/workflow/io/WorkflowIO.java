@@ -5,7 +5,7 @@
 package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
-import eu.mihosoft.vrl.workflow.EmptyValueObject;
+import eu.mihosoft.vrl.workflow.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
@@ -48,7 +48,7 @@ public class WorkflowIO {
         xstream.alias("flow", Flow.class);
         xstream.alias("node", Node.class);
         xstream.alias("connection", Connection.class);
-        xstream.alias("empty", EmptyValueObject.class);
+        xstream.alias("vobj", DefaultValueObject.class);
 
 //        xstream.setMode(XStream.ID_REFERENCES);
     }
@@ -101,7 +101,8 @@ public class WorkflowIO {
                     node.getHeight(),
                     node.getValueObject(),
                     flow.isVisible(),
-                    node.getVisualizationRequest());
+                    node.getVisualizationRequest(),
+                    node.getInputTypes(), node.getOutputTypes());
 
             for (FlowNode n : flow.getNodes()) {
                 nodeList.add(toPersistentNode(n, pFlow));
@@ -116,7 +117,8 @@ public class WorkflowIO {
                     node.getWidth(),
                     node.getHeight(),
                     node.getValueObject(),
-                    node.getVisualizationRequest());
+                    node.getVisualizationRequest(),
+                    node.getInputTypes(), node.getOutputTypes());
         }
     }
 
@@ -147,6 +149,14 @@ public class WorkflowIO {
         result.setValueObject(flow.getValueObject());
         result.setVisible(flow.isVisible());
         result.setVisualizationRequest(flow.getVReq());
+
+        for (String input : flow.getInputTypes()) {
+            result.setInput(true, input);
+        }
+
+        for (String output : flow.getOutputTypes()) {
+            result.setOutput(true, output);
+        }
 
         Map<String, List<Connection>> flowConnections = new HashMap<>();
 
@@ -185,6 +195,14 @@ public class WorkflowIO {
             result.setHeight(node.getHeight());
             result.setValueObject(node.getValueObject());
             result.setVisualizationRequest(node.getVReq());
+
+            for (String input : node.getInputTypes()) {
+                result.setInput(true, input);
+            }
+
+            for (String output : node.getOutputTypes()) {
+                result.setOutput(true, output);
+            }
         }
     }
 
@@ -199,6 +217,12 @@ public class WorkflowIO {
             result.add(c.getId(), c.getSenderId(), c.getReceiverId(), c.getVReq());
         }
 
+        return result;
+    }
+    
+    public static <T> List<T> listToSerializableList(List<T> input) {
+        List<T> result = new ArrayList<>();
+        result.addAll(input);
         return result;
     }
 }

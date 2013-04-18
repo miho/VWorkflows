@@ -270,7 +270,7 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     public FlowFlowNode newFlowNode() {
         FlowFlowNode flowNode = new FlowFlowNodeImpl(this);
         
-        EmptyValueObject valObj = new EmptyValueObject();
+        DefaultValueObject valObj = new DefaultValueObject();
 
         FlowFlowNode result = (FlowFlowNode) flow.newNode(flowNode, valObj); // end newNode()
         
@@ -305,7 +305,7 @@ class FlowFlowNodeImpl implements FlowFlowNode {
     
     @Override
     public FlowNode newNode() {
-        EmptyValueObject valObj = new EmptyValueObject();
+        DefaultValueObject valObj = new DefaultValueObject();
         FlowNode result = newNode(valObj);
         valObj.setParent(result);
         return result;

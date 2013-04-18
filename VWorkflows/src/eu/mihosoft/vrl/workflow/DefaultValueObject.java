@@ -10,14 +10,14 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class EmptyValueObject implements ValueObject {
+public class DefaultValueObject implements ValueObject {
 
-    private FlowNode parent;
+    private transient FlowNode parent;
 
-    public EmptyValueObject() {
+    public DefaultValueObject() {
     }
 
-    public EmptyValueObject(FlowNode parent) {
+    public DefaultValueObject(FlowNode parent) {
         this.parent = parent;
     }
 
@@ -46,7 +46,7 @@ public class EmptyValueObject implements ValueObject {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {
-                boolean differentObjects = sender != EmptyValueObject.this;
+                boolean differentObjects = sender != DefaultValueObject.this;
                 boolean compatibleType = getParent().isInputOfType(flowType)
                         && sender.getParent().isOutputOfType(flowType);
 
@@ -83,6 +83,7 @@ public class EmptyValueObject implements ValueObject {
     /**
      * @param parent the parent to set
      */
+    @Override
     public void setParent(FlowNode parent) {
         this.parent = parent;
     }

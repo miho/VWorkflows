@@ -12,6 +12,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
@@ -51,7 +53,17 @@ class FlowNodeBase implements FlowNode {
 
         this.flow = flow;
 
-        setValueObject(new EmptyValueObject(this));
+        setValueObject(new DefaultValueObject(this));
+        
+        valueObjectProperty.addListener(new ChangeListener<ValueObject>() {
+
+            @Override
+            public void changed(ObservableValue<? extends ValueObject> ov, ValueObject t, ValueObject t1) {
+                if (t1!=null) {
+                    t1.setParent(FlowNodeBase.this);
+                }
+            }
+        });
 
 //        inputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
 //            @Override

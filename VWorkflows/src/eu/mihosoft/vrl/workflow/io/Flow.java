@@ -12,7 +12,8 @@ import java.util.List;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class Flow extends Node{
+public class Flow extends Node {
+
     private List<Connection> connections;
     private List<Node> nodes;
     private List<String> connectionTypes;
@@ -27,12 +28,14 @@ public class Flow extends Node{
         this.nodes = nodes;
     }
 
-    public Flow(Flow parent,String id, List<String> connectionTypes,
+    public Flow(Flow parent, String id, List<String> connectionTypes,
             List<Connection> connections, List<Node> nodes, String title,
             double x, double y, double width, double height,
-            ValueObject valueObject, boolean visible, VisualizationRequest vReq) {
-        
-        super(id, title, x, y, width, height, valueObject, vReq);
+            ValueObject valueObject, boolean visible, VisualizationRequest vReq,
+            List<String> inputTypes, List<String> outputTypes) {
+
+        super(id, title, x, y, width, height, valueObject, vReq,
+                inputTypes, outputTypes);
         this.connectionTypes = connectionTypes;
         this.connections = connections;
         this.nodes = nodes;
@@ -109,6 +112,4 @@ public class Flow extends Node{
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-    
-    
 }

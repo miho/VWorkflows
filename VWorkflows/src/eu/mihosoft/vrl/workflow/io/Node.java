@@ -6,6 +6,7 @@ package eu.mihosoft.vrl.workflow.io;
 
 import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import java.util.List;
 
 /**
  *
@@ -21,14 +22,17 @@ public class Node {
     private ValueObject valueObject;
     private VisualizationRequest vReq;
     private String id;
+    private List<String> inputTypes;
+    private List<String> outputTypes;
 
     public Node() {
     }
 
     public Node(String id, String title,
             double x, double y, double width, double height,
-            ValueObject valueObject, VisualizationRequest vReq) {
-        
+            ValueObject valueObject, VisualizationRequest vReq,
+            List<String> inputTypes, List<String> outputTypes) {
+
         this.x = x;
         this.y = y;
         this.width = width;
@@ -37,7 +41,11 @@ public class Node {
         this.valueObject = valueObject;
         this.vReq = vReq;
         this.id = id;
+        this.inputTypes = WorkflowIO.listToSerializableList(inputTypes);
+        this.outputTypes = WorkflowIO.listToSerializableList(outputTypes);
     }
+    
+    
 
     /**
      * @return the x
@@ -149,5 +157,33 @@ public class Node {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * @return the inputTypes
+     */
+    public List<String> getInputTypes() {
+        return inputTypes;
+    }
+
+    /**
+     * @param inputTypes the inputTypes to set
+     */
+    public void setInputTypes(List<String> inputTypes) {
+        this.inputTypes = inputTypes;
+    }
+
+    /**
+     * @return the outputTypes
+     */
+    public List<String> getOutputTypes() {
+        return outputTypes;
+    }
+
+    /**
+     * @param outputTypes the outputTypes to set
+     */
+    public void setOutputTypes(List<String> outputTypes) {
+        this.outputTypes = outputTypes;
     }
 }

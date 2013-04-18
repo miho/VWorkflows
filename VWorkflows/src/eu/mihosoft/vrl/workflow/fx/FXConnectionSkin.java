@@ -407,6 +407,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
     @Override
     public void remove() {
+        if (connectionPath.getParent() == null || receiverConnector.getParent() == null) {
+            return;
+        }
         try {
             NodeUtil.removeFromParent(connectionPath);
             NodeUtil.removeFromParent(receiverConnector);

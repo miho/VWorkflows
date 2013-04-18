@@ -4,13 +4,11 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.DefaultWorkflow;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
-import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.IOException;
@@ -23,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
+import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.scene.layout.ScalableContentPane;
 
 /**
@@ -33,6 +32,7 @@ import jfxtras.labs.scene.layout.ScalableContentPane;
 public class MainWindowFXMLController implements Initializable {
     
     private int counter = 0;
+    private Window clipboard;
 
     /**
      * Initializes the controller class.
@@ -46,6 +46,7 @@ public class MainWindowFXMLController implements Initializable {
         Pane root = new Pane();
 
         canvas.setContentPane(root);
+       
 
         root.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
 
@@ -106,6 +107,7 @@ public class MainWindowFXMLController implements Initializable {
 
         updateUI();
     }
+    
     @FXML
     public Pane contentPane;
 
@@ -170,6 +172,14 @@ public class MainWindowFXMLController implements Initializable {
     private void updateUI() {
 
         rootPane.getChildren().clear();
+        
+        clipboard = new Window("Clipboard/Broken!");
+        clipboard.setPrefSize(80, 80);
+        clipboard.setResizableWindow(false);
+        
+        clipboard.setVisible(false);
+        
+        rootPane.getChildren().add(clipboard);
 
         if (workflow == null) {
             return;
@@ -177,6 +187,6 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow.getModel().setVisible(true);
 
-        workflow.setSkinFactory(new FXSkinFactory(rootPane));
+        workflow.setSkinFactory(new FXSkinFactory(rootPane, clipboard));
     }
 }

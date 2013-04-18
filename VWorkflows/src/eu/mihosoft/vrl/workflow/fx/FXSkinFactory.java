@@ -12,6 +12,7 @@ import eu.mihosoft.vrl.workflow.FlowNodeSkin;
 import eu.mihosoft.vrl.workflow.Skin;
 import eu.mihosoft.vrl.workflow.SkinFactory;
 import javafx.scene.Parent;
+import jfxtras.labs.scene.control.window.Window;
 
 /**
  *
@@ -20,9 +21,11 @@ import javafx.scene.Parent;
 public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSkin> {
 
     private final Parent parent;
+    private Window clipboard;
 
-    public FXSkinFactory(Parent parent) {
+    public FXSkinFactory(Parent parent, Window clipboard) {
         this.parent = parent;
+        this.clipboard = clipboard;
     }
 
     @Override
@@ -32,13 +35,13 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
     @Override
     public ConnectionSkin createSkin(Connection c, FlowController flow, String type) {
-        return new FXConnectionSkin(parent, c, flow, type);
+        return new FXConnectionSkin(parent, c, flow, type, clipboard);
     }
 
     @Override
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
 
-        FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode());
+        FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), clipboard);
 
         return result;
     }

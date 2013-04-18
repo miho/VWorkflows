@@ -152,18 +152,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     FlowNode model = w.nodeSkinProperty().get().getModel();
 
-
-                    System.out.println("ID: " + model.getId() + ": " + model);
-
 //                    // we cannot create a connection from us to us
 //                    if (model == getSender()) {
 //                        return;
-//                    }
-
-//                    // only one connection between nodes
-//                    if (model.getFlow().getConnections(type).contains(
-//                            getSender().getId(), w.nodeSkinProperty().get().getModel().getId())) {
-//                        boolean error;
 //                    }
 
                     ConnectionResult connResult =
@@ -333,4 +324,5 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         this.flowController = flow;
         this.flow = flow.getModel();
     }
+    
 }

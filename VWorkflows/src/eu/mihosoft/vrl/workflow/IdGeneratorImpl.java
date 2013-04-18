@@ -14,12 +14,11 @@ import java.util.Set;
 class IdGeneratorImpl implements IdGenerator{
     
     private Set<String> ids = new HashSet<>();
+    private int lastId = 0;
 
     public IdGeneratorImpl() {
         //
     }
-    
-    
 
     @Override
     public void addId(String id) {
@@ -33,9 +32,12 @@ class IdGeneratorImpl implements IdGenerator{
 
     @Override
     public String newId() {
-        int counter = 0;
         
-        String id = ""+counter;
+        // TODO improve id generation
+        // Question: do we really want strings as id?
+        int counter = lastId+1;
+        
+        String id = "" + counter; // verified that java / & 8 uses stringbuilder
         
         while(ids.contains(id)) {
             counter++;
@@ -43,6 +45,8 @@ class IdGeneratorImpl implements IdGenerator{
         }
         
         ids.add(id);
+        
+        lastId = counter;
         
         return id;
     }

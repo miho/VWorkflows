@@ -9,9 +9,15 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowNode;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -25,6 +31,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.event.MouseControlUtil;
 
@@ -48,13 +55,17 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
-    private boolean valid;
+    private boolean valid = true;
+    private Window clipboard;
+    private Window prevWindow;
 
-    public FXConnectionSkin(Parent parent, Connection connection, FlowController flow, String type) {
+    public FXConnectionSkin(Parent parent, Connection connection, FlowController flow, String type, Window clipboard) {
         setParent(parent);
         this.connection = connection;
         this.controller = flow;
         this.type = type;
+
+        this.clipboard = clipboard;
 
 //        startConnector = new Circle(20);
         receiverConnector = new Circle(20);
@@ -99,8 +110,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getSenderId());
         final Window senderWindow = senderSkin.getNode();
 
-        final FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getReceiverId());
+        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
+        
+        addToClipboard();
 
         setSender(getController().getNodeLookup().getById(connection.getSenderId()));
         setReceiver(getController().getNodeLookup().getById(connection.getReceiverId()));
@@ -132,7 +145,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         final DoubleBinding receiveXBinding = new DoubleBinding() {
             {
-                super.bind(receiverWindow.layoutXProperty());
+                super.bind(receiverWindow.boundsInParentProperty());
             }
 
             @Override
@@ -149,7 +162,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         final DoubleBinding receiveYBinding = new DoubleBinding() {
             {
                 super.bind(
-                        receiverWindow.layoutYProperty(),
+                        receiverWindow.boundsInParentProperty(),
                         receiverWindow.heightProperty());
             }
 
@@ -162,11 +175,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                 Point2D location = NodeUtil.transformCoordinates(
                         0,
-                        receiverWindow.getLayoutY(),
+                        receiverWindow.getBoundsInParent().getMinY(),
                         receiverWindow.getParent(), getParent());
 
                 double height =
-                        receiverWindow.getHeight()
+                        receiverWindow.getBoundsInParent().getMaxY()
                         * receiverWindow.getParent().localToSceneTransformProperty().get().getMyy();
 
                 return location.getY() + height / 2;
@@ -234,6 +247,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                 if (n != null) {
                     final FlowNodeWindow w = (FlowNodeWindow) n;
+
+                    prevWindow = w;
 
                     ConnectionResult connResult =
                             getSender().getFlow().tryConnect(
@@ -433,5 +448,60 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     @Override
     public void setController(FlowController controller) {
         this.controller = controller;
+    }
+
+    private void addToClipboard() {
+        if (!valid) {
+            clipboard.setVisible(true);
+            if (prevWindow != null) {
+                clipboard.toFront();
+                clipboard.setLayoutX(prevWindow.getLayoutX());
+                clipboard.setLayoutY(prevWindow.getLayoutY());
+
+                Timeline timeLine = new Timeline();
+
+                KeyValue vx1 = new KeyValue(clipboard.layoutXProperty(), clipboard.getLayoutX());
+                KeyValue vy1 = new KeyValue(clipboard.layoutYProperty(), clipboard.getLayoutY());
+                KeyValue vx2 = new KeyValue(clipboard.layoutXProperty(), prevWindow.getLayoutX());
+                KeyValue vy2 = new KeyValue(clipboard.layoutYProperty(), prevWindow.getLayoutY() - 100);
+
+                timeLine.getKeyFrames().add(new KeyFrame(Duration.ZERO, vx1, vy1));
+                timeLine.getKeyFrames().add(new KeyFrame(Duration.millis(300), vx2, vy2));
+
+                timeLine.play();
+
+                timeLine.statusProperty().addListener(new ChangeListener<Animation.Status>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Animation.Status> ov, Animation.Status t, Animation.Status t1) {
+                        if (t1 == Animation.Status.STOPPED) {
+
+                            DoubleBinding clipboardYBinding = new DoubleBinding() {
+                                {
+                                    super.bind(prevWindow.layoutYProperty());
+                                }
+
+                                @Override
+                                protected double computeValue() {
+
+                                    return prevWindow.getLayoutY() - 100;
+                                }
+                            };
+                            
+//                            clipboard.layoutXProperty().unbind();
+//                            clipboard.layoutYProperty().unbind();
+//
+//                            clipboard.layoutXProperty().bind(prevWindow.layoutXProperty());
+//                            clipboard.layoutYProperty().bind(clipboardYBinding);
+                        }
+                    }
+                });
+
+
+            }
+
+            receiverWindow = clipboard;
+        } else {
+            clipboard.setVisible(false);
+        }
     }
 }

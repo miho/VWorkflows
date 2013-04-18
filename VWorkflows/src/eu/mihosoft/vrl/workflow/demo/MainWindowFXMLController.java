@@ -31,6 +31,8 @@ import jfxtras.labs.scene.layout.ScalableContentPane;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class MainWindowFXMLController implements Initializable {
+    
+    private int counter = 0;
 
     /**
      * Initializes the controller class.
@@ -90,15 +92,17 @@ public class MainWindowFXMLController implements Initializable {
 
     @FXML
     public void onGenerateAction(ActionEvent e) {
+        
+        counter = 0;
 
         System.out.print(" >> generate workflow");
 
         workflow = new DefaultWorkflow();
-        workflowTest(workflow, 3, 6);
+        workflowTest(workflow, 5, 10);
 
         System.out.println(" [done]");
 
-        System.out.println(" --> #nodes: " + FlowFactory.numNodes());
+        System.out.println(" --> #nodes: " + counter);
 
         updateUI();
     }
@@ -121,6 +125,8 @@ public class MainWindowFXMLController implements Initializable {
         FlowNode prevNode = null;
 
         for (int i = 0; i < width; i++) {
+            
+            counter++;
 
             FlowNode n;
 
@@ -135,12 +141,15 @@ public class MainWindowFXMLController implements Initializable {
 //            n.setTitle("Node " + i);
             n.setTitle("Node " + n.getId());
 
-            if (i % 2 == 0) {
+            if (i % 3 == 0) {
                 n.setInput(true, "control");
                 n.setOutput(true, "control");
-            } else {
+            } else if (i % 3 == 1) {
                 n.setInput(true, "data");
                 n.setOutput(true, "data");
+            } else if (i % 3 == 2) {
+                n.setInput(true, "event");
+                n.setOutput(true, "event");
             }
 
 
@@ -156,7 +165,6 @@ public class MainWindowFXMLController implements Initializable {
 
             prevNode = n;
         }
-
     }
 
     private void updateUI() {

@@ -4,9 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>

@@ -15,24 +15,27 @@ public class FlowFactory {
     public static FlowController newFlow() {
         FlowController flow = new FlowControllerImpl(null);
 
+        FlowFlowNode model = FlowFactory.newFlowModel();
+
         return flow;
     }
 
     public static FlowController newFlow(
-            SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory) {
+            SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory) {
         FlowController flow = new FlowControllerImpl(skinFactory);
+
+        FlowFlowNode model = FlowFactory.newFlowModel();
 
         return flow;
     }
-    
+
     public static FlowFlowNode newFlowModel() {
         FlowFlowNode result = new FlowFlowNodeImpl(null);
         result.setId("ROOT");
         return result;
     }
-    
+
     public static int numNodes() {
         return FlowNodeBase.numInstances;
     }
-    
 }

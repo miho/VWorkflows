@@ -6,6 +6,7 @@ package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.DefaultValueObject;
+import eu.mihosoft.vrl.workflow.FlowController;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.FlowFlowNode;
 import eu.mihosoft.vrl.workflow.FlowNode;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +30,16 @@ import java.util.Map;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class WorkflowIO {
+
+    public static FlowController loadFromXML(Path p) throws IOException {
+        FlowController workflow = FlowFactory.newFlow();
+
+        FlowFlowNode flow = WorkflowIO.loadFromXML(p, workflow.getIdGenerator());
+        workflow.setNodeLookup(flow.getNodeLookup());
+        workflow.setModel(flow);
+
+        return workflow;
+    }
 
     public static FlowFlowNode loadFromXML(Path p, IdGenerator generator) throws IOException {
 
@@ -219,7 +231,7 @@ public class WorkflowIO {
 
         return result;
     }
-    
+
     public static <T> List<T> listToSerializableList(List<T> input) {
         List<T> result = new ArrayList<>();
         result.addAll(input);

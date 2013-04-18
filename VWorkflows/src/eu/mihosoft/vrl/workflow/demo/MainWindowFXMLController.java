@@ -30,7 +30,7 @@ import jfxtras.labs.scene.layout.ScalableContentPane;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class MainWindowFXMLController implements Initializable {
-    
+
     private int counter = 0;
     private Window clipboard;
 
@@ -46,7 +46,7 @@ public class MainWindowFXMLController implements Initializable {
         Pane root = new Pane();
 
         canvas.setContentPane(root);
-       
+
 
         root.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
 
@@ -61,10 +61,9 @@ public class MainWindowFXMLController implements Initializable {
     public void onLoadAction(ActionEvent e) {
         System.out.print(" >> loading workflow from xml");
 
-        workflow = FlowFactory.newFlow();
         try {
-            FlowFlowNode flow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"), workflow.getIdGenerator());
-            workflow.setModel(flow);
+            workflow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"));
+
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -93,7 +92,7 @@ public class MainWindowFXMLController implements Initializable {
 
     @FXML
     public void onGenerateAction(ActionEvent e) {
-        
+
         counter = 0;
 
         System.out.print(" >> generate workflow");
@@ -107,7 +106,6 @@ public class MainWindowFXMLController implements Initializable {
 
         updateUI();
     }
-    
     @FXML
     public Pane contentPane;
 
@@ -127,7 +125,7 @@ public class MainWindowFXMLController implements Initializable {
         FlowNode prevNode = null;
 
         for (int i = 0; i < width; i++) {
-            
+
             counter++;
 
             FlowNode n;
@@ -172,13 +170,13 @@ public class MainWindowFXMLController implements Initializable {
     private void updateUI() {
 
         rootPane.getChildren().clear();
-        
+
         clipboard = new Window("Clipboard/Broken!");
         clipboard.setPrefSize(80, 80);
         clipboard.setResizableWindow(false);
-        
+
         clipboard.setVisible(false);
-        
+
         rootPane.getChildren().add(clipboard);
 
         if (workflow == null) {

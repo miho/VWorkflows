@@ -17,10 +17,6 @@ public final class DefaultWorkflow extends FlowControllerImpl {
         FlowFlowNode model = FlowFactory.newFlowModel();
         setNodeLookup(new NodeLookupImpl(model));
         setModel(model);
-
-        addConnections(VConnections.newConnections("control"), "control");
-        addConnections(VConnections.newConnections("data"), "data");
-        addConnections(VConnections.newConnections("event"), "event");
     }
 
     public DefaultWorkflow() {
@@ -30,10 +26,6 @@ public final class DefaultWorkflow extends FlowControllerImpl {
         FlowFlowNode model = FlowFactory.newFlowModel();
         setNodeLookup(new NodeLookupImpl(model));
         setModel(model);
-
-        addConnections(VConnections.newConnections("control"), "control");
-        addConnections(VConnections.newConnections("data"), "data");
-        addConnections(VConnections.newConnections("event"), "event");
     }
 }
 

@@ -137,7 +137,14 @@ public class FlowModelImpl implements FlowModel {
     //TODO unmodifiable connection object?
     @Override
     public Connections getConnections(String type) {
-        return connections.get(type);
+        Connections result = connections.get(type);
+        
+        if (result == null) {
+            addConnections(VConnections.newConnections(type), type);
+            result = connections.get(type);
+        }
+        
+        return result;
     }
 
     @Override

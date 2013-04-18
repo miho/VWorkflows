@@ -12,17 +12,17 @@ import javafx.beans.property.ObjectProperty;
  */
 public class DefaultValueObject implements ValueObject {
 
-    private transient FlowNode parent;
+    private transient VNode parent;
 
     public DefaultValueObject() {
     }
 
-    public DefaultValueObject(FlowNode parent) {
+    public DefaultValueObject(VNode parent) {
         this.parent = parent;
     }
 
     @Override
-    public FlowNode getParent() {
+    public VNode getParent() {
         return parent;
     }
 
@@ -84,7 +84,7 @@ public class DefaultValueObject implements ValueObject {
      * @param parent the parent to set
      */
     @Override
-    public void setParent(FlowNode parent) {
+    public void setParent(VNode parent) {
         this.parent = parent;
     }
 }

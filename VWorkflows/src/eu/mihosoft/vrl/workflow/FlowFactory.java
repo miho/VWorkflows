@@ -4,35 +4,33 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.io.Node;
-
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class FlowFactory {
 
-    public static FlowController newFlow() {
-        FlowController flow = new FlowControllerImpl(null);
+    public static VFlow newFlow() {
+        VFlow flow = new FlowControllerImpl(null);
 
         return flow;
     }
 
-    public static FlowController newFlow(
+    public static VFlow newFlow(
             SkinFactory<? extends ConnectionSkin,? extends FlowNodeSkin> skinFactory) {
-        FlowController flow = new FlowControllerImpl(skinFactory);
+        VFlow flow = new FlowControllerImpl(skinFactory);
 
         return flow;
     }
     
-    public static FlowFlowNode newFlowModel() {
-        FlowFlowNode result = new FlowFlowNodeImpl(null);
+    public static VFlowModel newFlowModel() {
+        VFlowModel result = new VFlowModelImpl(null);
         result.setId("ROOT");
         return result;
     }
     
     public static int numNodes() {
-        return FlowNodeBase.numInstances;
+        return VNodeImpl.numInstances;
     }
     
 }

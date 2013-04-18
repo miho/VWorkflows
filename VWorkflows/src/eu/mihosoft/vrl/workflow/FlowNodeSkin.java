@@ -8,7 +8,7 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface FlowNodeSkin<T extends FlowNode> extends Skin<T> {
+public interface FlowNodeSkin<T extends VNode> extends Skin<T> {
 //    public void setFlow(V flow);
 //    public V getFlow();
 //    public ObjectProperty<V> flowProperty();

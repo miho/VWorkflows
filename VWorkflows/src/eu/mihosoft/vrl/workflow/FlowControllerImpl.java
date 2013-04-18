@@ -24,15 +24,15 @@ import javafx.collections.ObservableMap;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class FlowControllerImpl implements FlowController {
+class FlowControllerImpl implements VFlow {
 
-    ObjectProperty<FlowFlowNode> modelProperty = new SimpleObjectProperty<>();
-    private ListChangeListener<FlowNode> nodesListener;
+    ObjectProperty<VFlowModel> modelProperty = new SimpleObjectProperty<>();
+    private ListChangeListener<VNode> nodesListener;
     private ListChangeListener<Connection> connectionsListener;
     private SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory;
     private Map<String, FlowNodeSkin> nodeSkins = new HashMap<>();
     private Map<String, ConnectionSkin> connectionSkins = new HashMap<>();
-    private ObservableMap<String, FlowController> subControllers = FXCollections.observableHashMap();
+    private ObservableMap<String, VFlow> subControllers = FXCollections.observableHashMap();
     private ChangeListener<Boolean> visibilityListener;
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
@@ -50,9 +50,9 @@ class FlowControllerImpl implements FlowController {
         setIdGenerator(new IdGeneratorImpl());
         setNodeSkinLookup(new FlowNodeSkinLookupImpl(this));
 
-        nodesListener = new ListChangeListener<FlowNode>() {
+        nodesListener = new ListChangeListener<VNode>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends FlowNode> change) {
+            public void onChanged(ListChangeListener.Change<? extends VNode> change) {
                 while (change.next()) {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
@@ -62,7 +62,7 @@ class FlowControllerImpl implements FlowController {
                         //update item
                     } else if (change.wasRemoved()) {
                         // removed
-                        for (FlowNode n : change.getRemoved()) {
+                        for (VNode n : change.getRemoved()) {
                             if (nodeSkins.containsKey(n.getId())) {
                                 removeNodeSkin(n);
 //                                 System.out.println("remove node: " + n.getId());
@@ -76,7 +76,7 @@ class FlowControllerImpl implements FlowController {
                         }
                     } else if (change.wasAdded()) {
                         // added
-                        for (FlowNode n : change.getAddedSubList()) {
+                        for (VNode n : change.getAddedSubList()) {
                             if (!nodeSkins.containsKey(n.getId())) {
                                 createNodeSkin(n);
 //                                 System.out.println("add node: " + n.getId());
@@ -209,23 +209,23 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult tryConnect(VNode s, VNode r, String type) {
         return getModel().tryConnect(s, r, type);
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult connect(VNode s, VNode r, String type) {
 
         return getModel().connect(s, r, type);
     }
 
     @Override
-    public ObservableList<FlowNode> getNodes() {
+    public ObservableList<VNode> getNodes() {
         return getModel().getNodes();
     }
 
     @Override
-    public FlowNode remove(FlowNode n) {
+    public VNode remove(VNode n) {
         return getModel().remove(n);
     }
 
@@ -239,38 +239,38 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {
+    public VNode getSender(Connection c) {
         return getModel().getSender(c);
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
+    public VNode getReceiver(Connection c) {
         return getModel().getReceiver(c);
     }
 
     @Override
-    public void setFlowNodeClass(Class<? extends FlowNode> cls) {
+    public void setFlowNodeClass(Class<? extends VNode> cls) {
         getModel().setFlowNodeClass(cls);
     }
 
     @Override
-    public Class<? extends FlowNode> getFlowNodeClass() {
+    public Class<? extends VNode> getFlowNodeClass() {
         return getModel().getFlowNodeClass();
     }
 
     @Override
-    public FlowNode newNode(ValueObject obj) {
+    public VNode newNode(ValueObject obj) {
 
 
         return getModel().newNode(obj);
     }
 
     @Override
-    public FlowNode newNode() {
+    public VNode newNode() {
         return getModel().newNode();
     }
 
-    private FlowNodeSkin createNodeSkin(FlowNode n) {
+    private FlowNodeSkin createNodeSkin(VNode n) {
 
         if (skinFactory == null) {
             return null;
@@ -306,7 +306,7 @@ class FlowControllerImpl implements FlowController {
         return skin;
     }
 
-    private void removeNodeSkin(FlowNode n) {
+    private void removeNodeSkin(VNode n) {
 
         if (skinFactory == null) {
             return;
@@ -336,7 +336,7 @@ class FlowControllerImpl implements FlowController {
 
         List<FlowNodeSkin> nodeDelList = new ArrayList<>(nodeSkins.values());
 
-        for (FlowNodeSkin<FlowNode> nS : nodeDelList) {
+        for (FlowNodeSkin<VNode> nS : nodeDelList) {
             nS.remove();
         }
         nodeSkins.clear();
@@ -364,7 +364,7 @@ class FlowControllerImpl implements FlowController {
 
         } else {
 
-            for (FlowNode n : getNodes()) {
+            for (VNode n : getNodes()) {
                 createNodeSkin(n);
             }
 
@@ -381,7 +381,7 @@ class FlowControllerImpl implements FlowController {
             return;
         }
 
-        for (FlowController fC : subControllers.values()) {
+        for (VFlow fC : subControllers.values()) {
 
             SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> childNodeSkinFactory = null;
 
@@ -410,19 +410,19 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public void setModel(FlowFlowNode flow) {
+    public void setModel(VFlowModel flow) {
         modelProperty.set(flow);
 
-        for (FlowNode n : flow.getNodes()) {
-            if (n instanceof FlowFlowNode) {
-                newSubFlow((FlowFlowNode) n);
+        for (VNode n : flow.getNodes()) {
+            if (n instanceof VFlowModel) {
+                newSubFlow((VFlowModel) n);
             }
         }
 
     }
 
     @Override
-    public FlowFlowNode getModel() {
+    public VFlowModel getModel() {
         return modelProperty.get();
     }
 
@@ -431,9 +431,9 @@ class FlowControllerImpl implements FlowController {
         return modelProperty;
     }
 
-    private FlowController newSubFlow(FlowFlowNode flowNode) {
+    private VFlow newSubFlow(VFlowModel flowNode) {
 
-        FlowNodeSkin<FlowNode> skin = nodeSkins.get(flowNode.getId());
+        FlowNodeSkin<VNode> skin = nodeSkins.get(flowNode.getId());
 
         SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> childFactory = null;
 
@@ -441,7 +441,7 @@ class FlowControllerImpl implements FlowController {
             childFactory = skinFactory.createChild(skin);
         }
 
-        FlowController controller = new FlowControllerImpl(childFactory);
+        VFlow controller = new FlowControllerImpl(childFactory);
 
         controller.setIdGenerator(getIdGenerator());
         controller.setNodeLookup(getNodeLookup());
@@ -463,19 +463,19 @@ class FlowControllerImpl implements FlowController {
     }
 
     @Override
-    public FlowController newSubFlow(ValueObject obj) {
+    public VFlow newSubFlow(ValueObject obj) {
         return newSubFlow(getModel().newFlowNode(obj));
     }
 
     @Override
-    public FlowController newSubFlow() {
-        FlowFlowNode flowNode = getModel().newFlowNode();
+    public VFlow newSubFlow() {
+        VFlowModel flowNode = getModel().newFlowNode();
 
         return newSubFlow(flowNode);
     }
 
     @Override
-    public Collection<FlowController> getSubControllers() {
+    public Collection<VFlow> getSubControllers() {
         return Collections.unmodifiableCollection(subControllers.values());
     }
 

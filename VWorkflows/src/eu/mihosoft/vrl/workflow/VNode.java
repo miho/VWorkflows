@@ -14,7 +14,7 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface FlowNode extends Model {
+public interface VNode extends Model {
 
     public StringProperty titleProperty();
 
@@ -68,7 +68,7 @@ public interface FlowNode extends Model {
 
     public double getHeight();
 
-    public ObservableList<FlowNode> getChildren();
+    public ObservableList<VNode> getChildren();
 
 //    public ObservableList<Connector<FlowNode>> getInputs();
 //    public ObservableList<Connector<FlowNode>> getOutputs();
@@ -78,7 +78,7 @@ public interface FlowNode extends Model {
 
     public ObjectProperty<ValueObject> valueObjectProperty();
 
-    public FlowFlowNode getFlow();
+    public VFlowModel getFlow();
 
 //    /**
 //     * @return the inputProperty

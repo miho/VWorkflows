@@ -10,9 +10,9 @@ package eu.mihosoft.vrl.workflow;
  */
 class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
-    private FlowController root;
+    private VFlow root;
 
-    public FlowNodeSkinLookupImpl(FlowController root) {
+    public FlowNodeSkinLookupImpl(VFlow root) {
         this.root = root;
     }
 
@@ -24,7 +24,7 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
         return result;
     }
 
-    private FlowNodeSkin getNodeByGlobalId(FlowController parent, String id) {
+    private FlowNodeSkin getNodeByGlobalId(VFlow parent, String id) {
 
         FlowNodeSkin s = parent.getNodeSkinById(id);
 
@@ -32,7 +32,7 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
             return s;
         }
 
-        for (FlowController c : parent.getSubControllers()) {
+        for (VFlow c : parent.getSubControllers()) {
             s = getNodeByGlobalId(c, id);
 
             if (s != null) {

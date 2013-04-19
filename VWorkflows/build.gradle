@@ -11,9 +11,18 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.5'
 }
 
+int jdk = 7;
+
 dependencies {
-    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
+    //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"
+    if (jdk == 7) {
+        compile fileTree (dir: '/home/miho/Dropbox/tmp/jfxtras/jdk7/', includes: ['*.jar'])
+    } else if (jdk == 8) {
+        compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
+    } else {
+        throw new IllegalArgumentException("JDK " + jdk + " not supported!");
+    }
     // compile project('..:VRLInstrumentation')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
 }

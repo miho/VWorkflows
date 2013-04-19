@@ -11,8 +11,8 @@ import javafx.beans.property.ObjectProperty;
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public interface ValueObject {
-    public FlowNode getParent();
-    public void setParent(FlowNode p);
+    public VNode getParent();
+    public void setParent(VNode p);
     public Object getValue();
     public void setValue(Object o);
     public ObjectProperty<Object> valueProperty();

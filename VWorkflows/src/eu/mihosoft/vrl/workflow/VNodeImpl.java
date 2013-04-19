@@ -23,13 +23,13 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class FlowNodeBase implements FlowNode {
+class VNodeImpl implements VNode {
 
 //    private ObservableList<Connector<FlowNode>> inputs =
 //            FXCollections.observableArrayList();
 //    private ObservableList<Connector<FlowNode>> outputs =
 //            FXCollections.observableArrayList();
-    private ObservableList<FlowNode> children =
+    private ObservableList<VNode> children =
             FXCollections.observableArrayList();
     private StringProperty idProperty = new SimpleStringProperty();
     private StringProperty titleProperty = new SimpleStringProperty();
@@ -40,14 +40,14 @@ class FlowNodeBase implements FlowNode {
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
-    private FlowFlowNode flow;
+    private VFlowModel flow;
     static int numInstances = 0;
     private ObservableList<String> inputTypes = FXCollections.observableArrayList();
     private ObservableList<String> outputTypes = FXCollections.observableArrayList();
 
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
-    public FlowNodeBase(FlowFlowNode flow) {
+    public VNodeImpl(VFlowModel flow) {
 
         numInstances++;
 
@@ -60,7 +60,7 @@ class FlowNodeBase implements FlowNode {
             @Override
             public void changed(ObservableValue<? extends ValueObject> ov, ValueObject t, ValueObject t1) {
                 if (t1!=null) {
-                    t1.setParent(FlowNodeBase.this);
+                    t1.setParent(VNodeImpl.this);
                 }
             }
         });
@@ -198,7 +198,7 @@ class FlowNodeBase implements FlowNode {
     }
 
     @Override
-    public ObservableList<FlowNode> getChildren() {
+    public ObservableList<VNode> getChildren() {
         return children;
     }
 
@@ -248,7 +248,7 @@ class FlowNodeBase implements FlowNode {
      * @return the flow
      */
     @Override
-    public FlowFlowNode getFlow() {
+    public VFlowModel getFlow() {
         return flow;
     }
 

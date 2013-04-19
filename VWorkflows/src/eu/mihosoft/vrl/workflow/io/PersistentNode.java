@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class Node {
+public class PersistentNode {
 
     private double x;
     private double y;
@@ -25,10 +25,10 @@ public class Node {
     private List<String> inputTypes;
     private List<String> outputTypes;
 
-    public Node() {
+    public PersistentNode() {
     }
 
-    public Node(String id, String title,
+    public PersistentNode(String id, String title,
             double x, double y, double width, double height,
             ValueObject valueObject, VisualizationRequest vReq,
             List<String> inputTypes, List<String> outputTypes) {

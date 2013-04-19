@@ -31,12 +31,12 @@ public class FlowModelImpl implements FlowModel {
             FXCollections.observableHashMap();
     private final UnmodifiableObservableMap<String, Connections> readOnlyObservableConnections =
             (UnmodifiableObservableMap<String, Connections>) FXCollections.unmodifiableObservableMap(connections);
-    private final ObservableList<FlowNode> observableNodes =
+    private final ObservableList<VNode> observableNodes =
             FXCollections.observableArrayList();
-    private final ObservableList<FlowNode> readOnlyObservableNodes =
+    private final ObservableList<VNode> readOnlyObservableNodes =
             FXCollections.unmodifiableObservableList(observableNodes);
-    private final Map<String, FlowNode> nodes = new HashMap<>();
-    private Class<? extends FlowNode> flowNodeClass = FlowNodeBase.class;
+    private final Map<String, VNode> nodes = new HashMap<>();
+    private Class<? extends VNode> flowNodeClass = VNodeImpl.class;
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
@@ -67,7 +67,7 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public ConnectionResult tryConnect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult tryConnect(VNode s, VNode r, String type) {
 
         CompatibilityResult result = r.getValueObject().
                 compatible(s.getValueObject(), type);
@@ -76,7 +76,7 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public ConnectionResult connect(FlowNode s, FlowNode r, String type) {
+    public ConnectionResult connect(VNode s, VNode r, String type) {
 
         ConnectionResult result = tryConnect(s, r, type);
 
@@ -90,27 +90,27 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public ObservableList<FlowNode> getNodes() {
+    public ObservableList<VNode> getNodes() {
         return readOnlyObservableNodes;
     }
 
     @Override
     public void clear() {
-        List<FlowNode> delList = new ArrayList<>(observableNodes);
+        List<VNode> delList = new ArrayList<>(observableNodes);
 
-        for (FlowNode n : delList) {
+        for (VNode n : delList) {
             remove(n);
         }
     }
 
     @Override
-    public FlowNode remove(FlowNode n) {
+    public VNode remove(VNode n) {
 
 //        if (n instanceof FlowModel) {
 //            ((FlowModel)n).clear();
 //        }
 
-        FlowNode result = nodes.remove(n.getId());
+        VNode result = nodes.remove(n.getId());
         observableNodes.remove(n);
 
 //        removeNodeSkin(n);
@@ -148,17 +148,17 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public FlowNode getSender(Connection c) {       
+    public VNode getSender(Connection c) {       
         return getNodeLookup().getById(c.getSenderId());
     }
 
     @Override
-    public FlowNode getReceiver(Connection c) {
+    public VNode getReceiver(Connection c) {
         return  getNodeLookup().getById(c.getReceiverId());
     }
 
     @Override
-    public void setFlowNodeClass(Class<? extends FlowNode> cls) {
+    public void setFlowNodeClass(Class<? extends VNode> cls) {
         try {
             Constructor constructor = cls.getConstructor(FlowModel.class);
             throw new IllegalArgumentException("constructor missing: (String, String)");
@@ -170,11 +170,11 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public Class<? extends FlowNode> getFlowNodeClass() {
+    public Class<? extends VNode> getFlowNodeClass() {
         return flowNodeClass;
     }
 
-    FlowNode newNode(FlowNode result, ValueObject obj) {
+    VNode newNode(VNode result, ValueObject obj) {
 
         result.setValueObject(obj);
         

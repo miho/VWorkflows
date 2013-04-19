@@ -6,10 +6,10 @@ package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.DefaultValueObject;
-import eu.mihosoft.vrl.workflow.FlowController;
+import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.FlowFlowNode;
-import eu.mihosoft.vrl.workflow.FlowNode;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.VConnections;
 import java.io.ByteArrayInputStream;
@@ -31,17 +31,17 @@ import java.util.Map;
  */
 public class WorkflowIO {
 
-    public static FlowController loadFromXML(Path p) throws IOException {
-        FlowController workflow = FlowFactory.newFlow();
+    public static VFlow loadFromXML(Path p) throws IOException {
+        VFlow workflow = FlowFactory.newFlow();
 
-        FlowFlowNode flow = WorkflowIO.loadFromXML(p, workflow.getIdGenerator());
+        VFlowModel flow = WorkflowIO.loadFromXML(p, workflow.getIdGenerator());
         workflow.setNodeLookup(flow.getNodeLookup());
         workflow.setModel(flow);
 
         return workflow;
     }
 
-    public static FlowFlowNode loadFromXML(Path p, IdGenerator generator) throws IOException {
+    public static VFlowModel loadFromXML(Path p, IdGenerator generator) throws IOException {
 
         XStream xstream = new XStream();
 
@@ -53,19 +53,19 @@ public class WorkflowIO {
             xml.append(line).append("\n");
         }
 
-        return flowFromPersistentFlow((Flow) xstream.fromXML(xml.toString()), generator);
+        return flowFromPersistentFlow((PersistentFlow) xstream.fromXML(xml.toString()), generator);
     }
 
     private static void configureStream(XStream xstream) {
-        xstream.alias("flow", Flow.class);
-        xstream.alias("node", Node.class);
-        xstream.alias("connection", Connection.class);
+        xstream.alias("flow", PersistentFlow.class);
+        xstream.alias("node", PersistentNode.class);
+        xstream.alias("connection", PersistentConnection.class);
         xstream.alias("vobj", DefaultValueObject.class);
 
 //        xstream.setMode(XStream.ID_REFERENCES);
     }
 
-    public static void saveToXML(Path p, FlowFlowNode flow) throws IOException {
+    public static void saveToXML(Path p, VFlowModel flow) throws IOException {
         XStream xstream = new XStream();
 
         configureStream(xstream);
@@ -76,18 +76,18 @@ public class WorkflowIO {
         Files.copy(is, p, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public static Node toPersistentNode(FlowNode node, Flow parent) {
+    public static PersistentNode toPersistentNode(VNode node, PersistentFlow parent) {
 
-        if (node instanceof FlowFlowNode) {
+        if (node instanceof VFlowModel) {
 
-            FlowFlowNode flow = (FlowFlowNode) node;
+            VFlowModel flow = (VFlowModel) node;
 
-            List<Connection> connectionList = new ArrayList<>();
+            List<PersistentConnection> connectionList = new ArrayList<>();
 
             for (eu.mihosoft.vrl.workflow.Connections connections : flow.getAllConnections().values()) {
                 for (eu.mihosoft.vrl.workflow.Connection c : connections.getConnections()) {
                     connectionList.add(
-                            new Connection(c.getId(),
+                            new PersistentConnection(c.getId(),
                             c.getSenderId(),
                             c.getReceiverId(),
                             c.getType(),
@@ -95,13 +95,13 @@ public class WorkflowIO {
                 }
             }
 
-            List<Node> nodeList = new ArrayList<>();
+            List<PersistentNode> nodeList = new ArrayList<>();
 
             List<String> connectionTypes = new ArrayList<>();
 
             connectionTypes.addAll(flow.getAllConnections().keySet());
 
-            Flow pFlow = new Flow(parent,
+            PersistentFlow pFlow = new PersistentFlow(parent,
                     node.getId(),
                     connectionTypes,
                     connectionList,
@@ -116,13 +116,13 @@ public class WorkflowIO {
                     node.getVisualizationRequest(),
                     node.getInputTypes(), node.getOutputTypes());
 
-            for (FlowNode n : flow.getNodes()) {
+            for (VNode n : flow.getNodes()) {
                 nodeList.add(toPersistentNode(n, pFlow));
             }
 
             return pFlow;
         } else {
-            return new Node(node.getId(),
+            return new PersistentNode(node.getId(),
                     node.getTitle(),
                     node.getX(),
                     node.getY(),
@@ -134,15 +134,15 @@ public class WorkflowIO {
         }
     }
 
-    public static FlowFlowNode flowFromPersistentFlow(
-            Flow flow, IdGenerator generator) {
+    public static VFlowModel flowFromPersistentFlow(
+            PersistentFlow flow, IdGenerator generator) {
         return createFlowFromPersistent(flow, null, generator);
     }
 
-    private static FlowFlowNode createFlowFromPersistent(
-            Flow flow, FlowFlowNode parent, IdGenerator generator) {
+    private static VFlowModel createFlowFromPersistent(
+            PersistentFlow flow, VFlowModel parent, IdGenerator generator) {
 
-        FlowFlowNode result = null;
+        VFlowModel result;
 
         if (parent == null) {
             result = FlowFactory.newFlowModel();
@@ -170,34 +170,34 @@ public class WorkflowIO {
             result.setOutput(true, output);
         }
 
-        Map<String, List<Connection>> flowConnections = new HashMap<>();
+        Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();
 
         for (String type : flow.getConnectionTypes()) {
-            flowConnections.put(type, new ArrayList<Connection>());
+            flowConnections.put(type, new ArrayList<PersistentConnection>());
         }
 
-        for (Connection c : flow.getConnections()) {
+        for (PersistentConnection c : flow.getConnections()) {
             flowConnections.get(c.getType()).add(c);
         }
 
         for (String type : flowConnections.keySet()) {
-            List<Connection> connections = flowConnections.get(type);
+            List<PersistentConnection> connections = flowConnections.get(type);
             result.addConnections(fromPersistentConnections(type, connections), type);
         }
 
-        for (Node n : flow.getNodes()) {
+        for (PersistentNode n : flow.getNodes()) {
             addFlowNode(result, n, generator);
         }
 
         return result;
     }
 
-    private static void addFlowNode(FlowFlowNode flow, Node node, IdGenerator generator) {
+    private static void addFlowNode(VFlowModel flow, PersistentNode node, IdGenerator generator) {
 
-        if (node instanceof Flow) {
-            createFlowFromPersistent((Flow) node, flow, generator);
+        if (node instanceof PersistentFlow) {
+            createFlowFromPersistent((PersistentFlow) node, flow, generator);
         } else {
-            FlowNode result = flow.newNode();
+            VNode result = flow.newNode();
             result.setId(node.getId());
             generator.addId(node.getId());
             result.setTitle(node.getTitle());
@@ -218,14 +218,14 @@ public class WorkflowIO {
         }
     }
 
-    public static Connection toPersistentConnection(eu.mihosoft.vrl.workflow.Connection c) {
-        return new Connection(c.getId(), c.getSenderId(), c.getReceiverId(), c.getType(), c.getVisualizationRequest());
+    public static PersistentConnection toPersistentConnection(eu.mihosoft.vrl.workflow.Connection c) {
+        return new PersistentConnection(c.getId(), c.getSenderId(), c.getReceiverId(), c.getType(), c.getVisualizationRequest());
     }
 
-    public static eu.mihosoft.vrl.workflow.Connections fromPersistentConnections(String connectionType, List<Connection> connections) {
+    public static eu.mihosoft.vrl.workflow.Connections fromPersistentConnections(String connectionType, List<PersistentConnection> connections) {
         eu.mihosoft.vrl.workflow.Connections result = VConnections.newConnections(connectionType);
 
-        for (Connection c : connections) {
+        for (PersistentConnection c : connections) {
             result.add(c.getId(), c.getSenderId(), c.getReceiverId(), c.getVReq());
         }
 

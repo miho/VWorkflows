@@ -10,29 +10,29 @@ package eu.mihosoft.vrl.workflow;
  */
 public class NodeLookupImpl implements NodeLookup {
 
-    private FlowFlowNode root;
+    private VFlowModel root;
 
-    public NodeLookupImpl(FlowFlowNode root) {
+    public NodeLookupImpl(VFlowModel root) {
         this.root = root;
     }
 
     @Override
-    public FlowNode getById(String globalId) {
+    public VNode getById(String globalId) {
 
-        FlowNode result = getNodeByGlobalId(root, globalId);
+        VNode result = getNodeByGlobalId(root, globalId);
 
         return result;
     }
 
-    private FlowNode getNodeByGlobalId(FlowModel parent, String id) {
+    private VNode getNodeByGlobalId(FlowModel parent, String id) {
 
-        for (FlowNode n : parent.getNodes()) {
+        for (VNode n : parent.getNodes()) {
             if (n.getId().equals(id)) {
                 return n;
             }
 
             if (n instanceof FlowModel) {
-               FlowNode result = getNodeByGlobalId((FlowModel)n, id);
+               VNode result = getNodeByGlobalId((FlowModel)n, id);
                if (result!=null) {
                    return result;
                }

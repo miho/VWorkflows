@@ -4,7 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.io.Node;
+import eu.mihosoft.vrl.workflow.io.PersistentNode;
 
 /**
  *
@@ -12,30 +12,30 @@ import eu.mihosoft.vrl.workflow.io.Node;
  */
 public class FlowFactory {
 
-    public static FlowController newFlow() {
-        FlowController flow = new FlowControllerImpl(null);
+    public static VFlow newFlow() {
+        VFlow flow = new VFlowImpl(null);
 
-        FlowFlowNode model = FlowFactory.newFlowModel();
-
-        return flow;
-    }
-
-    public static FlowController newFlow(
-            SkinFactory<? extends ConnectionSkin, ? extends FlowNodeSkin> skinFactory) {
-        FlowController flow = new FlowControllerImpl(skinFactory);
-
-        FlowFlowNode model = FlowFactory.newFlowModel();
+        VFlowModel model = FlowFactory.newFlowModel();
 
         return flow;
     }
 
-    public static FlowFlowNode newFlowModel() {
-        FlowFlowNode result = new FlowFlowNodeImpl(null);
+    public static VFlow newFlow(
+            SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
+        VFlow flow = new VFlowImpl(skinFactory);
+
+        VFlowModel model = FlowFactory.newFlowModel();
+
+        return flow;
+    }
+
+    public static VFlowModel newFlowModel() {
+        VFlowModel result = new VFlowModelImpl(null);
         result.setId("ROOT");
         return result;
     }
 
     public static int numNodes() {
-        return FlowNodeBase.numInstances;
+        return VNodeImpl.numInstances;
     }
 }

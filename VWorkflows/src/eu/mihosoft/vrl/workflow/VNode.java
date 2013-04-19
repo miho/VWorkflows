@@ -80,11 +80,6 @@ public interface VNode extends Model {
 
     public VFlowModel getFlow();
 
-//    /**
-//     * @return the inputProperty
-//     */
-//    BooleanProperty inputProperty();
-//
     boolean isInputOfType(String type);
 
     boolean isOutputOfType(String type);
@@ -92,11 +87,6 @@ public interface VNode extends Model {
     boolean isInput();
 
     boolean isOutput();
-//
-//    /**
-//     * @return the outputProperty
-//     */
-//    BooleanProperty outputProperty();
 
     void setInput(boolean state, String type);
 

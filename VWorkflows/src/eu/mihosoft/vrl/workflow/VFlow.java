@@ -5,6 +5,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.util.Collection;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 
@@ -61,7 +62,30 @@ public interface VFlow {
     public IdGenerator getIdGenerator();
 
     public VNodeSkin getNodeSkinById(String id);
-    
+
     public FlowNodeSkinLookup getNodeSkinLookup();
+
     public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup);
+
+    public void setVisible(boolean state);
+
+    public boolean isVisible();
+
+    public BooleanProperty visibleState();
+
+    boolean isInputOfType(String type);
+
+    boolean isOutputOfType(String type);
+
+    boolean isInput();
+
+    boolean isOutput();
+
+    void setInput(boolean state, String type);
+
+    void setOutput(boolean state, String type);
+
+    ObservableList<String> getInputTypes();
+
+    ObservableList<String> getOutputTypes();
 }

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -508,5 +509,60 @@ class VFlowImpl implements VFlow {
     @Override
     public VNodeSkin getNodeSkinById(String id) {
         return nodeSkins.get(id);
+    }
+
+    @Override
+    public void setVisible(boolean state) {
+        getModel().setVisible(state);
+    }
+
+    @Override
+    public boolean isVisible() {
+       return getModel().isVisible();
+    }
+
+    @Override
+    public BooleanProperty visibleState() {
+        return getModel().visibleProperty();
+    }
+
+    @Override
+    public boolean isInputOfType(String type) {
+       return getModel().isInputOfType(type);
+    }
+
+    @Override
+    public boolean isOutputOfType(String type) {
+        return getModel().isOutputOfType(type);
+    }
+
+    @Override
+    public boolean isInput() {
+        return getModel().isInput();
+    }
+
+    @Override
+    public boolean isOutput() {
+        return getModel().isOutput();
+    }
+
+    @Override
+    public void setInput(boolean state, String type) {
+        getModel().setInput(state, type);
+    }
+
+    @Override
+    public void setOutput(boolean state, String type) {
+        getModel().setOutput(state, type);
+    }
+
+    @Override
+    public ObservableList<String> getInputTypes() {
+        return getModel().getInputTypes();
+    }
+
+    @Override
+    public ObservableList<String> getOutputTypes() {
+        return getModel().getOutputTypes();
     }
 }

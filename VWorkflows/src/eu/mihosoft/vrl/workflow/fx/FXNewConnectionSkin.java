@@ -25,6 +25,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
@@ -70,6 +71,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
         connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         connectionPath.setStrokeWidth(5);
+        connectionPath.setStrokeLineCap(StrokeLineCap.ROUND);
 
 //        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
 //        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
@@ -324,5 +326,4 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         this.flowController = flow;
         this.flow = flow.getModel();
     }
-    
 }

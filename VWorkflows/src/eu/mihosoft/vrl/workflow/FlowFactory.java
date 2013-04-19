@@ -4,8 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.io.PersistentNode;
-
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
@@ -16,6 +14,7 @@ public class FlowFactory {
         VFlow flow = new VFlowImpl(null);
 
         VFlowModel model = FlowFactory.newFlowModel();
+        flow.setModel(model);
 
         return flow;
     }
@@ -25,6 +24,7 @@ public class FlowFactory {
         VFlow flow = new VFlowImpl(skinFactory);
 
         VFlowModel model = FlowFactory.newFlowModel();
+        flow.setModel(model);
 
         return flow;
     }
@@ -33,9 +33,5 @@ public class FlowFactory {
         VFlowModel result = new VFlowModelImpl(null);
         result.setId("ROOT");
         return result;
-    }
-
-    public static int numNodes() {
-        return VNodeImpl.numInstances;
     }
 }

@@ -41,7 +41,6 @@ class VNodeImpl implements VNode {
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
     private VFlowModel flow;
-    static int numInstances = 0;
     private ObservableList<String> inputTypes = FXCollections.observableArrayList();
     private ObservableList<String> outputTypes = FXCollections.observableArrayList();
 
@@ -49,9 +48,12 @@ class VNodeImpl implements VNode {
 //            new SimpleObjectProperty<>();
     public VNodeImpl(VFlowModel flow) {
 
-        numInstances++;
-
         this.flow = flow;
+        
+        setWidth(200);
+        setHeight(150);
+        
+        setTitle("Node");
 
         setValueObject(new DefaultValueObject(this));
         
@@ -113,7 +115,7 @@ class VNodeImpl implements VNode {
     }
 
     @Override
-    public void setTitle(String title) {
+    public final void setTitle(String title) {
         titleProperty.set(title);
     }
 
@@ -178,12 +180,12 @@ class VNodeImpl implements VNode {
     }
 
     @Override
-    public void setWidth(double w) {
+    public final void setWidth(double w) {
         widthProperty.set(w);
     }
 
     @Override
-    public void setHeight(double h) {
+    public final void setHeight(double h) {
         heightProperty.set(h);
     }
 

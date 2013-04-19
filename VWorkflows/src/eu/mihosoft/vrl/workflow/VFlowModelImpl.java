@@ -42,7 +42,7 @@ class VFlowModelImpl implements VFlowModel {
     public VFlowModelImpl(FlowModel parentFlow) {
 
         flow = new FlowModelImpl();
-        
+
         VFlowModel pFlow = null;
 
         if (parentFlow != null) {
@@ -59,6 +59,7 @@ class VFlowModelImpl implements VFlowModel {
         }
 
         node = new VNodeImpl(pFlow);
+        setTitle("Node");
         
     }
 
@@ -138,7 +139,7 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public void setTitle(String title) {
+    public final void setTitle(String title) {
         node.setTitle(title);
     }
 
@@ -317,7 +318,7 @@ class VFlowModelImpl implements VFlowModel {
 //    }
 
     @Override
-    public void setIdGenerator(IdGenerator generator) {
+    public final void setIdGenerator(IdGenerator generator) {
         flow.setIdGenerator(generator);
     }
 

@@ -21,11 +21,11 @@ import jfxtras.labs.scene.control.window.Window;
 public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSkin> {
 
     private final Parent parent;
-    private Window clipboard;
+//    private Window clipboard;
 
-    public FXSkinFactory(Parent parent, Window clipboard) {
+    public FXSkinFactory(Parent parent) {
         this.parent = parent;
-        this.clipboard = clipboard;
+//        this.clipboard = clipboard;
     }
 
     @Override
@@ -35,13 +35,13 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
     @Override
     public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
-        return new FXConnectionSkin(parent, c, flow, type, clipboard);
+        return new FXConnectionSkin(parent, c, flow, type/*, clipboard*/);
     }
 
     @Override
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
 
-        FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), clipboard);
+        FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode());
 
         return result;
     }

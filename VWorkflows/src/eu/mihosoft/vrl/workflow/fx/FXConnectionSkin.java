@@ -56,16 +56,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private String type;
     private Node lastNode;
     private boolean valid = true;
-    private Window clipboard;
+//    private Window clipboard;
     private Window prevWindow;
 
-    public FXConnectionSkin(Parent parent, Connection connection, VFlow flow, String type, Window clipboard) {
+    public FXConnectionSkin(Parent parent, Connection connection, VFlow flow, String type) {
         setParent(parent);
         this.connection = connection;
         this.controller = flow;
         this.type = type;
 
-        this.clipboard = clipboard;
+//        this.clipboard = clipboard;
 
 //        startConnector = new Circle(20);
         receiverConnector = new Circle(20);
@@ -79,8 +79,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
     private void init() {
 
-        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
-        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+//        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         connectionPath.setStrokeWidth(5);
 
 //        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
@@ -100,8 +100,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         receiverConnector.setStrokeWidth(3);
 
-        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
-        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+//        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+//        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 
 
 //        final FlowNode sender = getController().getSender(connection);
@@ -455,57 +455,57 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     private void addToClipboard() {
-        if (!valid) {
-            clipboard.setVisible(true);
-            if (prevWindow != null) {
-                clipboard.toFront();
-                clipboard.setLayoutX(prevWindow.getLayoutX());
-                clipboard.setLayoutY(prevWindow.getLayoutY());
-
-                Timeline timeLine = new Timeline();
-
-                KeyValue vx1 = new KeyValue(clipboard.layoutXProperty(), clipboard.getLayoutX());
-                KeyValue vy1 = new KeyValue(clipboard.layoutYProperty(), clipboard.getLayoutY());
-                KeyValue vx2 = new KeyValue(clipboard.layoutXProperty(), prevWindow.getLayoutX());
-                KeyValue vy2 = new KeyValue(clipboard.layoutYProperty(), prevWindow.getLayoutY() - 100);
-
-                timeLine.getKeyFrames().add(new KeyFrame(Duration.ZERO, vx1, vy1));
-                timeLine.getKeyFrames().add(new KeyFrame(Duration.millis(300), vx2, vy2));
-
-                timeLine.play();
-
-                timeLine.statusProperty().addListener(new ChangeListener<Animation.Status>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Animation.Status> ov, Animation.Status t, Animation.Status t1) {
-                        if (t1 == Animation.Status.STOPPED) {
-
-                            DoubleBinding clipboardYBinding = new DoubleBinding() {
-                                {
-                                    super.bind(prevWindow.layoutYProperty());
-                                }
-
-                                @Override
-                                protected double computeValue() {
-
-                                    return prevWindow.getLayoutY() - 100;
-                                }
-                            };
-
-//                            clipboard.layoutXProperty().unbind();
-//                            clipboard.layoutYProperty().unbind();
+//        if (!valid) {
+//            clipboard.setVisible(true);
+//            if (prevWindow != null) {
+//                clipboard.toFront();
+//                clipboard.setLayoutX(prevWindow.getLayoutX());
+//                clipboard.setLayoutY(prevWindow.getLayoutY());
 //
-//                            clipboard.layoutXProperty().bind(prevWindow.layoutXProperty());
-//                            clipboard.layoutYProperty().bind(clipboardYBinding);
-                        }
-                    }
-                });
-
-
-            }
-
-            receiverWindow = clipboard;
-        } else {
-            clipboard.setVisible(false);
-        }
+//                Timeline timeLine = new Timeline();
+//
+//                KeyValue vx1 = new KeyValue(clipboard.layoutXProperty(), clipboard.getLayoutX());
+//                KeyValue vy1 = new KeyValue(clipboard.layoutYProperty(), clipboard.getLayoutY());
+//                KeyValue vx2 = new KeyValue(clipboard.layoutXProperty(), prevWindow.getLayoutX());
+//                KeyValue vy2 = new KeyValue(clipboard.layoutYProperty(), prevWindow.getLayoutY() - 100);
+//
+//                timeLine.getKeyFrames().add(new KeyFrame(Duration.ZERO, vx1, vy1));
+//                timeLine.getKeyFrames().add(new KeyFrame(Duration.millis(300), vx2, vy2));
+//
+//                timeLine.play();
+//
+//                timeLine.statusProperty().addListener(new ChangeListener<Animation.Status>() {
+//                    @Override
+//                    public void changed(ObservableValue<? extends Animation.Status> ov, Animation.Status t, Animation.Status t1) {
+//                        if (t1 == Animation.Status.STOPPED) {
+//
+//                            DoubleBinding clipboardYBinding = new DoubleBinding() {
+//                                {
+//                                    super.bind(prevWindow.layoutYProperty());
+//                                }
+//
+//                                @Override
+//                                protected double computeValue() {
+//
+//                                    return prevWindow.getLayoutY() - 100;
+//                                }
+//                            };
+//
+////                            clipboard.layoutXProperty().unbind();
+////                            clipboard.layoutYProperty().unbind();
+////
+////                            clipboard.layoutXProperty().bind(prevWindow.layoutXProperty());
+////                            clipboard.layoutYProperty().bind(clipboardYBinding);
+//                        }
+//                    }
+//                });
+//
+//
+//            }
+//
+//            receiverWindow = clipboard;
+//        } else {
+//            clipboard.setVisible(false);
+//        }
     }
 }

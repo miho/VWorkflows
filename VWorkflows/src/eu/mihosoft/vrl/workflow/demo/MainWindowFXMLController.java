@@ -169,13 +169,13 @@ public class MainWindowFXMLController implements Initializable {
 
         rootPane.getChildren().clear();
 
-        clipboard = new Window("Clipboard/Broken!");
-        clipboard.setPrefSize(80, 80);
-        clipboard.setResizableWindow(false);
+//        clipboard = new Window("Clipboard/Broken!");
+//        clipboard.setPrefSize(80, 80);
+//        clipboard.setResizableWindow(false);
+//
+//        clipboard.setVisible(false);
 
-        clipboard.setVisible(false);
-
-        rootPane.getChildren().add(clipboard);
+//        rootPane.getChildren().add(clipboard);
 
         if (workflow == null) {
             return;
@@ -183,6 +183,6 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow.getModel().setVisible(true);
 
-        workflow.setSkinFactory(new FXSkinFactory(rootPane, clipboard));
+        workflow.setSkinFactory(new FXSkinFactory(rootPane));
     }
 }

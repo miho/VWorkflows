@@ -215,9 +215,38 @@ class VFlowImpl implements VFlow {
     }
 
     @Override
-    public ConnectionResult connect(VNode s, VNode r, String type) {
+    public ConnectionResult tryConnect(VFlow s, VNode r, String type) {
+        return getModel().tryConnect(s.getModel(), r, type);
+    }
 
+    @Override
+    public ConnectionResult tryConnect(VNode s, VFlow r, String type) {
+        return getModel().tryConnect(s, r.getModel(), type);
+    }
+
+    @Override
+    public ConnectionResult tryConnect(VFlow s, VFlow r, String type) {
+        return getModel().tryConnect(s.getModel(), r.getModel(), type);
+    }
+
+    @Override
+    public ConnectionResult connect(VNode s, VNode r, String type) {
         return getModel().connect(s, r, type);
+    }
+
+    @Override
+    public ConnectionResult connect(VFlow s, VNode r, String type) {
+        return getModel().connect(s.getModel(), r, type);
+    }
+
+    @Override
+    public ConnectionResult connect(VNode s, VFlow r, String type) {
+        return getModel().connect(s, r.getModel(), type);
+    }
+
+    @Override
+    public ConnectionResult connect(VFlow s, VFlow r, String type) {
+        return getModel().connect(s.getModel(), r.getModel(), type);
     }
 
     @Override
@@ -518,7 +547,7 @@ class VFlowImpl implements VFlow {
 
     @Override
     public boolean isVisible() {
-       return getModel().isVisible();
+        return getModel().isVisible();
     }
 
     @Override
@@ -528,7 +557,7 @@ class VFlowImpl implements VFlow {
 
     @Override
     public boolean isInputOfType(String type) {
-       return getModel().isInputOfType(type);
+        return getModel().isInputOfType(type);
     }
 
     @Override

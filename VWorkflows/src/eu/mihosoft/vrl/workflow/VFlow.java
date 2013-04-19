@@ -29,6 +29,18 @@ public interface VFlow {
 
     public ConnectionResult connect(VNode s, VNode r, String flowType);
 
+    public ConnectionResult tryConnect(VFlow s, VNode r, String flowType);
+
+    public ConnectionResult tryConnect(VNode s, VFlow r, String flowType);
+
+    public ConnectionResult tryConnect(VFlow s, VFlow r, String flowType);
+
+    public ConnectionResult connect(VFlow s, VNode r, String flowType);
+
+    public ConnectionResult connect(VNode s, VFlow r, String flowType);
+
+    public ConnectionResult connect(VFlow s, VFlow r, String flowType);
+
     public VNode remove(VNode n);
 
     public ObservableList<VNode> getNodes();

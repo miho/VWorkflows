@@ -17,7 +17,7 @@ dependencies {
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"
     if (jdk == 7) {
-        compile fileTree (dir: '/home/miho/Dropbox/tmp/jfxtras/jdk7/', includes: ['*.jar'])
+        compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
     } else if (jdk == 8) {
         compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     } else {
@@ -52,6 +52,3 @@ javafx {
 jfxDeploy {
     packaging = "image"
 }
-
-
-

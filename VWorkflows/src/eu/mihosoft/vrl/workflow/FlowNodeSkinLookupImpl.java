@@ -4,6 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.List;
+
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
@@ -17,16 +19,16 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
     }
 
     @Override
-    public VNodeSkin getById(String globalId) {
+    public List<VNodeSkin> getById(String globalId) {
 
-        VNodeSkin result = getNodeByGlobalId(root, globalId);
+        List<VNodeSkin> result = getNodeByGlobalId(root, globalId);
 
         return result;
     }
 
-    private VNodeSkin getNodeByGlobalId(VFlow parent, String id) {
+    private List<VNodeSkin> getNodeByGlobalId(VFlow parent, String id) {
 
-        VNodeSkin s = parent.getNodeSkinById(id);
+        List<VNodeSkin> s = parent.getNodeSkinsById(id);
 
         if (s != null) {
             return s;

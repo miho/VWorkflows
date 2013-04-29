@@ -51,6 +51,8 @@ public class MainWindowFXMLController implements Initializable {
         contentPane.getChildren().add(canvas);
 
         rootPane = root;
+        
+        onGenerateAction(null);
     }
     private Pane rootPane;
     private VFlow workflow;

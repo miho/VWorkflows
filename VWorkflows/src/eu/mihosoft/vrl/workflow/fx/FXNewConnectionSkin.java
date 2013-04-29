@@ -220,6 +220,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
 
                     VNode receiver = w.nodeSkinProperty().get().getModel();
+                    
+                    System.out.println("FX-CONNECT: " + getSender().getId() + " -> " + receiver.getId());
 
                     flow.connect(getSender(), receiver, type);
                 }

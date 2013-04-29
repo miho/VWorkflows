@@ -69,8 +69,10 @@ public interface VFlow {
     public Collection<VFlow> getSubControllers();
 
     public void setSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactory);
-    
+
     public void setSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
+
+    public Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> getSkinFactories();
 
     public void setIdGenerator(IdGenerator generator);
 

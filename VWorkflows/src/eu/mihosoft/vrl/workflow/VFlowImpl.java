@@ -521,11 +521,10 @@ class VFlowImpl implements VFlow {
 
     @Override
     public final void setSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
-        this.getSkinFactories().clear();
-
 
         removeUIFromAllSkinFactories();
-
+        this.getSkinFactories().clear();
+        
         addSkinFactories(skinFactories);
     }
 
@@ -576,7 +575,7 @@ class VFlowImpl implements VFlow {
                 childSkinFactories.add(childNodeSkinFactory);
             }
 
-            fC.setSkinFactories(childSkinFactories);
+            fC.addSkinFactories(childSkinFactories);
         }
     }
 

@@ -5,6 +5,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,8 +41,14 @@ class VFlowImpl implements VFlow {
     private NodeLookup nodeLookup;
     private FlowNodeSkinLookup nodeSkinLookup;
 
-    public VFlowImpl(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
-        skinFactories.add(skinFactory);
+    public VFlowImpl(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
+        setSkinFactories(skinFactories);
+
+        init();
+    }
+
+    public VFlowImpl(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories) {
+        setSkinFactories(skinFactories);
 
         init();
     }
@@ -80,7 +87,7 @@ class VFlowImpl implements VFlow {
                         // added
                         for (VNode n : change.getAddedSubList()) {
                             if (!nodeSkins.containsKey(n.getId())) {
-                                createNodeSkin(n);
+                                createNodeSkins(n);
 //                                 System.out.println("add node: " + n.getId());
                             }
                         }
@@ -109,7 +116,7 @@ class VFlowImpl implements VFlow {
                     } else if (change.wasAdded()) {
                         // added
                         for (Connection c : change.getAddedSubList()) {
-                            createConnectionSkin(c, c.getType());
+                            createConnectionSkins(c, c.getType());
                         }
                     }
 
@@ -125,7 +132,7 @@ class VFlowImpl implements VFlow {
                 System.out.println("visible: " + t1 + " : " + getModel().isVisible() + " : " + getModel().getId());
 
                 if (t1) {
-                    setSkinFactory(skinFactory);
+                    setSkinFactories(skinFactories);
                 } else {
                     removeUI();
                 }
@@ -443,14 +450,22 @@ class VFlowImpl implements VFlow {
 
     }
 
+    @Override
+    public final void setSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories) {
+        SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>[] skinFactoryArray = new SkinFactory[skinFactories.size()];
+
+        setSkinFactories(skinFactoryArray);
+    }
+
     /**
      * @param nodeSkinFactory the nodeSkinFactory to set
      */
     @Override
-    public void setSkinFactory(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
+    public final void setSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactory) {
 
         this.skinFactories.clear();
-        this.skinFactories.add(skinFactory);
+        this.skinFactories.addAll(Arrays.asList(skinFactory));
+
 
         if (skinFactory == null) {
             removeUI();
@@ -464,7 +479,7 @@ class VFlowImpl implements VFlow {
             for (Connections cns : getAllConnections().values()) {
                 for (Connection c : cns.getConnections()) {
 
-                    createConnectionSkin(c, c.getType());
+                    createConnectionSkins(c, c.getType());
 
                 }
             }
@@ -476,6 +491,8 @@ class VFlowImpl implements VFlow {
 
         for (VFlow fC : subControllers.values()) {
 
+            Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> childSkinFactories = new ArrayList<>();
+
             for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> sF : skinFactories) {
 
                 SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> childNodeSkinFactory = null;
@@ -485,8 +502,12 @@ class VFlowImpl implements VFlow {
                             getNodeSkin(sF, fC.getModel().getId()));
                 }
 
-                fC.setSkinFactory(childNodeSkinFactory);
+                childSkinFactories.add(childNodeSkinFactory);
+
+
             }
+
+            fC.setSkinFactories(childSkinFactories);
         }
     }
 
@@ -528,17 +549,20 @@ class VFlowImpl implements VFlow {
     }
 
     private VFlow newSubFlow(VFlowModel flowNode) {
-        
-        for(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : skinFactories) {
 
-        VNodeSkin<VNode> skin = nodeSkins.get(flowNode.getId());
+        Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> childFactories = new ArrayList<>();
 
-        SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> childFactory = null;
+        for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : skinFactories) {
 
-        if (skinFactory != null) {
-            childFactory = skinFactory.createChild(skin);
-        }
-        
+            VNodeSkin<VNode> skin = getNodeSkin(skinFactory, flowNode.getId());//nodeSkins.get(flowNode.getId());
+
+            SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> childFactory = null;
+
+            if (skinFactory != null) {
+                childFactory = skinFactory.createChild(skin);
+                childFactories.add(childFactory);
+            }
+
         }
 
         VFlow controller = new VFlowImpl(childFactories);
@@ -607,7 +631,13 @@ class VFlowImpl implements VFlow {
 
     @Override
     public List<VNodeSkin> getNodeSkinsById(String id) {
-        return get
+        List<VNodeSkin> result = new ArrayList<>();
+
+        for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> sF : this.skinFactories) {
+            result.add(getNodeSkin(sF, id));
+        }
+
+        return result;
     }
 
     @Override

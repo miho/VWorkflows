@@ -41,7 +41,7 @@ class VFlowImpl implements VFlow {
     private FlowNodeSkinLookup nodeSkinLookup;
 
     public VFlowImpl(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
-        this.skinFactory = skinFactory;
+        skinFactories.add(skinFactory);
 
         init();
     }

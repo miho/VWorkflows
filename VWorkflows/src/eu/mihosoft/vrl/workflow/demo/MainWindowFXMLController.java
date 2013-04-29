@@ -96,7 +96,8 @@ public class MainWindowFXMLController implements Initializable {
         System.out.print(" >> generate workflow");
 
         workflow = FlowFactory.newFlow();
-        workflowTest(workflow, 5, 10);
+//        workflowTest(workflow, 5, 10);
+        workflowTest(workflow, 3, 3);
 
         System.out.println(" [done]");
 
@@ -182,7 +183,7 @@ public class MainWindowFXMLController implements Initializable {
         }
 
         workflow.getModel().setVisible(true);
-
-        workflow.setSkinFactory(new FXSkinFactory(rootPane));
+        
+        workflow.setSkinFactories(new FXSkinFactory(rootPane));
     }
 }

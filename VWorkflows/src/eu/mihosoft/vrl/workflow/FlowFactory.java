@@ -11,7 +11,7 @@ package eu.mihosoft.vrl.workflow;
 public class FlowFactory {
 
     public static VFlow newFlow() {
-        VFlow flow = new VFlowImpl(null);
+        VFlow flow = new VFlowImpl();
 
         VFlowModel model = FlowFactory.newFlowModel();
         flow.setModel(model);

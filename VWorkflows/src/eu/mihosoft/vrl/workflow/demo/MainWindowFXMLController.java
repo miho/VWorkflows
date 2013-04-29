@@ -8,6 +8,7 @@ import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
+import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.IOException;
 import java.net.URL;
@@ -179,6 +180,18 @@ public class MainWindowFXMLController implements Initializable {
 //        clipboard.setVisible(false);
 
 //        rootPane.getChildren().add(clipboard);
+        
+        OptimizableContentPane minimapContent = new OptimizableContentPane();
+        
+        ScalableContentPane minimapPane = new ScalableContentPane();
+        
+        minimapContent.getChildren().add(minimapPane);
+        
+        Window minimap = new Window("Minimap");
+        minimap.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+        minimap.setPrefSize(300, 200);
+        minimap.setContentPane(minimapContent);
+        rootPane.getChildren().add(minimap);
 
         if (workflow == null) {
             return;
@@ -187,5 +200,7 @@ public class MainWindowFXMLController implements Initializable {
         workflow.getModel().setVisible(true);
         
         workflow.setSkinFactories(new FXSkinFactory(rootPane));
+        
+        workflow.addSkinFactories(new FXSkinFactory(minimapPane.getContentPane()));
     }
 }

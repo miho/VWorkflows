@@ -112,10 +112,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        final FlowNode sender = getController().getSender(connection);
 //        final FlowNode receiver = getController().getReceiver(connection);
 
-        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory,connection.getSenderId());
+        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getSenderId());
         final Window senderWindow = senderSkin.getNode();
 
-        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory,connection.getReceiverId());
+        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
 
         addToClipboard();
@@ -392,7 +392,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     @Override
-    public void setModel(Connection model) {
+    public final void setModel(Connection model) {
         modelProperty.set(model);
     }
 

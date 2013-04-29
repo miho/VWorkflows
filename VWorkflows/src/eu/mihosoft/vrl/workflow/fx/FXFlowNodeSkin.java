@@ -399,7 +399,8 @@ public class FXFlowNodeSkin
     /**
      * @return the skinFactory
      */
+    @Override
     public FXSkinFactory getSkinFactory() {
-        return skinFactory;
+        return this.skinFactory;
     }
 }

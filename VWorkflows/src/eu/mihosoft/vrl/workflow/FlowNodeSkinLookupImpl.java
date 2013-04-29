@@ -50,6 +50,7 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
         List<VNodeSkin> candidates = getById(globalId);
         
         for (VNodeSkin vNodeSkin : candidates) {
+            
             if (vNodeSkin.getSkinFactory()==skinFactory) {
                 return vNodeSkin;
             }

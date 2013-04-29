@@ -16,4 +16,5 @@ import javafx.scene.Parent;
 public interface FXSkin<T extends Model, V extends Node> extends Skin<T>{
     public V getNode();
     public Parent getContentNode();
+    public FXSkinFactory getSkinFactory();
 }

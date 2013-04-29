@@ -18,4 +18,5 @@ public interface Skin<T extends Model> {
     public ObjectProperty<T> modelProperty();
     public VFlow getController();
     public void setController(VFlow flow);
+    public SkinFactory getSkinFactory();
 }

@@ -10,6 +10,7 @@ import java.util.List;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface FlowNodeSkinLookup extends Lookup<List<VNodeSkin>>{
-    
+public interface FlowNodeSkinLookup extends Lookup<List<VNodeSkin>> {
+
+    public VNodeSkin getById(SkinFactory skinFactory, String globalId);
 }

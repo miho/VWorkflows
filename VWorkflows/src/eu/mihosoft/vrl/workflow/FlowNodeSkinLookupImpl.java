@@ -44,4 +44,17 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         return null;
     }
+
+    @Override
+    public VNodeSkin getById(SkinFactory skinFactory, String globalId) {
+        List<VNodeSkin> candidates = getById(globalId);
+        
+        for (VNodeSkin vNodeSkin : candidates) {
+            if (vNodeSkin.getSkinFactory()==skinFactory) {
+                return vNodeSkin;
+            }
+        }
+        
+        return null;
+    }
 }

@@ -97,7 +97,7 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow = FlowFactory.newFlow();
 //        workflowTest(workflow, 5, 10);
-        workflowTest(workflow, 3, 3);
+        workflowTest(workflow, 3, 10);
 
         System.out.println(" [done]");
 

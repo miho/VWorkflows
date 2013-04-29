@@ -47,8 +47,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private String type;
     private Node lastNode;
+    private FXSkinFactory skinFactory;
 
-    public FXNewConnectionSkin(Parent parent, VNode sender, VFlow controller, String type) {
+    public FXNewConnectionSkin(FXSkinFactory skinFactory, Parent parent, VNode sender, VFlow controller, String type) {
+        this.skinFactory = skinFactory;
         setParent(parent);
         setSender(sender);
 
@@ -325,5 +327,12 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     public void setController(VFlow flow) {
         this.flowController = flow;
         this.flow = flow.getModel();
+    }
+
+    /**
+     * @return the skinFactory
+     */
+    public FXSkinFactory getSkinFactory() {
+        return skinFactory;
     }
 }

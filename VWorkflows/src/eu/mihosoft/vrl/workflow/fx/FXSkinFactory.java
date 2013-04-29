@@ -30,12 +30,12 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
     @Override
     public VNodeSkin createSkin(VNode n, VFlow flow) {
-        return new FXFlowNodeSkin(parent, n, flow);
+        return new FXFlowNodeSkin(this, parent, n, flow);
     }
 
     @Override
     public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
-        return new FXConnectionSkin(parent, c, flow, type/*, clipboard*/);
+        return new FXConnectionSkin(this, parent, c, flow, type/*, clipboard*/);
     }
 
     @Override
@@ -45,5 +45,4 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
         return result;
     }
-
 }

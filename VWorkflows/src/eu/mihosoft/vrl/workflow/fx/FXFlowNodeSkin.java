@@ -50,9 +50,10 @@ public class FXFlowNodeSkin
     private boolean removeSkinOnly = false;
     private VFlow controller;
     private Map<String, Node> outputs = new HashMap<>();
+    private FXSkinFactory skinFactory;
 
-    public FXFlowNodeSkin(Parent parent, VNode model, VFlow controller) {
-
+    public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
+        this.skinFactory = skinFactory;
         setParent(parent);
         setModel(model);
 
@@ -175,7 +176,7 @@ public class FXFlowNodeSkin
 //                }
 
                 newConnectionSkin =
-                        new FXNewConnectionSkin(
+                        new FXNewConnectionSkin(getSkinFactory(),
                         getParent(), getModel(), getController(), type);
 
                 newConnectionSkin.add();
@@ -393,5 +394,12 @@ public class FXFlowNodeSkin
     @Override
     public void setController(VFlow controller) {
         this.controller = controller;
+    }
+
+    /**
+     * @return the skinFactory
+     */
+    public FXSkinFactory getSkinFactory() {
+        return skinFactory;
     }
 }

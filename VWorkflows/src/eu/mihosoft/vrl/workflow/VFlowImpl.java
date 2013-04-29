@@ -342,7 +342,7 @@ class VFlowImpl implements VFlow {
 
     private void putNodeSkin(SkinFactory skinFactory, VNodeSkin<VNode> skin) {
         Map<String, VNodeSkin> nodeSkinMap = getNodeSkinMap(skinFactory);
-        
+
         System.out.println("put skin " + skin + "for: " + skin.getModel().getId() + ", factory: " + skinFactory);
 
 
@@ -353,9 +353,9 @@ class VFlowImpl implements VFlow {
         Map<String, VNodeSkin> nodeSkinMap = getNodeSkinMap(skinFactory);
 
         VNodeSkin<VNode> nodeSkin = nodeSkinMap.get(id);
-        
-        System.out.println("skin for " + id + " = " + nodeSkin  + ", factory: " + skinFactory);
-        
+
+        System.out.println("skin for " + id + " = " + nodeSkin + ", factory: " + skinFactory);
+
         return nodeSkin;
     }
 
@@ -383,6 +383,9 @@ class VFlowImpl implements VFlow {
 
     private void putConnectionSkin(SkinFactory skinFactory, ConnectionSkin<Connection> skin) {
         Map<String, ConnectionSkin> nodeSkinMap = getConnectionSkinMap(skinFactory);
+
+        System.out.println("putConnectionskin: " + skin);
+        System.out.println("putConnectionskin-model: " + skin.getModel());
 
 
         nodeSkinMap.put(skin.getModel().getId(), skin);
@@ -420,13 +423,13 @@ class VFlowImpl implements VFlow {
 
         List<ConnectionSkin> skins = new ArrayList<>();
 
+        if (getModel() != null && !getModel().isVisible()) {
+            return null;
+        }
+
         for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : skinFactories) {
 
             if (skinFactory == null) {
-                return null;
-            }
-
-            if (getModel() != null && !getModel().isVisible()) {
                 return null;
             }
 

@@ -59,10 +59,13 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private boolean valid = true;
 //    private Window clipboard;
     private Window prevWindow;
+    private FXSkinFactory skinFactory;
 
-    public FXConnectionSkin(Parent parent, Connection connection, VFlow flow, String type) {
+    public FXConnectionSkin(FXSkinFactory skinFactory, Parent parent, Connection connection, VFlow flow, String type) {
         setParent(parent);
+        this.skinFactory = skinFactory;
         this.connection = connection;
+        this.setModel(connection);
         this.controller = flow;
         this.type = type;
 
@@ -109,10 +112,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        final FlowNode sender = getController().getSender(connection);
 //        final FlowNode receiver = getController().getReceiver(connection);
 
-        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getSenderId());
+        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory,connection.getSenderId());
         final Window senderWindow = senderSkin.getNode();
 
-        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(connection.getReceiverId());
+        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory,connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
 
         addToClipboard();
@@ -509,5 +512,13 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        } else {
 //            clipboard.setVisible(false);
 //        }
+    }
+
+    /**
+     * @return the skinFatory
+     */
+    @Override
+    public FXSkinFactory getSkinFactory() {
+        return skinFactory;
     }
 }

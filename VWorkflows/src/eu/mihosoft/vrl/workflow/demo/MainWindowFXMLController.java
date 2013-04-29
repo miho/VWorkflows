@@ -32,6 +32,7 @@ public class MainWindowFXMLController implements Initializable {
 
     private int counter = 0;
     private Window clipboard;
+    private VFlow specialViewFlow;
 
     /**
      * Initializes the controller class.
@@ -52,7 +53,7 @@ public class MainWindowFXMLController implements Initializable {
         contentPane.getChildren().add(canvas);
 
         rootPane = root;
-        
+
         onGenerateAction(null);
     }
     private Pane rootPane;
@@ -123,6 +124,11 @@ public class MainWindowFXMLController implements Initializable {
         if (depth < 1) {
             return;
         }
+        
+        if ("250".equals(workflow.getModel().getId())) {
+            System.out.println("FLOW: " + workflow.getModel().getId());
+            specialViewFlow = workflow;
+        }
 
         VNode prevNode = null;
 
@@ -140,7 +146,6 @@ public class MainWindowFXMLController implements Initializable {
                 n = workflow.newNode();
             }
 
-//            n.setTitle("Node " + i);
             n.setTitle("Node " + n.getId());
 
             if (i % 3 == 0) {
@@ -153,7 +158,6 @@ public class MainWindowFXMLController implements Initializable {
                 n.setInput(true, "event");
                 n.setOutput(true, "event");
             }
-
 
             n.setWidth(300);
             n.setHeight(200);
@@ -173,34 +177,40 @@ public class MainWindowFXMLController implements Initializable {
 
         rootPane.getChildren().clear();
 
-//        clipboard = new Window("Clipboard/Broken!");
-//        clipboard.setPrefSize(80, 80);
-//        clipboard.setResizableWindow(false);
-//
-//        clipboard.setVisible(false);
-
-//        rootPane.getChildren().add(clipboard);
-        
-        OptimizableContentPane minimapContent = new OptimizableContentPane();
-        
-        ScalableContentPane minimapPane = new ScalableContentPane();
-        
-        minimapContent.getChildren().add(minimapPane);
-        
-        Window minimap = new Window("Minimap");
-        minimap.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
-        minimap.setPrefSize(300, 200);
-        minimap.setContentPane(minimapContent);
-        rootPane.getChildren().add(minimap);
+        ScalableContentPane minimapPane1 = createMinimap("Minimap 1");
+        ScalableContentPane minimapPane2 = createMinimap("Minimap 2");
 
         if (workflow == null) {
             return;
         }
 
         workflow.getModel().setVisible(true);
-        
+
         workflow.setSkinFactories(new FXSkinFactory(rootPane));
+
+        workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),
+                new FXSkinFactory(minimapPane2.getContentPane()));
         
-        workflow.addSkinFactories(new FXSkinFactory(minimapPane.getContentPane()));
+        ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
+        
+        specialViewFlow.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
+    }
+
+    private ScalableContentPane createMinimap(String title) {
+        //        clipboard = new Window("Clipboard/Broken!");
+        //        clipboard.setPrefSize(80, 80);
+        //        clipboard.setResizableWindow(false);
+        //
+        //        clipboard.setVisible(false);
+        //        rootPane.getChildren().add(clipboard);
+        OptimizableContentPane minimapContent = new OptimizableContentPane();
+        ScalableContentPane minimapPane = new ScalableContentPane();
+        minimapContent.getChildren().add(minimapPane);
+        Window minimap = new Window(title);
+        minimap.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+        minimap.setPrefSize(300, 200);
+        minimap.setContentPane(minimapContent);
+        rootPane.getChildren().add(minimap);
+        return minimapPane;
     }
 }

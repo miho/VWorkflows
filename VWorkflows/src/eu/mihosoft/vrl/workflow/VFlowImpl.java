@@ -110,7 +110,7 @@ class VFlowImpl implements VFlow {
                     } else if (change.wasRemoved()) {
                         // removed
                         for (Connection n : change.getRemoved()) {
-                            removeConnectionSkin(n);
+                            removeConnectionSkinFromAllSkinFactories(n);
 //                            System.out.println("remove skin: " + n);
                         }
                     } else if (change.wasAdded()) {
@@ -374,6 +374,41 @@ class VFlowImpl implements VFlow {
         return skin;
     }
 
+    private void putConnectionSkin(SkinFactory skinFactory, ConnectionSkin<Connection> skin) {
+        Map<String, ConnectionSkin> nodeSkinMap = getConnectionSkinMap(skinFactory);
+
+
+        nodeSkinMap.put(skin.getModel().getId(), skin);
+    }
+
+    private ConnectionSkin<Connection> getConnectionSkin(SkinFactory skinFactory, String id) {
+        Map<String, ConnectionSkin> nodeSkinMap = getConnectionSkinMap(skinFactory);
+
+        return nodeSkinMap.get(id);
+    }
+
+    public List<ConnectionSkin> getAllConnectionSkins() {
+        List<ConnectionSkin> result = new ArrayList<>();
+
+        for (SkinFactory<?, ?> skinFactory : skinFactories) {
+            result.addAll(getConnectionSkinMap(skinFactory).values());
+        }
+
+        return result;
+    }
+
+    private ConnectionSkin<Connection> removeConnectionSkinFromFactory(SkinFactory skinFactory, Connection c) {
+        Map<String, ConnectionSkin> connectionSkinsMap = getConnectionSkinMap(skinFactory);
+
+        ConnectionSkin skin = connectionSkinsMap.remove(connectionId(c));
+
+        if (skin != null) {
+            skin.remove();
+        }
+
+        return skin;
+    }
+
     private List<ConnectionSkin> createConnectionSkins(Connection c, String type) {
 
         List<ConnectionSkin> skins = new ArrayList<>();
@@ -390,7 +425,8 @@ class VFlowImpl implements VFlow {
 
             ConnectionSkin skin = skinFactory.createSkin(c, this, type);
 
-            connectionSkins.put(connectionId(c), skin);
+//            connectionSkins.put(connectionId(c), skin);
+            putConnectionSkin(skinFactory, skin);
 
             skin.add();
             skins.add(skin);
@@ -413,16 +449,22 @@ class VFlowImpl implements VFlow {
 //        VNodeSkin skin = nodeSkins.remove(n.getId());
     }
 
-    private void removeConnectionSkin(Connection c) {
+//    private void removeConnectionSkin(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory, Connection c) {
+//        
+//           if (skinFactory == null) {
+//            return;
+//        }
+//        
+//        ConnectionSkin skin = getConnectionSkinMap(skinFactory).remove(connectionId(c));
+//        
+//        if (skin != null) {
+//            skin.remove();
+//        }
+//    }
+    private void removeConnectionSkinFromAllSkinFactories(Connection c) {
 
-        if (skinFactory == null) {
-            return;
-        }
-
-        ConnectionSkin skin = connectionSkins.remove(connectionId(c));
-
-        if (skin != null) {
-            skin.remove();
+        for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : this.skinFactories) {
+            removeConnectionSkinFromFactory(skinFactory, c);
         }
     }
 
@@ -438,8 +480,7 @@ class VFlowImpl implements VFlow {
 
         nodeSkins.clear();
 
-        List<ConnectionSkin> connectionDelList =
-                new ArrayList<>(connectionSkins.values());
+        List<ConnectionSkin> connectionDelList = getAllConnectionSkins();
 
         for (ConnectionSkin<Connection> cS : connectionDelList) {
             cS.remove();
@@ -701,5 +742,13 @@ class VFlowImpl implements VFlow {
             nodeSkinMap = new HashMap<>();
         }
         return nodeSkinMap;
+    }
+
+    private Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory) {
+        Map<String, ConnectionSkin> connectionSkinMap = connectionSkins.get(skinFactory);
+        if (connectionSkinMap == null) {
+            connectionSkinMap = new HashMap<>();
+        }
+        return connectionSkinMap;
     }
 }

@@ -46,16 +46,14 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
     }
 
     private VNodeSkin getNodeByGlobalId(SkinFactory skinFactory, VFlow parent, String id) {
-        
-        System.out.println("searching: " + id);
+
+        System.out.println(">> searching: " + id);
 
         List<VNodeSkin> s = parent.getNodeSkinsById(id);
-        
-        System.out.println("searching 2");
 
         VNodeSkin result = getBySkinFactory(skinFactory, s);
-        
-        System.out.println("GET-SKIN: " + result);
+
+        System.out.println(" --> get-skin: " + result);
 
         if (result != null) {
             return result;
@@ -63,15 +61,21 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         for (VFlow c : parent.getSubControllers()) {
             for (SkinFactory sF : c.getSkinFactories()) {
-                s = getNodeByGlobalId(c, id);
+                
+                System.out.println(" --> parent = " + sF.getParent() + ", skinFactory = " + skinFactory);
 
-                result = getBySkinFactory(sF, s);
+                if (sF == skinFactory) {
+                    System.out.println(" --> searching in subfactory");
+                    result = getNodeByGlobalId(sF, c, id);
+                }
 
                 if (result != null) {
                     return result;
                 }
             }
         }
+        
+        System.out.println(" --> nothing found :(");
 
         return null;
     }
@@ -91,11 +95,11 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
     @Override
     public VNodeSkin getById(SkinFactory skinFactory, String globalId) {
         VNodeSkin result = getNodeByGlobalId(skinFactory, root, globalId);
-        
+
         if (result == null) {
             System.out.println("getById(): " + result);
         } else {
-            System.out.println("getById(): " + null);
+            System.out.println("NOT FOUND: getById(): " + null);
         }
 
         return result;

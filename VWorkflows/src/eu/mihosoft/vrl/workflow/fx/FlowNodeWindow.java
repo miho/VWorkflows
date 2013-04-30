@@ -38,7 +38,8 @@ public class FlowNodeWindow extends Window {
         getLeftIcons().add(new MinimizeIcon(this));
 
         setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
-
+        
+//        setStyle("-fx-background-color: rgb(120,140,255);-fx-border-color: rgb(255,255,255);-fx-border-width: 2;");
 
         OptimizableContentPane parentContent = new OptimizableContentPane();
 

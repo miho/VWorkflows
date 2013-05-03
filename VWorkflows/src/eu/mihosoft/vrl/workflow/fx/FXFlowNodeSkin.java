@@ -220,7 +220,7 @@ public class FXFlowNodeSkin
 
     private void removeOutputConnector(String type) {
         Node output = outputs.get(type);
-        if (output != null) {
+        if (output != null && output.getParent()!=null) {
             NodeUtil.removeFromParent(output);
         }
     }
@@ -241,7 +241,9 @@ public class FXFlowNodeSkin
         for (String type : outputs.keySet()) {
             removeOutputConnector(type);
         }
+        if (node != null && node.getParent()!=null) {
         NodeUtil.removeFromParent(node);
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,35 +48,57 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
     private VNodeSkin getNodeByGlobalId(SkinFactory skinFactory, VFlow parent, String id) {
 
-        System.out.println(">> searching: " + id);
+        // find flow that contains the requested node
+        VFlow flow = getFlowThatContains(parent, id);
+        
+        System.out.println("found flow: " + flow.getModel().getId());
 
-        List<VNodeSkin> s = parent.getNodeSkinsById(id);
+        for (SkinFactory sF : flow.getSkinFactories()) {
 
-        VNodeSkin result = getBySkinFactory(skinFactory, s);
-
-        System.out.println(" --> get-skin: " + result);
-
-        if (result != null) {
-            return result;
-        }
-
-        for (VFlow c : parent.getSubControllers()) {
-            for (SkinFactory sF : c.getSkinFactories()) {
-                
-                System.out.println(" --> parent = " + sF.getParent() + ", skinFactory = " + skinFactory);
-
-                if (sF == skinFactory) {
-                    System.out.println(" --> searching in subfactory");
-                    result = getNodeByGlobalId(sF, c, id);
-                }
-
-                if (result != null) {
-                    return result;
-                }
+            if (getRootSkinFactoryOf(skinFactory) == getRootSkinFactoryOf(sF)) {
+                List<VNodeSkin> s2 = flow.getNodeSkinsById(id);
+                return getBySkinFactory(sF, s2);
             }
         }
-        
+
         System.out.println(" --> nothing found :(");
+
+        return null;
+    }
+
+    private SkinFactory getRootSkinFactoryOf(SkinFactory skinFactory) {
+        // find root parent factory
+        SkinFactory tmpFactory = skinFactory;
+        SkinFactory parentFactory = skinFactory;
+
+        while (tmpFactory != null) {
+            tmpFactory = tmpFactory.getParent();
+            if (tmpFactory != null) {
+                parentFactory = tmpFactory;
+            }
+        }
+
+        return parentFactory;
+    }
+
+    private VFlow getFlowThatContains(VFlow parent, String id) {
+
+        // check if current controller contains node with specified id
+        for (VNode n : parent.getNodes()) {
+            if (n.getId().equals(id)) {
+                return parent;
+            }
+        }
+
+        Collection<VFlow> subflows = parent.getSubControllers();
+
+        for (VFlow vFlow : subflows) {
+            VFlow result = getFlowThatContains(vFlow, id);
+
+            if (result != null) {
+                return result;
+            }
+        }
 
         return null;
     }
@@ -94,9 +117,10 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
     @Override
     public VNodeSkin getById(SkinFactory skinFactory, String globalId) {
+
         VNodeSkin result = getNodeByGlobalId(skinFactory, root, globalId);
 
-        if (result == null) {
+        if (result != null) {
             System.out.println("getById(): " + result);
         } else {
             System.out.println("NOT FOUND: getById(): " + null);

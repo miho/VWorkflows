@@ -50,8 +50,8 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         // find flow that contains the requested node
         VFlow flow = getFlowThatContains(parent, id);
-        
-        System.out.println("found flow: " + flow.getModel().getId());
+//        
+//        System.out.println("found flow: " + flow.getModel().getId());
 
         for (SkinFactory sF : flow.getSkinFactories()) {
 
@@ -60,8 +60,8 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
                 return getBySkinFactory(sF, s2);
             }
         }
-
-        System.out.println(" --> nothing found :(");
+//
+//        System.out.println(" --> nothing found :(");
 
         return null;
     }
@@ -120,11 +120,11 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         VNodeSkin result = getNodeByGlobalId(skinFactory, root, globalId);
 
-        if (result != null) {
-            System.out.println("getById(): " + result);
-        } else {
-            System.out.println("NOT FOUND: getById(): " + null);
-        }
+//        if (result != null) {
+//            System.out.println("getById(): " + result);
+//        } else {
+//            System.out.println("NOT FOUND: getById(): " + null);
+//        }
 
         return result;
     }

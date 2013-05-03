@@ -32,7 +32,8 @@ public class MainWindowFXMLController implements Initializable {
 
     private int counter = 0;
     private Window clipboard;
-    private VFlow specialViewFlow;
+    private VFlow specialViewFlow1;
+    private VFlow specialViewFlow2;
 
     /**
      * Initializes the controller class.
@@ -100,8 +101,7 @@ public class MainWindowFXMLController implements Initializable {
         System.out.print(" >> generate workflow");
 
         workflow = FlowFactory.newFlow();
-//        workflowTest(workflow, 5, 10);
-        workflowTest(workflow, 3, 10);
+        workflowTest(workflow, 5, 10);
 
         System.out.println(" [done]");
 
@@ -125,9 +125,14 @@ public class MainWindowFXMLController implements Initializable {
             return;
         }
         
-        if ("250".equals(workflow.getModel().getId())) {
+        if ("4687".equals(workflow.getModel().getId())) {
             System.out.println("FLOW: " + workflow.getModel().getId());
-            specialViewFlow = workflow;
+            specialViewFlow1 = workflow;
+        }
+        
+         if ("4688".equals(workflow.getModel().getId())) {
+            System.out.println("FLOW: " + workflow.getModel().getId());
+            specialViewFlow2 = workflow;
         }
 
         VNode prevNode = null;
@@ -192,8 +197,10 @@ public class MainWindowFXMLController implements Initializable {
                 new FXSkinFactory(minimapPane2.getContentPane()));
         
         ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
+        ScalableContentPane minimapPane4 = createMinimap("Minimap 4");
         
-        specialViewFlow.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
+        specialViewFlow1.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
+        specialViewFlow2.addSkinFactories(new FXSkinFactory(minimapPane4.getContentPane()));
     }
 
     private ScalableContentPane createMinimap(String title) {

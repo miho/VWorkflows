@@ -325,7 +325,7 @@ class VFlowImpl implements VFlow {
             return null;
         }
 
-        System.out.println(">> creating skins for node: " + n.getId());
+//        System.out.println(">> creating skins for node: " + n.getId());
 
         List<VNodeSkin<VNode>> skins = new ArrayList<>();
 
@@ -335,7 +335,7 @@ class VFlowImpl implements VFlow {
                 return null;
             }
 
-            System.out.println(" --> adding to skinfsctory: " + skinFactory);
+//            System.out.println(" --> adding to skinfsctory: " + skinFactory);
 
             VNodeSkin skin = skinFactory.createSkin(n, this);
 

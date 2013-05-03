@@ -177,6 +177,8 @@ public class MainWindowFXMLController implements Initializable {
             prevNode = n;
         }
     }
+    
+    
 
     private void updateUI() {
 

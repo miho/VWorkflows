@@ -1,0 +1,4 @@
+// include 'jfxtras-labs'
+// project(':jfxtras-labs').projectDir = new File(settingsDir, '../../jfxtras-lab')
+include 'VWorkflows-Core'
+project(':VWorkflows-Core').projectDir = new File(settingsDir, '../VWorkflows-Core')

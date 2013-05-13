@@ -10,8 +10,6 @@ task wrapper(type: Wrapper) {
 
 String javaVersion = System.getProperty("java.version")
 
-int jdk = 7;
-
 if (javaVersion.startsWith("1.7")) {
     jdk=7;
 } else if (javaVersion.startsWith("1.8")) {

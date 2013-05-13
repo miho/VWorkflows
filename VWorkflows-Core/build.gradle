@@ -5,7 +5,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.5'
+    gradleVersion = '1.6'
 }
 
 String javaVersion = System.getProperty("java.version")
@@ -22,10 +22,17 @@ if (javaVersion.startsWith("1.7")) {
     
 println(">> using jdk " + javaVersion)
 
+// finding jfxrt.jar for JDK 7
+String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib/";
+project.ext.set("javafx_jar", "$jreHome/jfxrt.jar")
 
 dependencies {
-    //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
+
     compile "com.thoughtworks.xstream:xstream:1.4.4"
+    
+    if (jdk==7) {
+         compile files(project.javafx_jar)
+    }
 
     // compile project('..:VRLInstrumentation')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])

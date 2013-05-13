@@ -1,10 +1,7 @@
-apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
+apply plugin: 'java'
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots"
-    }
 }
 
 task wrapper(type: Wrapper) {
@@ -29,11 +26,7 @@ println(">> using jdk " + javaVersion)
 dependencies {
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"
-    if (jdk == 7) {
-        compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
-    } else if (jdk == 8) {
-        compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
-    }
+
     // compile project('..:VRLInstrumentation')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
 }
@@ -56,10 +49,6 @@ sourceSets {
     }
 }
 
-javafx {
-    mainClass "eu.mihosoft.vrl.workflow.demo.Main"
-}
 
-jfxDeploy {
-    packaging = "image"
-}
+//    mainClass "eu.mihosoft.vrl.workflow.demo.Main"
+

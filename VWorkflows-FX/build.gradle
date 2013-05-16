@@ -15,7 +15,7 @@ task wrapper(type: Wrapper) {
 
 String javaVersion = System.getProperty("java.version")
 
-int jdk = 7;
+project.ext.set("jdk", 7)
 
 if (javaVersion.startsWith("1.7")) {
     jdk=7;

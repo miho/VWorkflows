@@ -18,9 +18,9 @@ String javaVersion = System.getProperty("java.version")
 project.ext.set("jdk", 7)
 
 if (javaVersion.startsWith("1.7")) {
-    jdk=7;
+    project.jdk=7;
 } else if (javaVersion.startsWith("1.8")) {
-    jdk=8;
+    project.jdk=8;
 } else {
     System.err.println("Unsupported JDK: " + javaVersion);
 }
@@ -31,9 +31,9 @@ println(">> using jdk " + javaVersion)
 dependencies {
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"
-    if (jdk == 7) {
+    if (project.jdk == 7) {
         compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
-    } else if (jdk == 8) {
+    } else if (project.jdk == 8) {
         compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     }
     compile project(':VWorkflows-Core')    
@@ -57,6 +57,14 @@ sourceSets {
         }
     }
 }
+
+compileJava {
+    options.fork=true
+    options.compilerArgs+="-Xlint:unchecked"
+}
+
+
+
 
 javafx {
     mainClass "eu.mihosoft.vrl.workflow.demo.Main"

@@ -34,4 +34,8 @@ public class FlowFactory {
         result.setId("ROOT");
         return result;
     }
+    
+    public static IdGenerator newIdGenerator() {
+        return new IdGeneratorImpl();
+    }
 }

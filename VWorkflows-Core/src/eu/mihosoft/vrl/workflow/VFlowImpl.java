@@ -536,7 +536,7 @@ class VFlowImpl implements VFlow {
     }
 
     @Override
-    public final void setSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
+    public final void setSkinFactories(SkinFactory... skinFactories) {
 
         removeSkinFactories(getSkinFactories());
 

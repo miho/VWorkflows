@@ -75,7 +75,8 @@ public interface VFlow {
 
     public Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> getSkinFactories();
 
-    public void addSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactory);
+    // Doesn't use Generics because generic arrays are not supported. GENERICS ARE CRAPPY!
+    public void addSkinFactories(SkinFactory... skinFactory);
 
     public void addSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
 

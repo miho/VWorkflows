@@ -554,9 +554,15 @@ class VFlowImpl implements VFlow {
      * @param nodeSkinFactory the nodeSkinFactory to set
      */
     @Override
-    public final void addSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
+    public final void addSkinFactories(SkinFactory... skinFactories) {
+        
+        Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> tmpList = new ArrayList<>();
+        
+        for(SkinFactory sF : skinFactories) {
+            tmpList.add(sF);
+        }
 
-        this.getSkinFactories().addAll(Arrays.asList(skinFactories));
+        this.getSkinFactories().addAll(tmpList);
 
         if (skinFactories.length > 0) {
 

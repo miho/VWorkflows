@@ -58,10 +58,10 @@ sourceSets {
     }
 }
 
-compileJava {
-    options.fork=true
-    options.compilerArgs+="-Xlint:unchecked"
-}
+//compileJava {
+//    options.fork=true
+//    options.compilerArgs+="-Xlint:unchecked"
+//}
 
 
 

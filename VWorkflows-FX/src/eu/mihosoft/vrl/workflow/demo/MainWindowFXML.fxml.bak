@@ -8,7 +8,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="386.0000999999975" prefWidth="574.0" xmlns:fx="http://javafx.com/fxml" fx:controller="eu.mihosoft.vrl.workflow.demo.MainWindowFXMLController">
   <children>
-    <StackPane fx:id="contentPane" prefHeight="359.0" prefWidth="574.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0" />
+    <StackPane fx:id="contentPane" prefHeight="359.0" prefWidth="574.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0" />
     <MenuBar minHeight="23.000099999997474" prefHeight="23.000099999997474" prefWidth="574.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <menus>
         <Menu mnemonicParsing="false" text="File">

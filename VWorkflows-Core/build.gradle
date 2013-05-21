@@ -23,16 +23,16 @@ if (javaVersion.startsWith("1.7")) {
 println(">> using jdk " + javaVersion)
 
 // finding jfxrt.jar for JDK 7
-String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib/";
+String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib";
 project.ext.set("javafx_jar", "$jreHome/jfxrt.jar")
 
 dependencies {
 
     compile "com.thoughtworks.xstream:xstream:1.4.4"
     
-    if (project.jdk==7) {
+//    if (project.jdk==7) {
          compile files(project.javafx_jar)
-    }
+//    }
 
     // compile project('..:VRLInstrumentation')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])

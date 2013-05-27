@@ -124,13 +124,13 @@ public class MainWindowFXMLController implements Initializable {
         if (depth < 1) {
             return;
         }
-        
+
         if ("4687".equals(workflow.getModel().getId())) {
             System.out.println("FLOW: " + workflow.getModel().getId());
             specialViewFlow1 = workflow;
         }
-        
-         if ("4688".equals(workflow.getModel().getId())) {
+
+        if ("4688".equals(workflow.getModel().getId())) {
             System.out.println("FLOW: " + workflow.getModel().getId());
             specialViewFlow2 = workflow;
         }
@@ -177,8 +177,6 @@ public class MainWindowFXMLController implements Initializable {
             prevNode = n;
         }
     }
-    
-    
 
     private void updateUI() {
 
@@ -197,12 +195,19 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),
                 new FXSkinFactory(minimapPane2.getContentPane()));
-        
+
         ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
         ScalableContentPane minimapPane4 = createMinimap("Minimap 4");
-        
-        specialViewFlow1.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
-        specialViewFlow2.addSkinFactories(new FXSkinFactory(minimapPane4.getContentPane()));
+
+        if (specialViewFlow1 != null) {
+            specialViewFlow1.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
+        }
+
+        if (specialViewFlow2 != null) {
+            specialViewFlow2.addSkinFactories(new FXSkinFactory(minimapPane4.getContentPane()));
+        }
+
+        workflow.newSubFlow();
     }
 
     private ScalableContentPane createMinimap(String title) {

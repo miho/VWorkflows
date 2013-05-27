@@ -89,8 +89,10 @@ class VFlowImpl implements VFlow {
                         for (VNode n : change.getAddedSubList()) {
 //                            if (!nodeSkins.containsKey(n.getId())) {
                             if (getNodeSkinsById(n.getId()).isEmpty()) {
-                                createNodeSkins(n);
-//                                System.out.println("add node: " + n.getId());
+                                createNodeSkins(n, skinFactories);
+//                                System.out.println("add node: " + n.getId() + ", title: " + n.getTitle());
+                            } else {
+//                                System.out.println("can't add node: " + n.getId() + ", title: " + n.getTitle());
                             }
                         }
                     }
@@ -132,7 +134,7 @@ class VFlowImpl implements VFlow {
             @Override
             public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
 
-                System.out.println("visible: " + t1 + " : " + getModel().isVisible() + " : " + getModel().getId());
+//                System.out.println("visible: " + t1 + " : " + getModel().isVisible() + " : " + getModel().getId());
 
                 if (t1) {
                     setSkinFactories(getSkinFactories());
@@ -328,11 +330,14 @@ class VFlowImpl implements VFlow {
 //        System.out.println(">> creating skins for node: " + n.getId());
 
         List<VNodeSkin<VNode>> skins = new ArrayList<>();
+        
+//        System.out.println(" --> #skinFactories: " + skinFactories.length);
 
         for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : skinFactories) {
 
             if (skinFactory == null) {
-                return null;
+                System.err.println("ERROR: skinFactory must not be null!");
+                continue;
             }
 
 //            System.out.println(" --> adding to skinfsctory: " + skinFactory);

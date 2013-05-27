@@ -45,6 +45,8 @@ public interface VFlow {
     public VNode remove(VNode n);
 
     public ObservableList<VNode> getNodes();
+    
+    public void clear();
 
     public VNode getSender(Connection c);
 

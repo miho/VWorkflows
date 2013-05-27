@@ -11,20 +11,21 @@ package eu.mihosoft.vrl.workflow;
 public class FlowFactory {
 
     public static VFlow newFlow() {
-        VFlow flow = new VFlowImpl();
 
         VFlowModel model = FlowFactory.newFlowModel();
-        flow.setModel(model);
+        
+        VFlow flow = new VFlowImpl(model);
 
         return flow;
     }
 
     public static VFlow newFlow(
             SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
-        VFlow flow = new VFlowImpl(skinFactory);
+        
 
         VFlowModel model = FlowFactory.newFlowModel();
-        flow.setModel(model);
+
+        VFlow flow = new VFlowImpl(model,skinFactory);
 
         return flow;
     }

@@ -42,16 +42,41 @@ class VFlowImpl implements VFlow {
     private NodeLookup nodeLookup;
     private FlowNodeSkinLookup nodeSkinLookup;
 
-    public VFlowImpl(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
-        setSkinFactories(skinFactories);
-
+    public VFlowImpl(VFlowModel model, SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
+        
+        
         init();
+        
+        if (model.getIdGenerator()!=null) {
+            setIdGenerator(model.getIdGenerator());
+        }
+        
+        if (model.getNodeLookup()!=null) {
+            setNodeLookup(model.getNodeLookup());
+        }
+        
+        setModel(model);
+        setSkinFactories(skinFactories);
+        
+        
+  
     }
 
-    public VFlowImpl(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories) {
-        setSkinFactories(skinFactories);
-
+    public VFlowImpl(VFlowModel model, Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories) {
         init();
+        
+        if (model.getIdGenerator()!=null) {
+            setIdGenerator(model.getIdGenerator());
+        }
+        
+        if (model.getNodeLookup()!=null) {
+            setNodeLookup(model.getNodeLookup());
+        }
+        
+        setModel(model);
+        setSkinFactories(skinFactories);
+        
+        
     }
 
     private void init() {
@@ -656,7 +681,7 @@ class VFlowImpl implements VFlow {
     }
 
     @Override
-    public void setModel(VFlowModel flow) {
+    public final void setModel(VFlowModel flow) {
         modelProperty.set(flow);
 
         for (VNode n : flow.getNodes()) {
@@ -694,12 +719,11 @@ class VFlowImpl implements VFlow {
 
         }
 
-        VFlow controller = new VFlowImpl(childFactories);
+        VFlow controller = new VFlowImpl(flowNode, childFactories);
 
         controller.setIdGenerator(getIdGenerator());
         controller.setNodeLookup(getNodeLookup());
         controller.setNodeSkinLookup(getNodeSkinLookup());
-        controller.setModel(flowNode);
 
 
         for (String connectionType : getAllConnections().keySet()) {
@@ -733,7 +757,7 @@ class VFlowImpl implements VFlow {
     }
 
     @Override
-    public void setIdGenerator(IdGenerator generator) {
+    public final void setIdGenerator(IdGenerator generator) {
         this.idGenerator = generator;
     }
 
@@ -754,7 +778,7 @@ class VFlowImpl implements VFlow {
      * @param nodeLookup the nodeLookup to set
      */
     @Override
-    public void setNodeLookup(NodeLookup nodeLookup) {
+    public final void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
     }
 
@@ -852,5 +876,10 @@ class VFlowImpl implements VFlow {
     @Override
     public ObservableList<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> getSkinFactories() {
         return skinFactories;
+    }
+
+    @Override
+    public void clear() {
+        getModel().clear();
     }
 }

@@ -72,6 +72,16 @@ class VFlowModelImpl implements VFlowModel {
     public ConnectionResult connect(VNode s, VNode r, String flowType) {
         return flow.connect(s, r, flowType);
     }
+    
+     @Override
+    public ConnectionResult tryConnect(Connector s, Connector r ){
+        return flow.tryConnect(s, r);
+    }
+
+    @Override
+    public ConnectionResult connect(Connector s, Connector r ){
+        return flow.connect(s, r);
+    }
 
     @Override
     public VNode remove(VNode n) {
@@ -224,8 +234,8 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public ObservableList<VNode> getChildren() {
-        return node.getChildren();
+    public Connector getConnector(String localId) {
+        return node.getConnector(localId);
     }
 
     @Override
@@ -365,6 +375,16 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public void setOutput(boolean state, String type) {
         this.node.setOutput(state, type);
+    }
+
+    @Override
+    public Connector getMainInput() {
+        return this.node.getMainInput();
+    }
+
+    @Override
+    public Connector getMainOutput() {
+        return this.node.getMainOutput();
     }
 }
 

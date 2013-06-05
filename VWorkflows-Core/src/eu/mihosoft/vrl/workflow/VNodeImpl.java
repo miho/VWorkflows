@@ -328,9 +328,9 @@ class VNodeImpl implements VNode {
     }
 
     @Override
-    public Connector getConnector(String id) {
+    public Connector getConnector(String localId) {
         for (Connector c : connectors) {
-            if (c.getLocalId().equals(id)) {
+            if (c.getLocalId().equals(localId)) {
                 return c;
             }
         }

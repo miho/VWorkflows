@@ -99,5 +99,5 @@ public interface VNode extends Model {
     public Connector getMainInput();
     public Connector getMainOutput();
     
-    public Connector getConnector(String id);
+    public Connector getConnector(String localId);
 }

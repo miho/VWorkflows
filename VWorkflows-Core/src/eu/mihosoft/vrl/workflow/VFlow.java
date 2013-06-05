@@ -25,6 +25,10 @@ public interface VFlow {
     public VFlowModel getModel();
 
     public ObjectProperty modelProperty();
+    
+    public ConnectionResult tryConnect(Connector s, Connector r);
+    
+    public ConnectionResult connect(Connector s, Connector r);
 
     public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
 

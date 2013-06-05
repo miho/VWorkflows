@@ -25,7 +25,9 @@ class VNodeImpl implements VNode {
 //            FXCollections.observableArrayList();
 //    private ObservableList<Connector<FlowNode>> outputs =
 //            FXCollections.observableArrayList();
-    private ObservableList<VNode> children =
+//    private ObservableList<VNode> children =
+//            FXCollections.observableArrayList();
+    private ObservableList<Connector> connectors =
             FXCollections.observableArrayList();
     private StringProperty idProperty = new SimpleStringProperty();
     private StringProperty titleProperty = new SimpleStringProperty();
@@ -195,10 +197,10 @@ class VNodeImpl implements VNode {
         return heightProperty.get();
     }
 
-    @Override
-    public ObservableList<VNode> getChildren() {
-        return children;
-    }
+//    @Override
+//    public ObservableList<VNode> getChildren() {
+//        return children;
+//    }
 
     @Override
     public ValueObject getValueObject() {
@@ -313,5 +315,26 @@ class VNodeImpl implements VNode {
     @Override
     public ObservableList<String> getOutputTypes() {
         return outputTypes;
+    }
+
+    @Override
+    public Connector getMainInput() {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public Connector getMainOutput() {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public Connector getConnector(String id) {
+        for (Connector c : connectors) {
+            if (c.getLocalId().equals(id)) {
+                return c;
+            }
+        }
+        
+        return null;
     }
 }

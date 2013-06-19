@@ -318,12 +318,12 @@ class VNodeImpl implements VNode {
     }
 
     @Override
-    public Connector getMainInput() {
+    public Connector getMainInput(String type) {
         throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
 
     @Override
-    public Connector getMainOutput() {
+    public Connector getMainOutput(String type) {
         throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
 

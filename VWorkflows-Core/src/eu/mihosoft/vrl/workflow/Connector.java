@@ -8,7 +8,7 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public interface Connector {
+public interface Connector extends Model{
 
     public String getType();
 
@@ -16,7 +16,7 @@ public interface Connector {
 
     public String getLocalId();
 
-    public void setId(String id);
+    public void setLocalId(String id);
 
     public VNode getNode();
 }

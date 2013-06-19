@@ -12,11 +12,11 @@ class ConnectorImpl implements Connector {
 
     private VNode node;
     private String type;
-    private String id;
+    private String localId;
 
-    public ConnectorImpl(VNode node, String type, String id) {
+    public ConnectorImpl(VNode node, String type, String localId) {
         this.type = type;
-        this.id = id;
+        this.localId = localId;
         this.node = node;
     }
 
@@ -27,17 +27,17 @@ class ConnectorImpl implements Connector {
 
     @Override
     public String getId() {
-        return this.node.getId() + ":" + this.id;
+        return this.node.getId() + ":" + this.localId;
     }
 
     @Override
     public String getLocalId() {
-        return this.id;
+        return this.localId;
     }
 
     @Override
-    public void setId(String id) {
-        this.id = id;
+    public void setLocalId(String id) {
+        this.localId = id;
     }
 
     @Override

@@ -378,13 +378,13 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public Connector getMainInput() {
-        return this.node.getMainInput();
+    public Connector getMainInput(String type) {
+        return this.node.getMainInput(type);
     }
 
     @Override
-    public Connector getMainOutput() {
-        return this.node.getMainOutput();
+    public Connector getMainOutput(String type) {
+        return this.node.getMainOutput(type);
     }
 }
 

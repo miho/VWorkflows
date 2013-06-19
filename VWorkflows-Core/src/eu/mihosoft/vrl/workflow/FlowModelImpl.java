@@ -88,6 +88,16 @@ public class FlowModelImpl implements FlowModel {
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
+    
+    @Override
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public ConnectionResult connect(Connector s, Connector r) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
 
     @Override
     public ObservableList<VNode> getNodes() {
@@ -238,4 +248,5 @@ public class FlowModelImpl implements FlowModel {
     public void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
     }
+
 }

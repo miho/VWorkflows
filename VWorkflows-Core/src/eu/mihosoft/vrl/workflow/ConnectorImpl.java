@@ -13,6 +13,7 @@ class ConnectorImpl implements Connector {
     private VNode node;
     private String type;
     private String localId;
+    private VisualizationRequest vRequest;
 
     public ConnectorImpl(VNode node, String type, String localId) {
         this.type = type;
@@ -43,5 +44,15 @@ class ConnectorImpl implements Connector {
     @Override
     public VNode getNode() {
         return this.node;
+    }
+
+    @Override
+    public VisualizationRequest getVisualizationRequest() {
+        return this.vRequest;
+    }
+
+    @Override
+    public void setVisualizationRequest(VisualizationRequest vReq) {
+        this.vRequest = vReq;
     }
 }

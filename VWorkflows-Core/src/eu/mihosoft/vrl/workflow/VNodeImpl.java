@@ -250,24 +250,44 @@ class VNodeImpl implements VNode {
         return flow;
     }
 
-    @Override
-    public void setOutput(boolean state, String type) {
-        if (state && !outputTypes.contains(type)) {
-            outputTypes.add(type);
-        } else if (!state) {
-            outputTypes.remove(type);
-        }
-    }
+//    @Override
+//    public void setOutput(boolean state, String type) {
+//        if (state && !outputTypes.contains(type)) {
+//            outputTypes.add(type);
+//        } else if (!state) {
+//            outputTypes.remove(type);
+//        }
+//    }
+//
+//    @Override
+//    public void setInput(boolean state, String type) {
+//        if (state && !inputTypes.contains(type)) {
+//            inputTypes.add(type);
+//        } else if (!state) {
+//            inputTypes.remove(type);
+//        }
+//    }
 
     @Override
-    public void setInput(boolean state, String type) {
-        if (state && !inputTypes.contains(type)) {
-            inputTypes.add(type);
-        } else if (!state) {
-            inputTypes.remove(type);
-        }
+    public int addInput(String type) {
+        throw new UnsupportedOperationException();
     }
-
+    
+    @Override
+    public int addOutput(String type) {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public int[] getInputs(String type) {
+         throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public int[] getOutputs(String type) {
+         throw new UnsupportedOperationException();
+    }
+    
     @Override
     public boolean isInputOfType(String type) {
         return inputTypes.contains(type);

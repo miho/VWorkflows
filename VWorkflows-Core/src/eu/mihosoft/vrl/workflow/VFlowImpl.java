@@ -832,14 +832,18 @@ class VFlowImpl implements VFlow {
         return getModel().isOutput();
     }
 
-    @Override
-    public void setInput(boolean state, String type) {
-        getModel().setInput(state, type);
-    }
-
-    @Override
-    public void setOutput(boolean state, String type) {
-        getModel().setOutput(state, type);
+//    @Override
+//    public void setInput(boolean state, String type) {
+//        getModel().setInput(state, type);
+//    }
+//
+//    @Override
+//    public void setOutput(boolean state, String type) {
+//        getModel().setOutput(state, type);
+//    }
+    
+    public int addInput(String type) {
+        throw new UnsupportedOperationException("unsupported");
     }
 
     @Override

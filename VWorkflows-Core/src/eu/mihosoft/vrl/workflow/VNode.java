@@ -88,11 +88,15 @@ public interface VNode extends Model {
 
     boolean isOutput();
 
-    void setInput(boolean state, String type);
+    int addInput(String type);
 
-    void setOutput(boolean state, String type);
+    int addOutput(String type);
 
     ObservableList<String> getInputTypes();
 
     ObservableList<String> getOutputTypes();
+    
+    int[] getInputs(String type);
+    int[] getOutputs(String type);
+    
 }

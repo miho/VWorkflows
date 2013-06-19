@@ -26,7 +26,7 @@ public interface VFlow {
 
     public ObjectProperty modelProperty();
 
-    public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
+    public ConnectionResult tryConnect(VNode s, int sId, VNode r, int rId, String flowType);
 
     public ConnectionResult connect(VNode s, VNode r, String flowType);
 
@@ -112,9 +112,11 @@ public interface VFlow {
 
     boolean isOutput();
 
-    void setInput(boolean state, String type);
-
-    void setOutput(boolean state, String type);
+//    void setInput(boolean state, String type);
+//
+//    void setOutput(boolean state, String type);
+    
+    
 
     ObservableList<String> getInputTypes();
 

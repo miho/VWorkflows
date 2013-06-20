@@ -13,7 +13,7 @@ import eu.mihosoft.vrl.workflow.VisualizationRequest;
  */
 public class PersistentConnector{
 
-    private PersistentNode node;
+//    private PersistentNode node;
     private String type;
     private String localId;
     private VisualizationRequest vRequest;
@@ -21,10 +21,10 @@ public class PersistentConnector{
     private boolean output;
     private ValueObject valueObject;
 
-    public PersistentConnector(PersistentNode node, String type, String localId, boolean input, boolean output) {
+    public PersistentConnector(String type, String localId, boolean input, boolean output) {
         this.type = type;
         this.localId = localId;
-        this.node = node;
+//        this.node = node;
         this.input = input;
         this.output = output;
     }
@@ -41,9 +41,9 @@ public class PersistentConnector{
         this.localId = id;
     }
 
-    public PersistentNode getNode() {
-        return this.node;
-    }
+//    public PersistentNode getNode() {
+//        return this.node;
+//    }
 
 
     public VisualizationRequest getVisualizationRequest() {
@@ -69,12 +69,12 @@ public class PersistentConnector{
         return output;
     }
 
-    /**
-     * @param node the node to set
-     */
-    public void setNode(PersistentNode node) {
-        this.node = node;
-    }
+//    /**
+//     * @param node the node to set
+//     */
+//    public void setNode(PersistentNode node) {
+//        this.node = node;
+//    }
 
     /**
      * @return the valueObject

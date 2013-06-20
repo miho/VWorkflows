@@ -62,6 +62,7 @@ public class WorkflowIO {
         xstream.alias("node", PersistentNode.class);
         xstream.alias("connection", PersistentConnection.class);
         xstream.alias("vobj", DefaultValueObject.class);
+        xstream.alias("connector", PersistentConnector.class);
 
 //        xstream.setMode(XStream.ID_REFERENCES);
     }
@@ -260,6 +261,6 @@ public class WorkflowIO {
      * @return the equivalent persistent connector to the specified connector
      */
     public static PersistentConnector toPersistentConnector(Connector c) {
-        return new PersistentConnector(null, c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+        return new PersistentConnector(c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
     }
 }

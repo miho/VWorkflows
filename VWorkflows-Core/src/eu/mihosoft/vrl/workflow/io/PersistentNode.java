@@ -180,7 +180,7 @@ public class PersistentNode {
      */
     public void addConnector(PersistentConnector connector ) {
 
-            connector.setNode(this);
+//            connector.setNode(this);
             
             connectors.add(connector);
     }

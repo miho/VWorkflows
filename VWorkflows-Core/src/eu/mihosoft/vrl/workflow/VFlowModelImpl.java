@@ -368,16 +368,6 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public void setInput(boolean state, String type) {
-        this.node.setInput(state, type);
-    }
-
-    @Override
-    public void setOutput(boolean state, String type) {
-        this.node.setOutput(state, type);
-    }
-
-    @Override
     public Connector getMainInput(String type) {
         return this.node.getMainInput(type);
     }
@@ -385,6 +375,21 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public Connector getMainOutput(String type) {
         return this.node.getMainOutput(type);
+    }
+
+    @Override
+    public Connector addInput(String type) {
+        return this.node.addInput(type);
+    }
+
+    @Override
+    public Connector addOutput(String type) {
+       return this.node.addOutput(type);
+    }
+
+    @Override
+    public Connector addConnector(Connector c) {
+        return this.node.addConnector(c);
     }
 }
 

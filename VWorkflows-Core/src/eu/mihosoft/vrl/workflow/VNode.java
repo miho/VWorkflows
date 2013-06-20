@@ -88,16 +88,21 @@ public interface VNode extends Model {
 
     boolean isOutput();
 
-    void setInput(boolean state, String type);
-
-    void setOutput(boolean state, String type);
+//    void setInput(boolean state, String type);
+//    void setOutput(boolean state, String type);
+    
+    public Connector addInput(String type);
+    public Connector addOutput(String type);
+    
+    public Connector addConnector(Connector c);
 
     ObservableList<String> getInputTypes();
-
     ObservableList<String> getOutputTypes();
     
     public Connector getMainInput(String type);
     public Connector getMainOutput(String type);
     
     public Connector getConnector(String localId);
+
+
 }

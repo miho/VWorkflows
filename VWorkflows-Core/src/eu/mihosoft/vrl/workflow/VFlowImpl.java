@@ -842,15 +842,7 @@ class VFlowImpl implements VFlow {
         return getModel().isOutput();
     }
 
-    @Override
-    public void setInput(boolean state, String type) {
-        getModel().setInput(state, type);
-    }
-
-    @Override
-    public void setOutput(boolean state, String type) {
-        getModel().setOutput(state, type);
-    }
+    
 
     @Override
     public ObservableList<String> getInputTypes() {
@@ -892,4 +884,16 @@ class VFlowImpl implements VFlow {
     public void clear() {
         getModel().clear();
     }
+
+    @Override
+    public Connector addInput(String type) {
+        return getModel().addInput(type);
+    }
+
+    @Override
+    public Connector addOutput(String type) {
+        return getModel().addOutput(type);
+    }
+
+    
 }

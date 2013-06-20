@@ -47,19 +47,18 @@ class VNodeImpl implements VNode {
     public VNodeImpl(VFlowModel flow) {
 
         this.flow = flow;
-        
+
         setWidth(200);
         setHeight(150);
-        
+
         setTitle("Node");
 
         setValueObject(new DefaultValueObject(this));
-        
-        valueObjectProperty.addListener(new ChangeListener<ValueObject>() {
 
+        valueObjectProperty.addListener(new ChangeListener<ValueObject>() {
             @Override
             public void changed(ObservableValue<? extends ValueObject> ov, ValueObject t, ValueObject t1) {
-                if (t1!=null) {
+                if (t1 != null) {
                     t1.setParent(VNodeImpl.this);
                 }
             }
@@ -201,7 +200,6 @@ class VNodeImpl implements VNode {
 //    public ObservableList<VNode> getChildren() {
 //        return children;
 //    }
-
     @Override
     public ValueObject getValueObject() {
         return valueObjectProperty.get();
@@ -252,22 +250,36 @@ class VNodeImpl implements VNode {
         return flow;
     }
 
+//    @Override
+//    public void setOutput(boolean state, String type) {
+//        if (state && !outputTypes.contains(type)) {
+//            outputTypes.add(type);
+//        } else if (!state) {
+//            outputTypes.remove(type);
+//        }
+//    }
+//
+//    @Override
+//    public void setInput(boolean state, String type) {
+//        if (state && !inputTypes.contains(type)) {
+//            inputTypes.add(type);
+//        } else if (!state) {
+//            inputTypes.remove(type);
+//        }
+//    }
     @Override
-    public void setOutput(boolean state, String type) {
-        if (state && !outputTypes.contains(type)) {
-            outputTypes.add(type);
-        } else if (!state) {
-            outputTypes.remove(type);
-        }
+    public Connector addInput(String type) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
 
     @Override
-    public void setInput(boolean state, String type) {
-        if (state && !inputTypes.contains(type)) {
-            inputTypes.add(type);
-        } else if (!state) {
-            inputTypes.remove(type);
-        }
+    public Connector addOutput(String type) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public Connector addConnector(Connector c) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
 
     @Override
@@ -334,7 +346,7 @@ class VNodeImpl implements VNode {
                 return c;
             }
         }
-        
+
         return null;
     }
 }

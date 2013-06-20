@@ -116,9 +116,9 @@ public interface VFlow {
 
     boolean isOutput();
 
-    void setInput(boolean state, String type);
+    Connector addInput(String type);
 
-    void setOutput(boolean state, String type);
+    Connector addOutput(String type);
 
     ObservableList<String> getInputTypes();
 

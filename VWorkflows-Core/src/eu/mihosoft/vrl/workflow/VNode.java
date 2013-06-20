@@ -69,7 +69,6 @@ public interface VNode extends Model {
     public double getHeight();
 
 //    public ObservableList<VNode> getChildren();
-
 //    public ObservableList<Connector<FlowNode>> getInputs();
 //    public ObservableList<Connector<FlowNode>> getOutputs();
     public void setValueObject(ValueObject obj);
@@ -90,19 +89,21 @@ public interface VNode extends Model {
 
 //    void setInput(boolean state, String type);
 //    void setOutput(boolean state, String type);
-    
     public Connector addInput(String type);
+
     public Connector addOutput(String type);
-    
+
     public Connector addConnector(Connector c);
 
     ObservableList<String> getInputTypes();
+
     ObservableList<String> getOutputTypes();
-    
+
     public Connector getMainInput(String type);
+
     public Connector getMainOutput(String type);
-    
+
     public Connector getConnector(String localId);
 
-
+    public ObservableList<Connector> getConnectors();
 }

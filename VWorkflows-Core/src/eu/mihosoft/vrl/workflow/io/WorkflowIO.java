@@ -5,6 +5,7 @@
 package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.FlowFactory;
@@ -114,7 +115,11 @@ public class WorkflowIO {
                     node.getValueObject(),
                     flow.isVisible(),
                     node.getVisualizationRequest(),
-                    node.getInputTypes(), node.getOutputTypes());
+                    new ArrayList<PersistentConnector>());
+
+            for (Connector c : node.getConnectors()) {
+                pFlow.addConnector(toPersistentConnector(c));
+            }
 
             for (VNode n : flow.getNodes()) {
                 nodeList.add(toPersistentNode(n, pFlow));
@@ -122,7 +127,7 @@ public class WorkflowIO {
 
             return pFlow;
         } else {
-            return new PersistentNode(node.getId(),
+            PersistentNode pNode = new PersistentNode(node.getId(),
                     node.getTitle(),
                     node.getX(),
                     node.getY(),
@@ -130,7 +135,13 @@ public class WorkflowIO {
                     node.getHeight(),
                     node.getValueObject(),
                     node.getVisualizationRequest(),
-                    node.getInputTypes(), node.getOutputTypes());
+                    new ArrayList<PersistentConnector>());
+
+            for (Connector c : node.getConnectors()) {
+                pNode.addConnector(toPersistentConnector(c));
+            }
+
+            return pNode;
         }
     }
 
@@ -162,12 +173,12 @@ public class WorkflowIO {
         result.setVisible(flow.isVisible());
         result.setVisualizationRequest(flow.getVReq());
 
-        for (String input : flow.getInputTypes()) {
-            result.setInput(true, input);
+        for (PersistentNode n : flow.getNodes()) {
+            addFlowNode(result, n, generator);
         }
 
-        for (String output : flow.getOutputTypes()) {
-            result.setOutput(true, output);
+        for (PersistentConnector input : flow.getConnectors()) {
+            result.addConnector(fromPersistentConnector(input, parent));
         }
 
         Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();
@@ -185,9 +196,7 @@ public class WorkflowIO {
             result.addConnections(fromPersistentConnections(type, connections), type);
         }
 
-        for (PersistentNode n : flow.getNodes()) {
-            addFlowNode(result, n, generator);
-        }
+
 
         return result;
     }
@@ -208,12 +217,8 @@ public class WorkflowIO {
             result.setValueObject(node.getValueObject());
             result.setVisualizationRequest(node.getVReq());
 
-            for (String input : node.getInputTypes()) {
-                result.setInput(true, input);
-            }
-
-            for (String output : node.getOutputTypes()) {
-                result.setOutput(true, output);
+            for (PersistentConnector c : node.getConnectors()) {
+                result.addConnector(fromPersistentConnector(c, result));
             }
         }
     }
@@ -236,5 +241,25 @@ public class WorkflowIO {
         List<T> result = new ArrayList<>();
         result.addAll(input);
         return result;
+    }
+
+    public static Connector fromPersistentConnector(PersistentConnector c, VNode n) {
+
+        ConnectorIOImpl result =
+                new ConnectorIOImpl(n, c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+
+        return result;
+    }
+
+    /**
+     * Converts a connector to an equivalent persistent connector.
+     * <b>Note:</b> the corresponding node won't be defined. If the persistent
+     * connector is added to the persistent node, the node will call the connectors
+     * <code>setNode()</code> method to ensure the correct node is referenced.
+     * @param c connector to convert
+     * @return the equivalent persistent connector to the specified connector
+     */
+    public static PersistentConnector toPersistentConnector(Connector c) {
+        return new PersistentConnector(null, c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
     }
 }

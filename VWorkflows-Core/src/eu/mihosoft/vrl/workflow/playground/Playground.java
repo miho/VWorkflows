@@ -33,17 +33,18 @@ public class Playground {
 
         VNode n2 = flow.newNode();
 
-        Connector c3 = n.addInput("control"); // returns 
+        Connector c3 = n2.addInput("control"); // returns 
+        Connector c4 = n2.addOutput("control"); // returns 
 
-        ConnectionResult result = flow.connect(c1, c3);
+        ConnectionResult result = flow.connect(c2, c4);
         
-        ConnectionResult result2 = flow.tryConnect(c1, c3);
+//        ConnectionResult result2 = flow.tryConnect(c1, c3);
         
         if (!result.getStatus().isCompatible()) {
             System.out.println("ERROR:" + result.getStatus().getMessage());
         }
         
-        flow.connect(n,n2,"event").getStatus().getMessage()
+//        flow.connect(n,n2,"event").getStatus().getMessage();
 
 
         // the node should look like this:

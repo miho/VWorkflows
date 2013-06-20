@@ -41,6 +41,7 @@ class VNodeImpl implements VNode {
     private VFlowModel flow;
     private ObservableList<String> inputTypes = FXCollections.observableArrayList();
     private ObservableList<String> outputTypes = FXCollections.observableArrayList();
+    private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
 
 //     private ObjectProperty<Skin> skinProperty =
 //            new SimpleObjectProperty<>();
@@ -269,17 +270,26 @@ class VNodeImpl implements VNode {
 //    }
     @Override
     public Connector addInput(String type) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        Connector c = new ConnectorImpl(
+                this, type, connectorIdGenerator.newId(), true);
+        connectors.add(c);
+        return c;
     }
 
     @Override
     public Connector addOutput(String type) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        Connector c = new ConnectorImpl(
+                this, type, connectorIdGenerator.newId(), false);
+        connectors.add(c);
+        return c;
     }
 
     @Override
     public Connector addConnector(Connector c) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        connectorIdGenerator.addId(c.getLocalId());
+        Connector result = new ConnectorImpl(c);
+        connectors.add(result);
+        return result;
     }
 
     @Override
@@ -348,5 +358,10 @@ class VNodeImpl implements VNode {
         }
 
         return null;
+    }
+
+    @Override
+    public ObservableList<Connector> getConnectors() {
+        return this.connectors;
     }
 }

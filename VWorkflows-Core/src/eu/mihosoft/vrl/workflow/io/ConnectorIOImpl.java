@@ -2,16 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.io;
 
+import eu.mihosoft.vrl.workflow.*;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class ConnectorImpl implements Connector {
+class ConnectorIOImpl implements Connector {
 
     private VNode node;
     private String type;
@@ -19,19 +19,19 @@ class ConnectorImpl implements Connector {
     private VisualizationRequest vRequest;
     private boolean input;
     private boolean output;
-    private ObjectProperty<ValueObject> valueObjectProperty = new SimpleObjectProperty<>();
+    private ValueObject vObj;
 
-    public ConnectorImpl(VNode node, String type, String localId, boolean input) {
+    public ConnectorIOImpl(VNode node, String type, String localId, boolean input, boolean output) {
         this.type = type;
         this.localId = localId;
         this.node = node;
         this.input = input;
-        this.output = !input;
-        setValueObject(new DefaultConnectorValueObject(this));
+        this.output = output;
     }
     
-    public ConnectorImpl(Connector c) {
-        this(c.getNode(), c.getType(), c.getLocalId(), c.isInput());
+    public ConnectorIOImpl(Connector c) {
+        this(c.getNode(), c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+        this.vObj = c.getValueObject();
     }
 
     @Override
@@ -86,17 +86,17 @@ class ConnectorImpl implements Connector {
     }
 
     @Override
-    public void setValueObject(ValueObject vObj) {
-        valueObjectProperty().set(vObj);
+    public void setValueObject(ValueObject obj) {
+        this.vObj = obj;
     }
 
     @Override
     public ValueObject getValueObject() {
-        return valueObjectProperty().get();
+        return vObj;
     }
 
     @Override
     public ObjectProperty<ValueObject> valueObjectProperty() {
-        return this.valueObjectProperty;
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
 }

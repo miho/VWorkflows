@@ -32,10 +32,11 @@ public class PersistentFlow extends PersistentNode {
             List<PersistentConnection> connections, List<PersistentNode> nodes, String title,
             double x, double y, double width, double height,
             ValueObject valueObject, boolean visible, VisualizationRequest vReq,
-            List<String> inputTypes, List<String> outputTypes) {
+            List<PersistentConnector> connectors) {
 
         super(id, title, x, y, width, height, valueObject, vReq,
-                inputTypes, outputTypes);
+                connectors);
+        
         this.connectionTypes = connectionTypes;
         this.connections = connections;
         this.nodes = nodes;

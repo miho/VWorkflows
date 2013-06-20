@@ -391,5 +391,10 @@ class VFlowModelImpl implements VFlowModel {
     public Connector addConnector(Connector c) {
         return this.node.addConnector(c);
     }
+
+    @Override
+    public ObservableList<Connector> getConnectors() {
+        return this.node.getConnectors();
+    }
 }
 

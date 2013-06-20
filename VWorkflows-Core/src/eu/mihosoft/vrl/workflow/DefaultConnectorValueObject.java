@@ -10,20 +10,26 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class DefaultValueObject implements ValueObject {
+public class DefaultConnectorValueObject implements ValueObject {
 
     private transient VNode parent;
+    private transient Connector c;
 
-    public DefaultValueObject() {
+    public DefaultConnectorValueObject() {
     }
 
-    public DefaultValueObject(VNode parent) {
-        this.parent = parent;
+    public DefaultConnectorValueObject(Connector c) {
+        this.c = c;
+        this.parent = c.getNode();
     }
 
     @Override
     public VNode getParent() {
         return parent;
+    }
+
+    public Connector getConnector() {
+        return c;
     }
 
     @Override
@@ -46,16 +52,32 @@ public class DefaultValueObject implements ValueObject {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {
-                boolean differentObjects = sender != DefaultValueObject.this;
-                boolean compatibleType = getParent().isInputOfType(flowType)
-                        && sender.getParent().isOutputOfType(flowType);
+//                System.out.println(" -> isCompatible: ");
+                boolean differentObjects = sender != DefaultConnectorValueObject.this;
 
+                boolean compatibleType = false;
+
+                if (sender instanceof DefaultConnectorValueObject) {
+                    DefaultConnectorValueObject senderConnectorVObj = (DefaultConnectorValueObject) sender;
+                    compatibleType = getConnector().getType().equals(senderConnectorVObj.getConnector().getType())
+                            && getConnector().isInput() && senderConnectorVObj.getConnector().isOutput();
+                }
+
+//                System.out.println("differentObj: " + differentObjects + ", compatibleTypes " + compatibleType);
+                
                 return differentObjects && compatibleType;
             }
 
             @Override
             public String getMessage() {
-                return "incompatible: " + sender.getParent().getId()  + " -> " +  getParent().getId();
+                
+                String senderId = sender.getParent() + ":undefined";
+                
+                if (sender instanceof DefaultConnectorValueObject) {
+                    senderId = ((DefaultConnectorValueObject)sender).getConnector().getId();
+                }
+                
+                return "incompatible: " + senderId + " -> " + getConnector().getId();
             }
 
             @Override

@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import java.util.List;
@@ -22,8 +23,7 @@ public class PersistentNode {
     private ValueObject valueObject;
     private VisualizationRequest vReq;
     private String id;
-    private List<String> inputTypes;
-    private List<String> outputTypes;
+    private List<PersistentConnector> connectors;
 
     public PersistentNode() {
     }
@@ -31,7 +31,7 @@ public class PersistentNode {
     public PersistentNode(String id, String title,
             double x, double y, double width, double height,
             ValueObject valueObject, VisualizationRequest vReq,
-            List<String> inputTypes, List<String> outputTypes) {
+            List<PersistentConnector> connectors) {
 
         this.x = x;
         this.y = y;
@@ -41,8 +41,7 @@ public class PersistentNode {
         this.valueObject = valueObject;
         this.vReq = vReq;
         this.id = id;
-        this.inputTypes = WorkflowIO.listToSerializableList(inputTypes);
-        this.outputTypes = WorkflowIO.listToSerializableList(outputTypes);
+        this.connectors = WorkflowIO.listToSerializableList(connectors);
     }
     
     
@@ -162,28 +161,27 @@ public class PersistentNode {
     /**
      * @return the inputTypes
      */
-    public List<String> getInputTypes() {
-        return inputTypes;
+    public List<PersistentConnector> getConnectors() {
+        return connectors;
     }
 
     /**
-     * @param inputTypes the inputTypes to set
+     * @param connectors the inputTypes to set
      */
-    public void setInputTypes(List<String> inputTypes) {
-        this.inputTypes = inputTypes;
+    public void setConnectors(List<PersistentConnector> connectors) {
+        
+        for (PersistentConnector persistentConnector : connectors) {
+            addConnector(persistentConnector);
+        }
     }
-
-    /**
-     * @return the outputTypes
+    
+        /**
+     * @param connectors the inputTypes to set
      */
-    public List<String> getOutputTypes() {
-        return outputTypes;
-    }
+    public void addConnector(PersistentConnector connector ) {
 
-    /**
-     * @param outputTypes the outputTypes to set
-     */
-    public void setOutputTypes(List<String> outputTypes) {
-        this.outputTypes = outputTypes;
+            connector.setNode(this);
+            
+            connectors.add(connector);
     }
 }

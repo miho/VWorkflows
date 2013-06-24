@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -13,6 +14,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
@@ -21,14 +23,16 @@ import javafx.collections.ObservableList;
  */
 class VNodeImpl implements VNode {
 
-//    private ObservableList<Connector<FlowNode>> inputs =
-//            FXCollections.observableArrayList();
-//    private ObservableList<Connector<FlowNode>> outputs =
-//            FXCollections.observableArrayList();
-//    private ObservableList<VNode> children =
-//            FXCollections.observableArrayList();
     private ObservableList<Connector> connectors =
             FXCollections.observableArrayList();
+    private ObservableList<Connector> inputs =
+            FXCollections.observableArrayList();
+    private ObservableList<Connector> outputs =
+            FXCollections.observableArrayList();
+    private ObservableList<Connector> unmodifiableInputs =
+            FXCollections.unmodifiableObservableList(inputs);
+    private ObservableList<Connector> unmodifiableOutputs =
+            FXCollections.unmodifiableObservableList(outputs);
     private StringProperty idProperty = new SimpleStringProperty();
     private StringProperty titleProperty = new SimpleStringProperty();
     private DoubleProperty xProperty = new SimpleDoubleProperty();
@@ -43,8 +47,6 @@ class VNodeImpl implements VNode {
     private ObservableList<String> outputTypes = FXCollections.observableArrayList();
     private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
 
-//     private ObjectProperty<Skin> skinProperty =
-//            new SimpleObjectProperty<>();
     public VNodeImpl(VFlowModel flow) {
 
         this.flow = flow;
@@ -65,29 +67,50 @@ class VNodeImpl implements VNode {
             }
         });
 
-//        inputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
-//            @Override
-//            public void onChanged(Change<? extends Connector<FlowNode>> change) {
-//                while (change.next()) {
-//                    if (change.wasPermutated()) {
-//                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
-//                            //permutate
-//                        }
-//                    } else if (change.wasUpdated()) {
-//                        //update item
-//                    } else {
-//                        if (change.wasRemoved()) {
-//                            for (Connector<FlowNode> connector : change.getRemoved()) {
-//                                //
-//                            }
-//                        } else if (change.wasAdded()) {
-//                            for (Connector<FlowNode> connector : change.getAddedSubList()) {
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
+        connectors.addListener(new ListChangeListener<Connector>() {
+            @Override
+            public void onChanged(Change<? extends Connector> change) {
+                while (change.next()) {
+                    if (change.wasPermutated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            //permutate
+                        }
+                    } else if (change.wasUpdated()) {
+                        //update item
+                    } else {
+                        if (change.wasRemoved()) {
+                            for (Connector connector : change.getRemoved()) {
+                                if (connector.isInput()) {
+                                    inputs.remove(connector);
+                                }
+
+                                if (connector.isOutput()) {
+                                    outputs.remove(connector);
+                                }
+                                connectorIdGenerator.getIds().remove(connector.getId());
+                            }
+                        } else if (change.wasAdded()) {
+                            for (Connector connector : change.getAddedSubList()) {
+                                if (connector.isInput()) {
+                                    inputs.add(connector);
+//                                    System.out.println("added input:" + unmodifiableInputs.size());
+                                }
+
+                                if (connector.isOutput()) {
+                                    outputs.add(connector);
+//                                    System.out.println("added output:" + unmodifiableOutputs.size());
+                                }
+
+                                connector.setLocalId(connectorIdGenerator.newId());
+
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+
 //
 //        outputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
 //            @Override
@@ -271,7 +294,7 @@ class VNodeImpl implements VNode {
     @Override
     public Connector addInput(String type) {
         Connector c = new ConnectorImpl(
-                this, type, connectorIdGenerator.newId(), true);
+                this, type, null, true);
         connectors.add(c);
         return c;
     }
@@ -279,16 +302,25 @@ class VNodeImpl implements VNode {
     @Override
     public Connector addOutput(String type) {
         Connector c = new ConnectorImpl(
-                this, type, connectorIdGenerator.newId(), false);
+                this, type, null, false);
         connectors.add(c);
         return c;
     }
 
     @Override
     public Connector addConnector(Connector c) {
-        connectorIdGenerator.addId(c.getLocalId());
+        String localId = c.getLocalId();
+
+        if (connectorIdGenerator.getIds().contains(localId)) {
+            throw new IllegalArgumentException(
+                    "Cannot add connector: id \"" + localId + "\" already in use");
+        }
+
         Connector result = new ConnectorImpl(c);
         connectors.add(result);
+
+        connectorIdGenerator.addId(localId);
+
         return result;
     }
 
@@ -363,5 +395,15 @@ class VNodeImpl implements VNode {
     @Override
     public ObservableList<Connector> getConnectors() {
         return this.connectors;
+    }
+
+    @Override
+    public ObservableList<Connector> getInputs() {
+        return this.unmodifiableInputs;
+    }
+
+    @Override
+    public ObservableList<Connector> getOutputs() {
+        return this.unmodifiableOutputs;
     }
 }

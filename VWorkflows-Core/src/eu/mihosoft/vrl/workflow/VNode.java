@@ -106,4 +106,7 @@ public interface VNode extends Model {
     public Connector getConnector(String localId);
 
     public ObservableList<Connector> getConnectors();
+    
+    public ObservableList<Connector> getInputs();
+    public ObservableList<Connector> getOutputs();
 }

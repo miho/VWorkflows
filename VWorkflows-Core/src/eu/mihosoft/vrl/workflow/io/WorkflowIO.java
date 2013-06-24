@@ -179,7 +179,7 @@ public class WorkflowIO {
         }
 
         for (PersistentConnector input : flow.getConnectors()) {
-            result.addConnector(fromPersistentConnector(input, parent));
+            result.addConnector(fromPersistentConnector(input, result));
         }
 
         Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();

@@ -83,7 +83,7 @@ public class VFlowTest {
 
         String[] connectionTypes = {"control", "data", "event", "inheritance"};
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             VNode n = flow.newNode();
 
             String type = connectionTypes[i % connectionTypes.length];

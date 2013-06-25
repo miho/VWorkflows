@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import javafx.beans.property.ObjectProperty;
@@ -12,9 +13,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.CacheHint;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
@@ -38,7 +42,7 @@ public class FlowNodeWindow extends Window {
         getLeftIcons().add(new MinimizeIcon(this));
 
         setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
-        
+
 //        setStyle("-fx-background-color: rgb(120,140,255);-fx-border-color: rgb(255,255,255);-fx-border-width: 2;");
 
         OptimizableContentPane parentContent = new OptimizableContentPane();
@@ -52,8 +56,31 @@ public class FlowNodeWindow extends Window {
 
         super.setContentPane(parentContent);
         addCollapseIcon(skin);
-        
+
 //        addSelectionRectangle(skin, root);
+
+
+    }
+
+    private void showFlowInWindow(VFlow flow, Stage stage, String title) {
+
+        // create scalable root pane
+        jfxtras.labs.scene.layout.ScalableContentPane canvas = new jfxtras.labs.scene.layout.ScalableContentPane();
+
+        // define background style
+        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
+
+        // create skin factory for flow visualization
+        FXSkinFactory fXSkinFactory = new FXSkinFactory(canvas.getContentPane());
+
+        // generate the ui for the flow
+        flow.addSkinFactories(fXSkinFactory);
+
+        // the usual application setup
+        Scene scene = new Scene(canvas, 800, 800);
+        stage.setTitle(title);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public Pane getWorkflowContentPane() {
@@ -106,6 +133,36 @@ public class FlowNodeWindow extends Window {
                 }
             });
         }
+
+
+        // adds an icon that opens a new view in a separate window
+
+        final WindowIcon newViewIcon = new WindowIcon();
+
+        newViewIcon.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                FXFlowNodeSkin skin = nodeSkinProperty.get();
+
+                if (skin != null) {
+
+                    Stage stage = new Stage();
+                    stage.setWidth(400);
+                    stage.setHeight(300);
+
+                    String nodeId = skin.getModel().getId();
+
+                    for (VFlow vf : skin.getController().getSubControllers()) {
+                        if (vf.getModel().getId().equals(nodeId)) {
+                            showFlowInWindow(vf, stage, getTitle());
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        getLeftIcons().add(newViewIcon);
 
     }
 

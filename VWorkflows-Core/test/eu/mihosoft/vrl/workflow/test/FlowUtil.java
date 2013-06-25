@@ -6,6 +6,8 @@ package eu.mihosoft.vrl.workflow.test;
 
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -26,6 +28,10 @@ public class FlowUtil {
         if (depth < 1) {
             return;
         }
+
+        String[] connectionTypes = {"control", "data", "event"};
+
+        List<VNode> prevNodes = new ArrayList<>();
 
         // create nodes in current layer
         for (int i = 0; i < width; i++) {
@@ -48,16 +54,10 @@ public class FlowUtil {
             // every third node shall have the same connection type
             // colors for "control", "data" and "event" are currently hardcoded
             // in skin. This will change!
-            if (i % 3 == 0) {
-                n.addInput("control");
-                n.addOutput("control");
-            } else if (i % 3 == 1) {
-                n.addInput("data");
-                n.addOutput("data");
-            } else if (i % 3 == 2) {
-                n.addInput("event");
-                n.addOutput("event");
-            }
+            String type = connectionTypes[i % connectionTypes.length];
+
+            n.addInput(type);
+            n.addOutput(type);
 
             // specify node size
             n.setWidth(300);
@@ -72,6 +72,15 @@ public class FlowUtil {
             n.setX(gap + (i % numNodesPerRow) * (n.getWidth() + gap));
             n.setY(gap + (i / numNodesPerRow) * (n.getHeight() + gap));
 
+            if (i >= connectionTypes.length) {
+
+                workflow.connect(prevNodes.get(0).getOutputs().get(0),
+                        n.getInputs().get(0));
+
+                prevNodes.remove(0);
+            }
+
+            prevNodes.add(n);
         }
     }
 }

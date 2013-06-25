@@ -4,6 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.Objects;
+
 
 /**
  *
@@ -125,4 +127,41 @@ class ConnectionBase implements Connection {
         return type;
     }
 
+
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + Objects.hashCode(this.senderId);
+        hash = 37 * hash + Objects.hashCode(this.receiverId);
+        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 37 * hash + Objects.hashCode(this.type);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ConnectionBase other = (ConnectionBase) obj;
+        if (!Objects.equals(this.senderId, other.senderId)) {
+            return false;
+        }
+        if (!Objects.equals(this.receiverId, other.receiverId)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        return true;
+    }
+
+    
 }

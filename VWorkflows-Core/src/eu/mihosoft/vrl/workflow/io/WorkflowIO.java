@@ -105,7 +105,6 @@ public class WorkflowIO {
 
             PersistentFlow pFlow = new PersistentFlow(parent,
                     node.getId(),
-                    connectionTypes,
                     connectionList,
                     nodeList,
                     node.getTitle(),
@@ -184,19 +183,22 @@ public class WorkflowIO {
 
         Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();
 
-        for (String type : flow.getConnectionTypes()) {
-            flowConnections.put(type, new ArrayList<PersistentConnection>());
-        }
-
         for (PersistentConnection c : flow.getConnections()) {
-            flowConnections.get(c.getType()).add(c);
+            List<PersistentConnection> connectionsOfType = flowConnections.get(c.getType());
+
+            if (connectionsOfType == null) {
+                connectionsOfType = new ArrayList<>();
+                flowConnections.put(c.getType(), connectionsOfType);
+            }
+            connectionsOfType.add(c);
         }
 
         for (String type : flowConnections.keySet()) {
             List<PersistentConnection> connections = flowConnections.get(type);
-            result.addConnections(fromPersistentConnections(type, connections), type);
+            if (!connections.isEmpty()) {
+                result.addConnections(fromPersistentConnections(type, connections), type);
+            }
         }
-
 
 
         return result;
@@ -224,10 +226,9 @@ public class WorkflowIO {
         }
     }
 
-    public static PersistentConnection toPersistentConnection(eu.mihosoft.vrl.workflow.Connection c) {
-        return new PersistentConnection(c.getId(), c.getSenderId(), c.getReceiverId(), c.getType(), c.getVisualizationRequest());
-    }
-
+//    public static PersistentConnection toPersistentConnection(eu.mihosoft.vrl.workflow.Connection c) {
+//        return new PersistentConnection(c.getId(), c.getSenderId(), c.getReceiverId(), c.getType(), c.getVisualizationRequest());
+//    }
     public static eu.mihosoft.vrl.workflow.Connections fromPersistentConnections(String connectionType, List<PersistentConnection> connections) {
         eu.mihosoft.vrl.workflow.Connections result = VConnections.newConnections(connectionType);
 
@@ -255,8 +256,10 @@ public class WorkflowIO {
     /**
      * Converts a connector to an equivalent persistent connector.
      * <b>Note:</b> the corresponding node won't be defined. If the persistent
-     * connector is added to the persistent node, the node will call the connectors
+     * connector is added to the persistent node, the node will call the
+     * connectors
      * <code>setNode()</code> method to ensure the correct node is referenced.
+     *
      * @param c connector to convert
      * @return the equivalent persistent connector to the specified connector
      */

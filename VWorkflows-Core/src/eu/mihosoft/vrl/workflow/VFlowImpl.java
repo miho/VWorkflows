@@ -311,6 +311,7 @@ class VFlowImpl implements VFlow {
         return getModel().remove(n);
     }
 
+    @Override
     public ObservableMap<String, Connections> getAllConnections() {
         return getModel().getAllConnections();
     }

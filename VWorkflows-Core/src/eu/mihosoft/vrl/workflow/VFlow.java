@@ -9,6 +9,7 @@ import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  *
@@ -59,6 +60,7 @@ public interface VFlow {
     public void addConnections(Connections connections, String flowType);
 
     public Connections getConnections(String flowType);
+    public ObservableMap<String, Connections> getAllConnections();
 
     public void setFlowNodeClass(Class<? extends VNode> cls);
 

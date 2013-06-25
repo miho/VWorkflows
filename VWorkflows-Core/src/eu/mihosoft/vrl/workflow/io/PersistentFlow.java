@@ -16,7 +16,7 @@ public class PersistentFlow extends PersistentNode {
 
     private List<PersistentConnection> connections;
     private List<PersistentNode> nodes;
-    private List<String> connectionTypes;
+//    private List<String> connectionTypes;
     private PersistentFlow parent;
     private boolean visible;
 
@@ -28,7 +28,7 @@ public class PersistentFlow extends PersistentNode {
         this.nodes = nodes;
     }
 
-    public PersistentFlow(PersistentFlow parent, String id, List<String> connectionTypes,
+    public PersistentFlow(PersistentFlow parent, String id,
             List<PersistentConnection> connections, List<PersistentNode> nodes, String title,
             double x, double y, double width, double height,
             ValueObject valueObject, boolean visible, VisualizationRequest vReq,
@@ -36,8 +36,6 @@ public class PersistentFlow extends PersistentNode {
 
         super(id, title, x, y, width, height, valueObject, vReq,
                 connectors);
-        
-        this.connectionTypes = connectionTypes;
         this.connections = connections;
         this.nodes = nodes;
         this.parent = parent;
@@ -70,20 +68,6 @@ public class PersistentFlow extends PersistentNode {
      */
     public void setNodes(List<PersistentNode> nodes) {
         this.nodes = nodes;
-    }
-
-    /**
-     * @return the connectionTypes
-     */
-    public List<String> getConnectionTypes() {
-        return connectionTypes;
-    }
-
-    /**
-     * @param connectionTypes the connectionTypes to set
-     */
-    public void setConnectionTypes(List<String> connectionTypes) {
-        this.connectionTypes = connectionTypes;
     }
 
     /**

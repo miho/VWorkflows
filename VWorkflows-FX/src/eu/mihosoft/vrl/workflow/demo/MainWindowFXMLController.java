@@ -134,8 +134,8 @@ public class MainWindowFXMLController implements Initializable {
             System.out.println("FLOW: " + workflow.getModel().getId());
             specialViewFlow2 = workflow;
         }
-
-        VNode prevNode = null;
+        
+        String[] connectionTypes = {"control", "data", "event"};
 
         for (int i = 0; i < width; i++) {
 
@@ -153,28 +153,16 @@ public class MainWindowFXMLController implements Initializable {
 
             n.setTitle("Node " + n.getId());
 
-            if (i % 3 == 0) {
-                n.setInput(true, "control");
-                n.setOutput(true, "control");
-            } else if (i % 3 == 1) {
-                n.setInput(true, "data");
-                n.setOutput(true, "data");
-            } else if (i % 3 == 2) {
-                n.setInput(true, "event");
-                n.setOutput(true, "event");
-            }
+            String type = connectionTypes[i % connectionTypes.length];
+
+            n.addInput(type);
+            n.addOutput(type);
 
             n.setWidth(300);
             n.setHeight(200);
 
             n.setX((i % 5) * (n.getWidth() + 30));
             n.setY((i / 5) * (n.getHeight() + 30));
-
-//            if (prevNode != null) {
-//                workflow.connect(prevNode, n, "control");
-//            }
-
-            prevNode = n;
         }
     }
 

@@ -4,22 +4,28 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
+import eu.mihosoft.vrl.lang.VRLShell;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.scene.layout.ScalableContentPane;
 
@@ -102,6 +108,7 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow = FlowFactory.newFlow();
         workflowTest(workflow, 5, 10);
+//        workflowTest(workflow, 2, 2);
 
         System.out.println(" [done]");
 
@@ -170,32 +177,32 @@ public class MainWindowFXMLController implements Initializable {
 
         rootPane.getChildren().clear();
 
-        ScalableContentPane minimapPane1 = createMinimap("Minimap 1");
-        ScalableContentPane minimapPane2 = createMinimap("Minimap 2");
-
-        if (workflow == null) {
-            return;
-        }
+//        ScalableContentPane minimapPane1 = createMinimap("Minimap 1");
+//        ScalableContentPane minimapPane2 = createMinimap("Minimap 2");
+//
+//        if (workflow == null) {
+//            return;
+//        }
 
         workflow.getModel().setVisible(true);
 
         workflow.setSkinFactories(new FXSkinFactory(rootPane));
 
-        workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),
-                new FXSkinFactory(minimapPane2.getContentPane()));
+//        workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),
+//                new FXSkinFactory(minimapPane2.getContentPane()));
 
-        ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
-        ScalableContentPane minimapPane4 = createMinimap("Minimap 4");
-
-        if (specialViewFlow1 != null) {
-            specialViewFlow1.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
-        }
-
-        if (specialViewFlow2 != null) {
-            specialViewFlow2.addSkinFactories(new FXSkinFactory(minimapPane4.getContentPane()));
-        }
-
-        workflow.newSubFlow();
+//        ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
+//        ScalableContentPane minimapPane4 = createMinimap("Minimap 4");
+//
+//        if (specialViewFlow1 != null) {
+//            specialViewFlow1.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
+//        }
+//
+//        if (specialViewFlow2 != null) {
+//            specialViewFlow2.addSkinFactories(new FXSkinFactory(minimapPane4.getContentPane()));
+//        }
+//
+//        workflow.newSubFlow();
     }
 
     private ScalableContentPane createMinimap(String title) {
@@ -214,5 +221,9 @@ public class MainWindowFXMLController implements Initializable {
         minimap.setContentPane(minimapContent);
         rootPane.getChildren().add(minimap);
         return minimapPane;
+    }
+    
+    void registerShell(VRLShell shell) {
+        shell.addConstant("flow", workflow);
     }
 }

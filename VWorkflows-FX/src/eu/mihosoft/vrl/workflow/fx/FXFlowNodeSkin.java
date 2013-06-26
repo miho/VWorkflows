@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VNodeSkin;
@@ -82,13 +83,13 @@ public class FXFlowNodeSkin
             }
         });
 
-        for (String type : getModel().getOutputTypes()) {
-            addOutputConnector(type);
+        for (Connector outC : getModel().getOutputs()) {
+            addOutputConnector(outC);
         }
 
-        getModel().getOutputTypes().addListener(new ListChangeListener<String>() {
+        getModel().getOutputs().addListener(new ListChangeListener<Connector>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends String> change) {
+            public void onChanged(ListChangeListener.Change<? extends Connector> change) {
                 while (change.next()) {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
@@ -98,13 +99,13 @@ public class FXFlowNodeSkin
                         //update item
                     } else if (change.wasRemoved()) {
                         // removed
-                        for (String type : change.getRemoved()) {
-                            removeOutputConnector(type);
+                        for (Connector outC : change.getRemoved()) {
+                            removeOutputConnector(outC.getId());
                         }
                     } else if (change.wasAdded()) {
                         // added
-                        for (String type : change.getAddedSubList()) {
-                            addOutputConnector(type);
+                        for (Connector outC : change.getAddedSubList()) {
+                            addOutputConnector(outC);
                         }
                     }
 
@@ -114,7 +115,7 @@ public class FXFlowNodeSkin
 
     }
 
-    private void addOutputConnector(final String type) {
+    private void addOutputConnector(final Connector outC) {
         DoubleBinding startXBinding = new DoubleBinding() {
             {
                 super.bind(node.layoutXProperty(), node.widthProperty());
@@ -139,13 +140,13 @@ public class FXFlowNodeSkin
 
         Circle circle = new Circle(20);
 
-        if (type.equals("control")) {
+        if (outC.getType().equals("control")) {
             circle.setFill(new Color(1.0, 1.0, 0.0, 0.75));
             circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        } else if (type.equals("data")) {
+        } else if (outC.getType().equals("data")) {
             circle.setFill(new Color(0.1, 0.1, 0.1, 0.5));
             circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        } else if (type.equals("event")) {
+        } else if (outC.getType().equals("event")) {
             circle.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
             circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         }
@@ -177,7 +178,7 @@ public class FXFlowNodeSkin
 
                 newConnectionSkin =
                         new FXNewConnectionSkin(getSkinFactory(),
-                        getParent(), getModel(), getController(), type);
+                        getParent(), getModel(), getController(), outC.getType());
 
                 newConnectionSkin.add();
 
@@ -215,11 +216,11 @@ public class FXFlowNodeSkin
             }
         });
 
-        outputs.put(type, output);
+        outputs.put(outC.getId(), output);
     }
 
-    private void removeOutputConnector(String type) {
-        Node output = outputs.get(type);
+    private void removeOutputConnector(String id) {
+        Node output = outputs.get(id);
         if (output != null && output.getParent()!=null) {
             NodeUtil.removeFromParent(output);
         }
@@ -238,8 +239,8 @@ public class FXFlowNodeSkin
     @Override
     public void remove() {
         removeSkinOnly = true;
-        for (String type : outputs.keySet()) {
-            removeOutputConnector(type);
+        for (String id : outputs.keySet()) {
+            removeOutputConnector(id);
         }
         if (node != null && node.getParent()!=null) {
         NodeUtil.removeFromParent(node);

@@ -79,13 +79,13 @@ public interface VNode extends Model {
 
     public VFlowModel getFlow();
 
-    boolean isInputOfType(String type);
+//    boolean isInputOfType(String type);
+//
+//    boolean isOutputOfType(String type);
 
-    boolean isOutputOfType(String type);
-
-    boolean isInput();
-
-    boolean isOutput();
+//    boolean isInput();
+//
+//    boolean isOutput();
 
 //    void setInput(boolean state, String type);
 //    void setOutput(boolean state, String type);
@@ -95,9 +95,9 @@ public interface VNode extends Model {
 
     public Connector addConnector(Connector c);
 
-    ObservableList<String> getInputTypes();
-
-    ObservableList<String> getOutputTypes();
+//    ObservableList<String> getInputTypes();
+//
+//    ObservableList<String> getOutputTypes();
 
     public Connector getMainInput(String type);
 

@@ -260,15 +260,15 @@ class VFlowModelImpl implements VFlowModel {
 
    
 
-    @Override
-    public boolean isInput() {
-        return node.isInput();
-    }
-
-    @Override
-    public boolean isOutput() {
-        return node.isOutput();
-    }
+//    @Override
+//    public boolean isInput() {
+//        return node.isInput();
+//    }
+//
+//    @Override
+//    public boolean isOutput() {
+//        return node.isOutput();
+//    }
 
     @Override
     public VFlowModel newFlowNode(ValueObject obj) {
@@ -347,25 +347,25 @@ class VFlowModelImpl implements VFlowModel {
         return flow.getNodeLookup();
     }
 
-    @Override
-    public ObservableList<String> getInputTypes() {
-        return node.getInputTypes();
-    }
-
-    @Override
-    public ObservableList<String> getOutputTypes() {
-        return node.getOutputTypes();
-    }
-
-    @Override
-    public boolean isInputOfType(String type) {
-        return node.isInputOfType(type);
-    }
-
-    @Override
-    public boolean isOutputOfType(String type) {
-        return node.isOutputOfType(type);
-    }
+//    @Override
+//    public ObservableList<String> getInputTypes() {
+//        return node.getInputTypes();
+//    }
+//
+//    @Override
+//    public ObservableList<String> getOutputTypes() {
+//        return node.getOutputTypes();
+//    }
+//
+//    @Override
+//    public boolean isInputOfType(String type) {
+//        return node.isInputOfType(type);
+//    }
+//
+//    @Override
+//    public boolean isOutputOfType(String type) {
+//        return node.isOutputOfType(type);
+//    }
 
     @Override
     public Connector getMainInput(String type) {

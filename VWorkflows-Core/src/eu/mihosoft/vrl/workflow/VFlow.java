@@ -110,19 +110,19 @@ public interface VFlow {
 
     public BooleanProperty visibleState();
 
-    boolean isInputOfType(String type);
+//    boolean isInputOfType(String type);
+//
+//    boolean isOutputOfType(String type);
 
-    boolean isOutputOfType(String type);
-
-    boolean isInput();
-
-    boolean isOutput();
+//    boolean isInput();
+//
+//    boolean isOutput();
 
     Connector addInput(String type);
 
     Connector addOutput(String type);
 
-    ObservableList<String> getInputTypes();
-
-    ObservableList<String> getOutputTypes();
+//    ObservableList<String> getInputTypes();
+//
+//    ObservableList<String> getOutputTypes();
 }

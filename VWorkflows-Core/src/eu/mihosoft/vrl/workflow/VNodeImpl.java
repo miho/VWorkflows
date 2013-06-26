@@ -43,8 +43,8 @@ class VNodeImpl implements VNode {
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
     private VFlowModel flow;
-    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
-    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
+//    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
+//    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
     private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
 
     public VNodeImpl(VFlowModel flow) {
@@ -324,25 +324,25 @@ class VNodeImpl implements VNode {
         return result;
     }
 
-    @Override
-    public boolean isInputOfType(String type) {
-        return inputTypes.contains(type);
-    }
-
-    @Override
-    public boolean isOutputOfType(String type) {
-        return outputTypes.contains(type);
-    }
-
-    @Override
-    public boolean isOutput() {
-        return !outputTypes.isEmpty();
-    }
-
-    @Override
-    public boolean isInput() {
-        return !inputTypes.isEmpty();
-    }
+//    @Override
+//    public boolean isInputOfType(String type) {
+//        return inputTypes.contains(type);
+//    }
+//
+//    @Override
+//    public boolean isOutputOfType(String type) {
+//        return outputTypes.contains(type);
+//    }
+//
+//    @Override
+//    public boolean isOutput() {
+//        return !outputTypes.isEmpty();
+//    }
+//
+//    @Override
+//    public boolean isInput() {
+//        return !inputTypes.isEmpty();
+//    }
 
 //    @Override
 //    public String getGlobalId() {
@@ -361,15 +361,15 @@ class VNodeImpl implements VNode {
 //       
 //       return id;
 //    }
-    @Override
-    public ObservableList<String> getInputTypes() {
-        return inputTypes;
-    }
-
-    @Override
-    public ObservableList<String> getOutputTypes() {
-        return outputTypes;
-    }
+//    @Override
+//    public ObservableList<String> getInputTypes() {
+//        return inputTypes;
+//    }
+//
+//    @Override
+//    public ObservableList<String> getOutputTypes() {
+//        return outputTypes;
+//    }
 
     @Override
     public Connector getMainInput(String type) {

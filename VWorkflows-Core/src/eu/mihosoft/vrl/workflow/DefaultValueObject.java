@@ -47,10 +47,10 @@ public class DefaultValueObject implements ValueObject {
             @Override
             public boolean isCompatible() {
                 boolean differentObjects = sender != DefaultValueObject.this;
-                boolean compatibleType = getParent().isInputOfType(flowType)
-                        && sender.getParent().isOutputOfType(flowType);
+//                boolean compatibleType = getParent().isInputOfType(flowType)
+//                        && sender.getParent().isOutputOfType(flowType);
 
-                return differentObjects && compatibleType;
+                return differentObjects /*&& compatibleType*/;
             }
 
             @Override

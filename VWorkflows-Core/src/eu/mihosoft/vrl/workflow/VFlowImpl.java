@@ -823,37 +823,37 @@ class VFlowImpl implements VFlow {
         return getModel().visibleProperty();
     }
 
-    @Override
-    public boolean isInputOfType(String type) {
-        return getModel().isInputOfType(type);
-    }
-
-    @Override
-    public boolean isOutputOfType(String type) {
-        return getModel().isOutputOfType(type);
-    }
-
-    @Override
-    public boolean isInput() {
-        return getModel().isInput();
-    }
-
-    @Override
-    public boolean isOutput() {
-        return getModel().isOutput();
-    }
-
-    
-
-    @Override
-    public ObservableList<String> getInputTypes() {
-        return getModel().getInputTypes();
-    }
-
-    @Override
-    public ObservableList<String> getOutputTypes() {
-        return getModel().getOutputTypes();
-    }
+//    @Override
+//    public boolean isInputOfType(String type) {
+//        return getModel().isInputOfType(type);
+//    }
+//
+//    @Override
+//    public boolean isOutputOfType(String type) {
+//        return getModel().isOutputOfType(type);
+//    }
+//
+//    @Override
+//    public boolean isInput() {
+//        return getModel().isInput();
+//    }
+//
+//    @Override
+//    public boolean isOutput() {
+//        return getModel().isOutput();
+//    }
+//
+//    
+//
+//    @Override
+//    public ObservableList<String> getInputTypes() {
+//        return getModel().getInputTypes();
+//    }
+//
+//    @Override
+//    public ObservableList<String> getOutputTypes() {
+//        return getModel().getOutputTypes();
+//    }
 
     private Map<String, VNodeSkin> getNodeSkinMap(SkinFactory skinFactory) {
         Map<String, VNodeSkin> nodeSkinMap = nodeSkins.get(skinFactory);

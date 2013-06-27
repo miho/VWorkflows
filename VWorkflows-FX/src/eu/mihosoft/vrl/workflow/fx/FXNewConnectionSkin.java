@@ -155,7 +155,16 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 SelectedConnector selConnector =
                         FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
 
-
+                // reject connection if no main input defined for current node
+                if (selConnector != null
+                        && selConnector.getNode() != null
+                        && selConnector.getConnector() == null) {
+                    DropShadow shadow = new DropShadow(20, Color.RED);
+                    Glow effect = new Glow(0.8);
+                    effect.setInput(shadow);
+                    selConnector.getNode().setEffect(effect);
+                    lastNode = selConnector.getNode();
+                }
 
                 if (selConnector != null
                         && selConnector.getNode() != null
@@ -232,9 +241,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         && selConnector.getConnector() != null) {
 
                     Node n = selConnector.getNode();
-                    
+
                     n.toFront();
-                    
+
                     Connector receiverConnector = selConnector.getConnector();
 
                     if (n instanceof Shape) {

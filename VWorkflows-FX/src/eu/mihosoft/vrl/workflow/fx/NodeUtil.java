@@ -248,8 +248,6 @@ public class NodeUtil {
                         
                         return result;
                         
-                    } else {
-                        System.out.println("TYPE: " + result.getClass());
                     }
                 }
             }

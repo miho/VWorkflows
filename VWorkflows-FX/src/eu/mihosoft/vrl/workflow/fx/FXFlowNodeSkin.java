@@ -55,8 +55,8 @@ public class FXFlowNodeSkin
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
     private VFlow controller;
-    private Map<String, Node> outputs = new HashMap<>();
-    private List<Node> outputsList = new ArrayList<>();
+    private Map<String, Node> connectors = new HashMap<>();
+    private List<Node> connectorsList = new ArrayList<>();
     private FXSkinFactory skinFactory;
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
@@ -90,10 +90,10 @@ public class FXFlowNodeSkin
         });
 
         for (Connector outC : getModel().getOutputs()) {
-            addOutputConnector(outC);
+            addConnector(outC);
         }
 
-        getModel().getOutputs().addListener(new ListChangeListener<Connector>() {
+        getModel().getConnectors().addListener(new ListChangeListener<Connector>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Connector> change) {
                 while (change.next()) {
@@ -111,7 +111,7 @@ public class FXFlowNodeSkin
                     } else if (change.wasAdded()) {
                         // added
                         for (Connector outC : change.getAddedSubList()) {
-                            addOutputConnector(outC);
+                            addConnector(outC);
                         }
                     }
 
@@ -121,12 +121,12 @@ public class FXFlowNodeSkin
 
     }
 
-    private void addOutputConnector(final Connector outC) {
+    private void addConnector(final Connector connector) {
 
         Circle circle = new Circle(20);
 
 
-        switch (outC.getType()) {
+        switch (connector.getType()) {
             case "control":
                 circle.setFill(new Color(1.0, 1.0, 0.0, 0.75));
                 circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
@@ -143,10 +143,10 @@ public class FXFlowNodeSkin
 
         circle.setStrokeWidth(3);
 
-        final Circle output = circle;
+        final Circle connectorNode = circle;
 
-        outputs.put(outC.getId(), output);
-        outputsList.add(output);
+        connectors.put(connector.getId(), connectorNode);
+        connectorsList.add(connectorNode);
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
@@ -155,7 +155,13 @@ public class FXFlowNodeSkin
 
             @Override
             protected double computeValue() {
-                return node.getLayoutX() + node.getWidth();
+                double posX = node.getLayoutX();
+
+                if (connector.isOutput()) {
+                    posX += node.getWidth();
+                }
+
+                return posX;
             }
         };
 
@@ -167,41 +173,41 @@ public class FXFlowNodeSkin
             @Override
             protected double computeValue() {
 
-                double connectorHeight = output.getRadius() * 2;
+                double connectorHeight = connectorNode.getRadius() * 2;
                 double gap = 5;
 
-                double totalHeight = outputsList.size() * connectorHeight + (outputsList.size() - 1) * gap;
+                double totalHeight = connectorsList.size() * connectorHeight + (connectorsList.size() - 1) * gap;
 
                 double midPointOfNode = node.getLayoutY() + node.getHeight() / 2;
 
                 double startY = midPointOfNode - totalHeight / 2;
 
-                double y = startY + (connectorHeight + gap) * outputsList.indexOf(output) + (connectorHeight + gap) / 2;
+                double y = startY + (connectorHeight + gap) * connectorsList.indexOf(connectorNode) + (connectorHeight + gap) / 2;
 
                 return y;
             }
         };
 
-        output.layoutXProperty().bind(startXBinding);
-        output.layoutYProperty().bind(startYBinding);
+        connectorNode.layoutXProperty().bind(startXBinding);
+        connectorNode.layoutYProperty().bind(startYBinding);
 
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-                adjustConnectorSize(output, newValue);
+                adjustConnectorSize(connectorNode, newValue);
             }
         });
 
-        NodeUtil.addToParent(getParent(), output);
+        NodeUtil.addToParent(getParent(), connectorNode);
 
-        output.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
+        connectorNode.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                output.toFront();
+                connectorNode.toFront();
             }
         });
 
-        output.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
+        connectorNode.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
 
@@ -210,18 +216,21 @@ public class FXFlowNodeSkin
 //                    return;
 //                }
 
-                newConnectionSkin =
-                        new FXNewConnectionSkin(getSkinFactory(),
-                        getParent(), outC, getController(), outC.getType());
+                if (connector.isOutput()) {
 
-                newConnectionSkin.add();
+                    newConnectionSkin =
+                            new FXNewConnectionSkin(getSkinFactory(),
+                            getParent(), connector, getController(), connector.getType());
 
-                t.consume();
-                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                    newConnectionSkin.add();
+
+                    t.consume();
+                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                }
             }
         });
 
-        output.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
+        connectorNode.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 t.consume();
@@ -230,7 +239,7 @@ public class FXFlowNodeSkin
             }
         });
 
-        output.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
+        connectorNode.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 t.consume();
@@ -239,19 +248,19 @@ public class FXFlowNodeSkin
                 } catch (Exception ex) {
                     // TODO exception is not critical here (node already removed)
                 }
-                output.toBack();
+                connectorNode.toBack();
             }
         });
 
-        output.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
+        connectorNode.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                output.toBack();
+                connectorNode.toBack();
             }
         });
 
 
-        
+
     }
 
     private void adjustConnectorSize(Circle connectorNode, Bounds newValue) {
@@ -261,19 +270,19 @@ public class FXFlowNodeSkin
     private double computeConnectorHeight(Circle connectorNode, Bounds newValue) {
         double connectorHeight = connectorNode.getRadius() * 2;
         double gap = 5;
-        double totalHeight = outputsList.size() * connectorHeight + (outputsList.size() - 1) * gap;
+        double totalHeight = connectorsList.size() * connectorHeight + (connectorsList.size() - 1) * gap;
 
-        connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (outputsList.size());
+        connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (connectorsList.size());
         connectorHeight = Math.min(connectorHeight, 20 * 2);
 
         return connectorHeight;
     }
 
     private void removeOutputConnector(String id) {
-        Node output = outputs.remove(id);
+        Node output = connectors.remove(id);
 
         if (output != null && output.getParent() != null) {
-            outputsList.remove(output);
+            connectorsList.remove(output);
             NodeUtil.removeFromParent(output);
         }
     }
@@ -292,7 +301,7 @@ public class FXFlowNodeSkin
     public void remove() {
         removeSkinOnly = true;
 
-        Set<String> keySet = new HashSet<>(outputs.keySet());
+        Set<String> keySet = new HashSet<>(connectors.keySet());
 
         for (String id : keySet) {
             removeOutputConnector(id);
@@ -461,8 +470,8 @@ public class FXFlowNodeSkin
     public FXSkinFactory getSkinFactory() {
         return this.skinFactory;
     }
-    
+
     public Node getConnectorById(String id) {
-        return outputs.get(id);
+        return connectors.get(id);
     }
 }

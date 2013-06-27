@@ -99,7 +99,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         final VNode sender = getSender().getNode();
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, getSender().getId());
         final Node senderNode = senderSkin.getConnectorById(getSender().getId());
-        
+
         DoubleBinding startXBinding = new DoubleBinding() {
             {
                 super.bind(senderNode.boundsInLocalProperty(), senderNode.layoutXProperty());
@@ -124,28 +124,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             }
         };
 
-//        DoubleBinding startXBinding = new DoubleBinding() {
-//            {
-//                super.bind(sender.xProperty(), sender.widthProperty());
-//            }
-//
-//            @Override
-//            protected double computeValue() {
-//                return sender.getX() + sender.getWidth();
-//            }
-//        };
-//
-//        DoubleBinding startYBinding = new DoubleBinding() {
-//            {
-//                super.bind(sender.yProperty(), sender.heightProperty());
-//            }
-//
-//            @Override
-//            protected double computeValue() {
-//                return sender.getY() + sender.getHeight() / 2;
-//            }
-//        };
-
         moveTo.xProperty().bind(startXBinding);
         moveTo.yProperty().bind(startYBinding);
 
@@ -154,8 +132,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         makeDraggable();
 
-        receiverConnector.setLayoutX(getSender().getNode().getX() + getSender().getNode().getWidth());
-        receiverConnector.setLayoutY(getSender().getNode().getY() + getSender().getNode().getHeight() / 2.0);
+        receiverConnector.setLayoutX(senderNode.getLayoutX());
+        receiverConnector.setLayoutY(senderNode.getLayoutY());
 
     }
 
@@ -168,16 +146,14 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             @Override
             public void handle(MouseEvent t) {
 
-
-
                 if (lastNode != null) {
                     lastNode.setEffect(null);
                     lastNode = null;
                 }
 
 
-                SelectedConnector selConnector = 
-                        FXConnectorUtil.getSelectedInputConnector(getParent(), type,t);
+                SelectedConnector selConnector =
+                        FXConnectorUtil.getSelectedInputConnector(getParent(), type, t);
 
 
 
@@ -247,8 +223,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                        getParent(),
 //                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class, ConnectorCircle.class);
 
-                SelectedConnector selConnector = 
-                        FXConnectorUtil.getSelectedInputConnector(getParent(), type,t);
+                SelectedConnector selConnector =
+                        FXConnectorUtil.getSelectedInputConnector(getParent(), type, t);
 
 
 
@@ -273,8 +249,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         });
 
     }
-
-   
 
     public Node getReceiverConnector() {
         return receiverConnector;

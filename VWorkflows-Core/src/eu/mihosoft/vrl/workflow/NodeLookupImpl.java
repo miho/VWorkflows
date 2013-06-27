@@ -20,8 +20,10 @@ public class NodeLookupImpl implements NodeLookup {
     public Connector getConnectorById(String globalId) {
         String[] ids = globalId.split(":");
 
-        if (ids.length < 0) {
-            return null;
+        if (ids.length < 2) {
+            throw new IllegalArgumentException("wrong connector id format: "
+                    + globalId + ", correct format: node-id:connector-id");
+//            return null;
         }
 
         String nodeId = ids[0];

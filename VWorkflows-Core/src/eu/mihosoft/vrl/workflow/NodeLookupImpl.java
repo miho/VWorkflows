@@ -17,6 +17,28 @@ public class NodeLookupImpl implements NodeLookup {
     }
 
     @Override
+    public Connector getConnectorById(String globalId) {
+        String[] ids = globalId.split(":");
+
+        if (ids.length < 2) {
+            throw new IllegalArgumentException("wrong connector id format: "
+                    + globalId + ", correct format: node-id:connector-id");
+//            return null;
+        }
+
+        String nodeId = ids[0];
+
+        VNode node = getById(nodeId);
+        String connectorId = ids[1];
+
+        if (node == null) {
+            return null;
+        }
+
+        return node.getConnector(connectorId);
+    }
+
+    @Override
     public VNode getById(String globalId) {
 
         VNode result = getNodeByGlobalId(root, globalId);
@@ -32,10 +54,10 @@ public class NodeLookupImpl implements NodeLookup {
             }
 
             if (n instanceof FlowModel) {
-               VNode result = getNodeByGlobalId((FlowModel)n, id);
-               if (result!=null) {
-                   return result;
-               }
+                VNode result = getNodeByGlobalId((FlowModel) n, id);
+                if (result != null) {
+                    return result;
+                }
             }
         }
 

@@ -45,7 +45,7 @@ public class NodeUtil {
 
     static public Point2D transformCoordinates(double x, double y, Node from, Node to) {
 
-        if (from == to || from ==null || to == null) {
+        if (from == to || from == null || to == null) {
             return new Point2D(x, y);
         }
 
@@ -149,7 +149,7 @@ public class NodeUtil {
             throw new IllegalArgumentException("Unsupported parent: " + p);
         }
     }
-    
+
     /**
      * Adds the given node to the specified parent.
      *
@@ -220,7 +220,7 @@ public class NodeUtil {
      * instance of the specified class or <code>null</code> if no such node
      * exist
      */
-    public static Node getDeepestNode(Parent p, double sceneX, double sceneY, Class<?> nodeClass) {
+    public static Node getDeepestNode(Parent p, double sceneX, double sceneY, Class<?>... nodeClasses) {
 
         // dammit! javafx uses "wrong" children order.
         List<Node> rightOrder = new ArrayList<>();
@@ -235,15 +235,20 @@ public class NodeUtil {
                 Node result = null;
 
                 if (n instanceof Parent) {
-                    result = getDeepestNode((Parent) n, sceneX, sceneY, nodeClass);
+                    result = getDeepestNode((Parent) n, sceneX, sceneY, nodeClasses);
                 }
 
                 if (result == null) {
                     result = n;
                 }
 
-                if (nodeClass.isAssignableFrom(result.getClass())) {
-                    return result;
+                for (Class<?> nodeClass : nodeClasses) {
+
+                    if (nodeClass.isAssignableFrom(result.getClass())) {
+                        
+                        return result;
+                        
+                    }
                 }
             }
         }

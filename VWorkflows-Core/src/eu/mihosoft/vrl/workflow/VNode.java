@@ -4,7 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import javafx.beans.property.BooleanProperty;
+import java.util.Collection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -68,8 +68,7 @@ public interface VNode extends Model {
 
     public double getHeight();
 
-    public ObservableList<VNode> getChildren();
-
+//    public ObservableList<VNode> getChildren();
 //    public ObservableList<Connector<FlowNode>> getInputs();
 //    public ObservableList<Connector<FlowNode>> getOutputs();
     public void setValueObject(ValueObject obj);
@@ -80,23 +79,40 @@ public interface VNode extends Model {
 
     public VFlowModel getFlow();
 
-    boolean isInputOfType(String type);
+//    boolean isInputOfType(String type);
+//
+//    boolean isOutputOfType(String type);
+//    boolean isInput();
+//
+//    boolean isOutput();
+//    void setInput(boolean state, String type);
+//    void setOutput(boolean state, String type);
+    public Connector addInput(String type);
 
-    boolean isOutputOfType(String type);
+    public Connector addOutput(String type);
 
-    boolean isInput();
+    public Connector addConnector(Connector c);
 
-    boolean isOutput();
+//    ObservableList<String> getInputTypes();
+//
+//    ObservableList<String> getOutputTypes();
+    public Collection<String> getMainInputTypes();
 
-    int addInput(String type);
+    public Collection<String> getMainOutputTypes();
 
-    int addOutput(String type);
+    public Connector getMainInput(String type);
 
-    ObservableList<String> getInputTypes();
+    public Connector getMainOutput(String type);
 
-    ObservableList<String> getOutputTypes();
-    
-    int[] getInputs(String type);
-    int[] getOutputs(String type);
-    
+    public void setMainInput(Connector connector);
+
+    public void setMainOutput(Connector connector);
+
+    public Connector getConnector(String localId);
+
+    public ObservableList<Connector> getConnectors();
+
+    public ObservableList<Connector> getInputs();
+
+    public ObservableList<Connector> getOutputs();
 }

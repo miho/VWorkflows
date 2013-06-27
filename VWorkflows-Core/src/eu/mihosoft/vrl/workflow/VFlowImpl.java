@@ -43,40 +43,40 @@ class VFlowImpl implements VFlow {
     private FlowNodeSkinLookup nodeSkinLookup;
 
     public VFlowImpl(VFlowModel model, SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
-        
-        
+
+
         init();
-        
-        if (model.getIdGenerator()!=null) {
+
+        if (model.getIdGenerator() != null) {
             setIdGenerator(model.getIdGenerator());
         }
-        
-        if (model.getNodeLookup()!=null) {
+
+        if (model.getNodeLookup() != null) {
             setNodeLookup(model.getNodeLookup());
         }
-        
+
         setModel(model);
         setSkinFactories(skinFactories);
-        
-        
-  
+
+
+
     }
 
     public VFlowImpl(VFlowModel model, Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories) {
         init();
-        
-        if (model.getIdGenerator()!=null) {
+
+        if (model.getIdGenerator() != null) {
             setIdGenerator(model.getIdGenerator());
         }
-        
-        if (model.getNodeLookup()!=null) {
+
+        if (model.getNodeLookup() != null) {
             setNodeLookup(model.getNodeLookup());
         }
-        
+
         setModel(model);
         setSkinFactories(skinFactories);
-        
-        
+
+
     }
 
     private void init() {
@@ -252,6 +252,16 @@ class VFlowImpl implements VFlow {
     }
 
     @Override
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        return getModel().tryConnect(s, r);
+    }
+
+    @Override
+    public ConnectionResult connect(Connector s, Connector r) {
+        return getModel().connect(s, r);
+    }
+
+    @Override
     public ConnectionResult tryConnect(VNode s, VNode r, String type) {
         return getModel().tryConnect(s, r, type);
     }
@@ -301,6 +311,7 @@ class VFlowImpl implements VFlow {
         return getModel().remove(n);
     }
 
+    @Override
     public ObservableMap<String, Connections> getAllConnections() {
         return getModel().getAllConnections();
     }
@@ -355,7 +366,7 @@ class VFlowImpl implements VFlow {
 //        System.out.println(">> creating skins for node: " + n.getId());
 
         List<VNodeSkin<VNode>> skins = new ArrayList<>();
-        
+
 //        System.out.println(" --> #skinFactories: " + skinFactories.length);
 
         for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : skinFactories) {
@@ -585,10 +596,10 @@ class VFlowImpl implements VFlow {
      */
     @Override
     public final void addSkinFactories(SkinFactory... skinFactories) {
-        
+
         Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> tmpList = new ArrayList<>();
-        
-        for(SkinFactory sF : skinFactories) {
+
+        for (SkinFactory sF : skinFactories) {
             tmpList.add(sF);
         }
 
@@ -812,49 +823,37 @@ class VFlowImpl implements VFlow {
         return getModel().visibleProperty();
     }
 
-    @Override
-    public boolean isInputOfType(String type) {
-        return getModel().isInputOfType(type);
-    }
-
-    @Override
-    public boolean isOutputOfType(String type) {
-        return getModel().isOutputOfType(type);
-    }
-
-    @Override
-    public boolean isInput() {
-        return getModel().isInput();
-    }
-
-    @Override
-    public boolean isOutput() {
-        return getModel().isOutput();
-    }
-
 //    @Override
-//    public void setInput(boolean state, String type) {
-//        getModel().setInput(state, type);
+//    public boolean isInputOfType(String type) {
+//        return getModel().isInputOfType(type);
 //    }
 //
 //    @Override
-//    public void setOutput(boolean state, String type) {
-//        getModel().setOutput(state, type);
+//    public boolean isOutputOfType(String type) {
+//        return getModel().isOutputOfType(type);
 //    }
-    
-    public int addInput(String type) {
-        throw new UnsupportedOperationException("unsupported");
-    }
-
-    @Override
-    public ObservableList<String> getInputTypes() {
-        return getModel().getInputTypes();
-    }
-
-    @Override
-    public ObservableList<String> getOutputTypes() {
-        return getModel().getOutputTypes();
-    }
+//
+//    @Override
+//    public boolean isInput() {
+//        return getModel().isInput();
+//    }
+//
+//    @Override
+//    public boolean isOutput() {
+//        return getModel().isOutput();
+//    }
+//
+//    
+//
+//    @Override
+//    public ObservableList<String> getInputTypes() {
+//        return getModel().getInputTypes();
+//    }
+//
+//    @Override
+//    public ObservableList<String> getOutputTypes() {
+//        return getModel().getOutputTypes();
+//    }
 
     private Map<String, VNodeSkin> getNodeSkinMap(SkinFactory skinFactory) {
         Map<String, VNodeSkin> nodeSkinMap = nodeSkins.get(skinFactory);
@@ -886,4 +885,16 @@ class VFlowImpl implements VFlow {
     public void clear() {
         getModel().clear();
     }
+
+    @Override
+    public Connector addInput(String type) {
+        return getModel().addInput(type);
+    }
+
+    @Override
+    public Connector addOutput(String type) {
+        return getModel().addOutput(type);
+    }
+
+    
 }

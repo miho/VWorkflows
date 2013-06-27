@@ -69,8 +69,19 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public ConnectionResult tryConnect(VNode s, VNode r, String type) {
 
-        CompatibilityResult result = r.getValueObject().
-                compatible(s.getValueObject(), type);
+        ValueObject senderValObj = new NoDefaultConnectorValueObject(s);
+        ValueObject receiverValObj = new NoDefaultConnectorValueObject(r);
+
+        if (s.getMainOutput(type) != null) {
+            senderValObj = s.getMainOutput(type).getValueObject();
+        }
+
+        if (r.getMainInput(type) != null) {
+            receiverValObj = r.getMainInput(type).getValueObject();
+        }
+
+        CompatibilityResult result = receiverValObj.
+                compatible(senderValObj, type);
 
         return new ConnectionResultImpl(result, null);
     }
@@ -84,7 +95,40 @@ public class FlowModelImpl implements FlowModel {
             return result;
         }
 
-        Connection connection = getConnections(type).add(s.getId(), r.getId());
+        String senderId = null;
+        String receiverId = null;
+
+        if (s.getMainOutput(type) != null) {
+            senderId = s.getMainOutput(type).getId();
+        }
+
+        if (s.getMainInput(type) != null) {
+            receiverId = r.getMainInput(type).getId();
+        }
+
+        Connection connection = getConnections(type).add(senderId, receiverId);
+
+        return new ConnectionResultImpl(result.getStatus(), connection);
+    }
+
+    @Override
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        CompatibilityResult result = r.getValueObject().
+                compatible(s.getValueObject(), s.getType());
+
+        return new ConnectionResultImpl(result, null);
+    }
+
+    @Override
+    public ConnectionResult connect(Connector s, Connector r) {
+
+        ConnectionResult result = tryConnect(s, r);
+
+        if (!result.getStatus().isCompatible()) {
+            return result;
+        }
+
+        Connection connection = getConnections(s.getType()).add(s.getId(), r.getId());
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -138,23 +182,23 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public Connections getConnections(String type) {
         Connections result = connections.get(type);
-        
+
         if (result == null) {
             addConnections(VConnections.newConnections(type), type);
             result = connections.get(type);
         }
-        
+
         return result;
     }
 
     @Override
-    public VNode getSender(Connection c) {       
+    public VNode getSender(Connection c) {
         return getNodeLookup().getById(c.getSenderId());
     }
 
     @Override
     public VNode getReceiver(Connection c) {
-        return  getNodeLookup().getById(c.getReceiverId());
+        return getNodeLookup().getById(c.getReceiverId());
     }
 
     @Override
@@ -177,18 +221,18 @@ public class FlowModelImpl implements FlowModel {
     VNode newNode(VNode result, ValueObject obj) {
 
         result.setValueObject(obj);
-        
-        if (getIdGenerator()==null) {
+
+        if (getIdGenerator() == null) {
             throw new IllegalStateException("Please define an idgenerator before creating nodes!");
         }
-        
+
         String id = getIdGenerator().newId();
 
         result.setId(id);
 
         nodes.put(id, result);
         observableNodes.add(result);
-        
+
         return result;
     }
 

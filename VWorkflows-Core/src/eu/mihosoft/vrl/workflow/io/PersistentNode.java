@@ -6,7 +6,9 @@ package eu.mihosoft.vrl.workflow.io;
 
 import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -22,8 +24,9 @@ public class PersistentNode {
     private ValueObject valueObject;
     private VisualizationRequest vReq;
     private String id;
-    private List<String> inputTypes;
-    private List<String> outputTypes;
+    private List<PersistentConnector> connectors;
+    private Map<String,String> mainInputs = new HashMap<>();
+    private Map<String,String> mainOutputs = new HashMap<>();
 
     public PersistentNode() {
     }
@@ -31,7 +34,7 @@ public class PersistentNode {
     public PersistentNode(String id, String title,
             double x, double y, double width, double height,
             ValueObject valueObject, VisualizationRequest vReq,
-            List<String> inputTypes, List<String> outputTypes) {
+            List<PersistentConnector> connectors) {
 
         this.x = x;
         this.y = y;
@@ -41,8 +44,7 @@ public class PersistentNode {
         this.valueObject = valueObject;
         this.vReq = vReq;
         this.id = id;
-        this.inputTypes = WorkflowIO.listToSerializableList(inputTypes);
-        this.outputTypes = WorkflowIO.listToSerializableList(outputTypes);
+        this.connectors = WorkflowIO.listToSerializableList(connectors);
     }
     
     
@@ -162,28 +164,55 @@ public class PersistentNode {
     /**
      * @return the inputTypes
      */
-    public List<String> getInputTypes() {
-        return inputTypes;
+    public List<PersistentConnector> getConnectors() {
+        return connectors;
     }
 
     /**
-     * @param inputTypes the inputTypes to set
+     * @param connectors the inputTypes to set
      */
-    public void setInputTypes(List<String> inputTypes) {
-        this.inputTypes = inputTypes;
+    public void setConnectors(List<PersistentConnector> connectors) {
+        
+        for (PersistentConnector persistentConnector : connectors) {
+            addConnector(persistentConnector);
+        }
+    }
+    
+        /**
+     * @param connectors the inputTypes to set
+     */
+    public void addConnector(PersistentConnector connector ) {
+
+//            connector.setNode(this);
+            
+            connectors.add(connector);
     }
 
     /**
-     * @return the outputTypes
+     * @return the mainInputs
      */
-    public List<String> getOutputTypes() {
-        return outputTypes;
+    public Map<String,String> getMainInputs() {
+        return mainInputs;
     }
 
     /**
-     * @param outputTypes the outputTypes to set
+     * @param mainInputs the mainInputs to set
      */
-    public void setOutputTypes(List<String> outputTypes) {
-        this.outputTypes = outputTypes;
+    public void setMainInputs(Map<String,String> mainInputs) {
+        this.mainInputs = mainInputs;
+    }
+
+    /**
+     * @return the mainOutputs
+     */
+    public Map<String,String> getMainOutputs() {
+        return mainOutputs;
+    }
+
+    /**
+     * @param mainOutputs the mainOutputs to set
+     */
+    public void setMainOutputs(Map<String,String> mainOutputs) {
+        this.mainOutputs = mainOutputs;
     }
 }

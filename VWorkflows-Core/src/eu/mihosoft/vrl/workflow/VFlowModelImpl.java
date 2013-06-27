@@ -7,6 +7,7 @@ package eu.mihosoft.vrl.workflow;
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
@@ -51,16 +52,16 @@ class VFlowModelImpl implements VFlowModel {
             } else {
                 pFlow = (VFlowModel) parentFlow;
             }
-            if (parentFlow.getIdGenerator()==null) {
+            if (parentFlow.getIdGenerator() == null) {
                 throw new IllegalStateException("Please define an id generator before creating subflows!");
             }
-            
+
             setIdGenerator(parentFlow.getIdGenerator().newChild());
         }
 
         node = new VNodeImpl(pFlow);
         setTitle("Node");
-        
+
     }
 
     @Override
@@ -71,6 +72,16 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public ConnectionResult connect(VNode s, VNode r, String flowType) {
         return flow.connect(s, r, flowType);
+    }
+
+    @Override
+    public ConnectionResult tryConnect(Connector s, Connector r) {
+        return flow.tryConnect(s, r);
+    }
+
+    @Override
+    public ConnectionResult connect(Connector s, Connector r) {
+        return flow.connect(s, r);
     }
 
     @Override
@@ -224,8 +235,8 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public ObservableList<VNode> getChildren() {
-        return node.getChildren();
+    public Connector getConnector(String localId) {
+        return node.getConnector(localId);
     }
 
     @Override
@@ -248,18 +259,15 @@ class VFlowModelImpl implements VFlowModel {
         return node.getFlow();
     }
 
-   
-
-    @Override
-    public boolean isInput() {
-        return node.isInput();
-    }
-
-    @Override
-    public boolean isOutput() {
-        return node.isOutput();
-    }
-
+//    @Override
+//    public boolean isInput() {
+//        return node.isInput();
+//    }
+//
+//    @Override
+//    public boolean isOutput() {
+//        return node.isOutput();
+//    }
     @Override
     public VFlowModel newFlowNode(ValueObject obj) {
         VFlowModel flowNode = new VFlowModelImpl(this);
@@ -270,17 +278,17 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public VFlowModel newFlowNode() {
         VFlowModel flowNode = new VFlowModelImpl(this);
-        
+
         DefaultValueObject valObj = new DefaultValueObject();
 
         VFlowModel result = (VFlowModel) flow.newNode(flowNode, valObj); // end newNode()
-        
+
         valObj.setParent(result);
-        
+
         return result;
 
     }
-    
+
     @Override
     public VNode newNode(ValueObject obj) {
 
@@ -303,7 +311,7 @@ class VFlowModelImpl implements VFlowModel {
 
         return result;
     }
-    
+
     @Override
     public VNode newNode() {
         DefaultValueObject valObj = new DefaultValueObject();
@@ -316,7 +324,6 @@ class VFlowModelImpl implements VFlowModel {
 //    public String getGlobalId() {
 //        return node.getGlobalId();
 //    }
-
     @Override
     public final void setIdGenerator(IdGenerator generator) {
         flow.setIdGenerator(generator);
@@ -337,34 +344,82 @@ class VFlowModelImpl implements VFlowModel {
         return flow.getNodeLookup();
     }
 
+//    @Override
+//    public ObservableList<String> getInputTypes() {
+//        return node.getInputTypes();
+//    }
+//
+//    @Override
+//    public ObservableList<String> getOutputTypes() {
+//        return node.getOutputTypes();
+//    }
+//
+//    @Override
+//    public boolean isInputOfType(String type) {
+//        return node.isInputOfType(type);
+//    }
+//
+//    @Override
+//    public boolean isOutputOfType(String type) {
+//        return node.isOutputOfType(type);
+//    }
     @Override
-    public ObservableList<String> getInputTypes() {
-        return node.getInputTypes();
+    public Connector getMainInput(String type) {
+        return this.node.getMainInput(type);
     }
 
     @Override
-    public ObservableList<String> getOutputTypes() {
-        return node.getOutputTypes();
+    public Connector getMainOutput(String type) {
+        return this.node.getMainOutput(type);
     }
 
     @Override
-    public boolean isInputOfType(String type) {
-        return node.isInputOfType(type);
+    public Connector addInput(String type) {
+        return this.node.addInput(type);
     }
 
     @Override
-    public boolean isOutputOfType(String type) {
-        return node.isOutputOfType(type);
+    public Connector addOutput(String type) {
+        return this.node.addOutput(type);
     }
 
     @Override
-    public void setInput(boolean state, String type) {
-        this.node.setInput(state, type);
+    public Connector addConnector(Connector c) {
+        return this.node.addConnector(c);
     }
 
     @Override
-    public void setOutput(boolean state, String type) {
-        this.node.setOutput(state, type);
+    public ObservableList<Connector> getConnectors() {
+        return this.node.getConnectors();
+    }
+
+    @Override
+    public ObservableList<Connector> getInputs() {
+        return this.node.getInputs();
+    }
+
+    @Override
+    public ObservableList<Connector> getOutputs() {
+        return this.node.getOutputs();
+    }
+
+    @Override
+    public void setMainInput(Connector connector) {
+        this.node.setMainInput(connector);
+    }
+
+    @Override
+    public void setMainOutput(Connector connector) {
+        this.node.setMainOutput(connector);
+    }
+
+    @Override
+    public Collection<String> getMainInputTypes() {
+        return this.node.getMainInputTypes();
+    }
+
+    @Override
+    public Collection<String> getMainOutputTypes() {
+        return this.node.getMainOutputTypes();
     }
 }
-

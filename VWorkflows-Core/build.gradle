@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -36,6 +37,9 @@ dependencies {
 
     // compile project('..:VRLInstrumentation')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
+    
+    
+    testCompile 'junit:junit:4.11'
 }
 
 sourceSets {
@@ -57,5 +61,5 @@ sourceSets {
 }
 
 
-//    mainClass "eu.mihosoft.vrl.workflow.demo.Main"
+mainClassName =  "eu.mihosoft.vrl.workflow.playground.Playground"
 

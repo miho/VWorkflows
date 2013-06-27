@@ -17,6 +17,10 @@ interface FlowModel extends Model, VisibleState{
     
     public ConnectionResult connect(VNode s, VNode r, String flowType);
 
+     public ConnectionResult tryConnect(Connector s, Connector r);
+    
+    public ConnectionResult connect(Connector s, Connector r);
+    
     public VNode remove(VNode n);
     
     public void clear();

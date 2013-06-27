@@ -4,8 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.workflow.Connections;
-import eu.mihosoft.vrl.workflow.VConnections;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +11,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -71,7 +68,12 @@ public class Main extends Application {
         MouseControlUtil.
                 addSelectionRectangleGesture(controller.getRootPane(), rect);
 
-        Playground.search01();
+//        Playground.search01();
+//        
+//        VRLShell shell = VShell.showInteractivScenicView(canvas);
+//        
+//        controller.registerShell(shell);
+
     }
 
    

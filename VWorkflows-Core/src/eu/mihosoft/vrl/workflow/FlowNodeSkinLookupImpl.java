@@ -117,6 +117,10 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
     @Override
     public VNodeSkin getById(SkinFactory skinFactory, String globalId) {
+        
+        // support for connector ids, we wan't to return node skin if connector
+        // id is given
+        globalId = globalId.split(":")[0]; 
 
         VNodeSkin result = getNodeByGlobalId(skinFactory, root, globalId);
 

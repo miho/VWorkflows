@@ -9,6 +9,7 @@ import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  *
@@ -25,8 +26,12 @@ public interface VFlow {
     public VFlowModel getModel();
 
     public ObjectProperty modelProperty();
+    
+    public ConnectionResult tryConnect(Connector s, Connector r);
+    
+    public ConnectionResult connect(Connector s, Connector r);
 
-    public ConnectionResult tryConnect(VNode s, int sId, VNode r, int rId, String flowType);
+    public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
 
     public ConnectionResult connect(VNode s, VNode r, String flowType);
 
@@ -55,6 +60,7 @@ public interface VFlow {
     public void addConnections(Connections connections, String flowType);
 
     public Connections getConnections(String flowType);
+    public ObservableMap<String, Connections> getAllConnections();
 
     public void setFlowNodeClass(Class<? extends VNode> cls);
 
@@ -104,21 +110,19 @@ public interface VFlow {
 
     public BooleanProperty visibleState();
 
-    boolean isInputOfType(String type);
-
-    boolean isOutputOfType(String type);
-
-    boolean isInput();
-
-    boolean isOutput();
-
-//    void setInput(boolean state, String type);
+//    boolean isInputOfType(String type);
 //
-//    void setOutput(boolean state, String type);
-    
-    
+//    boolean isOutputOfType(String type);
 
-    ObservableList<String> getInputTypes();
+//    boolean isInput();
+//
+//    boolean isOutput();
 
-    ObservableList<String> getOutputTypes();
+    Connector addInput(String type);
+
+    Connector addOutput(String type);
+
+//    ObservableList<String> getInputTypes();
+//
+//    ObservableList<String> getOutputTypes();
 }

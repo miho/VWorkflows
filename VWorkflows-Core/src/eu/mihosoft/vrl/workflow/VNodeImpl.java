@@ -4,6 +4,9 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -13,6 +16,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
@@ -21,12 +25,16 @@ import javafx.collections.ObservableList;
  */
 class VNodeImpl implements VNode {
 
-//    private ObservableList<Connector<FlowNode>> inputs =
-//            FXCollections.observableArrayList();
-//    private ObservableList<Connector<FlowNode>> outputs =
-//            FXCollections.observableArrayList();
-    private ObservableList<VNode> children =
+    private ObservableList<Connector> connectors =
             FXCollections.observableArrayList();
+    private ObservableList<Connector> inputs =
+            FXCollections.observableArrayList();
+    private ObservableList<Connector> outputs =
+            FXCollections.observableArrayList();
+    private ObservableList<Connector> unmodifiableInputs =
+            FXCollections.unmodifiableObservableList(inputs);
+    private ObservableList<Connector> unmodifiableOutputs =
+            FXCollections.unmodifiableObservableList(outputs);
     private StringProperty idProperty = new SimpleStringProperty();
     private StringProperty titleProperty = new SimpleStringProperty();
     private DoubleProperty xProperty = new SimpleDoubleProperty();
@@ -37,55 +45,76 @@ class VNodeImpl implements VNode {
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
     private VFlowModel flow;
-    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
-    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
+//    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
+//    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
+    private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
+    private Map<String, Connector> mainInputs = new HashMap<>();
+    private Map<String, Connector> mainOutputs = new HashMap<>();
 
-//     private ObjectProperty<Skin> skinProperty =
-//            new SimpleObjectProperty<>();
     public VNodeImpl(VFlowModel flow) {
 
         this.flow = flow;
-        
+
         setWidth(200);
         setHeight(150);
-        
+
         setTitle("Node");
 
         setValueObject(new DefaultValueObject(this));
-        
-        valueObjectProperty.addListener(new ChangeListener<ValueObject>() {
 
+        valueObjectProperty.addListener(new ChangeListener<ValueObject>() {
             @Override
             public void changed(ObservableValue<? extends ValueObject> ov, ValueObject t, ValueObject t1) {
-                if (t1!=null) {
+                if (t1 != null) {
                     t1.setParent(VNodeImpl.this);
                 }
             }
         });
 
-//        inputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
-//            @Override
-//            public void onChanged(Change<? extends Connector<FlowNode>> change) {
-//                while (change.next()) {
-//                    if (change.wasPermutated()) {
-//                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
-//                            //permutate
-//                        }
-//                    } else if (change.wasUpdated()) {
-//                        //update item
-//                    } else {
-//                        if (change.wasRemoved()) {
-//                            for (Connector<FlowNode> connector : change.getRemoved()) {
-//                                //
-//                            }
-//                        } else if (change.wasAdded()) {
-//                            for (Connector<FlowNode> connector : change.getAddedSubList()) {
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
+        connectors.addListener(new ListChangeListener<Connector>() {
+            @Override
+            public void onChanged(Change<? extends Connector> change) {
+                while (change.next()) {
+                    if (change.wasPermutated()) {
+                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                            //permutate
+                        }
+                    } else if (change.wasUpdated()) {
+                        //update item
+                    } else {
+                        if (change.wasRemoved()) {
+                            for (Connector connector : change.getRemoved()) {
+                                if (connector.isInput()) {
+                                    inputs.remove(connector);
+                                }
+
+                                if (connector.isOutput()) {
+                                    outputs.remove(connector);
+                                }
+                                connectorIdGenerator.getIds().remove(connector.getId());
+                            }
+                        } else if (change.wasAdded()) {
+                            for (Connector connector : change.getAddedSubList()) {
+                                if (connector.isInput()) {
+                                    inputs.add(connector);
+//                                    System.out.println("added input:" + unmodifiableInputs.size());
+                                }
+
+                                if (connector.isOutput()) {
+                                    outputs.add(connector);
+//                                    System.out.println("added output:" + unmodifiableOutputs.size());
+                                }
+
+                                connector.setLocalId(connectorIdGenerator.newId());
+
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+
 //
 //        outputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
 //            @Override
@@ -195,11 +224,10 @@ class VNodeImpl implements VNode {
         return heightProperty.get();
     }
 
-    @Override
-    public ObservableList<VNode> getChildren() {
-        return children;
-    }
-
+//    @Override
+//    public ObservableList<VNode> getChildren() {
+//        return children;
+//    }
     @Override
     public ValueObject getValueObject() {
         return valueObjectProperty.get();
@@ -267,47 +295,58 @@ class VNodeImpl implements VNode {
 //            inputTypes.remove(type);
 //        }
 //    }
-
     @Override
-    public int addInput(String type) {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
-    public int addOutput(String type) {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
-    public int[] getInputs(String type) {
-         throw new UnsupportedOperationException();
-    }
-    
-    @Override
-    public int[] getOutputs(String type) {
-         throw new UnsupportedOperationException();
-    }
-    
-    @Override
-    public boolean isInputOfType(String type) {
-        return inputTypes.contains(type);
+    public Connector addInput(String type) {
+        Connector c = new ConnectorImpl(
+                this, type, null, true);
+        connectors.add(c);
+        return c;
     }
 
     @Override
-    public boolean isOutputOfType(String type) {
-        return outputTypes.contains(type);
+    public Connector addOutput(String type) {
+        Connector c = new ConnectorImpl(
+                this, type, null, false);
+        connectors.add(c);
+        return c;
     }
 
     @Override
-    public boolean isOutput() {
-        return !outputTypes.isEmpty();
+    public Connector addConnector(Connector c) {
+        String localId = c.getLocalId();
+
+        if (connectorIdGenerator.getIds().contains(localId)) {
+            throw new IllegalArgumentException(
+                    "Cannot add connector: id \"" + localId + "\" already in use");
+        }
+
+        Connector result = new ConnectorImpl(c);
+        connectors.add(result);
+
+        connectorIdGenerator.addId(localId);
+
+        return result;
     }
 
-    @Override
-    public boolean isInput() {
-        return !inputTypes.isEmpty();
-    }
-
+//    @Override
+//    public boolean isInputOfType(String type) {
+//        return inputTypes.contains(type);
+//    }
+//
+//    @Override
+//    public boolean isOutputOfType(String type) {
+//        return outputTypes.contains(type);
+//    }
+//
+//    @Override
+//    public boolean isOutput() {
+//        return !outputTypes.isEmpty();
+//    }
+//
+//    @Override
+//    public boolean isInput() {
+//        return !inputTypes.isEmpty();
+//    }
 //    @Override
 //    public String getGlobalId() {
 //       String id = getId();
@@ -325,13 +364,68 @@ class VNodeImpl implements VNode {
 //       
 //       return id;
 //    }
+//    @Override
+//    public ObservableList<String> getInputTypes() {
+//        return inputTypes;
+//    }
+//
+//    @Override
+//    public ObservableList<String> getOutputTypes() {
+//        return outputTypes;
+//    }
     @Override
-    public ObservableList<String> getInputTypes() {
-        return inputTypes;
+    public Connector getMainInput(String type) {
+        return mainInputs.get(type);
     }
 
     @Override
-    public ObservableList<String> getOutputTypes() {
-        return outputTypes;
+    public Connector getMainOutput(String type) {
+        return mainOutputs.get(type);
+    }
+
+    @Override
+    public Collection<String> getMainInputTypes() {
+        return mainInputs.keySet();
+    }
+
+    @Override
+    public Collection<String> getMainOutputTypes() {
+        return mainOutputs.keySet();
+    }
+
+    @Override
+    public void setMainInput(Connector connector) {
+        mainInputs.put(connector.getType(), connector);
+    }
+
+    @Override
+    public void setMainOutput(Connector connector) {
+        mainOutputs.put(connector.getType(), connector);
+    }
+
+    @Override
+    public Connector getConnector(String localId) {
+        for (Connector c : connectors) {
+            if (c.getLocalId().equals(localId)) {
+                return c;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public ObservableList<Connector> getConnectors() {
+        return this.connectors;
+    }
+
+    @Override
+    public ObservableList<Connector> getInputs() {
+        return this.unmodifiableInputs;
+    }
+
+    @Override
+    public ObservableList<Connector> getOutputs() {
+        return this.unmodifiableOutputs;
     }
 }

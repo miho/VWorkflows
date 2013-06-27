@@ -102,6 +102,7 @@ public class MainWindowFXMLController implements Initializable {
 
         workflow = FlowFactory.newFlow();
         workflowTest(workflow, 5, 10);
+//        workflowTest(workflow, 2, 2);
 
         System.out.println(" [done]");
 
@@ -135,7 +136,7 @@ public class MainWindowFXMLController implements Initializable {
             specialViewFlow2 = workflow;
         }
 
-        VNode prevNode = null;
+        String[] connectionTypes = {"control", "data", "event"};
 
         for (int i = 0; i < width; i++) {
 
@@ -153,28 +154,30 @@ public class MainWindowFXMLController implements Initializable {
 
             n.setTitle("Node " + n.getId());
 
-            if (i % 3 == 0) {
-                n.setInput(true, "control");
-                n.setOutput(true, "control");
-            } else if (i % 3 == 1) {
-                n.setInput(true, "data");
-                n.setOutput(true, "data");
-            } else if (i % 3 == 2) {
-                n.setInput(true, "event");
-                n.setOutput(true, "event");
+            String type = connectionTypes[i % connectionTypes.length];
+
+
+            n.setMainInput(n.addInput(type));
+            n.setMainInput(n.addInput("event"));
+
+            n.addInput(type);
+            n.addInput(type);
+
+            n.addOutput(type);
+            n.setMainOutput(n.addOutput("event"));
+            n.addOutput(type);
+
+//            if (i % 2 == 0) {
+            for (int j = 0; j < 3; j++) {
+                n.addOutput(type);
             }
+//            }
 
             n.setWidth(300);
             n.setHeight(200);
 
             n.setX((i % 5) * (n.getWidth() + 30));
             n.setY((i / 5) * (n.getHeight() + 30));
-
-//            if (prevNode != null) {
-//                workflow.connect(prevNode, n, "control");
-//            }
-
-            prevNode = n;
         }
     }
 
@@ -182,32 +185,32 @@ public class MainWindowFXMLController implements Initializable {
 
         rootPane.getChildren().clear();
 
-        ScalableContentPane minimapPane1 = createMinimap("Minimap 1");
-        ScalableContentPane minimapPane2 = createMinimap("Minimap 2");
-
-        if (workflow == null) {
-            return;
-        }
+//        ScalableContentPane minimapPane1 = createMinimap("Minimap 1");
+//        ScalableContentPane minimapPane2 = createMinimap("Minimap 2");
+//
+//        if (workflow == null) {
+//            return;
+//        }
 
         workflow.getModel().setVisible(true);
 
         workflow.setSkinFactories(new FXSkinFactory(rootPane));
 
-        workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),
-                new FXSkinFactory(minimapPane2.getContentPane()));
+//        workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),
+//                new FXSkinFactory(minimapPane2.getContentPane()));
 
-        ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
-        ScalableContentPane minimapPane4 = createMinimap("Minimap 4");
-
-        if (specialViewFlow1 != null) {
-            specialViewFlow1.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
-        }
-
-        if (specialViewFlow2 != null) {
-            specialViewFlow2.addSkinFactories(new FXSkinFactory(minimapPane4.getContentPane()));
-        }
-
-        workflow.newSubFlow();
+//        ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
+//        ScalableContentPane minimapPane4 = createMinimap("Minimap 4");
+//
+//        if (specialViewFlow1 != null) {
+//            specialViewFlow1.addSkinFactories(new FXSkinFactory(minimapPane3.getContentPane()));
+//        }
+//
+//        if (specialViewFlow2 != null) {
+//            specialViewFlow2.addSkinFactories(new FXSkinFactory(minimapPane4.getContentPane()));
+//        }
+//
+//        workflow.newSubFlow();
     }
 
     private ScalableContentPane createMinimap(String title) {
@@ -227,4 +230,8 @@ public class MainWindowFXMLController implements Initializable {
         rootPane.getChildren().add(minimap);
         return minimapPane;
     }
+
+//    void registerShell(VRLShell shell) {
+//        shell.addConstant("flow", workflow);
+//    }
 }

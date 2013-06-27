@@ -7,6 +7,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import javafx.animation.Animation;
@@ -42,8 +43,8 @@ import jfxtras.labs.util.event.MouseControlUtil;
  */
 public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
-    private ObjectProperty<VNode> senderProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<VNode> receiverProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
     private Path connectionPath;
     private LineTo lineTo;
     private MoveTo moveTo;
@@ -114,84 +115,72 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getSenderId());
         final Window senderWindow = senderSkin.getNode();
+        final Node senderNode = senderSkin.getConnectorById(connection.getSenderId());
 
         FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
+        final Node receiverNode = receiverSkin.getConnectorById(connection.getReceiverId());
 
         addToClipboard();
 
-        setSender(getController().getNodeLookup().getById(connection.getSenderId()));
-        setReceiver(getController().getNodeLookup().getById(connection.getReceiverId()));
+        setSender(getController().getNodeLookup().getConnectorById(connection.getSenderId()));
+        setReceiver(getController().getNodeLookup().getConnectorById(connection.getReceiverId()));
 
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(senderWindow.layoutXProperty(), senderWindow.widthProperty());
+                super.bind(senderNode.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return senderWindow.getLayoutX() + senderWindow.getWidth();
+                return senderNode.getLayoutX();
 
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(senderWindow.layoutYProperty(), senderWindow.heightProperty(), receiverWindow.heightProperty());
+                super.bind(senderNode.layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
-                return senderWindow.getLayoutY() + senderWindow.getHeight() / 2;
+                return senderNode.getLayoutY();
             }
         };
 
         final DoubleBinding receiveXBinding = new DoubleBinding() {
             {
-                super.bind(receiverWindow.boundsInParentProperty());
+                // super.bind(receiverWindow.boundsInParentProperty());
+                super.bind(receiverNode.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                Point2D location = NodeUtil.transformCoordinates(
-                        receiverWindow.getBoundsInParent().getMinX(),
-                        receiverWindow.getBoundsInParent().getMinY(), receiverWindow.getParent(), getParent());
-
-                return location.getX();
+//                Point2D location = NodeUtil.transformCoordinates(
+//                        receiverWindow.getBoundsInParent().getMinX(),
+//                        receiverWindow.getBoundsInParent().getMinY(), receiverWindow.getParent(), getParent());
+//
+//                return location.getX();
+                return receiverNode.layoutXProperty().get();
             }
         };
 
         final DoubleBinding receiveYBinding = new DoubleBinding() {
             {
-                super.bind(
-                        receiverWindow.boundsInParentProperty(),
-                        receiverWindow.heightProperty());
+//                super.bind(
+//                        receiverWindow.boundsInParentProperty(),
+//                        receiverWindow.heightProperty());
+                super.bind(receiverNode.layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
-
-                if (receiverWindow.getParent() == null) {
-                    return 0;
-                }
-
-                if (receiverWindow.getParent() == getParent()) {
-                    return receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2;
-                }
-
-                Point2D location = NodeUtil.transformCoordinates(
-                        0,
-                        receiverWindow.getBoundsInParent().getMinY(),
-                        receiverWindow.getParent(), getParent());
-
-                double height =
-                        receiverWindow.getBoundsInParent().getMaxY()
-                        * receiverWindow.getParent().localToSceneTransformProperty().get().getMyy();
-
-                return location.getY() + height / 2;
+                
+                return receiverNode.layoutYProperty().get();
             }
         };
 
@@ -243,51 +232,74 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                    return;
 //                }
 
-                final Node n = NodeUtil.getDeepestNode(
-                        getParent(),
-                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
+//                final Node n = NodeUtil.getDeepestNode(
+//                        getParent(),
+//                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (lastNode != null) {
                     lastNode.setEffect(null);
                     lastNode = null;
                 }
-
+                
+                SelectedConnector selConnector = 
+                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                
                 valid = true;
+                
+                // reject connection if no main input defined for current node
+                if (selConnector != null
+                        && selConnector.getNode() != null
+                        && selConnector.getConnector() == null) {
+                    DropShadow shadow = new DropShadow(20, Color.RED);
+                    Glow effect = new Glow(0.8);
+                    effect.setInput(shadow);
+                    selConnector.getNode().setEffect(effect);
+                    valid = false;
+                    lastNode = selConnector.getNode();
+                }
 
-                if (n != null) {
-                    final FlowNodeWindow w = (FlowNodeWindow) n;
+                
 
-                    prevWindow = w;
+                if (selConnector != null 
+                        && selConnector.getNode()!=null 
+                        && selConnector.getConnector()!=null) {
+
+                    Node n = selConnector.getNode();
+                    n.toFront();
+                    Connector receiver = selConnector.getConnector();
+
+//                    prevWindow = w;
 
                     ConnectionResult connResult =
-                            getSender().getFlow().tryConnect(
-                            getSender(), w.nodeSkinProperty().get().getModel(),
-                            type);
+                            getSender().getNode().getFlow().tryConnect(
+                            getSender(), receiver);
 
                     if (connResult.getStatus().isCompatible()) {
 
                         DropShadow shadow = new DropShadow(20, Color.WHITE);
                         Glow effect = new Glow(0.5);
                         shadow.setInput(effect);
-                        w.setEffect(shadow);
+                        n.setEffect(shadow);
 
-                        receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
+                        receiverConnector.setFill(
+                                new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
                         valid = true;
                     } else {
 
                         DropShadow shadow = new DropShadow(20, Color.RED);
                         Glow effect = new Glow(0.8);
                         effect.setInput(shadow);
-                        w.setEffect(effect);
+                        n.setEffect(effect);
 
                         receiverConnector.setFill(Color.RED);
                         valid = false;
                     }
 
-                    lastNode = w;
+                    lastNode = n;
 
                 } else {
-                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+                    receiverConnector.setFill(
+                            new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
         }, new EventHandler<MouseEvent>() {
@@ -328,56 +340,82 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                        makeDraggable(receiveXBinding, receiveYBinding);
 //                    }
 //                });
+                
+                
+                 SelectedConnector selConnector = 
+                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type,t);
 
 
+                if (selConnector != null
+                        && selConnector.getNode() != null
+                        && selConnector.getConnector() != null) {
 
-                Node n = NodeUtil.getDeepestNode(
-                        getParent(),
-                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
-
-                if (n != null) {
-                    connection.setReceiverId(
-                            ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
-
-                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+                    Node n = selConnector.getNode();
+                    n.toFront();
+                    Connector receiverConnector = selConnector.getConnector();
+                    
+                    connection.setReceiverId(receiverConnector.getId());
+                    
+                    if (n instanceof Shape) {
+                        ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+                    }
+                    
                     init();
-
-                } else {
+                    
+                }   else {
                     remove();
                     connection.getConnections().remove(connection);
                 }
+
+
+
+//                Node n = NodeUtil.getDeepestNode(
+//                        getParent(),
+//                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
+
+//                if (n != null) {
+//                    connection.setReceiverId(
+//                            ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
+//
+//                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+//                    init();
+
+//                } else {
+//                    remove();
+//                    connection.getConnections().remove(connection);
+//                }
             }
         });
 
     }
 
     @Override
-    public VNode getSender() {
+    public Connector getSender() {
         return senderProperty.get();
     }
 
     @Override
-    public final void setSender(VNode n) {
+    public final void setSender(Connector n) {
         senderProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<VNode> senderProperty() {
+    public ObjectProperty<Connector> senderProperty() {
         return senderProperty;
     }
 
     @Override
-    public VNode getReceiver() {
+    public Connector getReceiver() {
         return receiverProperty.get();
     }
 
     @Override
-    public void setReceiver(VNode n) {
+    public void setReceiver(Connector n) {
         receiverProperty.set(n);
     }
 
     @Override
-    public ObjectProperty<VNode> receiverProperty() {
+    public ObjectProperty<Connector> receiverProperty() {
         return receiverProperty;
     }
 

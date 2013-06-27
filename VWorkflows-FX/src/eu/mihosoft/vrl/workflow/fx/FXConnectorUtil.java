@@ -44,7 +44,8 @@ class FXConnectorUtil {
         final Node myNode = NodeUtil.getDeepestNode(
                 parent,
                 t.getSceneX(), t.getSceneY(),
-                FlowNodeWindow.class, ConnectorCircle.class);
+                ConnectorCircle.class,
+                FlowNodeWindow.class);
         Connector connector = null;
         if (myNode != null) {
             if (myNode instanceof ConnectorCircle) {

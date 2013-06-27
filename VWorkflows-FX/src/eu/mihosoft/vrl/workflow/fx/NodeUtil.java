@@ -243,8 +243,13 @@ public class NodeUtil {
                 }
 
                 for (Class<?> nodeClass : nodeClasses) {
+
                     if (nodeClass.isAssignableFrom(result.getClass())) {
+                        
                         return result;
+                        
+                    } else {
+                        System.out.println("TYPE: " + result.getClass());
                     }
                 }
             }

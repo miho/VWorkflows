@@ -153,7 +153,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
 
                 SelectedConnector selConnector =
-                        FXConnectorUtil.getSelectedInputConnector(getParent(), type, t);
+                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
 
 
 
@@ -163,7 +163,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     Connector receiverConnector = selConnector.getConnector();
                     Node n = selConnector.getNode();
-
+                    n.toFront();
 
                     VNode model = selConnector.getConnector().getNode();
 
@@ -224,8 +224,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class, ConnectorCircle.class);
 
                 SelectedConnector selConnector =
-                        FXConnectorUtil.getSelectedInputConnector(getParent(), type, t);
-
+                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
 
 
                 if (selConnector != null
@@ -233,6 +232,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         && selConnector.getConnector() != null) {
 
                     Node n = selConnector.getNode();
+                    
+                    n.toFront();
+                    
                     Connector receiverConnector = selConnector.getConnector();
 
                     if (n instanceof Shape) {

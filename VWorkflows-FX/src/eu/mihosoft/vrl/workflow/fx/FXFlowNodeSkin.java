@@ -124,8 +124,7 @@ public class FXFlowNodeSkin
 
     private void addConnector(final Connector connector) {
 
-        Circle circle = new Circle(20);
-
+        ConnectorCircle circle = new ConnectorCircle(connector,20);
 
         switch (connector.getType()) {
             case "control":

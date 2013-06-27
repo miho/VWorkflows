@@ -18,6 +18,11 @@ class ConnectorCircle extends Circle{
         this.connector = connector;
     }
 
+    public ConnectorCircle(Connector connector, double radius) {
+        super(radius);
+        this.connector = connector;
+    }
+    
     public ConnectorCircle() {
     }
     

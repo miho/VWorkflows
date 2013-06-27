@@ -102,8 +102,8 @@ public interface VNode extends Model {
     public Connector getMainInput(String type);
     public Connector getMainOutput(String type);
     
-    public void setMainInput(String type, Connector connector);
-    public void setMainOutput(String type, Connector connector);
+    public void setMainInput(Connector connector);
+    public void setMainOutput(Connector connector);
 
     public Connector getConnector(String localId);
 

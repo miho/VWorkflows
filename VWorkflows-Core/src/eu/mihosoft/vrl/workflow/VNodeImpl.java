@@ -386,13 +386,13 @@ class VNodeImpl implements VNode {
     }
     
     @Override
-    public void setMainInput(String type, Connector connector) {
-        mainInputs.put(type, connector);
+    public void setMainInput(Connector connector) {
+        mainInputs.put(connector.getType(), connector);
     }
     
     @Override
-    public void setMainOutput(String type, Connector connector) {
-        mainOutputs.put(type, connector);
+    public void setMainOutput(Connector connector) {
+        mainOutputs.put(connector.getType(), connector);
     }
 
     @Override

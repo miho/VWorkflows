@@ -4,7 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -46,6 +47,9 @@ class VNodeImpl implements VNode {
 //    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
 //    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
     private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
+    
+    private Map<String,Connector> mainInputs = new HashMap<>();
+    private Map<String,Connector> mainOutputs = new HashMap<>();
 
     public VNodeImpl(VFlowModel flow) {
 
@@ -373,12 +377,22 @@ class VNodeImpl implements VNode {
 
     @Override
     public Connector getMainInput(String type) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        return mainInputs.get(type);
     }
 
     @Override
     public Connector getMainOutput(String type) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        return mainOutputs.get(type);
+    }
+    
+    @Override
+    public void setMainInput(String type, Connector connector) {
+        mainInputs.put(type, connector);
+    }
+    
+    @Override
+    public void setMainOutput(String type, Connector connector) {
+        mainOutputs.put(type, connector);
     }
 
     @Override

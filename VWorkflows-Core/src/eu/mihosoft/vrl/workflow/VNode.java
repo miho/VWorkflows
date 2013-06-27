@@ -100,8 +100,10 @@ public interface VNode extends Model {
 //    ObservableList<String> getOutputTypes();
 
     public Connector getMainInput(String type);
-
     public Connector getMainOutput(String type);
+    
+    public void setMainInput(String type, Connector connector);
+    public void setMainOutput(String type, Connector connector);
 
     public Connector getConnector(String localId);
 

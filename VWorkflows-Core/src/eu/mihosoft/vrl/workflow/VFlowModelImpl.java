@@ -406,5 +406,15 @@ class VFlowModelImpl implements VFlowModel {
     public ObservableList<Connector> getOutputs() {
         return this.node.getOutputs();
     }
+
+    @Override
+    public void setMainInput(String type, Connector connector) {
+        this.node.setMainInput(type, connector);
+    }
+
+    @Override
+    public void setMainOutput(String type, Connector connector) {
+        this.node.setMainOutput(type, connector);
+    }
 }
 

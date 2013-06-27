@@ -4,8 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.lang.VRLShell;
-import eu.mihosoft.vrl.vshell.VShell;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -70,11 +70,11 @@ public class Main extends Application {
         MouseControlUtil.
                 addSelectionRectangleGesture(controller.getRootPane(), rect);
 
-        Playground.search01();
-        
-        VRLShell shell = VShell.showInteractivScenicView(canvas);
-        
-        controller.registerShell(shell);
+//        Playground.search01();
+//        
+//        VRLShell shell = VShell.showInteractivScenicView(canvas);
+//        
+//        controller.registerShell(shell);
 
     }
 

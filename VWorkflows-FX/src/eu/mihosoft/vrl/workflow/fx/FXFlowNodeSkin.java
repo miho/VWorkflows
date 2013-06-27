@@ -188,20 +188,9 @@ public class FXFlowNodeSkin
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-
-                double connectorHeight = output.getRadius() * 2;
-                double gap = 5;
-                double totalHeight = outputsList.size() * connectorHeight + (outputsList.size() - 1) * gap;
-
-                connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (outputsList.size());
-
-                connectorHeight = Math.min(connectorHeight, 20 * 2);
-
-                output.setRadius(connectorHeight / 2);
-
+                adjustConnectorSize(output, newValue);
             }
         });
-
 
         NodeUtil.addToParent(getParent(), output);
 
@@ -223,7 +212,7 @@ public class FXFlowNodeSkin
 
                 newConnectionSkin =
                         new FXNewConnectionSkin(getSkinFactory(),
-                        getParent(), getModel(), getController(), outC.getType());
+                        getParent(), outC, getController(), outC.getType());
 
                 newConnectionSkin.add();
 
@@ -260,6 +249,24 @@ public class FXFlowNodeSkin
                 output.toBack();
             }
         });
+
+
+        
+    }
+
+    private void adjustConnectorSize(Circle connectorNode, Bounds newValue) {
+        connectorNode.setRadius(computeConnectorHeight(connectorNode, newValue) / 2);
+    }
+
+    private double computeConnectorHeight(Circle connectorNode, Bounds newValue) {
+        double connectorHeight = connectorNode.getRadius() * 2;
+        double gap = 5;
+        double totalHeight = outputsList.size() * connectorHeight + (outputsList.size() - 1) * gap;
+
+        connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (outputsList.size());
+        connectorHeight = Math.min(connectorHeight, 20 * 2);
+
+        return connectorHeight;
     }
 
     private void removeOutputConnector(String id) {

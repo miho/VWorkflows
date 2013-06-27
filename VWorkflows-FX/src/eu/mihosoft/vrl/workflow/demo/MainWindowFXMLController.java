@@ -162,7 +162,10 @@ public class MainWindowFXMLController implements Initializable {
 
             String type = connectionTypes[i % connectionTypes.length];
 
-            n.addInput(type);
+            
+            n.setMainInput(type, n.addInput(type));
+            
+            
             n.addOutput(type);
             
             if (i %2 ==0) {

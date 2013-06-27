@@ -461,4 +461,8 @@ public class FXFlowNodeSkin
     public FXSkinFactory getSkinFactory() {
         return this.skinFactory;
     }
+    
+    public Node getConnectorById(String id) {
+        return outputs.get(id);
+    }
 }

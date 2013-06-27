@@ -115,11 +115,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getSenderId());
         final Window senderWindow = senderSkin.getNode();
+        final Node senderNode = senderSkin.getConnectorById(connection.getSenderId());
 
         FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
-        
-        System.out.println("RECEIVER-WIN: " + receiverWindow);
+        final Node receiverNode = receiverSkin.getConnectorById(connection.getReceiverId());
 
         addToClipboard();
 
@@ -129,25 +129,25 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(senderWindow.layoutXProperty(), senderWindow.widthProperty());
+                super.bind(senderNode.boundsInLocalProperty(), senderNode.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return senderWindow.getLayoutX() + senderWindow.getWidth();
+                return senderNode.getLayoutX();
 
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(senderWindow.layoutYProperty(), senderWindow.heightProperty(), receiverWindow.heightProperty());
+                super.bind(senderNode.boundsInLocalProperty(), senderNode.layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
-                return senderWindow.getLayoutY() + senderWindow.getHeight() / 2;
+                return senderNode.getLayoutY();
             }
         };
 
@@ -339,24 +339,50 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                        makeDraggable(receiveXBinding, receiveYBinding);
 //                    }
 //                });
+                
+                
+                 SelectedConnector selConnector = 
+                        FXConnectorUtil.getSelectedInputConnector(getParent(), type,t);
 
 
 
-                Node n = NodeUtil.getDeepestNode(
-                        getParent(),
-                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
+                if (selConnector != null
+                        && selConnector.getNode() != null
+                        && selConnector.getConnector() != null) {
 
-                if (n != null) {
-                    connection.setReceiverId(
-                            ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
-
-                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+                    Node n = selConnector.getNode();
+                    Connector receiverConnector = selConnector.getConnector();
+                    
+                    connection.setReceiverId(receiverConnector.getId());
+                    
+                    if (n instanceof Shape) {
+                        ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+                    }
+                    
                     init();
-
-                } else {
+                    
+                }   else {
                     remove();
                     connection.getConnections().remove(connection);
                 }
+
+
+
+//                Node n = NodeUtil.getDeepestNode(
+//                        getParent(),
+//                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
+
+//                if (n != null) {
+//                    connection.setReceiverId(
+//                            ((FlowNodeWindow) n).nodeSkinProperty().get().getModel().getId());
+//
+//                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+//                    init();
+
+//                } else {
+//                    remove();
+//                    connection.getConnections().remove(connection);
+//                }
             }
         });
 

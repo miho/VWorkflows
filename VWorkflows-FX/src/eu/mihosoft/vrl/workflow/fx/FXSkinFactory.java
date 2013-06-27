@@ -43,6 +43,7 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
     @Override
     public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
+        System.out.println("skin for: " + c);
         return new FXConnectionSkin(this, parent, c, flow, type/*, clipboard*/);
     }
 

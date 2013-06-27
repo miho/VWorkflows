@@ -22,7 +22,6 @@ class ConnectorCircle extends Circle{
     }
     
     
-
     /**
      * @return the connector
      */

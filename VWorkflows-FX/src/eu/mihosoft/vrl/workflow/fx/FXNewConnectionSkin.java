@@ -97,28 +97,54 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //    
 
         final VNode sender = getSender().getNode();
-
+        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, getSender().getId());
+        final Node senderNode = senderSkin.getConnectorById(getSender().getId());
+        
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(sender.xProperty(), sender.widthProperty());
+                super.bind(senderNode.boundsInLocalProperty(), senderNode.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
-                return sender.getX() + sender.getWidth();
+
+                return senderNode.getLayoutX();
+
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(sender.yProperty(), sender.heightProperty());
+                super.bind(senderNode.boundsInLocalProperty(), senderNode.layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
-                return sender.getY() + sender.getHeight() / 2;
+                return senderNode.getLayoutY();
             }
         };
+
+//        DoubleBinding startXBinding = new DoubleBinding() {
+//            {
+//                super.bind(sender.xProperty(), sender.widthProperty());
+//            }
+//
+//            @Override
+//            protected double computeValue() {
+//                return sender.getX() + sender.getWidth();
+//            }
+//        };
+//
+//        DoubleBinding startYBinding = new DoubleBinding() {
+//            {
+//                super.bind(sender.yProperty(), sender.heightProperty());
+//            }
+//
+//            @Override
+//            protected double computeValue() {
+//                return sender.getY() + sender.getHeight() / 2;
+//            }
+//        };
 
         moveTo.xProperty().bind(startXBinding);
         moveTo.yProperty().bind(startYBinding);

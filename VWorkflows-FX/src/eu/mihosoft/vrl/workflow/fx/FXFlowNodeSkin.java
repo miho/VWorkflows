@@ -124,7 +124,7 @@ public class FXFlowNodeSkin
 
     private void addConnector(final Connector connector) {
 
-        ConnectorCircle circle = new ConnectorCircle(connector,20);
+        ConnectorCircle circle = new ConnectorCircle(connector, 20);
 
         switch (connector.getType()) {
             case "control":
@@ -231,17 +231,15 @@ public class FXFlowNodeSkin
 //                    return;
 //                }
 
-                if (connector.isOutput()) {
+                newConnectionSkin =
+                        new FXNewConnectionSkin(getSkinFactory(),
+                        getParent(), connector, getController(), connector.getType());
 
-                    newConnectionSkin =
-                            new FXNewConnectionSkin(getSkinFactory(),
-                            getParent(), connector, getController(), connector.getType());
+                newConnectionSkin.add();
 
-                    newConnectionSkin.add();
+                t.consume();
+                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
 
-                    t.consume();
-                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
-                }
             }
         });
 

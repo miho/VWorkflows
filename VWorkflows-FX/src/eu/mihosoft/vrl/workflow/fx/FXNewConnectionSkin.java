@@ -152,8 +152,13 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 }
 
 
-                SelectedConnector selConnector =
-                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                SelectedConnector selConnector = null;
+
+                if (getSender().isOutput()) {
+                    selConnector = FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                } else {
+                    selConnector = FXConnectorUtil.getSelectedOutputConnector(getParent().getScene().getRoot(), type, t);
+                }
 
                 // reject connection if no main input defined for current node
                 if (selConnector != null
@@ -181,9 +186,16 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                        return;
 //                    }
 
-                    ConnectionResult connResult =
-                            flow.tryConnect(
-                            getSender(), receiverConnector);
+                    ConnectionResult connResult = null;
+
+                    if (getSender().isInput() && receiverConnector.isOutput()) {
+
+                        connResult = flow.tryConnect(
+                                receiverConnector, getSender());
+                    } else {
+                        connResult = flow.tryConnect(
+                                getSender(), receiverConnector);
+                    }
 
                     if (connResult.getStatus().isCompatible()) {
 
@@ -232,8 +244,14 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                        getParent(),
 //                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class, ConnectorCircle.class);
 
-                SelectedConnector selConnector =
-                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                SelectedConnector selConnector = null;
+
+                if (getSender().isOutput()) {
+                    selConnector = FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                } else {
+                    selConnector = FXConnectorUtil.getSelectedOutputConnector(getParent().getScene().getRoot(), type, t);
+                }
+
 
 
                 if (selConnector != null
@@ -250,9 +268,19 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                     }
 
-                    System.out.println("FX-CONNECT: " + getSender().getId() + " -> " + receiverConnector.getId());
 
-                    flow.connect(getSender(), receiverConnector);
+
+
+                    ConnectionResult connResult = null;
+
+                    if (getSender().isInput() && receiverConnector.isOutput()) {
+
+                        connResult = flow.connect(receiverConnector, getSender());
+                    } else {
+                        connResult = flow.connect(getSender(), receiverConnector);
+                    }
+
+                    System.out.println("FX-CONNECT: " + connResult.getConnection());
                 }
 
                 remove();

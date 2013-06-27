@@ -170,13 +170,13 @@ public class MainWindowFXMLController implements Initializable {
             n.addInput(type);
 
             n.addOutput(type);
-            n.addOutput("event");
+            n.setMainOutput(n.addOutput("event"));
             n.addOutput(type);
 
 //            if (i % 2 == 0) {
-                for (int j = 0; j < 3; j++) {
-                    n.addOutput(type);
-                }
+            for (int j = 0; j < 3; j++) {
+                n.addOutput(type);
+            }
 //            }
 
             n.setWidth(300);

@@ -129,7 +129,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(), senderNode.layoutXProperty());
+                super.bind(senderNode.layoutXProperty());
             }
 
             @Override
@@ -142,7 +142,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(), senderNode.layoutYProperty());
+                super.bind(senderNode.layoutYProperty());
             }
 
             @Override
@@ -153,48 +153,34 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         final DoubleBinding receiveXBinding = new DoubleBinding() {
             {
-                super.bind(receiverWindow.boundsInParentProperty());
+                // super.bind(receiverWindow.boundsInParentProperty());
+                super.bind(receiverNode.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                Point2D location = NodeUtil.transformCoordinates(
-                        receiverWindow.getBoundsInParent().getMinX(),
-                        receiverWindow.getBoundsInParent().getMinY(), receiverWindow.getParent(), getParent());
-
-                return location.getX();
+//                Point2D location = NodeUtil.transformCoordinates(
+//                        receiverWindow.getBoundsInParent().getMinX(),
+//                        receiverWindow.getBoundsInParent().getMinY(), receiverWindow.getParent(), getParent());
+//
+//                return location.getX();
+                return receiverNode.layoutXProperty().get();
             }
         };
 
         final DoubleBinding receiveYBinding = new DoubleBinding() {
             {
-                super.bind(
-                        receiverWindow.boundsInParentProperty(),
-                        receiverWindow.heightProperty());
+//                super.bind(
+//                        receiverWindow.boundsInParentProperty(),
+//                        receiverWindow.heightProperty());
+                super.bind(receiverNode.layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
-
-                if (receiverWindow.getParent() == null) {
-                    return 0;
-                }
-
-                if (receiverWindow.getParent() == getParent()) {
-                    return receiverWindow.getLayoutY() + receiverWindow.getHeight() / 2;
-                }
-
-                Point2D location = NodeUtil.transformCoordinates(
-                        0,
-                        receiverWindow.getBoundsInParent().getMinY(),
-                        receiverWindow.getParent(), getParent());
-
-                double height =
-                        receiverWindow.getBoundsInParent().getMaxY()
-                        * receiverWindow.getParent().localToSceneTransformProperty().get().getMyy();
-
-                return location.getY() + height / 2;
+                
+                return receiverNode.layoutYProperty().get();
             }
         };
 

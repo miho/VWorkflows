@@ -90,8 +90,8 @@ public class FXFlowNodeSkin
             }
         });
 
-        for (Connector outC : getModel().getConnectors()) {
-            addConnector(outC);
+        for (Connector connector : getModel().getConnectors()) {
+            addConnector(connector);
         }
 
         getModel().getConnectors().addListener(new ListChangeListener<Connector>() {
@@ -150,7 +150,8 @@ public class FXFlowNodeSkin
 
         if (connector.isInput()) {
             inputList.add(connectorNode);
-        } else if (connector.isOutput()) {
+        }
+        if (connector.isOutput()) {
             outputList.add(connectorNode);
         }
 
@@ -209,7 +210,7 @@ public class FXFlowNodeSkin
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-                adjustConnectorSize(connector,connectorNode, newValue);
+                adjustConnectorSize(connector, connectorNode, newValue);
             }
         });
 
@@ -307,7 +308,7 @@ public class FXFlowNodeSkin
         if (connectorNode != null && connectorNode.getParent() != null) {
             if (connector.isInput()) {
                 inputList.remove(connectorNode);
-            } if (connector.isOutput()) {
+            } else if (connector.isOutput()) {
                 outputList.remove(connectorNode);
             }
             NodeUtil.removeFromParent(connectorNode);

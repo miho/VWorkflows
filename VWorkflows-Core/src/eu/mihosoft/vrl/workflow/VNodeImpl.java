@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.beans.property.DoubleProperty;
@@ -47,9 +48,8 @@ class VNodeImpl implements VNode {
 //    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
 //    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
     private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
-    
-    private Map<String,Connector> mainInputs = new HashMap<>();
-    private Map<String,Connector> mainOutputs = new HashMap<>();
+    private Map<String, Connector> mainInputs = new HashMap<>();
+    private Map<String, Connector> mainOutputs = new HashMap<>();
 
     public VNodeImpl(VFlowModel flow) {
 
@@ -347,7 +347,6 @@ class VNodeImpl implements VNode {
 //    public boolean isInput() {
 //        return !inputTypes.isEmpty();
 //    }
-
 //    @Override
 //    public String getGlobalId() {
 //       String id = getId();
@@ -374,7 +373,6 @@ class VNodeImpl implements VNode {
 //    public ObservableList<String> getOutputTypes() {
 //        return outputTypes;
 //    }
-
     @Override
     public Connector getMainInput(String type) {
         return mainInputs.get(type);
@@ -384,12 +382,22 @@ class VNodeImpl implements VNode {
     public Connector getMainOutput(String type) {
         return mainOutputs.get(type);
     }
-    
+
+    @Override
+    public Collection<String> getMainInputTypes() {
+        return mainInputs.keySet();
+    }
+
+    @Override
+    public Collection<String> getMainOutputTypes() {
+        return mainOutputs.keySet();
+    }
+
     @Override
     public void setMainInput(Connector connector) {
         mainInputs.put(connector.getType(), connector);
     }
-    
+
     @Override
     public void setMainOutput(Connector connector) {
         mainOutputs.put(connector.getType(), connector);

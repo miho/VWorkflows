@@ -4,7 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import javafx.beans.property.BooleanProperty;
+import java.util.Collection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -82,11 +82,9 @@ public interface VNode extends Model {
 //    boolean isInputOfType(String type);
 //
 //    boolean isOutputOfType(String type);
-
 //    boolean isInput();
 //
 //    boolean isOutput();
-
 //    void setInput(boolean state, String type);
 //    void setOutput(boolean state, String type);
     public Connector addInput(String type);
@@ -98,17 +96,23 @@ public interface VNode extends Model {
 //    ObservableList<String> getInputTypes();
 //
 //    ObservableList<String> getOutputTypes();
+    public Collection<String> getMainInputTypes();
+
+    public Collection<String> getMainOutputTypes();
 
     public Connector getMainInput(String type);
+
     public Connector getMainOutput(String type);
-    
+
     public void setMainInput(Connector connector);
+
     public void setMainOutput(Connector connector);
 
     public Connector getConnector(String localId);
 
     public ObservableList<Connector> getConnectors();
-    
+
     public ObservableList<Connector> getInputs();
+
     public ObservableList<Connector> getOutputs();
 }

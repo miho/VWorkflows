@@ -7,6 +7,7 @@ package eu.mihosoft.vrl.workflow;
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
@@ -51,16 +52,16 @@ class VFlowModelImpl implements VFlowModel {
             } else {
                 pFlow = (VFlowModel) parentFlow;
             }
-            if (parentFlow.getIdGenerator()==null) {
+            if (parentFlow.getIdGenerator() == null) {
                 throw new IllegalStateException("Please define an id generator before creating subflows!");
             }
-            
+
             setIdGenerator(parentFlow.getIdGenerator().newChild());
         }
 
         node = new VNodeImpl(pFlow);
         setTitle("Node");
-        
+
     }
 
     @Override
@@ -72,14 +73,14 @@ class VFlowModelImpl implements VFlowModel {
     public ConnectionResult connect(VNode s, VNode r, String flowType) {
         return flow.connect(s, r, flowType);
     }
-    
-     @Override
-    public ConnectionResult tryConnect(Connector s, Connector r ){
+
+    @Override
+    public ConnectionResult tryConnect(Connector s, Connector r) {
         return flow.tryConnect(s, r);
     }
 
     @Override
-    public ConnectionResult connect(Connector s, Connector r ){
+    public ConnectionResult connect(Connector s, Connector r) {
         return flow.connect(s, r);
     }
 
@@ -258,8 +259,6 @@ class VFlowModelImpl implements VFlowModel {
         return node.getFlow();
     }
 
-   
-
 //    @Override
 //    public boolean isInput() {
 //        return node.isInput();
@@ -269,7 +268,6 @@ class VFlowModelImpl implements VFlowModel {
 //    public boolean isOutput() {
 //        return node.isOutput();
 //    }
-
     @Override
     public VFlowModel newFlowNode(ValueObject obj) {
         VFlowModel flowNode = new VFlowModelImpl(this);
@@ -280,17 +278,17 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public VFlowModel newFlowNode() {
         VFlowModel flowNode = new VFlowModelImpl(this);
-        
+
         DefaultValueObject valObj = new DefaultValueObject();
 
         VFlowModel result = (VFlowModel) flow.newNode(flowNode, valObj); // end newNode()
-        
+
         valObj.setParent(result);
-        
+
         return result;
 
     }
-    
+
     @Override
     public VNode newNode(ValueObject obj) {
 
@@ -313,7 +311,7 @@ class VFlowModelImpl implements VFlowModel {
 
         return result;
     }
-    
+
     @Override
     public VNode newNode() {
         DefaultValueObject valObj = new DefaultValueObject();
@@ -326,7 +324,6 @@ class VFlowModelImpl implements VFlowModel {
 //    public String getGlobalId() {
 //        return node.getGlobalId();
 //    }
-
     @Override
     public final void setIdGenerator(IdGenerator generator) {
         flow.setIdGenerator(generator);
@@ -366,7 +363,6 @@ class VFlowModelImpl implements VFlowModel {
 //    public boolean isOutputOfType(String type) {
 //        return node.isOutputOfType(type);
 //    }
-
     @Override
     public Connector getMainInput(String type) {
         return this.node.getMainInput(type);
@@ -384,7 +380,7 @@ class VFlowModelImpl implements VFlowModel {
 
     @Override
     public Connector addOutput(String type) {
-       return this.node.addOutput(type);
+        return this.node.addOutput(type);
     }
 
     @Override
@@ -416,5 +412,14 @@ class VFlowModelImpl implements VFlowModel {
     public void setMainOutput(Connector connector) {
         this.node.setMainOutput(connector);
     }
-}
 
+    @Override
+    public Collection<String> getMainInputTypes() {
+        return this.node.getMainInputTypes();
+    }
+
+    @Override
+    public Collection<String> getMainOutputTypes() {
+        return this.node.getMainOutputTypes();
+    }
+}

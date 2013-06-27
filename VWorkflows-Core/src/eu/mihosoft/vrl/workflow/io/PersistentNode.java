@@ -4,10 +4,11 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -24,6 +25,8 @@ public class PersistentNode {
     private VisualizationRequest vReq;
     private String id;
     private List<PersistentConnector> connectors;
+    private Map<String,String> mainInputs = new HashMap<>();
+    private Map<String,String> mainOutputs = new HashMap<>();
 
     public PersistentNode() {
     }
@@ -183,5 +186,33 @@ public class PersistentNode {
 //            connector.setNode(this);
             
             connectors.add(connector);
+    }
+
+    /**
+     * @return the mainInputs
+     */
+    public Map<String,String> getMainInputs() {
+        return mainInputs;
+    }
+
+    /**
+     * @param mainInputs the mainInputs to set
+     */
+    public void setMainInputs(Map<String,String> mainInputs) {
+        this.mainInputs = mainInputs;
+    }
+
+    /**
+     * @return the mainOutputs
+     */
+    public Map<String,String> getMainOutputs() {
+        return mainOutputs;
+    }
+
+    /**
+     * @param mainOutputs the mainOutputs to set
+     */
+    public void setMainOutputs(Map<String,String> mainOutputs) {
+        this.mainOutputs = mainOutputs;
     }
 }

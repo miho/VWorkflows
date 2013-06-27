@@ -121,6 +121,14 @@ public class WorkflowIO {
                 pFlow.addConnector(toPersistentConnector(c));
             }
 
+            for (String mainType : node.getMainInputTypes()) {
+                pFlow.getMainInputs().put(mainType, node.getMainInput(mainType).getLocalId());
+            }
+            
+            for (String mainType : node.getMainOutputTypes()) {
+                pFlow.getMainOutputs().put(mainType, node.getMainOutput(mainType).getLocalId());
+            }
+
             for (VNode n : flow.getNodes()) {
                 nodeList.add(toPersistentNode(n, pFlow));
             }
@@ -139,6 +147,14 @@ public class WorkflowIO {
 
             for (Connector c : node.getConnectors()) {
                 pNode.addConnector(toPersistentConnector(c));
+            }
+            
+            for (String mainType : node.getMainInputTypes()) {
+                pNode.getMainInputs().put(mainType, node.getMainInput(mainType).getLocalId());
+            }
+            
+            for (String mainType : node.getMainOutputTypes()) {
+                pNode.getMainOutputs().put(mainType, node.getMainOutput(mainType).getLocalId());
             }
 
             return pNode;
@@ -177,8 +193,16 @@ public class WorkflowIO {
             addFlowNode(result, n, generator);
         }
 
-        for (PersistentConnector input : flow.getConnectors()) {
-            result.addConnector(fromPersistentConnector(input, result));
+        for (PersistentConnector connector : flow.getConnectors()) {
+            result.addConnector(fromPersistentConnector(connector, result));
+        }
+        
+        for (String type : flow.getMainInputs().keySet()) {
+            result.setMainInput(result.getConnector(flow.getMainInputs().get(type)));
+        }
+        
+        for (String type : flow.getMainOutputs().keySet()) {
+            result.setMainOutput(result.getConnector(flow.getMainOutputs().get(type)));
         }
 
         Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();

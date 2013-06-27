@@ -56,7 +56,8 @@ public class FXFlowNodeSkin
     private boolean removeSkinOnly = false;
     private VFlow controller;
     private Map<String, Node> connectors = new HashMap<>();
-    private List<Node> connectorsList = new ArrayList<>();
+    private List<Node> inputList = new ArrayList<>();
+    private List<Node> outputList = new ArrayList<>();
     private FXSkinFactory skinFactory;
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
@@ -89,7 +90,7 @@ public class FXFlowNodeSkin
             }
         });
 
-        for (Connector outC : getModel().getOutputs()) {
+        for (Connector outC : getModel().getConnectors()) {
             addConnector(outC);
         }
 
@@ -105,13 +106,13 @@ public class FXFlowNodeSkin
                         //update item
                     } else if (change.wasRemoved()) {
                         // removed
-                        for (Connector outC : change.getRemoved()) {
-                            removeOutputConnector(outC.getId());
+                        for (Connector connector : change.getRemoved()) {
+                            removeConnector(connector);
                         }
                     } else if (change.wasAdded()) {
                         // added
-                        for (Connector outC : change.getAddedSubList()) {
-                            addConnector(outC);
+                        for (Connector connector : change.getAddedSubList()) {
+                            addConnector(connector);
                         }
                     }
 
@@ -146,7 +147,12 @@ public class FXFlowNodeSkin
         final Circle connectorNode = circle;
 
         connectors.put(connector.getId(), connectorNode);
-        connectorsList.add(connectorNode);
+
+        if (connector.isInput()) {
+            inputList.add(connectorNode);
+        } else if (connector.isOutput()) {
+            outputList.add(connectorNode);
+        }
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
@@ -176,13 +182,22 @@ public class FXFlowNodeSkin
                 double connectorHeight = connectorNode.getRadius() * 2;
                 double gap = 5;
 
-                double totalHeight = connectorsList.size() * connectorHeight + (connectorsList.size() - 1) * gap;
+                double numConnectors = inputList.size();
+                int connectorIndex = inputList.indexOf(connectorNode);
+
+
+                if (connector.isOutput()) {
+                    numConnectors = outputList.size();
+                    connectorIndex = outputList.indexOf(connectorNode);
+                }
+
+                double totalHeight = numConnectors * connectorHeight + (numConnectors - 1) * gap;
 
                 double midPointOfNode = node.getLayoutY() + node.getHeight() / 2;
 
                 double startY = midPointOfNode - totalHeight / 2;
 
-                double y = startY + (connectorHeight + gap) * connectorsList.indexOf(connectorNode) + (connectorHeight + gap) / 2;
+                double y = startY + (connectorHeight + gap) * connectorIndex + (connectorHeight + gap) / 2;
 
                 return y;
             }
@@ -194,7 +209,7 @@ public class FXFlowNodeSkin
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-                adjustConnectorSize(connectorNode, newValue);
+                adjustConnectorSize(connector,connectorNode, newValue);
             }
         });
 
@@ -263,27 +278,39 @@ public class FXFlowNodeSkin
 
     }
 
-    private void adjustConnectorSize(Circle connectorNode, Bounds newValue) {
-        connectorNode.setRadius(computeConnectorHeight(connectorNode, newValue) / 2);
+    private void adjustConnectorSize(Connector conector, Circle connectorNode, Bounds newValue) {
+        connectorNode.setRadius(computeConnectorHeight(conector, connectorNode, newValue) / 2);
     }
 
-    private double computeConnectorHeight(Circle connectorNode, Bounds newValue) {
+    private double computeConnectorHeight(Connector connector, Circle connectorNode, Bounds newValue) {
         double connectorHeight = connectorNode.getRadius() * 2;
         double gap = 5;
-        double totalHeight = connectorsList.size() * connectorHeight + (connectorsList.size() - 1) * gap;
 
-        connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (connectorsList.size());
+        int numConnectors = inputList.size();
+
+
+        if (connector.isOutput()) {
+            numConnectors = outputList.size();
+        }
+
+        double totalHeight = numConnectors * connectorHeight + (numConnectors - 1) * gap;
+
+        connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (numConnectors);
         connectorHeight = Math.min(connectorHeight, 20 * 2);
 
         return connectorHeight;
     }
 
-    private void removeOutputConnector(String id) {
-        Node output = connectors.remove(id);
+    private void removeConnector(Connector connector) {
+        Node connectorNode = connectors.remove(connector.getId());
 
-        if (output != null && output.getParent() != null) {
-            connectorsList.remove(output);
-            NodeUtil.removeFromParent(output);
+        if (connectorNode != null && connectorNode.getParent() != null) {
+            if (connector.isInput()) {
+                inputList.remove(connectorNode);
+            } if (connector.isOutput()) {
+                outputList.remove(connectorNode);
+            }
+            NodeUtil.removeFromParent(connectorNode);
         }
     }
 
@@ -304,7 +331,7 @@ public class FXFlowNodeSkin
         Set<String> keySet = new HashSet<>(connectors.keySet());
 
         for (String id : keySet) {
-            removeOutputConnector(id);
+            removeConnector(getModel().getFlow().getNodeLookup().getConnectorById(id));
         }
         if (node != null && node.getParent() != null) {
             NodeUtil.removeFromParent(node);

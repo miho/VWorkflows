@@ -183,8 +183,8 @@ public class FXFlowNodeSkin
                 double gap = 5;
 
                 double numConnectors = inputList.size();
+                
                 int connectorIndex = inputList.indexOf(connectorNode);
-
 
                 if (connector.isOutput()) {
                     numConnectors = outputList.size();
@@ -282,6 +282,7 @@ public class FXFlowNodeSkin
 
     private double computeConnectorHeight(Connector connector, Circle connectorNode, Bounds newValue) {
         double connectorHeight = connectorNode.getRadius() * 2;
+        double originalConnectorHeight = connectorHeight;
         double gap = 5;
 
         int numConnectors = inputList.size();
@@ -295,6 +296,10 @@ public class FXFlowNodeSkin
 
         connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (numConnectors);
         connectorHeight = Math.min(connectorHeight, 20 * 2);
+        
+        if (numConnectors == 1) {
+            connectorHeight = originalConnectorHeight;
+        }
 
         return connectorHeight;
     }

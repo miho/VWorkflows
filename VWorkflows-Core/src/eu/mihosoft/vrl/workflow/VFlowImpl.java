@@ -242,12 +242,12 @@ class VFlowImpl implements VFlow {
     }
 
     // TODO duplicated code
-    private static String connectionId(String id, String s, String r) {
+    static String connectionId(String id, String s, String r) {
         return "id=" + id + ";[" + s + "]->[" + r + "]";
     }
 
     // TODO duplicated code
-    private static String connectionId(Connection c) {
+    static String connectionId(Connection c) {
         return connectionId(c.getId(), c.getSenderId(), c.getReceiverId());
     }
 
@@ -854,7 +854,6 @@ class VFlowImpl implements VFlow {
 //    public ObservableList<String> getOutputTypes() {
 //        return getModel().getOutputTypes();
 //    }
-
     private Map<String, VNodeSkin> getNodeSkinMap(SkinFactory skinFactory) {
         Map<String, VNodeSkin> nodeSkinMap = nodeSkins.get(skinFactory);
         if (nodeSkinMap == null) {
@@ -864,7 +863,7 @@ class VFlowImpl implements VFlow {
         return nodeSkinMap;
     }
 
-    private Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory) {
+    Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory) {
         Map<String, ConnectionSkin> connectionSkinMap = connectionSkins.get(skinFactory);
         if (connectionSkinMap == null) {
             connectionSkinMap = new HashMap<>();
@@ -896,5 +895,29 @@ class VFlowImpl implements VFlow {
         return getModel().addOutput(type);
     }
 
-    
+    @Override
+    public VFlow getFlowById(String id) {
+        return getFlowById(this, id);
+    }
+
+    private VFlow getFlowById(VFlow parent, String id) {
+
+        if (getModel().getId().equals(id)) {
+            return this;
+        }
+
+        for (VFlow sf : parent.getSubControllers()) {
+            if (sf.getModel().getId().equals(id)) {
+                return sf;
+            } else {
+                VFlow tmp = getFlowById(sf, id);
+
+                if (tmp != null) {
+                    return tmp;
+                }
+            }
+        }
+
+        return null;
+    }
 }

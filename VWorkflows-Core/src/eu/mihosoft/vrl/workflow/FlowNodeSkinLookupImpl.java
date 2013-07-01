@@ -6,6 +6,7 @@ package eu.mihosoft.vrl.workflow;
 
 import java.util.Collection;
 import java.util.List;
+import javax.naming.OperationNotSupportedException;
 
 /**
  *
@@ -117,10 +118,10 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
     @Override
     public VNodeSkin getById(SkinFactory skinFactory, String globalId) {
-        
+
         // support for connector ids, we wan't to return node skin if connector
         // id is given
-        globalId = globalId.split(":")[0]; 
+        globalId = globalId.split(":")[0];
 
         VNodeSkin result = getNodeByGlobalId(skinFactory, root, globalId);
 
@@ -131,5 +132,37 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 //        }
 
         return result;
+    }
+
+    @Override
+    public ConnectionSkin<?> getById(SkinFactory skinFactory, Connection c) {
+
+        String sender = c.getSenderId();
+        String receiver = c.getReceiverId();
+
+        VFlowModel senderFlow = root.getNodeLookup().getById(sender.split(":")[0]).getFlow();
+        VFlowModel receiverFlow = root.getNodeLookup().getById(receiver.split(":")[0]).getFlow();
+
+        if (senderFlow != receiverFlow) {
+            throw new UnsupportedOperationException(
+                    "Only skins for connections that share the same parent can be searched");
+        }
+
+        VFlow flow = root.getFlowById(senderFlow.getId());
+
+        if (!(flow instanceof VFlowImpl)) {
+            System.err.println("flow: " + flow);
+            throw new UnsupportedOperationException(
+                    "Unsupported flow class '"
+                    + flow.getClass()
+                    + "', should implement '" + VFlowImpl.class + "'");
+        }
+
+        VFlowImpl flowImpl = (VFlowImpl) flow;
+
+        ConnectionSkin<Connection> skin = flowImpl.getConnectionSkinMap(skinFactory).get(
+                VFlowImpl.connectionId(c));
+
+        return skin;
     }
 }

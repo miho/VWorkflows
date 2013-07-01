@@ -13,4 +13,5 @@ import java.util.List;
 public interface FlowNodeSkinLookup extends Lookup<List<VNodeSkin>> {
 
     public VNodeSkin getById(SkinFactory skinFactory, String globalId);
+    public ConnectionSkin<?> getById(SkinFactory skinFactory, Connection c);
 }

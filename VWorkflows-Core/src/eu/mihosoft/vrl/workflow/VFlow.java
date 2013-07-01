@@ -26,9 +26,9 @@ public interface VFlow {
     public VFlowModel getModel();
 
     public ObjectProperty modelProperty();
-    
+
     public ConnectionResult tryConnect(Connector s, Connector r);
-    
+
     public ConnectionResult connect(Connector s, Connector r);
 
     public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
@@ -50,7 +50,7 @@ public interface VFlow {
     public VNode remove(VNode n);
 
     public ObservableList<VNode> getNodes();
-    
+
     public void clear();
 
     public VNode getSender(Connection c);
@@ -60,6 +60,7 @@ public interface VFlow {
     public void addConnections(Connections connections, String flowType);
 
     public Connections getConnections(String flowType);
+
     public ObservableMap<String, Connections> getAllConnections();
 
     public void setFlowNodeClass(Class<? extends VNode> cls);
@@ -113,11 +114,9 @@ public interface VFlow {
 //    boolean isInputOfType(String type);
 //
 //    boolean isOutputOfType(String type);
-
 //    boolean isInput();
 //
 //    boolean isOutput();
-
     Connector addInput(String type);
 
     Connector addOutput(String type);
@@ -125,4 +124,12 @@ public interface VFlow {
 //    ObservableList<String> getInputTypes();
 //
 //    ObservableList<String> getOutputTypes();
+    /**
+     * Returns child flow by id.
+     *
+     * @param id the id that specifies the requested flow
+     * @return the requested child flow or <code>null</code> if no such flow
+     * exists
+     */
+    public VFlow getFlowById(String id);
 }

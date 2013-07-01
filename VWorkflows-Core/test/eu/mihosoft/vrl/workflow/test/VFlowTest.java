@@ -8,6 +8,7 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,4 +151,41 @@ public class VFlowTest {
         } // end for i
     }
 
+    @Test
+    public void createSubflows() {
+        VFlow flow = FlowFactory.newFlow();
+
+        for (int i = 0; i < 10; i++) {
+            flow.newNode();
+        }
+
+        VFlow subFlow = flow.newSubFlow();
+
+        VNode subNode = flow.getNodeLookup().getById(subFlow.getModel().getId());
+
+        System.out.println(" --> subnode class: " + subNode.getClass());
+
+        assertTrue("Node that represent flows must implement VFlowModel interface",
+                (subNode instanceof VFlowModel));
+    }
+    
+    @Test
+    public void connectorsParentNode() {
+        VFlow flow = FlowFactory.newFlow();
+
+        for (int i = 0; i < 10; i++) {
+            flow.newNode();
+        }
+
+        VFlow subFlow = flow.newSubFlow();
+
+        VNode subNode = subFlow.getModel();
+        
+        Connector connector = subNode.addInput("control");
+
+        System.out.println(" --> subnode class (as referenced by connector): " + connector.getNode().getClass());
+
+        assertTrue("Node that represent flows must implement VFlowModel interface",
+                (connector.getNode() instanceof VFlowModel));
+    }
 }

@@ -161,18 +161,20 @@ public class MainWindowFXMLController implements Initializable {
             n.setMainInput(n.addInput(type));
             n.setMainInput(n.addInput("event"));
 
-            n.addInput(type);
-            n.addInput(type);
+            for (int j = 0; j < 3; j++) {
+                n.addInput(type);
+            }
+
+//            n.addInput(type);
+//            n.addInput(type);
 
             n.addOutput(type);
             n.setMainOutput(n.addOutput("event"));
             n.addOutput(type);
 
-//            if (i % 2 == 0) {
             for (int j = 0; j < 3; j++) {
                 n.addOutput(type);
             }
-//            }
 
             n.setWidth(300);
             n.setHeight(200);
@@ -231,7 +233,6 @@ public class MainWindowFXMLController implements Initializable {
         rootPane.getChildren().add(minimap);
         return minimapPane;
     }
-
 //    void registerShell(VRLShell shell) {
 //        shell.addConstant("flow", workflow);
 //    }

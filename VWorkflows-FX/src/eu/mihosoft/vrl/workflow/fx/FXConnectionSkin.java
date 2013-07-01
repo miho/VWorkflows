@@ -9,18 +9,10 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VNode;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
@@ -32,7 +24,6 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.event.MouseControlUtil;
@@ -49,7 +40,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private LineTo lineTo;
     private MoveTo moveTo;
 //    private Shape startConnector;
-    private Shape receiverConnector;
+    private Circle receiverConnector;
     private Window receiverWindow;
     private VFlow controller;
     private Connection connection;
@@ -89,22 +80,25 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
         connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         connectionPath.setStrokeWidth(5);
-        connectionPath.setStrokeLineCap(StrokeLineCap.ROUND);
+//        connectionPath.setStrokeLineCap(StrokeLineCap.ROUND);
 
 //        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
 //        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 //        receiverConnector.setStrokeWidth(3);
 
-        if (type.equals("control")) {
-            getReceiverUI().setFill(new Color(1.0, 1.0, 0.0, 0.75));
-            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        } else if (type.equals("data")) {
-            getReceiverUI().setFill(new Color(0.1, 0.1, 0.1, 0.5));
-            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        } else if (type.equals("event")) {
-            getReceiverUI().setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
-            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        }
+        getReceiverUI().setFill(new Color(0,1.0,0,0.0));
+        getReceiverUI().setStroke(new Color(0,1.0,0,0.0));
+
+//        if (type.equals("control")) {
+//            getReceiverUI().setFill(new Color(1.0, 1.0, 0.0, 0.75));
+//            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        } else if (type.equals("data")) {
+//            getReceiverUI().setFill(new Color(0.1, 0.1, 0.1, 0.5));
+//            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        } else if (type.equals("event")) {
+//            getReceiverUI().setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+//            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        }
 
         getReceiverUI().setStrokeWidth(3);
 
@@ -220,9 +214,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             }
         });
 
-
         makeDraggable(receiveXBinding, receiveYBinding);
-
     }
 
     private void makeDraggable(
@@ -235,7 +227,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         MouseControlUtil.makeDraggable(getReceiverUI(), new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-
 
                 if (lastNode != null) {
                     lastNode.setEffect(null);
@@ -277,13 +268,18 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     if (connResult.getStatus().isCompatible()) {
 
-                        DropShadow shadow = new DropShadow(20, Color.WHITE);
-                        Glow effect = new Glow(0.5);
-                        shadow.setInput(effect);
-                        n.setEffect(shadow);
+//                        DropShadow shadow = new DropShadow(20, Color.WHITE);
+//                        Glow effect = new Glow(0.5);
+//                        shadow.setInput(effect);
+//                        n.setEffect(shadow);
 
-                        getReceiverUI().setFill(
-                                new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
+                        getReceiverUI().toFront();
+
+                        if (lastNode != n) {
+                            receiverConnector.radiusProperty().unbind();
+                            FXConnectorUtil.connectAnim(getReceiverUI(), n);
+                        }
+
                         valid = true;
                     } else {
 
@@ -296,11 +292,23 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         valid = false;
                     }
 
+//                    getReceiverUI().setFill(Color.TRANSPARENT);
+//                    getReceiverUI().setStroke(null);
+
+                    getReceiverUI().toFront();
+
                     lastNode = n;
 
                 } else {
-                    getReceiverUI().setFill(
-                            new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+//                    getReceiverUI().setStroke(
+//                            new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//                    getReceiverUI().setFill(
+//                            new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+                    
+                    receiverConnector.radiusProperty().unbind();
+                    FXConnectorUtil.unconnectAnim(getReceiverUI());
+                    lastNode = null;
+
                 }
             }
         }, new EventHandler<MouseEvent>() {
@@ -344,8 +352,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
 
                 SelectedConnector selConnector =
-                        FXConnectorUtil.getSelectedInputConnector(getSender().getNode(), getParent().getScene().getRoot(), type, t);
-
+                        FXConnectorUtil.getSelectedInputConnector(
+                        getSender().getNode(), getParent().getScene().getRoot(), type, t);
 
                 if (selConnector != null
                         && selConnector.getNode() != null
@@ -355,18 +363,23 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     n.toFront();
                     Connector receiverConnector = selConnector.getConnector();
 
-                    connection.setReceiverId(receiverConnector.getId());
+                    controller.connect(getSender(), receiverConnector);
 
-                    if (n instanceof Shape) {
-                        ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
-                    }
+//                    connection.setReceiverId(receiverConnector.getId());
 
-                    init();
+//                    if (n instanceof Shape) {
+//                        ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+//                    }
+
+//                    init();
 
                 } else {
-                    remove();
-                    connection.getConnections().remove(connection);
+//                    remove();
+//                    connection.getConnections().remove(connection);
                 }
+
+                remove();
+                connection.getConnections().remove(connection);
 
 
 
@@ -560,7 +573,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     public FXSkinFactory getSkinFactory() {
         return skinFactory;
     }
-    
+
     public void toFront() {
         getReceiverUI().toFront();
     }

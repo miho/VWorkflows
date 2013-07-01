@@ -43,7 +43,7 @@ public class Main extends Application {
 
         StackPane canvas = new StackPane();
 
-        Scene scene = new Scene(canvas, 800, 800);
+        Scene scene = new Scene(canvas, 1600, 800);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainWindowFXML.fxml"));
 
@@ -65,8 +65,8 @@ public class Main extends Application {
         Rectangle rect = new Rectangle();
         rect.setStroke(new Color(1, 1, 1, 1));
         rect.setFill(new Color(0, 0, 0, 0.5));
-        MouseControlUtil.
-                addSelectionRectangleGesture(controller.getRootPane(), rect);
+//        MouseControlUtil.
+//                addSelectionRectangleGesture(controller.getRootPane(), rect);
 
 //        Playground.search01();
 //        

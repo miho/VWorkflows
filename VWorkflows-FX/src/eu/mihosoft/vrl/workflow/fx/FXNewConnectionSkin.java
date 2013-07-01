@@ -11,6 +11,9 @@ import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,12 +24,13 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.util.Duration;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
@@ -41,7 +45,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private LineTo lineTo;
     private MoveTo moveTo;
 //    private Shape startConnector;
-    private Shape receiverConnector;
+    private Circle receiverConnector;
     private VFlowModel flow;
     private VFlow flowController;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
@@ -60,7 +64,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         this.type = type;
 
 //        startConnector = new Circle(20);
-        receiverConnector = new Circle(20);
+        receiverConnector = new Circle(10);
 
         moveTo = new MoveTo();
         lineTo = new LineTo();
@@ -175,7 +179,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         && selConnector.getNode() != null
                         && selConnector.getConnector() != null) {
 
-                    Connector receiverConnector = selConnector.getConnector();
+                    Connector receiverConnectorModel = selConnector.getConnector();
                     Node n = selConnector.getNode();
                     n.toFront();
 
@@ -188,23 +192,26 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     ConnectionResult connResult = null;
 
-                    if (getSender().isInput() && receiverConnector.isOutput()) {
+                    if (getSender().isInput() && receiverConnectorModel.isOutput()) {
 
                         connResult = flow.tryConnect(
-                                receiverConnector, getSender());
+                                receiverConnectorModel, getSender());
                     } else {
                         connResult = flow.tryConnect(
-                                getSender(), receiverConnector);
+                                getSender(), receiverConnectorModel);
                     }
 
                     if (connResult.getStatus().isCompatible()) {
 
-                        DropShadow shadow = new DropShadow(20, Color.WHITE);
-                        Glow effect = new Glow(0.5);
-                        shadow.setInput(effect);
-                        n.setEffect(shadow);
+//                        DropShadow shadow = new DropShadow(20, Color.WHITE);
+//                        Glow effect = new Glow(0.5);
+//                        shadow.setInput(effect);
+//                        n.setEffect(shadow);
 
-//                        receiverConnector.setFill(new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
+                        if (lastNode != n) {
+                            FXConnectorUtil.connectAnim(receiverConnector, n);
+                        }
+
                     } else {
 
                         DropShadow shadow = new DropShadow(20, Color.RED);
@@ -215,9 +222,13 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                        receiverConnector.setFill(Color.RED);
                     }
 
+                    receiverConnector.toFront();
+
                     lastNode = n;
                 } else {
-//                    receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+
+                    FXConnectorUtil.unconnectAnim(receiverConnector);
+                    lastNode = null;
                 }
             }
         }, new EventHandler<MouseEvent>() {
@@ -262,12 +273,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     Connector receiverConnector = selConnector.getConnector();
 
-                    if (n instanceof Shape) {
-                        ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
-                    }
-
-
-
+//                    if (n instanceof Shape) {
+//                        ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+//                    }
 
                     ConnectionResult connResult = null;
 

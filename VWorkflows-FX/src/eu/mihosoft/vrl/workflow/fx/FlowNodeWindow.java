@@ -4,9 +4,14 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -14,7 +19,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.CacheHint;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -60,6 +67,13 @@ public class FlowNodeWindow extends Window {
 //        addSelectionRectangle(skin, root);
 
 
+        addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent t) {
+               connectorsToFront();
+            }
+        });
     }
 
     private void showFlowInWindow(VFlow flow, Stage stage, String title) {
@@ -178,5 +192,40 @@ public class FlowNodeWindow extends Window {
         rect.setFill(new Color(0, 0, 0, 0.5));
         MouseControlUtil.
                 addSelectionRectangleGesture(root, rect);
+    }
+
+    @Override
+    public void toFront() {
+        super.toFront();
+        connectorsToFront();
+    }
+
+    private void connectorsToFront() {
+        // move connectors to front
+        FXFlowNodeSkin skin = nodeSkinProperty().get();
+
+        for (Node n : skin.inputList) {
+            n.toFront();
+        }
+        for (Node n : skin.outputList) {
+            n.toFront();
+        }
+
+//        List<Connection> connections = new ArrayList<>();
+//
+//        for (String connId : skin.connectors.keySet()) {
+//            for (Connections connectionsI : skin.controller.getAllConnections().values()) {
+//                connections.addAll(connectionsI.getAllWith(connId));
+//            }
+//        }
+//
+//        for (Connection conn : connections) {
+//            ConnectionSkin skinI = skin.controller.getNodeSkinLookup().getById(skin.getSkinFactory(), conn);
+//
+//            if (skinI instanceof FXConnectionSkin) {
+//                FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
+//                fxSkin.toFront();
+//            }
+//        }
     }
 }

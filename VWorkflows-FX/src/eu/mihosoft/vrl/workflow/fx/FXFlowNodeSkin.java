@@ -4,6 +4,9 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -54,10 +57,10 @@ public class FXFlowNodeSkin
 //    private Node output;
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
-    private VFlow controller;
-    private Map<String, Node> connectors = new HashMap<>();
-    private List<Node> inputList = new ArrayList<>();
-    private List<Node> outputList = new ArrayList<>();
+    VFlow controller;
+    Map<String, Node> connectors = new HashMap<>();
+    List<Node> inputList = new ArrayList<>();
+    List<Node> outputList = new ArrayList<>();
     private FXSkinFactory skinFactory;
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
@@ -120,11 +123,12 @@ public class FXFlowNodeSkin
             }
         });
 
+
     }
 
     private void addConnector(final Connector connector) {
 
-        ConnectorCircle circle = new ConnectorCircle(connector, 20);
+        ConnectorCircle circle = new ConnectorCircle(controller, getSkinFactory(), connector, 20);
 
         switch (connector.getType()) {
             case "control":
@@ -142,6 +146,7 @@ public class FXFlowNodeSkin
         }
 
         circle.setStrokeWidth(3);
+
 
         final Circle connectorNode = circle;
 
@@ -183,7 +188,7 @@ public class FXFlowNodeSkin
                 double gap = 5;
 
                 double numConnectors = inputList.size();
-                
+
                 int connectorIndex = inputList.indexOf(connectorNode);
 
                 if (connector.isOutput()) {
@@ -230,6 +235,13 @@ public class FXFlowNodeSkin
 //                        isOutputConnected(getModel().getId())) {
 //                    return;
 //                }
+                
+                // we are already connected and manipulate the existing connection
+                // rather than creating a new one
+                if (controller.getConnections(connector.getType()).
+                        isInputConnected(connector.getId())) {
+                    return;
+                }
 
                 newConnectionSkin =
                         new FXNewConnectionSkin(getSkinFactory(),
@@ -246,6 +258,15 @@ public class FXFlowNodeSkin
         connectorNode.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                
+                // we are already connected and manipulate the existing connection
+                // rather than creating a new one
+                if (controller.getConnections(connector.getType()).
+                        isInputConnected(connector.getId())) {
+                    return;
+                }
+
+                
                 t.consume();
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
 
@@ -255,20 +276,29 @@ public class FXFlowNodeSkin
         connectorNode.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                
+                // we are already connected and manipulate the existing connection
+                // rather than creating a new one
+                if (controller.getConnections(connector.getType()).
+                        isInputConnected(connector.getId())) {
+                    return;
+                }
+
+                
                 t.consume();
                 try {
                     MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
                 } catch (Exception ex) {
                     // TODO exception is not critical here (node already removed)
                 }
-                connectorNode.toBack();
+                //connectorNode.toBack();
             }
         });
 
         connectorNode.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                connectorNode.toBack();
+                //connectorNode.toBack();
             }
         });
 
@@ -296,7 +326,7 @@ public class FXFlowNodeSkin
 
         connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (numConnectors);
         connectorHeight = Math.min(connectorHeight, 20 * 2);
-        
+
         if (numConnectors == 1) {
             connectorHeight = originalConnectorHeight;
         }

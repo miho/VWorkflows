@@ -73,6 +73,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        this.clipboard = clipboard;
 
 //        startConnector = new Circle(20);
+
+
         receiverConnector = new Circle(20);
 
         moveTo = new MoveTo();
@@ -94,17 +96,17 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        receiverConnector.setStrokeWidth(3);
 
         if (type.equals("control")) {
-            receiverConnector.setFill(new Color(1.0, 1.0, 0.0, 0.75));
-            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+            getReceiverUI().setFill(new Color(1.0, 1.0, 0.0, 0.75));
+            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         } else if (type.equals("data")) {
-            receiverConnector.setFill(new Color(0.1, 0.1, 0.1, 0.5));
-            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+            getReceiverUI().setFill(new Color(0.1, 0.1, 0.1, 0.5));
+            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         } else if (type.equals("event")) {
-            receiverConnector.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
-            receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+            getReceiverUI().setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         }
 
-        receiverConnector.setStrokeWidth(3);
+        getReceiverUI().setStrokeWidth(3);
 
 //        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
@@ -125,6 +127,15 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         setSender(getController().getNodeLookup().getConnectorById(connection.getSenderId()));
         setReceiver(getController().getNodeLookup().getConnectorById(connection.getReceiverId()));
+
+        if (receiverNode instanceof ConnectorCircle) {
+            ConnectorCircle recConnNode = (ConnectorCircle) receiverNode;
+
+            if (getReceiverUI() instanceof Circle) {
+                ((Circle) getReceiverUI()).radiusProperty().
+                        bind(recConnNode.radiusProperty());
+            }
+        }
 
 
         DoubleBinding startXBinding = new DoubleBinding() {
@@ -179,32 +190,32 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
             @Override
             protected double computeValue() {
-                
+
                 return receiverNode.layoutYProperty().get();
             }
         };
 
-        receiverConnector.layoutXProperty().bind(receiveXBinding);
-        receiverConnector.layoutYProperty().bind(receiveYBinding);
+        getReceiverUI().layoutXProperty().bind(receiveXBinding);
+        getReceiverUI().layoutYProperty().bind(receiveYBinding);
 
         moveTo.xProperty().bind(startXBinding);
         moveTo.yProperty().bind(startYBinding);
 
-        lineTo.xProperty().bind(receiverConnector.layoutXProperty());
-        lineTo.yProperty().bind(receiverConnector.layoutYProperty());
+        lineTo.xProperty().bind(getReceiverUI().layoutXProperty());
+        lineTo.yProperty().bind(getReceiverUI().layoutYProperty());
 
-        receiverConnector.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
+        getReceiverUI().onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                receiverConnector.toFront();
+                getReceiverUI().toFront();
             }
         });
 
-        receiverConnector.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
+        getReceiverUI().onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 if (!t.isPrimaryButtonDown()) {
-//                    receiverConnector.toBack();
+                    getReceiverUI().toFront();
                 }
             }
         });
@@ -219,35 +230,25 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             final DoubleBinding receiveYBinding) {
 
         connectionPath.toFront();
-        receiverConnector.toFront();
+        getReceiverUI().toFront();
 
-        MouseControlUtil.makeDraggable(receiverConnector, new EventHandler<MouseEvent>() {
+        MouseControlUtil.makeDraggable(getReceiverUI(), new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
 
-//                Parent root = getParent().getScene().getRoot();
-
-//                // TODO why can root be null?
-//                if (root == null) {
-//                    return;
-//                }
-
-//                final Node n = NodeUtil.getDeepestNode(
-//                        getParent(),
-//                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class);
 
                 if (lastNode != null) {
                     lastNode.setEffect(null);
                     lastNode = null;
                 }
-                
-                SelectedConnector selConnector = 
+
+                SelectedConnector selConnector =
                         FXConnectorUtil.getSelectedInputConnector(
                         getSender().getNode(),
                         getParent().getScene().getRoot(), type, t);
-                
+
                 valid = true;
-                
+
                 // reject connection if no main input defined for current node
                 if (selConnector != null
                         && selConnector.getNode() != null
@@ -260,9 +261,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     lastNode = selConnector.getNode();
                 }
 
-                if (selConnector != null 
-                        && selConnector.getNode()!=null 
-                        && selConnector.getConnector()!=null) {
+                if (selConnector != null
+                        && selConnector.getNode() != null
+                        && selConnector.getConnector() != null) {
 
                     Node n = selConnector.getNode();
                     n.toFront();
@@ -281,7 +282,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         shadow.setInput(effect);
                         n.setEffect(shadow);
 
-                        receiverConnector.setFill(
+                        getReceiverUI().setFill(
                                 new Color(220.0 / 255.0, 240.0 / 255.0, 1, 0.6));
                         valid = true;
                     } else {
@@ -291,30 +292,30 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         effect.setInput(shadow);
                         n.setEffect(effect);
 
-                        receiverConnector.setFill(Color.RED);
+                        getReceiverUI().setFill(Color.RED);
                         valid = false;
                     }
 
                     lastNode = n;
 
                 } else {
-                    receiverConnector.setFill(
+                    getReceiverUI().setFill(
                             new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                 }
             }
         }, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                receiverConnector.layoutXProperty().unbind();
-                receiverConnector.layoutYProperty().unbind();
+                getReceiverUI().layoutXProperty().unbind();
+                getReceiverUI().layoutYProperty().unbind();
             }
         });
 
-        receiverConnector.layoutXProperty().bind(receiveXBinding);
-        receiverConnector.layoutYProperty().bind(receiveYBinding);
+        getReceiverUI().layoutXProperty().bind(receiveXBinding);
+        getReceiverUI().layoutYProperty().bind(receiveYBinding);
 
 
-        receiverConnector.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
+        getReceiverUI().onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
 
@@ -328,11 +329,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     return;
                 }
 
-                receiverConnector.toBack();
+                getReceiverUI().toFront();
                 connectionPath.toBack();
 
-                receiverConnector.layoutXProperty().bind(receiveXBinding);
-                receiverConnector.layoutYProperty().bind(receiveYBinding);
+                getReceiverUI().layoutXProperty().bind(receiveXBinding);
+                getReceiverUI().layoutYProperty().bind(receiveYBinding);
 
 //                receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
 //                    @Override
@@ -340,10 +341,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                        makeDraggable(receiveXBinding, receiveYBinding);
 //                    }
 //                });
-                
-                
-                 SelectedConnector selConnector = 
-                        FXConnectorUtil.getSelectedInputConnector(getSender().getNode(),getParent().getScene().getRoot(), type,t);
+
+
+                SelectedConnector selConnector =
+                        FXConnectorUtil.getSelectedInputConnector(getSender().getNode(), getParent().getScene().getRoot(), type, t);
 
 
                 if (selConnector != null
@@ -353,16 +354,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     Node n = selConnector.getNode();
                     n.toFront();
                     Connector receiverConnector = selConnector.getConnector();
-                    
+
                     connection.setReceiverId(receiverConnector.getId());
-                    
+
                     if (n instanceof Shape) {
                         ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
                     }
-                    
+
                     init();
-                    
-                }   else {
+
+                } else {
                     remove();
                     connection.getConnections().remove(connection);
                 }
@@ -460,21 +461,21 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     public void add() {
         NodeUtil.addToParent(getParent(), connectionPath);
 //        VFXNodeUtils.addToParent(getParent(), startConnector);
-        NodeUtil.addToParent(getParent(), receiverConnector);
+        NodeUtil.addToParent(getParent(), getReceiverUI());
 
 //        startConnector.toBack();
-        receiverConnector.toBack();
+        getReceiverUI().toFront();
         connectionPath.toBack();
     }
 
     @Override
     public void remove() {
-        if (connectionPath.getParent() == null || receiverConnector.getParent() == null) {
+        if (connectionPath.getParent() == null || getReceiverUI().getParent() == null) {
             return;
         }
         try {
             NodeUtil.removeFromParent(connectionPath);
-            NodeUtil.removeFromParent(receiverConnector);
+            NodeUtil.removeFromParent(getReceiverUI());
 //            connection.getConnections().remove(connection);
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -558,5 +559,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     @Override
     public FXSkinFactory getSkinFactory() {
         return skinFactory;
+    }
+    
+    public void toFront() {
+        getReceiverUI().toFront();
+    }
+
+    /**
+     * @return the receiverConnector
+     */
+    public Shape getReceiverUI() {
+        return receiverConnector;
     }
 }

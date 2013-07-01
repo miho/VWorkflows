@@ -4,29 +4,96 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.VFlow;
+import java.util.Collection;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
 /**
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-class ConnectorCircle extends Circle{
-    private Connector connector;
+class ConnectorCircle extends Circle {
 
-    public ConnectorCircle(Connector connector) {
+    private Connector connector;
+    private VFlow flow;
+    private FXSkinFactory skinFactory;
+    
+    private FXConnectionSkin connectionSkin;
+
+    public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector) {
         this.connector = connector;
+        this.flow = flow;
+        this.skinFactory = skinFactory;
     }
 
-    public ConnectorCircle(Connector connector, double radius) {
+    public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector, double radius) {
         super(radius);
         this.connector = connector;
+        this.flow = flow;
+        this.skinFactory = skinFactory;
+
+        init();
     }
-    
-    public ConnectorCircle() {
+
+    public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory) {
+        this.flow = flow;
+        this.skinFactory = skinFactory;
+        init();
     }
-    
-    
+
+    private void init() {
+        addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent t) {
+                
+                connectionSkin = null;
+
+                if (connector.isInput() && flow.getConnections(connector.getType()).isInputConnected(connector.getId())) {
+                    for (Connection conn : flow.getConnections(connector.getType()).getConnections()) {
+                        ConnectionSkin skinI = flow.getNodeSkinLookup().getById(skinFactory, conn);
+
+                        if (skinI instanceof FXConnectionSkin) {
+                            FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
+                            connectionSkin = fxSkin;
+                            t.consume();
+                            connectionSkin.toFront();
+                            MouseEvent.fireEvent(fxSkin.getReceiverUI(), t);
+                        }
+                    }
+
+                }
+            }
+        });
+        
+//        addEventHandler(javafx.scene.input.MouseEvent.MOUSE_ENTERED, new EventHandler<javafx.scene.input.MouseEvent>() {
+//            @Override
+//            public void handle(javafx.scene.input.MouseEvent t) {
+//
+//               if (connectionSkin!=null) {
+//                   t.consume();
+//                   MouseEvent.fireEvent(connectionSkin.getReceiverUI(), t);
+//               }
+//            }
+//        });
+//        
+//        addEventHandler(javafx.scene.input.MouseEvent.MOUSE_DRAGGED, new EventHandler<javafx.scene.input.MouseEvent>() {
+//            @Override
+//            public void handle(javafx.scene.input.MouseEvent t) {
+//
+//               if (connectionSkin!=null) {
+//                   t.consume();
+//                   MouseEvent.fireEvent(connectionSkin.getReceiverUI(), t);
+//               }
+//            }
+//        });
+    }
+
     /**
      * @return the connector
      */
@@ -40,5 +107,4 @@ class ConnectorCircle extends Circle{
     public void setConnector(Connector connector) {
         this.connector = connector;
     }
-    
 }

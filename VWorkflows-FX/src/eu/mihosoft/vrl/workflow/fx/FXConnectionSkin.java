@@ -86,8 +86,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 //        receiverConnector.setStrokeWidth(3);
 
-        getReceiverUI().setFill(new Color(0,1.0,0,0.0));
-        getReceiverUI().setStroke(new Color(0,1.0,0,0.0));
+        getReceiverUI().setFill(new Color(0, 1.0, 0, 0.0));
+        getReceiverUI().setStroke(new Color(0, 1.0, 0, 0.0));
 
 //        if (type.equals("control")) {
 //            getReceiverUI().setFill(new Color(1.0, 1.0, 0.0, 0.75));
@@ -244,10 +244,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 if (selConnector != null
                         && selConnector.getNode() != null
                         && selConnector.getConnector() == null) {
-                    DropShadow shadow = new DropShadow(20, Color.RED);
-                    Glow effect = new Glow(0.8);
-                    effect.setInput(shadow);
-                    selConnector.getNode().setEffect(effect);
+//                    DropShadow shadow = new DropShadow(20, Color.RED);
+//                    Glow effect = new Glow(0.8);
+//                    effect.setInput(shadow);
+//                    selConnector.getNode().setEffect(effect);
+                    FXConnectorUtil.incompatibleAnim(receiverConnector);
                     valid = false;
                     lastNode = selConnector.getNode();
                 }
@@ -283,31 +284,25 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         valid = true;
                     } else {
 
-                        DropShadow shadow = new DropShadow(20, Color.RED);
-                        Glow effect = new Glow(0.8);
-                        effect.setInput(shadow);
-                        n.setEffect(effect);
+//                        DropShadow shadow = new DropShadow(20, Color.RED);
+//                        Glow effect = new Glow(0.8);
+//                        effect.setInput(shadow);
+//                        n.setEffect(effect);
 
-                        getReceiverUI().setFill(Color.RED);
+                        FXConnectorUtil.incompatibleAnim(receiverConnector);
                         valid = false;
                     }
-
-//                    getReceiverUI().setFill(Color.TRANSPARENT);
-//                    getReceiverUI().setStroke(null);
 
                     getReceiverUI().toFront();
 
                     lastNode = n;
 
                 } else {
-//                    getReceiverUI().setStroke(
-//                            new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-//                    getReceiverUI().setFill(
-//                            new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
-                    
-                    receiverConnector.radiusProperty().unbind();
-                    FXConnectorUtil.unconnectAnim(getReceiverUI());
-                    lastNode = null;
+
+                    if (lastNode == null) {
+                        receiverConnector.radiusProperty().unbind();
+                        FXConnectorUtil.unconnectAnim(getReceiverUI());
+                    }
 
                 }
             }

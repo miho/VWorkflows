@@ -98,8 +98,8 @@ class FXConnectorUtil {
     }
 
     public static void unconnectAnim(Node n) {
-        
-        if (timeline!=null) {
+
+        if (timeline != null) {
             timeline.stop();
         }
 
@@ -124,12 +124,12 @@ class FXConnectorUtil {
         timeline.getKeyFrames().add(kf3);
 
         timeline.play();
-        
+
     }
 
     public static void connectAnim(Node n, Node target) {
-        
-        if (timeline!=null) {
+
+        if (timeline != null) {
             timeline.stop();
         }
 
@@ -177,6 +177,25 @@ class FXConnectorUtil {
 //        timeline.getKeyFrames().add(kf3);
 
 
+        timeline.play();
+    }
+
+    static void incompatibleAnim(Circle receiverConnector) {
+
+        if (timeline != null) {
+            timeline.stop();
+        }
+
+        timeline = new Timeline();
+//        timeline.setAutoReverse(true);
+//        timeline.setCycleCount(Timeline.INDEFINITE);
+
+        final KeyValue kv2 = new KeyValue(receiverConnector.fillProperty(), new Color(1, 0, 0, 0.80));
+        final KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
+        timeline.getKeyFrames().add(kf2);
+        final KeyValue kv3 = new KeyValue(receiverConnector.strokeProperty(), new Color(1, 0, 0, 0.90));
+        final KeyFrame kf3 = new KeyFrame(Duration.millis(500), kv3);
+        timeline.getKeyFrames().add(kf3);
         timeline.play();
     }
 }

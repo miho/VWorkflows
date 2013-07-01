@@ -168,10 +168,11 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 if (selConnector != null
                         && selConnector.getNode() != null
                         && selConnector.getConnector() == null) {
-                    DropShadow shadow = new DropShadow(20, Color.RED);
-                    Glow effect = new Glow(0.8);
-                    effect.setInput(shadow);
-                    selConnector.getNode().setEffect(effect);
+//                    DropShadow shadow = new DropShadow(20, Color.RED);
+//                    Glow effect = new Glow(0.8);
+//                    effect.setInput(shadow);
+//                    selConnector.getNode().setEffect(effect);
+                    FXConnectorUtil.incompatibleAnim(receiverConnector);
                     lastNode = selConnector.getNode();
                 }
 
@@ -203,32 +204,27 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     if (connResult.getStatus().isCompatible()) {
 
-//                        DropShadow shadow = new DropShadow(20, Color.WHITE);
-//                        Glow effect = new Glow(0.5);
-//                        shadow.setInput(effect);
-//                        n.setEffect(shadow);
-
                         if (lastNode != n) {
                             FXConnectorUtil.connectAnim(receiverConnector, n);
                         }
 
                     } else {
 
-                        DropShadow shadow = new DropShadow(20, Color.RED);
-                        Glow effect = new Glow(0.8);
-                        effect.setInput(shadow);
-                        n.setEffect(effect);
+//                        DropShadow shadow = new DropShadow(20, Color.RED);
+//                        Glow effect = new Glow(0.8);
+//                        effect.setInput(shadow);
+//                        n.setEffect(effect);
 
-//                        receiverConnector.setFill(Color.RED);
+                        FXConnectorUtil.incompatibleAnim(receiverConnector);
                     }
 
                     receiverConnector.toFront();
 
                     lastNode = n;
                 } else {
-
-                    FXConnectorUtil.unconnectAnim(receiverConnector);
-                    lastNode = null;
+                    if (lastNode == null) {
+                        FXConnectorUtil.unconnectAnim(receiverConnector);
+                    }
                 }
             }
         }, new EventHandler<MouseEvent>() {

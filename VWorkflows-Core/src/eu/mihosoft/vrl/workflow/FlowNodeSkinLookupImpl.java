@@ -162,6 +162,13 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         ConnectionSkin<Connection> skin = flowImpl.getConnectionSkinMap(skinFactory).get(
                 VFlowImpl.connectionId(c));
+        
+//        for (String key : flowImpl.getConnectionSkinMap(skinFactory).keySet()) {
+//            ConnectionSkin<Connection> skinI = flowImpl.getConnectionSkinMap(skinFactory).get(key);
+//            System.out.println(" --> skin  " + skinI + ": " + key + "==" + VFlowImpl.connectionId(c));
+//        }
+//        
+//        System.out.println("skin for connection " + c + ": " + skin);
 
         return skin;
     }

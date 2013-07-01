@@ -129,6 +129,7 @@ class VFlowImpl implements VFlow {
         connectionsListener = new ListChangeListener<Connection>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Connection> change) {
+                
                 while (change.next()) {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
@@ -140,17 +141,18 @@ class VFlowImpl implements VFlow {
                         // removed
                         for (Connection c : change.getRemoved()) {
                             removeConnectionSkinFromAllSkinFactories(c);
-//                            System.out.println("remove skin: " + c);
+                            System.out.println("remove skin: " + c);
                         }
                     } else if (change.wasAdded()) {
                         // added
                         for (Connection c : change.getAddedSubList()) {
 
                             createConnectionSkins(c, c.getType(), getSkinFactories());
+                            System.out.println("add skin: " + c);
                         }
                     }
-
                 }
+                
             }
         };
 
@@ -854,7 +856,7 @@ class VFlowImpl implements VFlow {
 //    public ObservableList<String> getOutputTypes() {
 //        return getModel().getOutputTypes();
 //    }
-    private Map<String, VNodeSkin> getNodeSkinMap(SkinFactory skinFactory) {
+    synchronized private Map<String, VNodeSkin> getNodeSkinMap(SkinFactory skinFactory) {
         Map<String, VNodeSkin> nodeSkinMap = nodeSkins.get(skinFactory);
         if (nodeSkinMap == null) {
             nodeSkinMap = new HashMap<>();
@@ -863,7 +865,7 @@ class VFlowImpl implements VFlow {
         return nodeSkinMap;
     }
 
-    Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory) {
+    synchronized Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory) {
         Map<String, ConnectionSkin> connectionSkinMap = connectionSkins.get(skinFactory);
         if (connectionSkinMap == null) {
             connectionSkinMap = new HashMap<>();

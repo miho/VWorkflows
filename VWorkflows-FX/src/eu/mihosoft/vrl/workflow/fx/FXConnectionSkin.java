@@ -242,7 +242,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 }
                 
                 SelectedConnector selConnector = 
-                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                        FXConnectorUtil.getSelectedInputConnector(
+                        getSender().getNode(),
+                        getParent().getScene().getRoot(), type, t);
                 
                 valid = true;
                 
@@ -257,8 +259,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     valid = false;
                     lastNode = selConnector.getNode();
                 }
-
-                
 
                 if (selConnector != null 
                         && selConnector.getNode()!=null 
@@ -343,7 +343,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 
                 
                  SelectedConnector selConnector = 
-                        FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type,t);
+                        FXConnectorUtil.getSelectedInputConnector(getSender().getNode(),getParent().getScene().getRoot(), type,t);
 
 
                 if (selConnector != null

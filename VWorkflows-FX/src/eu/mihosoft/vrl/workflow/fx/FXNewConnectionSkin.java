@@ -155,9 +155,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 SelectedConnector selConnector = null;
 
                 if (getSender().isOutput()) {
-                    selConnector = FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                    selConnector = FXConnectorUtil.getSelectedInputConnector(getSender().getNode(), getParent().getScene().getRoot(), type, t);
                 } else {
-                    selConnector = FXConnectorUtil.getSelectedOutputConnector(getParent().getScene().getRoot(), type, t);
+                    selConnector = FXConnectorUtil.getSelectedOutputConnector(getSender().getNode(), getParent().getScene().getRoot(), type, t);
                 }
 
                 // reject connection if no main input defined for current node
@@ -247,12 +247,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 SelectedConnector selConnector = null;
 
                 if (getSender().isOutput()) {
-                    selConnector = FXConnectorUtil.getSelectedInputConnector(getParent().getScene().getRoot(), type, t);
+                    selConnector = FXConnectorUtil.getSelectedInputConnector(getSender().getNode(), getParent().getScene().getRoot(), type, t);
                 } else {
-                    selConnector = FXConnectorUtil.getSelectedOutputConnector(getParent().getScene().getRoot(), type, t);
+                    selConnector = FXConnectorUtil.getSelectedOutputConnector(getSender().getNode(), getParent().getScene().getRoot(), type, t);
                 }
-
-
 
                 if (selConnector != null
                         && selConnector.getNode() != null

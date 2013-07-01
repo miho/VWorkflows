@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
+import eu.mihosoft.vrl.lang.VRLShell;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;

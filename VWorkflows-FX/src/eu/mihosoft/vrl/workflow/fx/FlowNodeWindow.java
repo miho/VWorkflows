@@ -211,21 +211,21 @@ public class FlowNodeWindow extends Window {
             n.toFront();
         }
 
-//        List<Connection> connections = new ArrayList<>();
-//
-//        for (String connId : skin.connectors.keySet()) {
-//            for (Connections connectionsI : skin.controller.getAllConnections().values()) {
-//                connections.addAll(connectionsI.getAllWith(connId));
-//            }
-//        }
-//
-//        for (Connection conn : connections) {
-//            ConnectionSkin skinI = skin.controller.getNodeSkinLookup().getById(skin.getSkinFactory(), conn);
-//
-//            if (skinI instanceof FXConnectionSkin) {
-//                FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
-//                fxSkin.toFront();
-//            }
-//        }
+        List<Connection> connections = new ArrayList<>();
+
+        for (String connId : skin.connectors.keySet()) {
+            for (Connections connectionsI : skin.controller.getAllConnections().values()) {
+                connections.addAll(connectionsI.getAllWith(connId));
+            }
+        }
+
+        for (Connection conn : connections) {
+            ConnectionSkin skinI = skin.controller.getNodeSkinLookup().getById(skin.getSkinFactory(), conn);
+
+            if (skinI instanceof FXConnectionSkin) {
+                FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
+                fxSkin.toFront();
+            }
+        }
     }
 }

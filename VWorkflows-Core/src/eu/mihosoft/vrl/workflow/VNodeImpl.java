@@ -297,30 +297,42 @@ class VNodeImpl implements VNode {
 //    }
     @Override
     public Connector addInput(String type) {
-        Connector c = new ConnectorImpl(
-                this, type, null, true);
-        connectors.add(c);
-        return c;
+       return addInput(this, type);
     }
 
     @Override
     public Connector addOutput(String type) {
-        Connector c = new ConnectorImpl(
-                this, type, null, false);
-        connectors.add(c);
-        return c;
+       return this.addOutput(this,type);
     }
 
     @Override
     public Connector addConnector(Connector c) {
-        String localId = c.getLocalId();
+       return addConnector(this, c);
+    }
+    
+    Connector addInput(VNode node, String type) {
+        Connector c = new ConnectorImpl(
+                node, type, null, true);
+        connectors.add(c);
+        return c;
+    }
+
+    Connector addOutput(VNode node, String type) {
+         Connector c = new ConnectorImpl(
+                node, type, null, false);
+        connectors.add(c);
+        return c;
+    }
+
+    Connector addConnector(VNode node, Connector c) {
+         String localId = c.getLocalId();
 
         if (connectorIdGenerator.getIds().contains(localId)) {
             throw new IllegalArgumentException(
                     "Cannot add connector: id \"" + localId + "\" already in use");
         }
 
-        Connector result = new ConnectorImpl(c);
+        Connector result = new ConnectorImpl(node,c);
         connectors.add(result);
 
         connectorIdGenerator.addId(localId);
@@ -428,4 +440,6 @@ class VNodeImpl implements VNode {
     public ObservableList<Connector> getOutputs() {
         return this.unmodifiableOutputs;
     }
+
+    
 }

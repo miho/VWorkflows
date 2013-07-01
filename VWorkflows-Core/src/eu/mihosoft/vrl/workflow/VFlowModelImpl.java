@@ -22,7 +22,7 @@ import javafx.collections.ObservableList;
  */
 class VFlowModelImpl implements VFlowModel {
 
-    private final VNode node;
+    private final VNodeImpl node;
     private final FlowModelImpl flow;
 
     @Override
@@ -375,17 +375,17 @@ class VFlowModelImpl implements VFlowModel {
 
     @Override
     public Connector addInput(String type) {
-        return this.node.addInput(type);
+        return this.node.addInput(this,type);
     }
 
     @Override
     public Connector addOutput(String type) {
-        return this.node.addOutput(type);
+        return this.node.addOutput(this,type);
     }
 
     @Override
     public Connector addConnector(Connector c) {
-        return this.node.addConnector(c);
+        return this.node.addConnector(this,c);
     }
 
     @Override

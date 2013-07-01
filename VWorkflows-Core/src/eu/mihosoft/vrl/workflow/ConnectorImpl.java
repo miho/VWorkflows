@@ -30,8 +30,8 @@ class ConnectorImpl implements Connector {
         setValueObject(new DefaultConnectorValueObject(this));
     }
     
-    public ConnectorImpl(Connector c) {
-        this(c.getNode(), c.getType(), c.getLocalId(), c.isInput());
+    public ConnectorImpl(VNode node, Connector c) {
+        this(node, c.getType(), c.getLocalId(), c.isInput());
     }
 
     @Override

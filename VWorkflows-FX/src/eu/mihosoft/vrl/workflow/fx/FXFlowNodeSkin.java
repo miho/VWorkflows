@@ -59,9 +59,11 @@ public class FXFlowNodeSkin
     private boolean removeSkinOnly = false;
     VFlow controller;
     Map<String, Node> connectors = new HashMap<>();
-    List<Node> inputList = new ArrayList<>();
-    List<Node> outputList = new ArrayList<>();
+    List<Circle> inputList = new ArrayList<>();
+    List<Circle> outputList = new ArrayList<>();
     private FXSkinFactory skinFactory;
+    private double inputConnectorSize;
+    private double outputConnectorSize;
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
         this.skinFactory = skinFactory;
@@ -122,8 +124,6 @@ public class FXFlowNodeSkin
                 } // end while change.next()
             }
         });
-
-
     }
 
     private void addConnector(final Connector connector) {
@@ -146,7 +146,6 @@ public class FXFlowNodeSkin
         }
 
         circle.setStrokeWidth(3);
-
 
         final Circle connectorNode = circle;
 
@@ -214,7 +213,9 @@ public class FXFlowNodeSkin
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-                adjustConnectorSize(connector, connectorNode, newValue);
+                computeInputConnectorSize();
+                computeOutputConnectorSize();
+                adjustConnectorSize();
             }
         });
 
@@ -231,11 +232,6 @@ public class FXFlowNodeSkin
             @Override
             public void handle(MouseEvent t) {
 
-//                if (getModel().getFlow().getConnections("control").
-//                        isOutputConnected(getModel().getId())) {
-//                    return;
-//                }
-                
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
                 if (controller.getConnections(connector.getType()).
@@ -258,7 +254,7 @@ public class FXFlowNodeSkin
         connectorNode.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                
+
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
                 if (controller.getConnections(connector.getType()).
@@ -266,7 +262,6 @@ public class FXFlowNodeSkin
                     return;
                 }
 
-                
                 t.consume();
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
 
@@ -276,7 +271,7 @@ public class FXFlowNodeSkin
         connectorNode.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                
+
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
                 if (controller.getConnections(connector.getType()).
@@ -284,54 +279,81 @@ public class FXFlowNodeSkin
                     return;
                 }
 
-                
                 t.consume();
                 try {
                     MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
                 } catch (Exception ex) {
                     // TODO exception is not critical here (node already removed)
                 }
-                //connectorNode.toBack();
             }
         });
-
-        connectorNode.onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                //connectorNode.toBack();
-            }
-        });
-
-
-
     }
 
-    private void adjustConnectorSize(Connector conector, Circle connectorNode, Bounds newValue) {
-        connectorNode.setRadius(computeConnectorHeight(conector, connectorNode, newValue) / 2);
+    private void computeInputConnectorSize() {
+
+        double inset = 120;
+        double minInset = 60;
+        double minSize = 8;
+
+        double connectorHeight = computeConnectorSize(inset, inputList.size());
+
+        if (connectorHeight < minSize) {
+            double diff = minSize - connectorHeight;
+            inset = Math.max(inset - diff * inputList.size(), minInset);
+            connectorHeight = computeConnectorSize(inset, inputList.size());
+        }
+
+        inputConnectorSize = connectorHeight;
     }
 
-    private double computeConnectorHeight(Connector connector, Circle connectorNode, Bounds newValue) {
-        double connectorHeight = connectorNode.getRadius() * 2;
+    private void computeOutputConnectorSize() {
+        double inset = 120;
+        double minInset = 60;
+        double minSize = 8;
+
+        double connectorHeight = computeConnectorSize(inset, outputList.size());
+
+        if (connectorHeight < minSize) {
+            double diff = minSize - connectorHeight;
+            inset = Math.max(inset - diff * outputList.size(), minInset);
+            connectorHeight = computeConnectorSize(inset, outputList.size());
+        }
+
+        outputConnectorSize = connectorHeight;
+    }
+
+    private double computeConnectorSize(double inset, int numConnectors) {
+
+        double maxSize = 10;
+
+        double connectorHeight = maxSize * 2;
         double originalConnectorHeight = connectorHeight;
         double gap = 5;
 
-        int numConnectors = inputList.size();
-
-
-        if (connector.isOutput()) {
-            numConnectors = outputList.size();
-        }
-
         double totalHeight = numConnectors * connectorHeight + (numConnectors - 1) * gap;
 
-        connectorHeight = Math.min(totalHeight, newValue.getHeight() - 80) / (numConnectors);
-        connectorHeight = Math.min(connectorHeight, 20 * 2);
+        connectorHeight = Math.min(totalHeight, node.getPrefHeight() - inset) / (numConnectors);
+        connectorHeight = Math.min(connectorHeight, maxSize * 2);
 
         if (numConnectors == 1) {
             connectorHeight = originalConnectorHeight;
         }
 
         return connectorHeight;
+    }
+
+    private void adjustConnectorSize() {
+
+        inputConnectorSize = Math.min(inputConnectorSize, outputConnectorSize);
+        outputConnectorSize = inputConnectorSize;
+
+        for (Circle connector : inputList) {
+            connector.setRadius(inputConnectorSize / 2.0);
+        }
+
+        for (Circle connector : outputList) {
+            connector.setRadius(outputConnectorSize / 2.0);
+        }
     }
 
     private void removeConnector(Connector connector) {

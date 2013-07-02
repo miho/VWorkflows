@@ -11,8 +11,11 @@ import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VNodeSkin;
 import eu.mihosoft.vrl.workflow.Skin;
 import eu.mihosoft.vrl.workflow.SkinFactory;
+import java.util.Collection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.Parent;
-import jfxtras.labs.scene.control.window.Window;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -23,6 +26,9 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     private final Parent parent;
     private final FXSkinFactory parentFactory;
 //    private Window clipboard;
+    
+    private ObservableMap<String,Color> connectionFillColors = FXCollections.observableHashMap();
+    private ObservableMap<String,Color> connectionStrokeColors = FXCollections.observableHashMap();
 
     public FXSkinFactory(Parent parent) {
         this.parent = parent;
@@ -57,5 +63,37 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     @Override
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> getParent() {
         return this.parentFactory;
+    }
+    
+    public void setConnectionFillColor(String type, Color color) {
+        connectionFillColors.put(type, color);
+    }
+    
+    public Color getConnectionFillColor(String type) {
+        return connectionFillColors.get(type);
+    }
+    
+    ObservableMap<String, Color> connectionFillColorTypes() {
+        return connectionFillColors;
+    }
+    
+    public Collection<String> getConnectionFillColorTypes() {
+        return connectionFillColors.keySet();
+    }
+    
+    public void setConnectionStrokeColor(String type, Color color) {
+        connectionStrokeColors.put(type, color);
+    }
+    
+    public Color getConnectionStrokeColor(String type) {
+        return connectionStrokeColors.get(type);
+    }
+    
+    ObservableMap<String, Color> connectionStrokeColorTypes() {
+        return connectionStrokeColors;
+    }
+    
+    public Collection<String> getConnectionStrokeColorTypes() {
+        return connectionStrokeColors.keySet();
     }
 }

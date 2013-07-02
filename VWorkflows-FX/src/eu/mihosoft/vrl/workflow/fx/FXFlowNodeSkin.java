@@ -4,9 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -23,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -31,6 +29,7 @@ import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.NodeUtil;
 
@@ -58,7 +57,7 @@ public class FXFlowNodeSkin
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
     VFlow controller;
-    Map<String, Node> connectors = new HashMap<>();
+    Map<String, Shape> connectors = new HashMap<>();
     List<Circle> inputList = new ArrayList<>();
     List<Circle> outputList = new ArrayList<>();
     private FXSkinFactory skinFactory;
@@ -124,26 +123,71 @@ public class FXFlowNodeSkin
                 } // end while change.next()
             }
         });
+
+
+        skinFactory.connectionFillColorTypes().addListener(new MapChangeListener<String, Color>() {
+            @Override
+            public void onChanged(MapChangeListener.Change<? extends String, ? extends Color> change) {
+                if (change.wasAdded()) {
+                    for (Connector connector : getModel().getConnectors()) {
+
+                        if (connector.getType().equals(change.getKey())) {
+                            Shape cN = connectors.get(connector.getId());
+                            cN.setFill(change.getValueAdded());
+                        }
+                    }
+                }
+            }
+        });
+
+        skinFactory.connectionStrokeColorTypes().addListener(new MapChangeListener<String, Color>() {
+            @Override
+            public void onChanged(MapChangeListener.Change<? extends String, ? extends Color> change) {
+                if (change.wasAdded()) {
+                    for (Connector connector : getModel().getConnectors()) {
+
+                        if (connector.getType().equals(change.getKey())) {
+                            Shape cN = connectors.get(connector.getId());
+                            cN.setStroke(change.getValueAdded());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void addConnector(final Connector connector) {
 
         ConnectorCircle circle = new ConnectorCircle(controller, getSkinFactory(), connector, 20);
 
-        switch (connector.getType()) {
-            case "control":
-                circle.setFill(new Color(1.0, 1.0, 0.0, 0.75));
-                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-                break;
-            case "data":
-                circle.setFill(new Color(0.1, 0.1, 0.1, 0.5));
-                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-                break;
-            case "event":
-                circle.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
-                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-                break;
+//        switch (connector.getType()) {
+//            case "control":
+//                circle.setFill(new Color(1.0, 1.0, 0.0, 0.75));
+//                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//                break;
+//            case "data":
+//                circle.setFill(new Color(0.1, 0.1, 0.1, 0.5));
+//                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//                break;
+//            case "event":
+//                circle.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+//                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//                break;
+//        }
+
+        Color fillColor = skinFactory.getConnectionFillColor(connector.getType());
+        Color strokeColor = skinFactory.getConnectionStrokeColor(connector.getType());
+
+        if (fillColor == null) {
+            fillColor = new Color(0.1, 0.1, 0.1, 0.5);
         }
+
+        if (strokeColor == null) {
+            strokeColor = new Color(120 / 255.0, 140 / 255.0, 1, 0.42);
+        }
+        
+        circle.setFill(fillColor);
+        circle.setStroke(strokeColor);
 
         circle.setStrokeWidth(3);
 

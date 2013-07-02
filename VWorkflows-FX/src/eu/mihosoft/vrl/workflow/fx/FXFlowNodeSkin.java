@@ -63,6 +63,7 @@ public class FXFlowNodeSkin
     private FXSkinFactory skinFactory;
     private double inputConnectorSize;
     private double outputConnectorSize;
+    private List<Connector> connectorList = new ArrayList<>();
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
         this.skinFactory = skinFactory;
@@ -157,23 +158,8 @@ public class FXFlowNodeSkin
     }
 
     private void addConnector(final Connector connector) {
-
+        connectorList.add(connector);
         ConnectorCircle circle = new ConnectorCircle(controller, getSkinFactory(), connector, 20);
-
-//        switch (connector.getType()) {
-//            case "control":
-//                circle.setFill(new Color(1.0, 1.0, 0.0, 0.75));
-//                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-//                break;
-//            case "data":
-//                circle.setFill(new Color(0.1, 0.1, 0.1, 0.5));
-//                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-//                break;
-//            case "event":
-//                circle.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
-//                circle.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-//                break;
-//        }
 
         Color fillColor = skinFactory.getConnectionFillColor(connector.getType());
         Color strokeColor = skinFactory.getConnectionStrokeColor(connector.getType());
@@ -401,6 +387,7 @@ public class FXFlowNodeSkin
     }
 
     private void removeConnector(Connector connector) {
+        connectorList.remove(connector);
         Node connectorNode = connectors.remove(connector.getId());
 
         if (connectorNode != null && connectorNode.getParent() != null) {
@@ -427,10 +414,10 @@ public class FXFlowNodeSkin
     public void remove() {
         removeSkinOnly = true;
 
-        Set<String> keySet = new HashSet<>(connectors.keySet());
+        List<Connector> delList = new ArrayList<>(connectorList);
 
-        for (String id : keySet) {
-            removeConnector(getModel().getFlow().getNodeLookup().getConnectorById(id));
+        for (Connector c : delList) {
+            removeConnector(c);
         }
         if (node != null && node.getParent() != null) {
             NodeUtil.removeFromParent(node);

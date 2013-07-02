@@ -27,8 +27,8 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     private final FXSkinFactory parentFactory;
 //    private Window clipboard;
     
-    private ObservableMap<String,Color> connectionFillColors = FXCollections.observableHashMap();
-    private ObservableMap<String,Color> connectionStrokeColors = FXCollections.observableHashMap();
+    ObservableMap<String,Color> connectionFillColors = FXCollections.observableHashMap();
+    ObservableMap<String,Color> connectionStrokeColors = FXCollections.observableHashMap();
 
     public FXSkinFactory(Parent parent) {
         this.parent = parent;

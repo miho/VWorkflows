@@ -68,10 +68,9 @@ public class FlowNodeWindow extends Window {
 
 
         addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-
             @Override
             public void handle(MouseEvent t) {
-               connectorsToFront();
+                connectorsToFront();
             }
         });
     }
@@ -86,6 +85,12 @@ public class FlowNodeWindow extends Window {
 
         // create skin factory for flow visualization
         FXSkinFactory fXSkinFactory = new FXSkinFactory(canvas.getContentPane());
+
+        // copy colors from prototype
+        if (nodeSkinProperty.get().getSkinFactory() != null) {
+            fXSkinFactory.connectionFillColors = nodeSkinProperty.get().getSkinFactory().connectionFillColorTypes();
+            fXSkinFactory.connectionStrokeColors = nodeSkinProperty.get().getSkinFactory().connectionStrokeColorTypes();
+        }
 
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);
@@ -161,8 +166,8 @@ public class FlowNodeWindow extends Window {
                 if (skin != null) {
 
                     Stage stage = new Stage();
-                    stage.setWidth(400);
-                    stage.setHeight(300);
+                    stage.setWidth(800);
+                    stage.setHeight(600);
 
                     String nodeId = skin.getModel().getId();
 

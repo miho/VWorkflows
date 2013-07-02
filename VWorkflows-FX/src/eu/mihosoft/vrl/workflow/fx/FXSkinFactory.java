@@ -56,6 +56,9 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
 
         FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), this);
+        
+        result.connectionFillColors = connectionFillColors;
+        result.connectionStrokeColors = connectionStrokeColors;
 
         return result;
     }

@@ -52,6 +52,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //    private Window clipboard;
     private Window prevWindow;
     private FXSkinFactory skinFactory;
+    
+    private Shape senderNode;
+    private Shape receiverNode;
 
     public FXConnectionSkin(FXSkinFactory skinFactory, Parent parent, Connection connection, VFlow flow, String type) {
         setParent(parent);
@@ -111,19 +114,19 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getSenderId());
         final Window senderWindow = senderSkin.getNode();
-        final Node senderNode = senderSkin.getConnectorById(connection.getSenderId());
+        senderNode = (Shape) senderSkin.getConnectorById(connection.getSenderId());
 
         FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getReceiverId());
         receiverWindow = receiverSkin.getNode();
-        final Node receiverNode = receiverSkin.getConnectorById(connection.getReceiverId());
+        receiverNode = (Shape) receiverSkin.getConnectorById(connection.getReceiverId());
 
         addToClipboard();
 
         setSender(getController().getNodeLookup().getConnectorById(connection.getSenderId()));
         setReceiver(getController().getNodeLookup().getConnectorById(connection.getReceiverId()));
 
-        if (receiverNode instanceof ConnectorCircle) {
-            ConnectorCircle recConnNode = (ConnectorCircle) receiverNode;
+        if (getReceiverNode() instanceof ConnectorCircle) {
+            ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
 
             if (getReceiverUI() instanceof Circle) {
                 ((Circle) getReceiverUI()).radiusProperty().
@@ -134,32 +137,32 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(senderNode.layoutXProperty());
+                super.bind(getSenderNode().layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return senderNode.getLayoutX();
+                return getSenderNode().getLayoutX();
 
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(senderNode.layoutYProperty());
+                super.bind(getSenderNode().layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
-                return senderNode.getLayoutY();
+                return getSenderNode().getLayoutY();
             }
         };
 
         final DoubleBinding receiveXBinding = new DoubleBinding() {
             {
                 // super.bind(receiverWindow.boundsInParentProperty());
-                super.bind(receiverNode.layoutXProperty());
+                super.bind(getReceiverNode().layoutXProperty());
             }
 
             @Override
@@ -170,7 +173,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                        receiverWindow.getBoundsInParent().getMinY(), receiverWindow.getParent(), getParent());
 //
 //                return location.getX();
-                return receiverNode.layoutXProperty().get();
+                return getReceiverNode().layoutXProperty().get();
             }
         };
 
@@ -179,13 +182,13 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                super.bind(
 //                        receiverWindow.boundsInParentProperty(),
 //                        receiverWindow.heightProperty());
-                super.bind(receiverNode.layoutYProperty());
+                super.bind(getReceiverNode().layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return receiverNode.layoutYProperty().get();
+                return getReceiverNode().layoutYProperty().get();
             }
         };
 
@@ -358,7 +361,23 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     n.toFront();
                     Connector receiverConnector = selConnector.getConnector();
 
-                    controller.connect(getSender(), receiverConnector);
+                    ConnectionResult connResult = controller.connect(
+                            getSender(), receiverConnector);
+
+                    if (connResult.getStatus().isCompatible()) {
+                        if (getReceiverUI() instanceof Circle) {
+                            Circle circle = (Circle) selConnector.getNode();
+                            circle.radiusProperty().unbind();
+                        }
+                        FXConnectorUtil.connnectionEstablishedAnim((Shape)selConnector.getNode());
+                    } else {
+                        if (getReceiverUI() instanceof Circle) {
+                            Circle circle = (Circle) selConnector.getNode();
+                            circle.radiusProperty().unbind();
+                        }
+                        FXConnectorUtil.unconnectAnim(getReceiverUI());
+                        FXConnectorUtil.connnectionIncompatibleAnim((Shape)selConnector.getNode());
+                    }
 
 //                    connection.setReceiverId(receiverConnector.getId());
 
@@ -578,5 +597,19 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
      */
     public Shape getReceiverUI() {
         return receiverConnector;
+    }
+
+    /**
+     * @return the senderNode
+     */
+    public Shape getSenderNode() {
+        return senderNode;
+    }
+
+    /**
+     * @return the receiverNode
+     */
+    public Shape getReceiverNode() {
+        return receiverNode;
     }
 }

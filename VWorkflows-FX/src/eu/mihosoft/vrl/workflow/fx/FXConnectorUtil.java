@@ -10,6 +10,8 @@ import eu.mihosoft.vrl.workflow.VNode;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
@@ -95,6 +97,84 @@ class FXConnectorUtil {
         }
 
         return new SelectedConnector(myNode, connector);
+    }
+
+    public static void connnectionEstablishedAnim(Shape receiverUI) {
+        Timeline timeline = new Timeline();
+//        timeline.setAutoReverse(true);
+//        timeline.setCycleCount(Timeline.INDEFINITE);
+
+        final Circle connectedShape = new Circle();
+        connectedShape.setStrokeWidth(15);
+        connectedShape.setFill(Color.TRANSPARENT);
+        
+        connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
+        connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
+        
+        NodeUtil.addToParent(receiverUI.getParent(), connectedShape);
+
+        final KeyValue kv0 = new KeyValue(connectedShape.radiusProperty(), 0);
+        final KeyFrame kf0 = new KeyFrame(Duration.ZERO, kv0);
+        timeline.getKeyFrames().add(kf0);
+        final KeyValue kv1 = new KeyValue(connectedShape.radiusProperty(), 80);
+        final KeyFrame kf1 = new KeyFrame(Duration.millis(3500), kv1);
+        timeline.getKeyFrames().add(kf1);
+
+        final KeyValue kv2 = new KeyValue(connectedShape.strokeProperty(), new Color(0, 1, 0, 1.0));
+        final KeyFrame kf2 = new KeyFrame(Duration.ZERO, kv2);
+        timeline.getKeyFrames().add(kf2);
+        final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(), new Color(0, 1, 0, 0.0));
+        final KeyFrame kf3 = new KeyFrame(Duration.millis(3500), kv3);
+        timeline.getKeyFrames().add(kf3);
+        
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent t) {
+                NodeUtil.removeFromParent(connectedShape);
+            }
+        });
+        
+        timeline.play();
+    }
+    
+    public static void connnectionIncompatibleAnim(Node receiverUI) {
+        Timeline timeline = new Timeline();
+//        timeline.setAutoReverse(true);
+//        timeline.setCycleCount(Timeline.INDEFINITE);
+
+        final Circle connectedShape = new Circle();
+        connectedShape.setStrokeWidth(15);
+        connectedShape.setFill(Color.TRANSPARENT);
+        
+        connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
+        connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
+        
+        NodeUtil.addToParent(receiverUI.getParent(), connectedShape);
+
+        final KeyValue kv0 = new KeyValue(connectedShape.radiusProperty(), 0);
+        final KeyFrame kf0 = new KeyFrame(Duration.ZERO, kv0);
+        timeline.getKeyFrames().add(kf0);
+        final KeyValue kv1 = new KeyValue(connectedShape.radiusProperty(), 80);
+        final KeyFrame kf1 = new KeyFrame(Duration.millis(3500), kv1);
+        timeline.getKeyFrames().add(kf1);
+
+        final KeyValue kv2 = new KeyValue(connectedShape.strokeProperty(), new Color(1, 0, 0, 1.0));
+        final KeyFrame kf2 = new KeyFrame(Duration.ZERO, kv2);
+        timeline.getKeyFrames().add(kf2);
+        final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(), new Color(1, 0, 0, 0.0));
+        final KeyFrame kf3 = new KeyFrame(Duration.millis(3500), kv3);
+        timeline.getKeyFrames().add(kf3);
+        
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent t) {
+                NodeUtil.removeFromParent(connectedShape);
+            }
+        });
+        
+        timeline.play();
     }
 
     public static void unconnectAnim(Node n) {
@@ -197,5 +277,6 @@ class FXConnectorUtil {
         final KeyFrame kf3 = new KeyFrame(Duration.millis(500), kv3);
         timeline.getKeyFrames().add(kf3);
         timeline.play();
+
     }
 }

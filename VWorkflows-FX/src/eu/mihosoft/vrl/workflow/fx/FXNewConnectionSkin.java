@@ -169,7 +169,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                    Glow effect = new Glow(0.8);
 //                    effect.setInput(shadow);
 //                    selConnector.getNode().setEffect(effect);
-                    onConnectionIncompatible();
+                    
+                    //onConnectionIncompatible();
+                    onNoConnection(selConnector.getNode());
+                    
                     lastNode = selConnector.getNode();
                 }
 
@@ -269,7 +272,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     ConnectionResult connResult = null;
 
                     if (getSender().isInput() && receiverConnector.isOutput()) {
-
                         connResult = flow.connect(receiverConnector, getSender());
                         onCreateNewConnectionReverseReleased(connResult);
 
@@ -283,7 +285,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     } else{
                         onConnectionIncompatibleReleased(n);
                     }
-
                     
                 }
 
@@ -339,8 +340,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private void onConnectionIncompatibleReleased(Node n) {
         System.out.println("connection incompatible");
 
-            FXConnectorUtil.connnectionIncompatibleAnim(n);
-
+        FXConnectorUtil.connnectionIncompatibleAnim(n);
     }
     
     private void onCreateNewConnectionReleased(ConnectionResult connResult) {
@@ -360,7 +360,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     }
     
     
-
     public Node getReceiverConnector() {
         return receiverConnectorUI;
     }

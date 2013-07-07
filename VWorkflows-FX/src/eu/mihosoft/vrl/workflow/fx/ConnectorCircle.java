@@ -6,12 +6,8 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
-import java.util.Collection;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
 /**
@@ -77,7 +73,6 @@ class ConnectorCircle extends Circle {
                     connectionSkin.toFront();
                 }
             }
-
         }
     }
     

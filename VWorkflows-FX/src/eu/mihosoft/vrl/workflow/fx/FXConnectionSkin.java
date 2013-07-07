@@ -382,6 +382,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     //
                 }
 
+                // remove error notification etc.
+                if (controller.getConnections(type).contains(connection.getSenderId(),
+                        connection.getReceiverId())) {
+                    connectionListener.onNoConnection(receiverConnectorUI);
+                }
+                
                 remove();
                 connection.getConnections().remove(connection);
 

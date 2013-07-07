@@ -100,6 +100,7 @@ class ConnectionListenerImpl implements ConnectionListener {
     }
     
     private void newConnectionAnim(ConnectionResult connResult) {
+        System.out.println("new-connection anim");
         if (connResult.getConnection() != null) {
             FXConnectionSkin connectionSkin =
                     (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
@@ -109,6 +110,7 @@ class ConnectionListenerImpl implements ConnectionListener {
     }
 
     private void newConnectionReverseAnim(ConnectionResult connResult) {
+        // System.out.println("new-connection anim (reverse)");
         if (connResult.getConnection() != null) {
             FXConnectionSkin connectionSkin =
                     (FXConnectionSkin) flowController.getNodeSkinLookup().getById(

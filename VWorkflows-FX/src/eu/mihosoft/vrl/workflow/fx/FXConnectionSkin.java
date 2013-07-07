@@ -367,36 +367,16 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                             getSender(), receiverConnector);
 
                     if (connResult.getStatus().isCompatible()) {
-//                        if (getReceiverUI() instanceof Circle) {
-//                            Circle circle = (Circle) selConnector.getNode();
-//                            circle.radiusProperty().unbind();
-//                        }
                         connectionListener.onCreateNewConnectionReleased(connResult);
                     } 
-                    
-//                    else {
-////                        if (getReceiverUI() instanceof Circle) {
-////                            Circle circle = (Circle) selConnector.getNode();
-////                            circle.radiusProperty().unbind();
-////                        }
-//                        
-//                        
-//                        connectionListener.onCreateNewConnectionReverseReleased(connResult);
-//                    }
+ 
 
                     if (connResult.getStatus().isCompatible()) {
-//                        System.out.println("FX-CONNECT: " + connResult.getConnection());
+                        //
                     } else {
                         connectionListener.onConnectionIncompatibleReleased(n);
                     }
 
-//                    connection.setReceiverId(receiverConnector.getId());
-
-//                    if (n instanceof Shape) {
-//                        ((Shape) n).setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
-//                    }
-
-//                    init();
 
                 } else {
                     //

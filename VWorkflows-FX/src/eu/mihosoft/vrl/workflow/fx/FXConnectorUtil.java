@@ -116,15 +116,15 @@ class FXConnectorUtil {
         final KeyValue kv0 = new KeyValue(connectedShape.radiusProperty(), 0);
         final KeyFrame kf0 = new KeyFrame(Duration.ZERO, kv0);
         timeline.getKeyFrames().add(kf0);
-        final KeyValue kv1 = new KeyValue(connectedShape.radiusProperty(), 80);
-        final KeyFrame kf1 = new KeyFrame(Duration.millis(3500), kv1);
+        final KeyValue kv1 = new KeyValue(connectedShape.radiusProperty(), 60);
+        final KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
         timeline.getKeyFrames().add(kf1);
 
         final KeyValue kv2 = new KeyValue(connectedShape.strokeProperty(), new Color(0, 1, 0, 1.0));
-        final KeyFrame kf2 = new KeyFrame(Duration.ZERO, kv2);
+        final KeyFrame kf2 = new KeyFrame(Duration.millis(0), kv2);
         timeline.getKeyFrames().add(kf2);
         final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(), new Color(0, 1, 0, 0.0));
-        final KeyFrame kf3 = new KeyFrame(Duration.millis(3500), kv3);
+        final KeyFrame kf3 = new KeyFrame(Duration.millis(400), kv3);
         timeline.getKeyFrames().add(kf3);
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {
@@ -154,15 +154,15 @@ class FXConnectorUtil {
         final KeyValue kv0 = new KeyValue(connectedShape.radiusProperty(), 0);
         final KeyFrame kf0 = new KeyFrame(Duration.ZERO, kv0);
         timeline.getKeyFrames().add(kf0);
-        final KeyValue kv1 = new KeyValue(connectedShape.radiusProperty(), 80);
-        final KeyFrame kf1 = new KeyFrame(Duration.millis(3500), kv1);
+        final KeyValue kv1 = new KeyValue(connectedShape.radiusProperty(), 60);
+        final KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
         timeline.getKeyFrames().add(kf1);
 
         final KeyValue kv2 = new KeyValue(connectedShape.strokeProperty(), new Color(1, 0, 0, 1.0));
-        final KeyFrame kf2 = new KeyFrame(Duration.ZERO, kv2);
+        final KeyFrame kf2 = new KeyFrame(Duration.millis(0), kv2);
         timeline.getKeyFrames().add(kf2);
         final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(), new Color(1, 0, 0, 0.0));
-        final KeyFrame kf3 = new KeyFrame(Duration.millis(3500), kv3);
+        final KeyFrame kf3 = new KeyFrame(Duration.millis(400), kv3);
         timeline.getKeyFrames().add(kf3);
 
         timeline.setOnFinished(new EventHandler<ActionEvent>() {

@@ -48,6 +48,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private String type;
     private Node lastNode;
     private FXSkinFactory skinFactory;
+    private ConnectionListener connectionListener;
 
     public FXNewConnectionSkin(FXSkinFactory skinFactory, Parent parent, Connector sender, VFlow controller, String type) {
         this.skinFactory = skinFactory;
@@ -135,6 +136,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         receiverConnectorUI.setLayoutX(senderNode.getLayoutX());
         receiverConnectorUI.setLayoutY(senderNode.getLayoutY());
+        
+        connectionListener = 
+                new ConnectionListenerImpl(
+                skinFactory, flowController, receiverConnectorUI);
 
     }
 
@@ -171,7 +176,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                    selConnector.getNode().setEffect(effect);
                     
                     //onConnectionIncompatible();
-                    onNoConnection(selConnector.getNode());
+                    connectionListener.onNoConnection(selConnector.getNode());
                     
                     lastNode = selConnector.getNode();
                 }
@@ -206,7 +211,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                         if (lastNode != n) {
                             
-                            onConnectionCompatible(n);
+                            connectionListener.onConnectionCompatible(n);
                         }
 
                     } else {
@@ -215,7 +220,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                        Glow effect = new Glow(0.8);
 //                        effect.setInput(shadow);
 //                        n.setEffect(effect);
-                        onConnectionIncompatible();
+                        connectionListener.onConnectionIncompatible();
                     }
 
                     receiverConnectorUI.toFront();
@@ -223,7 +228,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     lastNode = n;
                 } else {
                     if (lastNode == null) {
-                       onNoConnection(receiverConnectorUI);
+                       connectionListener.onNoConnection(receiverConnectorUI);
                     }
                 }
             }
@@ -273,17 +278,17 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     if (getSender().isInput() && receiverConnector.isOutput()) {
                         connResult = flow.connect(receiverConnector, getSender());
-                        onCreateNewConnectionReverseReleased(connResult);
+                        connectionListener.onCreateNewConnectionReverseReleased(connResult);
 
                     } else {
                         connResult = flow.connect(getSender(), receiverConnector);
-                        onCreateNewConnectionReleased(connResult);
+                        connectionListener.onCreateNewConnectionReleased(connResult);
                     }
                     
                     if (connResult.getStatus().isCompatible()) {
 //                        System.out.println("FX-CONNECT: " + connResult.getConnection());
                     } else{
-                        onConnectionIncompatibleReleased(n);
+                        connectionListener.onConnectionIncompatibleReleased(n);
                     }
                     
                 }
@@ -294,72 +299,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
     }
 
-    private void newConnectionAnim(ConnectionResult connResult) {
-        if (connResult.getConnection() != null) {
-            FXConnectionSkin connectionSkin =
-                    (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
-                    skinFactory, connResult.getConnection());
-            FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getReceiverUI());
-        }
-    }
-
-    private void newConnectionReverseAnim(ConnectionResult connResult) {
-        if (connResult.getConnection() != null) {
-            FXConnectionSkin connectionSkin =
-                    (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
-                    skinFactory, connResult.getConnection());
-  
-            FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getSenderNode());
-        }
-    }
-    
-    private void onConnectionCompatible(Node n) {
-        System.out.println("connection compatible");
-        
-        FXConnectorUtil.connectAnim(receiverConnectorUI, n);
-    }
-    
-    private void onConnectionCompatibleReleased(Node n) {
-        System.out.println("connection compatible");
-        
-        FXConnectorUtil.connectAnim(receiverConnectorUI, n);
-    }
-    
-    private void onConnectionIncompatible() {
-        System.out.println("connection incompatible");
-        
-        FXConnectorUtil.incompatibleAnim(receiverConnectorUI);
-    }
-    
-    private void onNoConnection(Node n) {
-        System.out.println("no connection");
-        
-        FXConnectorUtil.unconnectAnim(receiverConnectorUI);
-    }
-    
-    private void onConnectionIncompatibleReleased(Node n) {
-        System.out.println("connection incompatible");
-
-        FXConnectorUtil.connnectionIncompatibleAnim(n);
-    }
-    
-    private void onCreateNewConnectionReleased(ConnectionResult connResult) {
-        System.out.println("connection created");
-        newConnectionAnim(connResult);
-    }
-    
-    private void onCreateNewConnectionReverseReleased(ConnectionResult connResult) {
-        System.out.println("connection created (reverse)");
-        newConnectionReverseAnim(connResult);
-    }
-    
-    private void onRemoveConnectionReleased() {
-        System.out.println("remove connection");
-        
-        FXConnectorUtil.unconnectAnim(receiverConnectorUI);
-    }
-    
-    
     public Node getReceiverConnector() {
         return receiverConnectorUI;
     }

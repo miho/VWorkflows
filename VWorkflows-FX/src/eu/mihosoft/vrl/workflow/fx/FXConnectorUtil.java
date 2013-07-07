@@ -107,10 +107,10 @@ class FXConnectorUtil {
         final Circle connectedShape = new Circle();
         connectedShape.setStrokeWidth(15);
         connectedShape.setFill(Color.TRANSPARENT);
-        
+
         connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
         connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
-        
+
         NodeUtil.addToParent(receiverUI.getParent(), connectedShape);
 
         final KeyValue kv0 = new KeyValue(connectedShape.radiusProperty(), 0);
@@ -126,18 +126,17 @@ class FXConnectorUtil {
         final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(), new Color(0, 1, 0, 0.0));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(3500), kv3);
         timeline.getKeyFrames().add(kf3);
-        
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
 
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 NodeUtil.removeFromParent(connectedShape);
             }
         });
-        
+
         timeline.play();
     }
-    
+
     public static void connnectionIncompatibleAnim(Node receiverUI) {
         Timeline timeline = new Timeline();
 //        timeline.setAutoReverse(true);
@@ -146,10 +145,10 @@ class FXConnectorUtil {
         final Circle connectedShape = new Circle();
         connectedShape.setStrokeWidth(15);
         connectedShape.setFill(Color.TRANSPARENT);
-        
+
         connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
         connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
-        
+
         NodeUtil.addToParent(receiverUI.getParent(), connectedShape);
 
         final KeyValue kv0 = new KeyValue(connectedShape.radiusProperty(), 0);
@@ -165,15 +164,14 @@ class FXConnectorUtil {
         final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(), new Color(1, 0, 0, 0.0));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(3500), kv3);
         timeline.getKeyFrames().add(kf3);
-        
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
 
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 NodeUtil.removeFromParent(connectedShape);
             }
         });
-        
+
         timeline.play();
     }
 
@@ -260,7 +258,15 @@ class FXConnectorUtil {
         timeline.play();
     }
 
-    static void incompatibleAnim(Circle receiverConnector) {
+    static void incompatibleAnim(Node receiverConnector) {
+
+        if (!(receiverConnector instanceof Circle)) {
+            throw new IllegalArgumentException(
+                    "only" + Circle.class
+                    + "nodes are supported. Specified: " + receiverConnector);
+        }
+
+        Circle circleConnector = (Circle) receiverConnector;
 
         if (timeline != null) {
             timeline.stop();
@@ -270,10 +276,10 @@ class FXConnectorUtil {
 //        timeline.setAutoReverse(true);
 //        timeline.setCycleCount(Timeline.INDEFINITE);
 
-        final KeyValue kv2 = new KeyValue(receiverConnector.fillProperty(), new Color(1, 0, 0, 0.80));
+        final KeyValue kv2 = new KeyValue(circleConnector.fillProperty(), new Color(1, 0, 0, 0.80));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
         timeline.getKeyFrames().add(kf2);
-        final KeyValue kv3 = new KeyValue(receiverConnector.strokeProperty(), new Color(1, 0, 0, 0.90));
+        final KeyValue kv3 = new KeyValue(circleConnector.strokeProperty(), new Color(1, 0, 0, 0.90));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(500), kv3);
         timeline.getKeyFrames().add(kf3);
         timeline.play();

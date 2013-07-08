@@ -48,9 +48,8 @@ public class FlowNodeWindow extends Window {
         getLeftIcons().add(new CloseIcon(this));
         getLeftIcons().add(new MinimizeIcon(this));
 
-        setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
+//        setTitleBarStyleClass("my-titlebar");
 
-//        setStyle("-fx-background-color: rgb(120,140,255);-fx-border-color: rgb(255,255,255);-fx-border-width: 2;");
 
         OptimizableContentPane parentContent = new OptimizableContentPane();
 
@@ -75,7 +74,7 @@ public class FlowNodeWindow extends Window {
         });
     }
 
-    private void showFlowInWindow(VFlow flow, Stage stage, String title) {
+    private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
 
         // create scalable root pane
         jfxtras.labs.scene.layout.ScalableContentPane canvas = new jfxtras.labs.scene.layout.ScalableContentPane();
@@ -97,6 +96,8 @@ public class FlowNodeWindow extends Window {
 
         // the usual application setup
         Scene scene = new Scene(canvas, 800, 800);
+
+        scene.getStylesheets().setAll(stylesheets);
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
@@ -173,7 +174,10 @@ public class FlowNodeWindow extends Window {
 
                     for (VFlow vf : skin.getController().getSubControllers()) {
                         if (vf.getModel().getId().equals(nodeId)) {
-                            showFlowInWindow(vf, stage, getTitle());
+                            showFlowInWindow(vf,
+                                    NodeUtil.getStylesheetsOfAncestors(
+                                    FlowNodeWindow.this),
+                                    stage, getTitle());
                             break;
                         }
                     }

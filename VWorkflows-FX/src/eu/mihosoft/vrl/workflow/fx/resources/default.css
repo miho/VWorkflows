@@ -7,21 +7,55 @@
 */
 
 .connector {
-/*    -fx-fill : radial-gradient(center 50% 25%,
-                               radius 75%,
-                               rgb(122,255,77) 0%,
-                               rgb(0,102,0) 100%);*/
-    
-/*    -fx-effect: dropshadow(gaussian,
-                           rgba(0, 0, 0, 0.65),
-                           10, 0.0, 5, 5);*/
+    /*    -fx-fill : radial-gradient(center 50% 25%,
+                                   radius 75%,
+                                   rgb(122,255,77) 0%,
+                                   rgb(0,102,0) 100%);*/
+
+    /*    -fx-effect: dropshadow(gaussian,
+                               rgba(0, 0, 0, 0.65),
+                               10, 0.0, 5, 5);*/
 }
 
 .window {
+    -fx-background-color: rgba(120,140,255,0.2);
+    -fx-border-color: rgba(120,140,255,0.42);
+    -fx-border-width: 2;
 
+    /* -fx-background-color : radial-gradient(center 50% 25%,
+                                       radius 75%,
+                                       rgb(122,255,77) 0%,
+                                       rgb(0,102,0) 100%);*/
 }
 
+.window-titlebar {
 
-.my-titlebar {
+    -fx-background-color: rgba(120,140,255,0.2);
+    -fx-border-color: rgba(120,140,255,0.42);
+    -fx-border-width: 0;
+    -fx-padding: 6 4 3 4;
+    -fx-background-insets: 0 0 -2 0;
 
+    -fx-alignment: center;
+
+    -fx-stroke: rgba(255,255,255,50);
+    -fx-fill: rgba(255,255,255,50);
 }
+
+/*.my-titlebar{
+ -fx-background-color : radial-gradient(center 50% 25%,
+                                   radius 75%,
+                                   rgb(122,255,77) 0%,
+                                   rgb(0,102,0) 100%);
+ 
+    -fx-alignment: center;
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-glass-color, 30%), -fx-glass-color);
+    -fx-border-color: derive(-fx-background-color, -60%);
+    -fx-border-width: 2;
+    -fx-background-insets: 0 0 -2 0;
+    -fx-border-radius: 3;
+    -fx-padding: 5;
+    -fx-background-radius: 3;
+    -fx-stroke: rgba(255,255,255,50);
+    -fx-fill: rgba(255,255,255,50);
+}*/

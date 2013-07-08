@@ -93,6 +93,22 @@ public class NodeUtil {
     }
 
     /**
+     * Returns the stylesheets of all ancestors of thhe specified node.
+     *
+     * @param n scene graph node
+     * @return a list that contains the stylesheets of all ancestors of the
+     * specified node
+     */
+    public static List<String> getStylesheetsOfAncestors(Node n) {
+        List<String> result = new ArrayList<>();
+        for (Parent p : getAncestors(n)) {
+            result.addAll(p.getStylesheets());
+        }
+
+        return result;
+    }
+
+    /**
      * Returns all ancestors of the specified node till the specified one is
      * reached.
      *
@@ -245,9 +261,9 @@ public class NodeUtil {
                 for (Class<?> nodeClass : nodeClasses) {
 
                     if (nodeClass.isAssignableFrom(result.getClass())) {
-                        
+
                         return result;
-                        
+
                     }
                 }
             }

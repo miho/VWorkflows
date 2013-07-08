@@ -7,7 +7,14 @@
 */
 
 .connector {
-    -fx-skin: "eu.mihosoft.vrl.fxconnections.DefaultConnectorSkin";
+/*    -fx-fill : radial-gradient(center 50% 25%,
+                               radius 75%,
+                               rgb(122,255,77) 0%,
+                               rgb(0,102,0) 100%);*/
+    
+/*    -fx-effect: dropshadow(gaussian,
+                           rgba(0, 0, 0, 0.65),
+                           10, 0.0, 5, 5);*/
 }
 
 .window {

@@ -141,14 +141,14 @@ class VFlowImpl implements VFlow {
                         // removed
                         for (Connection c : change.getRemoved()) {
                             removeConnectionSkinFromAllSkinFactories(c);
-                            System.out.println("remove skin: " + c);
+//                            System.out.println("remove skin: " + c);
                         }
                     } else if (change.wasAdded()) {
                         // added
                         for (Connection c : change.getAddedSubList()) {
 
                             createConnectionSkins(c, c.getType(), getSkinFactories());
-                            System.out.println("add skin: " + c);
+//                            System.out.println("add skin: " + c);
                         }
                     }
                 }

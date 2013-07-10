@@ -71,24 +71,27 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
     private void init() {
 
-        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
-        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        connectionPath.setStrokeWidth(5);
-        connectionPath.setStrokeLineCap(StrokeLineCap.ROUND);
+        connectionPath.getStyleClass().setAll("vnode-new-connection", "vnode-new-connection-" + getSender().getType());
+        receiverConnectorUI.getStyleClass().setAll("vnode-new-connection-receiver", "vnode-new-connection-receiver-" + getSender().getType());
+
+//        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+//        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        connectionPath.setStrokeWidth(5);
+//        connectionPath.setStrokeLineCap(StrokeLineCap.ROUND);
 
 //        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
 //        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 
-        if (type.equals("control")) {
-            receiverConnectorUI.setFill(new Color(1.0, 1.0, 0.0, 0.75));
-            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        } else if (type.equals("data")) {
-            receiverConnectorUI.setFill(new Color(0.1, 0.1, 0.1, 0.5));
-            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        } else if (type.equals("event")) {
-            receiverConnectorUI.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
-            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        }
+//        if (type.equals("control")) {
+//            receiverConnectorUI.setFill(new Color(1.0, 1.0, 0.0, 0.75));
+//            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        } else if (type.equals("data")) {
+//            receiverConnectorUI.setFill(new Color(0.1, 0.1, 0.1, 0.5));
+//            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        } else if (type.equals("event")) {
+//            receiverConnectorUI.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+//            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        }
 
         receiverConnectorUI.setStrokeWidth(3);
 
@@ -136,8 +139,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         receiverConnectorUI.setLayoutX(senderNode.getLayoutX());
         receiverConnectorUI.setLayoutY(senderNode.getLayoutY());
-        
-        connectionListener = 
+
+        connectionListener =
                 new ConnectionListenerImpl(
                 skinFactory, flowController, receiverConnectorUI);
 
@@ -174,10 +177,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                    Glow effect = new Glow(0.8);
 //                    effect.setInput(shadow);
 //                    selConnector.getNode().setEffect(effect);
-                    
+
                     //onConnectionIncompatible();
                     connectionListener.onNoConnection(selConnector.getNode());
-                    
+
                     lastNode = selConnector.getNode();
                 }
 
@@ -210,7 +213,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     if (connResult.getStatus().isCompatible()) {
 
                         if (lastNode != n) {
-                            
+
                             connectionListener.onConnectionCompatible(n);
                         }
 
@@ -228,7 +231,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     lastNode = n;
                 } else {
                     if (lastNode == null) {
-                       connectionListener.onNoConnection(receiverConnectorUI);
+                        connectionListener.onNoConnection(receiverConnectorUI);
                     }
                 }
             }
@@ -284,13 +287,13 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         connResult = flow.connect(getSender(), receiverConnector);
                         connectionListener.onCreateNewConnectionReleased(connResult);
                     }
-                    
+
                     if (connResult.getStatus().isCompatible()) {
 //                        System.out.println("FX-CONNECT: " + connResult.getConnection());
-                    } else{
+                    } else {
                         connectionListener.onConnectionIncompatibleReleased(n);
                     }
-                    
+
                 }
 
                 remove();

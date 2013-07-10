@@ -56,6 +56,17 @@
     -fx-stroke-width: 3px; 
 }
 
+.vnode-connection {
+    -fx-stroke: rgba(120,140,255,0.2);
+    -fx-stroke-width: 5px;
+}
+
+.vnode-new-connection {
+    -fx-stroke: rgba(120,140,255,0.2);
+    -fx-stroke-width: 5px;
+}
+
+
 /*.window-titlebar {
 
     -fx-background-color: rgba(120,140,255,0.2);

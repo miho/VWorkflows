@@ -77,9 +77,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
     private void init() {
 
-        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
-        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-        connectionPath.setStrokeWidth(5);
+        connectionPath.getStyleClass().setAll("vnode-connection", "vnode-connection-" + type);
+        receiverConnectorUI.getStyleClass().setAll("vnode-connection-receiver", "vnode-connection-receiver-" + type);
+
+//        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
+//        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        connectionPath.setStrokeWidth(5);
 //        connectionPath.setStrokeLineCap(StrokeLineCap.ROUND);
 
 //        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
@@ -368,8 +371,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     if (connResult.getStatus().isCompatible()) {
                         connectionListener.onCreateNewConnectionReleased(connResult);
-                    } 
- 
+                    }
+
 
                     if (connResult.getStatus().isCompatible()) {
                         //
@@ -387,7 +390,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         connection.getReceiverId())) {
                     connectionListener.onNoConnection(receiverConnectorUI);
                 }
-                
+
                 remove();
                 connection.getConnections().remove(connection);
 

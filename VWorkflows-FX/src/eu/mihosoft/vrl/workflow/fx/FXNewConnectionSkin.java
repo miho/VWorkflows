@@ -248,7 +248,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 connectionPath.toBack();
 
                 if (lastNode != null) {
-                    lastNode.setEffect(null);
+//                    lastNode.setEffect(null);
                     lastNode = null;
                 }
 

@@ -43,7 +43,7 @@ class ConnectorCircle extends Circle {
     }
 
     private void init() {
-//        this.getStyleClass().add("connector");
+        this.getStyleClass().add("connector");
     }
 
     /**

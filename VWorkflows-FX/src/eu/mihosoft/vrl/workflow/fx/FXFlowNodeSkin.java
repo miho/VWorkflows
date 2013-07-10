@@ -172,10 +172,10 @@ public class FXFlowNodeSkin
             strokeColor = new Color(120 / 255.0, 140 / 255.0, 1, 0.42);
         }
         
-        circle.setFill(fillColor);
-        circle.setStroke(strokeColor);
-
-        circle.setStrokeWidth(3);
+//        circle.setFill(fillColor);
+//        circle.setStroke(strokeColor);
+//
+//        circle.setStrokeWidth(3);
 
         final Circle connectorNode = circle;
 

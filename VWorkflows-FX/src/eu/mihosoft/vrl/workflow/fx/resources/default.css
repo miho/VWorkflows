@@ -6,26 +6,30 @@
         Purpose of the stylesheet follows.
 */
 
-.connector {
-    /*    -fx-fill : radial-gradient(center 50% 25%,
+/*.connector {
+        -fx-fill : radial-gradient(center 50% 25%,
                                    radius 75%,
                                    rgb(122,255,77) 0%,
-                                   rgb(0,102,0) 100%);*/
+                                   rgb(0,102,0) 100%);
 
-    /*    -fx-effect: dropshadow(gaussian,
+        -fx-effect: dropshadow(gaussian,
                                rgba(0, 0, 0, 0.65),
-                               10, 0.0, 5, 5);*/
-}
+                               10, 0.0, 5, 5);
+}*/
 
 .window {
     -fx-background-color: rgba(120,140,255,0.2);
     -fx-border-color: rgba(120,140,255,0.42);
     -fx-border-width: 2;
 
-    /* -fx-background-color : radial-gradient(center 50% 25%,
+     -fx-background-color : radial-gradient(center 50% 25%,
                                        radius 75%,
                                        rgb(122,255,77) 0%,
-                                       rgb(0,102,0) 100%);*/
+                                       rgb(0,102,0) 100%);
+     
+     -fx-effect: dropshadow(gaussian,
+                               rgba(0, 0, 0, 0.65),
+                               20, 0.0, 10, 16);
 }
 
 .window-titlebar {

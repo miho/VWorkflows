@@ -234,7 +234,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             public void handle(MouseEvent t) {
 
                 if (lastNode != null) {
-                    lastNode.setEffect(null);
+//                    lastNode.setEffect(null);
                     lastNode = null;
                 }
 

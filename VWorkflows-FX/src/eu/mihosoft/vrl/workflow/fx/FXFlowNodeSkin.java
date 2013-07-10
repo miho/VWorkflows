@@ -43,7 +43,6 @@ public class FXFlowNodeSkin
         implements FXSkin<VNode, Window>, VNodeSkin<VNode> {
 
     private ObjectProperty<VNode> modelProperty = new SimpleObjectProperty<>();
-//    private ObjectProperty<Flow> flowProperty = new SimpleObjectProperty<>();
     private FlowNodeWindow node;
     private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private ChangeListener<String> modelTitleListener;
@@ -128,57 +127,57 @@ public class FXFlowNodeSkin
         });
 
 
-        skinFactory.connectionFillColorTypes().addListener(new MapChangeListener<String, Color>() {
-            @Override
-            public void onChanged(MapChangeListener.Change<? extends String, ? extends Color> change) {
-                if (change.wasAdded()) {
-                    for (Connector connector : getModel().getConnectors()) {
-
-                        if (connector.getType().equals(change.getKey())) {
-                            Shape cN = connectors.get(connector.getId());
-                            cN.setFill(change.getValueAdded());
-                        }
-                    }
-                }
-            }
-        });
-
-        skinFactory.connectionStrokeColorTypes().addListener(new MapChangeListener<String, Color>() {
-            @Override
-            public void onChanged(MapChangeListener.Change<? extends String, ? extends Color> change) {
-                if (change.wasAdded()) {
-                    for (Connector connector : getModel().getConnectors()) {
-
-                        if (connector.getType().equals(change.getKey())) {
-                            Shape cN = connectors.get(connector.getId());
-                            cN.setStroke(change.getValueAdded());
-                        }
-                    }
-                }
-            }
-        });
+//        skinFactory.connectionFillColorTypes().addListener(new MapChangeListener<String, Color>() {
+//            @Override
+//            public void onChanged(MapChangeListener.Change<? extends String, ? extends Color> change) {
+//                if (change.wasAdded()) {
+//                    for (Connector connector : getModel().getConnectors()) {
+//
+//                        if (connector.getType().equals(change.getKey())) {
+//                            Shape cN = connectors.get(connector.getId());
+//                            cN.setFill(change.getValueAdded());
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//
+//        skinFactory.connectionStrokeColorTypes().addListener(new MapChangeListener<String, Color>() {
+//            @Override
+//            public void onChanged(MapChangeListener.Change<? extends String, ? extends Color> change) {
+//                if (change.wasAdded()) {
+//                    for (Connector connector : getModel().getConnectors()) {
+//
+//                        if (connector.getType().equals(change.getKey())) {
+//                            Shape cN = connectors.get(connector.getId());
+//                            cN.setStroke(change.getValueAdded());
+//                        }
+//                    }
+//                }
+//            }
+//        });
     }
 
     private void addConnector(final Connector connector) {
         connectorList.add(connector);
         ConnectorCircle circle = new ConnectorCircle(controller, getSkinFactory(), connector, 20);
 
-        Color fillColor = skinFactory.getConnectionFillColor(connector.getType());
-        Color strokeColor = skinFactory.getConnectionStrokeColor(connector.getType());
-
-        if (fillColor == null) {
-            fillColor = new Color(0.1, 0.1, 0.1, 0.5);
-        }
-
-        if (strokeColor == null) {
-            strokeColor = new Color(120 / 255.0, 140 / 255.0, 1, 0.42);
-        }
-
-        
-        circle.setFill(fillColor);
-        circle.setStroke(strokeColor);
-
-        circle.setStrokeWidth(3);
+//        Color fillColor = skinFactory.getConnectionFillColor(connector.getType());
+//        Color strokeColor = skinFactory.getConnectionStrokeColor(connector.getType());
+//
+//        if (fillColor == null) {
+//            fillColor = new Color(0.1, 0.1, 0.1, 0.5);
+//        }
+//
+//        if (strokeColor == null) {
+//            strokeColor = new Color(120 / 255.0, 140 / 255.0, 1, 0.42);
+//        }
+//
+//        
+//        circle.setFill(fillColor);
+//        circle.setStroke(strokeColor);
+//
+//        circle.setStrokeWidth(3);
 
 
         final Circle connectorNode = circle;

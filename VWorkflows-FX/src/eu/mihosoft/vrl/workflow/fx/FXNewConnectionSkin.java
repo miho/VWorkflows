@@ -153,7 +153,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             public void handle(MouseEvent t) {
 
                 if (lastNode != null) {
-                    lastNode.setEffect(null);
+//                    lastNode.setEffect(null);
                     lastNode = null;
                 }
 

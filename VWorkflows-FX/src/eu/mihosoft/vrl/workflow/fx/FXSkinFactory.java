@@ -68,35 +68,35 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
         return this.parentFactory;
     }
     
-    public void setConnectionFillColor(String type, Color color) {
-        connectionFillColors.put(type, color);
-    }
-    
-    public Color getConnectionFillColor(String type) {
-        return connectionFillColors.get(type);
-    }
-    
-    ObservableMap<String, Color> connectionFillColorTypes() {
-        return connectionFillColors;
-    }
-    
-    public Collection<String> getConnectionFillColorTypes() {
-        return connectionFillColors.keySet();
-    }
-    
-    public void setConnectionStrokeColor(String type, Color color) {
-        connectionStrokeColors.put(type, color);
-    }
-    
-    public Color getConnectionStrokeColor(String type) {
-        return connectionStrokeColors.get(type);
-    }
-    
-    ObservableMap<String, Color> connectionStrokeColorTypes() {
-        return connectionStrokeColors;
-    }
-    
-    public Collection<String> getConnectionStrokeColorTypes() {
-        return connectionStrokeColors.keySet();
-    }
+//    public void setConnectionFillColor(String type, Color color) {
+//        connectionFillColors.put(type, color);
+//    }
+//    
+//    public Color getConnectionFillColor(String type) {
+//        return connectionFillColors.get(type);
+//    }
+//    
+//    ObservableMap<String, Color> connectionFillColorTypes() {
+//        return connectionFillColors;
+//    }
+//    
+//    public Collection<String> getConnectionFillColorTypes() {
+//        return connectionFillColors.keySet();
+//    }
+//    
+//    public void setConnectionStrokeColor(String type, Color color) {
+//        connectionStrokeColors.put(type, color);
+//    }
+//    
+//    public Color getConnectionStrokeColor(String type) {
+//        return connectionStrokeColors.get(type);
+//    }
+//    
+//    ObservableMap<String, Color> connectionStrokeColorTypes() {
+//        return connectionStrokeColors;
+//    }
+//    
+//    public Collection<String> getConnectionStrokeColorTypes() {
+//        return connectionStrokeColors.keySet();
+//    }
 }

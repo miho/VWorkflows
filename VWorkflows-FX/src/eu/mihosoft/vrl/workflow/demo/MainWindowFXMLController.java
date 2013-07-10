@@ -202,14 +202,14 @@ public class MainWindowFXMLController implements Initializable {
         workflow.setSkinFactories(skinFactory);
 
 
-        skinFactory.setConnectionFillColor("control", new Color(1.0, 1.0, 0.0, 0.75));
-        skinFactory.setConnectionStrokeColor("control", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-
-        skinFactory.setConnectionFillColor("data", new Color(0.1, 0.1, 0.1, 0.5));
-        skinFactory.setConnectionStrokeColor("data", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-
-        skinFactory.setConnectionFillColor("event", new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
-        skinFactory.setConnectionStrokeColor("event", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//        skinFactory.setConnectionFillColor("control", new Color(1.0, 1.0, 0.0, 0.75));
+//        skinFactory.setConnectionStrokeColor("control", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//
+//        skinFactory.setConnectionFillColor("data", new Color(0.1, 0.1, 0.1, 0.5));
+//        skinFactory.setConnectionStrokeColor("data", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+//
+//        skinFactory.setConnectionFillColor("event", new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
+//        skinFactory.setConnectionStrokeColor("event", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 
 
 //        workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),

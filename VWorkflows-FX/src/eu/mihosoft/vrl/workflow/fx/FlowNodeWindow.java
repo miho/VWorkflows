@@ -50,9 +50,9 @@ public class FlowNodeWindow extends Window {
 
 //        setTitleBarStyleClass("my-titlebar");
 
-        setStyle("    -fx-background-color: rgba(120,140,255,0.2);\n"
-                + "    -fx-border-color: rgba(120,140,255,0.42);\n"
-                + "    -fx-border-width: 2;");
+//        setStyle("    -fx-background-color: rgba(120,140,255,0.2);\n"
+//                + "    -fx-border-color: rgba(120,140,255,0.42);\n"
+//                + "    -fx-border-width: 2;");
 
 
         OptimizableContentPane parentContent = new OptimizableContentPane();
@@ -84,16 +84,16 @@ public class FlowNodeWindow extends Window {
         jfxtras.labs.scene.layout.ScalableContentPane canvas = new jfxtras.labs.scene.layout.ScalableContentPane();
 
         // define background style
-        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
+//        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
 
         // create skin factory for flow visualization
         FXSkinFactory fXSkinFactory = new FXSkinFactory(canvas.getContentPane());
 
         // copy colors from prototype
-        if (nodeSkinProperty.get().getSkinFactory() != null) {
-            fXSkinFactory.connectionFillColors = nodeSkinProperty.get().getSkinFactory().connectionFillColorTypes();
-            fXSkinFactory.connectionStrokeColors = nodeSkinProperty.get().getSkinFactory().connectionStrokeColorTypes();
-        }
+//        if (nodeSkinProperty.get().getSkinFactory() != null) {
+//            fXSkinFactory.connectionFillColors = nodeSkinProperty.get().getSkinFactory().connectionFillColorTypes();
+//            fXSkinFactory.connectionStrokeColors = nodeSkinProperty.get().getSkinFactory().connectionStrokeColorTypes();
+//        }
 
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);

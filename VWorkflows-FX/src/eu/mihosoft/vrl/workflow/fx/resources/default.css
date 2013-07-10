@@ -22,14 +22,38 @@
     -fx-border-color: rgba(120,140,255,0.42);
     -fx-border-width: 2;
 
-     -fx-background-color : radial-gradient(center 50% 25%,
+/*     -fx-background-color : radial-gradient(center 50% 25%,
                                        radius 75%,
                                        rgb(122,255,77) 0%,
                                        rgb(0,102,0) 100%);
      
      -fx-effect: dropshadow(gaussian,
                                rgba(0, 0, 0, 0.65),
-                               20, 0.0, 10, 16);
+                               20, 0.0, 10, 16);*/
+}
+
+.vnode-connector {
+    -fx-fill: rgba(0,0,0,0.75);
+    -fx-stroke: rgba(120, 140, 255, 0.42);
+    -fx-stroke-width: 3px; 
+}
+
+.vnode-connector-control {
+    -fx-fill: rgba(255,255,0,0.75);
+    -fx-stroke: rgba(120, 140, 255, 0.42);
+    -fx-stroke-width: 3px; 
+}
+
+.vnode-connector-event {
+    -fx-fill: rgba(255,100,255,0.75);
+    -fx-stroke: rgba(120, 140, 255, 0.42);
+    -fx-stroke-width: 3px; 
+}
+
+.vnode-connector-data {
+    -fx-fill: rgba(10,10,10,0.75);
+    -fx-stroke: rgba(120, 140, 255, 0.42);
+    -fx-stroke-width: 3px; 
 }
 
 /*.window-titlebar {

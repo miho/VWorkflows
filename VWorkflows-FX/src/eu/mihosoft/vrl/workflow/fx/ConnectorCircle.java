@@ -22,14 +22,14 @@ class ConnectorCircle extends Circle {
     private FXConnectionSkin connectionSkin;
 
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector) {
-        this.connector = connector;
+        setConnector(connector);
         this.flow = flow;
         this.skinFactory = skinFactory;
     }
 
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector, double radius) {
         super(radius);
-        this.connector = connector;
+        setConnector(connector);
         this.flow = flow;
         this.skinFactory = skinFactory;
 
@@ -43,7 +43,7 @@ class ConnectorCircle extends Circle {
     }
 
     private void init() {
-        this.getStyleClass().add("connector");
+        this.getStyleClass().add("vnode-connector");
     }
 
     /**
@@ -57,12 +57,22 @@ class ConnectorCircle extends Circle {
      * @param connector the connector to set
      */
     public void setConnector(Connector connector) {
+        
+        if (getConnector()!=null) {
+            getStyleClass().remove("vnode-connector-"+getConnector().getType());
+        }
+        
         this.connector = connector;
+        
+        if (getConnector()!=null) {
+            getStyleClass().add("vnode-connector-"+getConnector().getType());
+        }
+        
     }
 
     private void moveConnectionReceiverToFront() {
         connectionSkin = null;
-        
+
         if (connector.isInput() && flow.getConnections(connector.getType()).isInputConnected(connector.getId())) {
             for (Connection conn : flow.getConnections(connector.getType()).getConnections()) {
                 ConnectionSkin skinI = flow.getNodeSkinLookup().getById(skinFactory, conn);
@@ -75,7 +85,7 @@ class ConnectorCircle extends Circle {
             }
         }
     }
-    
+
     @Override
     public void toFront() {
         super.toFront();

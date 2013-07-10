@@ -50,6 +50,10 @@ public class FlowNodeWindow extends Window {
 
 //        setTitleBarStyleClass("my-titlebar");
 
+        setStyle("    -fx-background-color: rgba(120,140,255,0.2);\n"
+                + "    -fx-border-color: rgba(120,140,255,0.42);\n"
+                + "    -fx-border-width: 2;");
+
 
         OptimizableContentPane parentContent = new OptimizableContentPane();
 

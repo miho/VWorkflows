@@ -4,11 +4,13 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VNodeSkin;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -171,11 +173,13 @@ public class FXFlowNodeSkin
         if (strokeColor == null) {
             strokeColor = new Color(120 / 255.0, 140 / 255.0, 1, 0.42);
         }
+
         
-//        circle.setFill(fillColor);
-//        circle.setStroke(strokeColor);
-//
-//        circle.setStrokeWidth(3);
+        circle.setFill(fillColor);
+        circle.setStroke(strokeColor);
+
+        circle.setStrokeWidth(3);
+
 
         final Circle connectorNode = circle;
 
@@ -391,6 +395,16 @@ public class FXFlowNodeSkin
         Node connectorNode = connectors.remove(connector.getId());
 
         if (connectorNode != null && connectorNode.getParent() != null) {
+
+            Collection<Connection> connections =
+                    controller.getConnections(connector.getType()).
+                    getAllWith(connector.getId());
+
+            for (Connection connection : connections) {
+                controller.getConnections(connector.getType()).
+                        remove(connection);
+            }
+
             if (connector.isInput()) {
                 inputList.remove(connectorNode);
             } else if (connector.isOutput()) {

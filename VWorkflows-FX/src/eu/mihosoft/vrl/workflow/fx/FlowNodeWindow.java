@@ -87,11 +87,10 @@ public class FlowNodeWindow extends Window {
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
-
-        // create skin factory for flow visualization
-        FXSkinFactory fXSkinFactory = new FXSkinFactory(canvas.getContentPane());
         
-        nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
+        // create skin factory for flow visualization
+        FXSkinFactory fXSkinFactory = 
+                nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
 
         // copy colors from prototype
 //        if (nodeSkinProperty.get().getSkinFactory() != null) {

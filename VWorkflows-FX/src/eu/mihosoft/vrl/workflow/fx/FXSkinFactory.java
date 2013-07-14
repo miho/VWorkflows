@@ -58,7 +58,7 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
         return result;
     }
     
-    public static SkinFactory<FXConnectionSkin, FXFlowNodeSkin> newInstance(Parent parent, FXSkinFactory parentFactory) {
+    public static FXSkinFactory newInstance(Parent parent, FXSkinFactory parentFactory) {
 
         FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), parentFactory);
 

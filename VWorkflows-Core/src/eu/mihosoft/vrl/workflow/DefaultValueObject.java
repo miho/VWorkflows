@@ -5,6 +5,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  *
@@ -13,6 +14,7 @@ import javafx.beans.property.ObjectProperty;
 public class DefaultValueObject implements ValueObject {
 
     private transient VNode parent;
+    private ObjectProperty valueProperty = new SimpleObjectProperty();
 
     public DefaultValueObject() {
     }
@@ -28,17 +30,17 @@ public class DefaultValueObject implements ValueObject {
 
     @Override
     public Object getValue() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return valueProperty().get();
     }
 
     @Override
     public void setValue(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.valueProperty().set(o);
     }
 
     @Override
     public ObjectProperty<Object> valueProperty() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return valueProperty;
     }
 
     @Override

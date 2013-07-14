@@ -23,31 +23,31 @@ import javafx.scene.paint.Color;
  */
 public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSkin> {
 
-    private final Parent parent;
+    private final Parent fxParent;
     private final FXSkinFactory parentFactory;
 //    private Window clipboard;
     
 
     public FXSkinFactory(Parent parent) {
-        this.parent = parent;
+        this.fxParent = parent;
 //        this.clipboard = clipboard;
         this.parentFactory = null;
     }
 
     protected FXSkinFactory(Parent parent, FXSkinFactory parentFactory) {
-        this.parent = parent;
+        this.fxParent = parent;
 //        this.clipboard = clipboard;
         this.parentFactory = parentFactory;
     }
 
     @Override
     public VNodeSkin createSkin(VNode n, VFlow flow) {
-        return new FXFlowNodeSkin(this, parent, n, flow);
+        return new FXFlowNodeSkin(this, getFxParent(), n, flow);
     }
 
     @Override
     public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
-        return new FXConnectionSkin(this, parent, c, flow, type/*, clipboard*/);
+        return new FXConnectionSkin(this, getFxParent(), c, flow, type/*, clipboard*/);
     }
 
     @Override
@@ -61,6 +61,13 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     @Override
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> getParent() {
         return this.parentFactory;
+    }
+
+    /**
+     * @return the fxParent
+     */
+    public Parent getFxParent() {
+        return fxParent;
     }
     
 }

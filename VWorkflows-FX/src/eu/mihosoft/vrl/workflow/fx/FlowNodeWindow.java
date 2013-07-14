@@ -90,6 +90,8 @@ public class FlowNodeWindow extends Window {
 
         // create skin factory for flow visualization
         FXSkinFactory fXSkinFactory = new FXSkinFactory(canvas.getContentPane());
+        
+        nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
 
         // copy colors from prototype
 //        if (nodeSkinProperty.get().getSkinFactory() != null) {

@@ -82,6 +82,8 @@ public class FlowNodeWindow extends Window {
 
         // create scalable root pane
         jfxtras.labs.scene.layout.ScalableContentPane canvas = new jfxtras.labs.scene.layout.ScalableContentPane();
+        
+        canvas.getStyleClass().add("vflow-background");
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");

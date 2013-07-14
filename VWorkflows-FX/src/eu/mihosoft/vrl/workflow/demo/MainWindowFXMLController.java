@@ -50,7 +50,7 @@ public class MainWindowFXMLController implements Initializable {
         canvas.setContentPane(root);
 
 
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
+        root.getStyleClass().add("vflow-background");
 
         contentPane.getChildren().add(canvas);
 

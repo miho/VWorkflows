@@ -7,8 +7,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 
 /**
  * Utility class that provides methods to simplify node handling. Possible use
@@ -93,16 +93,57 @@ public class NodeUtil {
     }
 
     /**
-     * Returns the stylesheets of all ancestors of thhe specified node.
+     * Returns the stylesheets of the node and all ancestors of the specified
+     * node.
      *
      * @param n scene graph node
-     * @return a list that contains the stylesheets of all ancestors of the
-     * specified node
+     * @return a list that contains the stylesheets of the node and all
+     * ancestors of the specified node
      */
     public static List<String> getStylesheetsOfAncestors(Node n) {
+
+//        System.out.println(">> searching stylesheets of ancestors of: " + n);
+
         List<String> result = new ArrayList<>();
+
+        if (n instanceof Parent) {
+
+//            for (String css : ((Parent) n).getStylesheets()) {
+//                System.out.println(" --> n-css: " + css);
+//            }
+
+            result.addAll(((Parent) n).getStylesheets());
+        }
+
+        Scene scene = null;
+
         for (Parent p : getAncestors(n)) {
+
+//            System.out.println(" --> parent: " + p);
+//
+//            for (String css : p.getStylesheets()) {
+//                System.out.println("  --> p-css: " + p + ": " + css);
+//            }
+
             result.addAll(p.getStylesheets());
+
+            if (scene == null) {
+                scene = p.getScene();
+            }
+        }
+
+        if (scene != null) {
+
+//            System.out.println(" --> scene: " + scene);
+
+            result.addAll(scene.getStylesheets());
+
+//            for (String css : scene.getStylesheets()) {
+//                System.out.println("  --> scene-css: " + css);
+//            }
+//
+//            System.out.println(" --> done");
+
         }
 
         return result;

@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -36,6 +37,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Path connectionPath;
     private LineTo lineTo;
     private MoveTo moveTo;
+    private CubicCurveTo curveTo;
 //    private Shape startConnector;
     private Circle receiverConnectorUI;
     private Window receiverWindow;
@@ -70,7 +72,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
         moveTo = new MoveTo();
         lineTo = new LineTo();
-        connectionPath = new Path(moveTo, lineTo);
+        curveTo = new CubicCurveTo();
+        connectionPath = new Path(moveTo, curveTo);
 
         init();
     }
@@ -191,37 +194,114 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 return getReceiverNode().layoutYProperty().get();
             }
         };
+        
+        DoubleBinding controlX1Binding = new DoubleBinding() {
+            {
+                super.bind(senderNode.boundsInLocalProperty(),
+                        senderNode.layoutXProperty(), receiverConnectorUI.layoutXProperty());
+            }
 
-        getReceiverUI().layoutXProperty().bind(receiveXBinding);
-        getReceiverUI().layoutYProperty().bind(receiveYBinding);
+            @Override
+            protected double computeValue() {
+
+                return senderNode.getLayoutX() 
+                        +(receiverConnectorUI.getLayoutX() - senderNode.getLayoutX())/2;
+
+            }
+        };
+
+        DoubleBinding controlY1Binding = new DoubleBinding() {
+            {
+                super.bind(senderNode.boundsInLocalProperty(),
+                        senderNode.layoutYProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+
+                return senderNode.getLayoutY();
+
+            }
+        };
+
+        DoubleBinding controlX2Binding = new DoubleBinding() {
+            {
+                super.bind(senderNode.boundsInLocalProperty(), 
+                        senderNode.layoutXProperty(), receiverConnectorUI.layoutXProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+
+                return receiverConnectorUI.getLayoutX()
+                        - (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX())/2;
+
+            }
+        };
+
+        DoubleBinding controlY2Binding = new DoubleBinding() {
+            {
+                super.bind(receiverConnectorUI.boundsInLocalProperty(),
+                        receiverConnectorUI.layoutYProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+
+                return receiverConnectorUI.getLayoutY();
+
+            }
+        };
 
         moveTo.xProperty().bind(startXBinding);
         moveTo.yProperty().bind(startYBinding);
 
-        lineTo.xProperty().bind(getReceiverUI().layoutXProperty());
-        lineTo.yProperty().bind(getReceiverUI().layoutYProperty());
-
-        getReceiverUI().onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                getReceiverUI().toFront();
-            }
-        });
-
-        getReceiverUI().onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                if (!t.isPrimaryButtonDown()) {
-                    getReceiverUI().toFront();
-                }
-            }
-        });
+        curveTo.controlX1Property().bind(controlX1Binding);
+        curveTo.controlY1Property().bind(controlY1Binding);
+        curveTo.controlX2Property().bind(controlX2Binding);
+        curveTo.controlY2Property().bind(controlY2Binding);
+        curveTo.xProperty().bind(receiverConnectorUI.layoutXProperty());
+        curveTo.yProperty().bind(receiverConnectorUI.layoutYProperty());
 
         makeDraggable(receiveXBinding, receiveYBinding);
+
+//        receiverConnectorUI.setLayoutX(senderNode.getLayoutX());
+//        receiverConnectorUI.setLayoutY(senderNode.getLayoutY());
 
         connectionListener =
                 new ConnectionListenerImpl(
                 skinFactory, controller, receiverConnectorUI);
+
+//        getReceiverUI().layoutXProperty().bind(receiveXBinding);
+//        getReceiverUI().layoutYProperty().bind(receiveYBinding);
+//
+//        moveTo.xProperty().bind(startXBinding);
+//        moveTo.yProperty().bind(startYBinding);
+//
+//        lineTo.xProperty().bind(getReceiverUI().layoutXProperty());
+//        lineTo.yProperty().bind(getReceiverUI().layoutYProperty());
+//
+//        getReceiverUI().onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent t) {
+//                getReceiverUI().toFront();
+//            }
+//        });
+//
+//        getReceiverUI().onMouseExitedProperty().set(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent t) {
+//                if (!t.isPrimaryButtonDown()) {
+//                    getReceiverUI().toFront();
+//                }
+//            }
+//        });
+//
+//        makeDraggable(receiveXBinding, receiveYBinding);
+//
+//        connectionListener =
+//                new ConnectionListenerImpl(
+//                skinFactory, controller, receiverConnectorUI);
 
     } // end init
 

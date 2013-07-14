@@ -27,8 +27,6 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     private final FXSkinFactory parentFactory;
 //    private Window clipboard;
     
-    ObservableMap<String,Color> connectionFillColors = FXCollections.observableHashMap();
-    ObservableMap<String,Color> connectionStrokeColors = FXCollections.observableHashMap();
 
     public FXSkinFactory(Parent parent) {
         this.parent = parent;
@@ -36,7 +34,7 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
         this.parentFactory = null;
     }
 
-    private FXSkinFactory(Parent parent, FXSkinFactory parentFactory) {
+    protected FXSkinFactory(Parent parent, FXSkinFactory parentFactory) {
         this.parent = parent;
 //        this.clipboard = clipboard;
         this.parentFactory = parentFactory;
@@ -56,9 +54,6 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
 
         FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), this);
-        
-        result.connectionFillColors = connectionFillColors;
-        result.connectionStrokeColors = connectionStrokeColors;
 
         return result;
     }
@@ -68,35 +63,4 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
         return this.parentFactory;
     }
     
-//    public void setConnectionFillColor(String type, Color color) {
-//        connectionFillColors.put(type, color);
-//    }
-//    
-//    public Color getConnectionFillColor(String type) {
-//        return connectionFillColors.get(type);
-//    }
-//    
-//    ObservableMap<String, Color> connectionFillColorTypes() {
-//        return connectionFillColors;
-//    }
-//    
-//    public Collection<String> getConnectionFillColorTypes() {
-//        return connectionFillColors.keySet();
-//    }
-//    
-//    public void setConnectionStrokeColor(String type, Color color) {
-//        connectionStrokeColors.put(type, color);
-//    }
-//    
-//    public Color getConnectionStrokeColor(String type) {
-//        return connectionStrokeColors.get(type);
-//    }
-//    
-//    ObservableMap<String, Color> connectionStrokeColorTypes() {
-//        return connectionStrokeColors;
-//    }
-//    
-//    public Collection<String> getConnectionStrokeColorTypes() {
-//        return connectionStrokeColors.keySet();
-//    }
 }

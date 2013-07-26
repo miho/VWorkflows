@@ -4,6 +4,7 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,37 +14,45 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 
 /**
- *
+ * Scales content to always fit in the bounds of this pane. Useful for workflows
+ * with lots of windows.
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class ScalableContentPane extends Pane {
 
     private Scale contentScaleTransform;
     private Property<Pane> contentPaneProperty =
-            new SimpleObjectProperty<Pane>();
+            new SimpleObjectProperty<>();
     private double contentScaleWidth = 1.0;
     private double contentScaleHeight = 1.0;
     private boolean aspectScale = true;
+    private boolean autoRescale = true;
 
+    /**
+     * Constructor.
+     */
     public ScalableContentPane() {
-        setContentPane(new RootPane());
+        setContentPane(new Pane());
 
         setPrefWidth(USE_PREF_SIZE);
         setPrefHeight(USE_PREF_SIZE);
     }
 
     /**
-     * @return the view
+     * @return the content pane
      */
     public Pane getContentPane() {
         return contentPaneProperty.getValue();
     }
 
-    public void setContentPane(Pane contentPane) {
+    /**
+     * Defines the content pane of this scalable pane.
+     * @param contentPane pane to define
+     */
+    public final void setContentPane(Pane contentPane) {
         contentPaneProperty.setValue(contentPane);
         contentPane.setManaged(false);
         initContentPaneListener();
@@ -58,12 +67,17 @@ public class ScalableContentPane extends Pane {
         getChildren().add(contentPane);
     }
 
+    /**
+     * Returns the content pane property.
+     * @return the content pane property
+     */
     public Property<Pane> contentPaneProperty() {
         return contentPaneProperty;
     }
 
     /**
-     * @return the contentScaleTransform
+     * Returns the content scale transform.
+     * @return the content scale transform
      */
     public final Scale getContentScaleTransform() {
         return contentScaleTransform;
@@ -72,16 +86,20 @@ public class ScalableContentPane extends Pane {
     @Override
     protected void layoutChildren() {
 
-//        System.out.println("scaled-content: layout " + System.currentTimeMillis());
-
         super.layoutChildren();
 
-        double realWidth =
-                Math.max(getWidth(),
-                getContentPane().prefWidth(0));
+//        double realWidth =
+//                Math.max(getWidth(),
+//                getContentPane().prefWidth(0));
+//
+//        double realHeigh = Math.max(getHeight(),
+//                getContentPane().prefHeight(0));
+        
+         double realWidth =
+                getContentPane().prefWidth(0);
 
-        double realHeigh = Math.max(getHeight(),
-                getContentPane().prefHeight(0));
+        double realHeigh = 
+                getContentPane().prefHeight(0);
 
         double leftAndRight = getInsets().getLeft() + getInsets().getRight();
         double topAndBottom = getInsets().getTop() + getInsets().getBottom();
@@ -114,39 +132,33 @@ public class ScalableContentPane extends Pane {
     @Override
     protected double computeMinWidth(double d) {
 
-        double result = getInsets().getLeft() + getInsets().getRight()+1;
-//        result = Math.min(result, getContentPane().minWidth(d) * contentScale);
+        double result = getInsets().getLeft() + getInsets().getRight() + 1;
 
-        return result;//getContentPane().minWidth(d) * contentScale;
+        return result;
     }
 
     @Override
     protected double computeMinHeight(double d) {
 
-        double result = getInsets().getTop() + getInsets().getBottom()+1;
-//        result = Math.min(result,
-//                +getContentPane().minHeight(d) * contentScale);
+        double result = getInsets().getTop() + getInsets().getBottom() + 1;
 
-        return result;//getContentPane().minHeight(d) * contentScale;
+        return result;
     }
 
     @Override
     protected double computePrefWidth(double d) {
 
-        double result = 1;//minWidth(d);
-//        result = Math.min(result, getContentPane().prefWidth(d) * contentScale);
+        double result = 1;
 
-        return result;//getContentPane().prefWidth(d) * contentScale;
+        return result;
     }
 
     @Override
     protected double computePrefHeight(double d) {
 
-        double result = 1;//minHeight(d);
-//        result = Math.min(result,
-//                + getContentPane().prefHeight(d) * contentScale);
+        double result = 1;
 
-        return result;//getContentPane().prefHeight(d) * contentScale;
+        return result;
     }
 
     private void initContentPaneListener() {
@@ -154,15 +166,18 @@ public class ScalableContentPane extends Pane {
         final ChangeListener<Bounds> boundsListener = new ChangeListener<Bounds>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
-//                System.out.println("b.w: " + t1.getWidth() + ", b.h: " + t1.getHeight());
-                requestLayout();
+                if (isAutoRescale()) {
+                    requestLayout();
+                }
             }
         };
 
         final ChangeListener<Number> numberListener = new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-                requestLayout();
+                if (isAutoRescale()) {
+                    requestLayout();
+                }
             }
         };
 
@@ -199,16 +214,36 @@ public class ScalableContentPane extends Pane {
     }
 
     /**
-     * @return the aspectScale
+     * Defines whether to keep aspect ration when scaling content.
+     * @return <code>true</code> if keeping aspect ratio of the content;
+     *         <code>false</code> otherwise
      */
     public boolean isAspectScale() {
         return aspectScale;
     }
 
     /**
-     * @param aspectScale the aspectScale to set
+     * Defines whether to keep aspect ration of the content.
+     * @param aspectScale the state to set
      */
     public void setAspectScale(boolean aspectScale) {
         this.aspectScale = aspectScale;
+    }
+
+    /**
+     * Indicates whether content is automatically scaled.
+     * @return <code>true</code> if content is automatically scaled;
+     *         <code>false</code> otherwise
+     */
+    public boolean isAutoRescale() {
+        return autoRescale;
+    }
+
+    /**
+     * Defines whether to automatically rescale content.
+     * @param autoRescale the state to set
+     */
+    public void setAutoRescale(boolean autoRescale) {
+        this.autoRescale = autoRescale;
     }
 }

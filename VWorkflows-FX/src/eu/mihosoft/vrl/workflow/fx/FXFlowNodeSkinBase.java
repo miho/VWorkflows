@@ -23,7 +23,7 @@ import javafx.scene.layout.StackPane;
  *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
-public class FlowNodeSkinBase extends FXFlowNodeSkin {
+public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
 
     private ChangeListener<Object> valueChangeListener;
 
@@ -35,9 +35,9 @@ public class FlowNodeSkinBase extends FXFlowNodeSkin {
      * @param model node model that shall be visualized
      * @param controller parent flow controller
      */
-    public FlowNodeSkinBase(FXSkinFactory skinFactory,
-            Parent parent, VNode model, VFlow controller) {
-        super(skinFactory, parent, model, controller);
+    public FXFlowNodeSkinBase(FXSkinFactory skinFactory,
+            VNode model, VFlow controller) {
+        super(skinFactory, skinFactory.getFxParent(), model, controller);
 
         init();
     }
@@ -60,13 +60,9 @@ public class FlowNodeSkinBase extends FXFlowNodeSkin {
         // registers listener to update view if new value object has been defined
         getModel().getValueObject().valueProperty().addListener(valueChangeListener);
     }
-    
-    public static FlowNodeSkinBase newInstance(FXSkinFactory skinFactory, VNode n, VFlow flow) {
-        return new FlowNodeSkinBase(skinFactory, skinFactory.getFxParent(), n, flow);
-    }
 
     public void updateView() {
-        //
+        // no default implementation
     }
     
     protected void updateViewSample() {

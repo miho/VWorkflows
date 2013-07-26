@@ -11,6 +11,7 @@ import eu.mihosoft.vrl.workflow.SkinFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VNodeSkin;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ import javafx.scene.Parent;
  */
 public class FXValueSkinFactory extends FXSkinFactory {
 
-    private Map<String, Class<? extends FlowNodeSkinBase>> valueSkins = new HashMap<>();
+    private Map<String, Class<? extends FXFlowNodeSkinBase>> valueSkins = new HashMap<>();
 
     public FXValueSkinFactory(Parent parent) {
         super(parent);
@@ -40,35 +41,72 @@ public class FXValueSkinFactory extends FXSkinFactory {
     }
 
     private void init() {
-        valueSkins.put(Object.class.getName(), FlowNodeSkinBase.class);
+        valueSkins.put(Object.class.getName(), FXFlowNodeSkinBase.class);
     }
 
     private FXFlowNodeSkin chooseNodeSkin(VNode n, VFlow flow) {
-        
+
         Object value = n.getValueObject().getValue();
 
         if (value == null) {
-            return FlowNodeSkinBase.newInstance(this, n, flow);
+            return new FXFlowNodeSkinBase(this, n, flow);
         }
 
-        Class<?> cls = value.getClass();
-        Class<? extends FlowNodeSkinBase> valueClass = valueSkins.get(cls.getName());
+        Class<?> valueClass = value.getClass();
+        Class<? extends FXFlowNodeSkinBase> skinClass = valueSkins.get(valueClass.getName());
 
-        while (valueClass == null) {
-            cls = cls.getSuperclass();
-            valueClass = valueSkins.get(cls.getName());
+        while (skinClass == null) {
+            valueClass = valueClass.getSuperclass();
+            skinClass = valueSkins.get(valueClass.getName());
         }
 
         try {
-            return (FXFlowNodeSkin) valueClass.getMethod(
-                    "newInstance", VNode.class, VFlow.class).
-                    invoke(valueClass, n, flow);
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+
+            Constructor<?> constructor =
+                    skinClass.getConstructor(
+                    FXSkinFactory.class, VNode.class, VFlow.class);
+
+            FXFlowNodeSkinBase skin = 
+                    (FXFlowNodeSkinBase) constructor.newInstance(this, n, flow);
+            
+            return skin;
+
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
             Logger.getLogger(FXValueSkinFactory.class.getName()).log(
                     Level.SEVERE, null, ex);
         }
+
+        return new FXFlowNodeSkinBase(this, n, flow);
+    }
+
+    public void addSkinClassForValueType(Class<?> valueType,
+            Class<? extends FXFlowNodeSkinBase> skinClass) {
+
+        boolean notAvailable = true;
+
+        // check whether correct constructor is available
+        try {
+            Constructor<?> constructor =
+                    FXFlowNodeSkinBase.class.getConstructor(
+                    FXSkinFactory.class, VNode.class, VFlow.class);
+            notAvailable = false;
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(FXValueSkinFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(FXValueSkinFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // we cannot accept the specified skin class as it does not provide
+        // the required constructor
+        if (notAvailable) {
+            throw new IllegalArgumentException(
+                    "Required constructor missing: ("
+                    + FXSkinFactory.class.getSimpleName()
+                    + ", " + VNode.class.getSimpleName() + ", " 
+                    + FXSkinFactory.class.getSimpleName() + ")");
+        }
         
-        return FlowNodeSkinBase.newInstance(this, n, flow);
+        valueSkins.put(valueType.getName(), skinClass);
     }
 
     @Override
@@ -84,7 +122,9 @@ public class FXValueSkinFactory extends FXSkinFactory {
     @Override
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
 
-        FXSkinFactory result = new FXValueSkinFactory(((FXSkin) parent).getContentNode(), this);
+        FXValueSkinFactory result = new FXValueSkinFactory(((FXSkin) parent).getContentNode(), this);
+        
+        result.valueSkins = valueSkins;
 
         return result;
     }
@@ -92,7 +132,9 @@ public class FXValueSkinFactory extends FXSkinFactory {
     @Override
     public FXSkinFactory newInstance(Parent parent, FXSkinFactory parentFactory) {
 
-        FXSkinFactory result = new FXValueSkinFactory(parent, parentFactory);
+        FXValueSkinFactory result = new FXValueSkinFactory(parent, parentFactory);
+        
+        result.valueSkins = valueSkins;
 
         return result;
     }

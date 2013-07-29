@@ -2,6 +2,8 @@
 
 apply from: 'lib/gradle/javafx.plugin'
 
+apply from: 'maven-deployment.gradle'
+
 repositories {
     mavenCentral()
     maven {
@@ -38,6 +40,10 @@ dependencies {
     }
     compile project(':VWorkflows-Core')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
+}
+
+tasks.withType(Compile) {
+    options.encoding = 'UTF-8'
 }
 
 sourceSets {

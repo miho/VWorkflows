@@ -1,3 +1,5 @@
+rootProject.name = 'vworkflows-fx'
+
 // include 'jfxtras-labs'
 // project(':jfxtras-labs').projectDir = new File(settingsDir, '../../jfxtras-lab')
 include 'VWorkflows-Core'

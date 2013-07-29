@@ -2,7 +2,7 @@
 
 apply from: 'lib/gradle/javafx.plugin'
 
-apply from: 'maven-deployment.gradle'
+//apply from: 'maven-deployment.gradle'
 
 repositories {
     mavenCentral()

@@ -38,7 +38,7 @@ dependencies {
     } else if (project.jdk == 8) {
         compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     }
-    compile project(':VWorkflows-Core')    
+    compile project(':vworkflows-core')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
 }
 

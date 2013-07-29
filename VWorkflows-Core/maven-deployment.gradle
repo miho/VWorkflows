@@ -1,3 +1,4 @@
+// doc for deployment: http://jedicoder.blogspot.de/2011/11/automated-gradle-project-deployment-to.html
 
 // sonatype dependencies
 apply plugin: 'maven'

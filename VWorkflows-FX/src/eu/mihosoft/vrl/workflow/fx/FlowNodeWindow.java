@@ -81,7 +81,7 @@ public class FlowNodeWindow extends Window {
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
 
         // create scalable root pane
-        jfxtras.labs.scene.layout.ScalableContentPane canvas = new jfxtras.labs.scene.layout.ScalableContentPane();
+        ScalableContentPane canvas = new ScalableContentPane();
         
         canvas.getStyleClass().add("vflow-background");
 

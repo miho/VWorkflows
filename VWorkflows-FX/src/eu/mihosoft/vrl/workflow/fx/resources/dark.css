@@ -1,0 +1,140 @@
+/* 
+    Document   : dark
+    Created on : 10.07.2013, 17:34:18
+    Author     : Michael Hoffer <info@michaelhoffer.de>
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.vflow-background {
+    -fx-background-color: linear-gradient(to top, rgb(5,5,5), rgb(110,110,120));
+}
+
+.window {
+    -fx-border-width: 1.5px;
+    -fx-border-color: rgba(20,20,20,0.4);
+    -fx-background-color : radial-gradient(center 50% 25%,
+        radius 75%,
+        rgba(122,122,122,0.9) 0%,
+        rgba(82,82,82,0.9) 100%);
+    -fx-background-image: url("inbus-01-128x128.png"), url("inbus-01-128x128.png"), url("inbus-01-128x128.png"), url("inbus-01-128x128.png");
+    -fx-background-position: 0 0, 100% 0, 0 100%, 100% 100%;
+    -fx-background-repeat: no-repeat no-repeat;
+    -fx-background-size: 32 32;
+
+    /*    -fx-effect: dropshadow(gaussian,
+            rgba(0, 0, 0, 0.65),
+            20, 0.0, 10, 16);*/
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 5);
+}
+
+.window-titlebar {
+    -fx-background-color : transparent;
+    -fx-border-color: transparent;
+}
+
+.window-close-icon {
+    -fx-border-color: transparent;
+}
+
+.window-minimize-icon {
+    -fx-border-color: transparent;
+}
+
+.window-icon {
+    -fx-border-color: transparent;
+}
+
+.vnode-connection {
+    -fx-stroke: rgba(220, 220, 220, 0.75);
+    -fx-stroke-width: 5px; 
+    -fx-stroke-line-cap: round;
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        10, 0.0, 0, 0);
+}
+
+.vnode-new-connection {
+    -fx-stroke: rgba(220, 220, 220, 0.75);
+    -fx-stroke-width: 5px; 
+    -fx-stroke-line-cap: round;
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        10, 0.0, 0, 0);
+}
+
+.vnode-connection-control {
+    -fx-stroke: rgba(255, 255, 10, 0.75);
+    -fx-stroke-width: 5px; 
+    -fx-stroke-line-cap: round;
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 0);
+}
+
+.vnode-new-connection-control {
+    -fx-stroke: rgba(255, 255, 10, 0.75);
+    -fx-stroke-width: 5px; 
+    -fx-stroke-line-cap: round;
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 0);
+}
+
+.vnode-connection-event {
+    -fx-stroke: rgba(10, 255, 10, 0.75);
+    -fx-stroke-width: 5px; 
+    -fx-stroke-line-cap: round;
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 0);
+}
+
+.vnode-new-connection-event {
+    -fx-stroke: rgba(10, 255, 10, 0.75);
+    -fx-stroke-width: 5px; 
+    -fx-stroke-line-cap: round;
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 0);
+}
+
+.vnode-connector {
+    -fx-fill: radial-gradient(center 50% 25%,
+        radius 75%,
+        rgb(122,120,125) 0%,
+        rgb(40,40,40) 100%);
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 0);
+}
+
+.vnode-connector-control {
+    -fx-fill: radial-gradient(center 50% 25%,
+        radius 75%,
+        rgb(255,255,10) 0%,
+        rgb(40,40,40) 100%);
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 0);
+}
+
+.vnode-connector-event {
+    -fx-fill: radial-gradient(center 50% 25%,
+        radius 75%,
+        rgb(10,255,10) 0%,
+        rgb(40,40,40) 100%);
+
+    -fx-effect: dropshadow(one-pass-box,
+        rgba(0, 0, 0, 0.9),
+        7, 0.0, 0, 0);
+}

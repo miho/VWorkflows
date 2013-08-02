@@ -9,17 +9,15 @@ import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkinBase;
-//import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
+import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.gauge.Gauge;
 import jfxtras.labs.scene.control.gauge.Lcd;
 import jfxtras.labs.scene.control.gauge.LcdBuilder;
 import jfxtras.labs.scene.control.gauge.LcdDesign;
 import jfxtras.labs.scene.control.gauge.StyleModel;
 import jfxtras.labs.scene.control.gauge.StyleModelBuilder;
-import jfxtras.labs.scene.layout.ScalableContentPane;
 
 /**
  * Custom flownode skin. In addition to the basic node visualization from
@@ -78,9 +76,6 @@ public class IntegerFlowNodeSkin extends FXFlowNodeSkinBase {
         lcd1.setPrefSize(250, 70);
         
         scalableContentPane.getContentPane().getChildren().add(lcd1);
-        
-        Pane wrapper = new Pane();
-        wrapper.getChildren().add(scalableContentPane);
-        getNode().setContentPane(wrapper);
+        getNode().setContentPane(scalableContentPane);
     }
 }

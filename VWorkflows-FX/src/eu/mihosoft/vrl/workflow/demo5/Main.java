@@ -11,12 +11,13 @@ import javafx.stage.Stage;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.FXValueSkinFactory;
-//import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
+import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 
 import java.util.Random;
-import jfxtras.labs.scene.layout.ScalableContentPane;
 
 /**
  *

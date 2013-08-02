@@ -4,7 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -19,7 +18,8 @@ import javafx.scene.transform.Scale;
 /**
  * Scales content to always fit in the bounds of this pane. Useful for workflows
  * with lots of windows.
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class ScalableContentPane extends Pane {
 
@@ -30,6 +30,12 @@ public class ScalableContentPane extends Pane {
     private double contentScaleHeight = 1.0;
     private boolean aspectScale = true;
     private boolean autoRescale = true;
+    private static boolean applyJDK7Fix = false;
+
+    static {
+        // JDK7 fix:
+        applyJDK7Fix = System.getProperty("java.version").startsWith("1.7");
+    }
 
     /**
      * Constructor.
@@ -50,6 +56,7 @@ public class ScalableContentPane extends Pane {
 
     /**
      * Defines the content pane of this scalable pane.
+     *
      * @param contentPane pane to define
      */
     public final void setContentPane(Pane contentPane) {
@@ -69,6 +76,7 @@ public class ScalableContentPane extends Pane {
 
     /**
      * Returns the content pane property.
+     *
      * @return the content pane property
      */
     public Property<Pane> contentPaneProperty() {
@@ -77,6 +85,7 @@ public class ScalableContentPane extends Pane {
 
     /**
      * Returns the content scale transform.
+     *
      * @return the content scale transform
      */
     public final Scale getContentScaleTransform() {
@@ -88,18 +97,15 @@ public class ScalableContentPane extends Pane {
 
         super.layoutChildren();
 
-//        double realWidth =
-//                Math.max(getWidth(),
-//                getContentPane().prefWidth(0));
-//
-//        double realHeigh = Math.max(getHeight(),
-//                getContentPane().prefHeight(0));
-        
-         double realWidth =
-                getContentPane().prefWidth(0);
+        double realWidth =
+                getContentPane().prefWidth(getHeight());
 
-        double realHeigh = 
-                getContentPane().prefHeight(0);
+        double realHeigh =
+                getContentPane().prefHeight(getWidth());
+
+        if (applyJDK7Fix) {
+            realHeigh += 0.001; // does not paint without it
+        }
 
         double leftAndRight = getInsets().getLeft() + getInsets().getRight();
         double topAndBottom = getInsets().getTop() + getInsets().getBottom();
@@ -215,8 +221,9 @@ public class ScalableContentPane extends Pane {
 
     /**
      * Defines whether to keep aspect ration when scaling content.
+     *
      * @return <code>true</code> if keeping aspect ratio of the content;
-     *         <code>false</code> otherwise
+     * <code>false</code> otherwise
      */
     public boolean isAspectScale() {
         return aspectScale;
@@ -224,6 +231,7 @@ public class ScalableContentPane extends Pane {
 
     /**
      * Defines whether to keep aspect ration of the content.
+     *
      * @param aspectScale the state to set
      */
     public void setAspectScale(boolean aspectScale) {
@@ -232,8 +240,9 @@ public class ScalableContentPane extends Pane {
 
     /**
      * Indicates whether content is automatically scaled.
+     *
      * @return <code>true</code> if content is automatically scaled;
-     *         <code>false</code> otherwise
+     * <code>false</code> otherwise
      */
     public boolean isAutoRescale() {
         return autoRescale;
@@ -241,6 +250,7 @@ public class ScalableContentPane extends Pane {
 
     /**
      * Defines whether to automatically rescale content.
+     *
      * @param autoRescale the state to set
      */
     public void setAutoRescale(boolean autoRescale) {

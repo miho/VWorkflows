@@ -272,7 +272,7 @@ public class NodeUtil {
      * @param p parent node
      * @param sceneX x coordinate
      * @param sceneY y coordinate
-     * @param nodeClass node class to search for
+     * @param nodeClasses node classes to search for
      * @return a node that contains the specified screen coordinates and is an
      * instance of the specified class or <code>null</code> if no such node
      * exist

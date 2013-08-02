@@ -11,7 +11,7 @@ import javafx.scene.Parent;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface FXSkin<T extends Model, V extends Node> extends Skin<T>{
     public V getNode();

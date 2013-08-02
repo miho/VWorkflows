@@ -22,7 +22,7 @@ import javafx.util.Duration;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class FXConnectorUtil {
 

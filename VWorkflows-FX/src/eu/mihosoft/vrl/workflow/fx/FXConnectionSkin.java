@@ -28,7 +28,7 @@ import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 

@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
  * cases are searching for nodes at specific locations, adding/removing nodes
  * to/from parents (Parent interface does not give write access to children).
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class NodeUtil {
 

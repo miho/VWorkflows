@@ -8,7 +8,7 @@ import javafx.scene.transform.Transform;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface OptimizationRule {
     public boolean visible(OptimizableContentPane p, Transform t);

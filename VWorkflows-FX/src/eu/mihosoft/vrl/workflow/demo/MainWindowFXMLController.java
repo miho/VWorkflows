@@ -27,7 +27,7 @@ import jfxtras.labs.scene.layout.ScalableContentPane;
 /**
  * FXML Controller class
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class MainWindowFXMLController implements Initializable {
 

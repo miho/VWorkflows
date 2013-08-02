@@ -37,7 +37,7 @@ import jfxtras.labs.util.NodeUtil;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FXFlowNodeSkin
         implements FXSkin<VNode, Window>, VNodeSkin<VNode> {

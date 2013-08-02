@@ -31,7 +31,6 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
      * Constructor.
      *
      * @param skinFactory skin factory that created this skin
-     * @param parent FX parent node
      * @param model node model that shall be visualized
      * @param controller parent flow controller
      */

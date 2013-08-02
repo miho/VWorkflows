@@ -9,6 +9,7 @@ import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
+import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +23,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import jfxtras.labs.scene.control.window.Window;
-import jfxtras.labs.scene.layout.ScalableContentPane;
 
 /**
  * FXML Controller class

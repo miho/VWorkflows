@@ -1,8 +1,9 @@
+apply from: 'jdkdetect.gradle'
+
 //apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
 
 apply from: 'lib/gradle/javafx.plugin'
-
-//apply from: 'maven-deployment.gradle'
+apply from: 'maven-deployment.gradle'
 
 repositories {
     mavenCentral()
@@ -14,21 +15,6 @@ repositories {
 task wrapper(type: Wrapper) {
     gradleVersion = '1.5'
 }
-
-String javaVersion = System.getProperty("java.version")
-
-project.ext.set("jdk", 7)
-
-if (javaVersion.startsWith("1.7")) {
-    project.jdk=7;
-} else if (javaVersion.startsWith("1.8")) {
-    project.jdk=8;
-} else {
-    System.err.println("Unsupported JDK: " + javaVersion);
-}
-    
-println(">> using jdk " + javaVersion)
-
 
 dependencies {
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
@@ -74,7 +60,7 @@ sourceSets {
 
 
 javafx {
-    mainClass "eu.mihosoft.vrl.workflow.demo5.Main"
+    mainClass "eu.mihosoft.vrl.workflow.demo.Main"
 }
 
 jfxDeploy {

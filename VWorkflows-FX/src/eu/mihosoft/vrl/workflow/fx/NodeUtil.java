@@ -212,7 +212,7 @@ public class NodeUtil {
      *
      * @param p parent
      * @param n node
-     *
+     * @param index child index (z buffer)
      * @throws IllegalArgumentException if an unsupported parent class has been
      * specified or the parent is <code>null</code>
      */

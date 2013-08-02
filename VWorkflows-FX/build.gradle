@@ -34,7 +34,8 @@ dependencies {
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"
     if (project.jdk == 7) {
-        compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
+        //compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
+        compile "org.jfxtras:jfxtras-labs:2.2-r6-SNAPSHOT"
     } else if (project.jdk == 8) {
         compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     }
@@ -73,9 +74,13 @@ sourceSets {
 
 
 javafx {
-    mainClass "eu.mihosoft.vrl.workflow.demo.Main"
+    mainClass "eu.mihosoft.vrl.workflow.demo5.Main"
 }
 
 jfxDeploy {
     packaging = "image"
+}
+
+tasks.withType(Compile) {
+    options.encoding = 'UTF-8'
 }

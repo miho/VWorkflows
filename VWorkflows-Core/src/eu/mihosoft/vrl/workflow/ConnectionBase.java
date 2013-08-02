@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class ConnectionBase implements Connection {
 

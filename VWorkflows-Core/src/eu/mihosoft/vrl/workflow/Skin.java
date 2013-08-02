@@ -8,7 +8,7 @@ import javafx.beans.property.ObjectProperty;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Skin<T extends Model> {
     public void add();

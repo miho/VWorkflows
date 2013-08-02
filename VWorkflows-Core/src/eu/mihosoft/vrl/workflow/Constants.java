@@ -6,7 +6,7 @@ package eu.mihosoft.vrl.workflow;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class Constants {
         public static final String DEFAULT_STYLE =

@@ -9,7 +9,7 @@ import eu.mihosoft.vrl.workflow.VisualizationRequest;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class PersistentConnector{
 

@@ -173,6 +173,7 @@ public class ScalableContentPane extends Pane {
             @Override
             public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
                 if (isAutoRescale()) {
+                    getContentPane().requestLayout();
                     requestLayout();
                 }
             }
@@ -182,6 +183,7 @@ public class ScalableContentPane extends Pane {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
                 if (isAutoRescale()) {
+                    getContentPane().requestLayout();
                     requestLayout();
                 }
             }

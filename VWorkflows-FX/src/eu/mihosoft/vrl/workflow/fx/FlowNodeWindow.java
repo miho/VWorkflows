@@ -18,6 +18,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -34,7 +35,7 @@ import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FlowNodeWindow extends Window {
 
@@ -76,20 +77,29 @@ public class FlowNodeWindow extends Window {
                 connectorsToFront();
             }
         });
+
+//        boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
+//                if (getParent() != null) {
+//                    getParent().requestLayout();
+//                }
+//            }
+//        });
     }
 
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
 
         // create scalable root pane
         ScalableContentPane canvas = new ScalableContentPane();
-        
+
         canvas.getStyleClass().add("vflow-background");
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
-        
+
         // create skin factory for flow visualization
-        FXSkinFactory fXSkinFactory = 
+        FXSkinFactory fXSkinFactory =
                 nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
 
         // copy colors from prototype

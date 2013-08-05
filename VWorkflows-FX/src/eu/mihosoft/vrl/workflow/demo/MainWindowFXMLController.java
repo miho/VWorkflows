@@ -7,6 +7,7 @@ package eu.mihosoft.vrl.workflow.demo;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.fx.Canvas;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
@@ -21,13 +22,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import jfxtras.labs.scene.control.window.Window;
 
 /**
  * FXML Controller class
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class MainWindowFXMLController implements Initializable {
 
@@ -41,16 +41,9 @@ public class MainWindowFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ScalableContentPane canvas = new ScalableContentPane();
+        Canvas canvas = new Canvas();
 
-//        Pane root = canvas.getContentPane();
-
-        Pane root = new Pane();
-
-        canvas.setContentPane(root);
-
-
-        root.getStyleClass().add("vflow-background");
+        Pane root = canvas.getContentPane();
 
         contentPane.getChildren().add(canvas);
 

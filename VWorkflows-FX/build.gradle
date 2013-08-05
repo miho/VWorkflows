@@ -3,7 +3,7 @@ apply from: 'jdkdetect.gradle'
 //apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
 
 apply from: 'lib/gradle/javafx.plugin'
-apply from: 'maven-deployment.gradle'
+//apply from: 'maven-deployment.gradle'
 
 repositories {
     mavenCentral()

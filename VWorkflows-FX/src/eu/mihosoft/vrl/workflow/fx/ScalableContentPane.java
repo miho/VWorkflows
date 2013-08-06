@@ -11,8 +11,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
 
 /**
@@ -45,6 +45,15 @@ public class ScalableContentPane extends Pane {
 
         setPrefWidth(USE_PREF_SIZE);
         setPrefHeight(USE_PREF_SIZE);
+
+        needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+                if (t1) {
+                    computeScale();
+                }
+            }
+        });
     }
 
     /**
@@ -72,6 +81,8 @@ public class ScalableContentPane extends Pane {
         getContentPane().getTransforms().add(getContentScaleTransform());
 
         getChildren().add(contentPane);
+
+//        getContentPane().setStyle("-fx-border-color: red; -fx-border-width: 1;");
     }
 
     /**
@@ -97,6 +108,10 @@ public class ScalableContentPane extends Pane {
 
         super.layoutChildren();
 
+
+    }
+
+    private void computeScale() {
         double realWidth =
                 getContentPane().prefWidth(getHeight());
 
@@ -104,7 +119,8 @@ public class ScalableContentPane extends Pane {
                 getContentPane().prefHeight(getWidth());
 
         if (applyJDK7Fix) {
-            realHeigh += 0.001; // does not paint without it
+//            realWidth += 0.01;
+            realHeigh += 0.01; // does not paint without it
         }
 
         double leftAndRight = getInsets().getLeft() + getInsets().getRight();
@@ -120,12 +136,15 @@ public class ScalableContentPane extends Pane {
 
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);
-            contentScaleWidth = scale;
-            contentScaleHeight = scale;
-        }
 
-        getContentScaleTransform().setX(contentScaleWidth);
-        getContentScaleTransform().setY(contentScaleHeight);
+            getContentScaleTransform().setX(scale);
+            getContentScaleTransform().setY(scale);
+
+            System.out.println("scale: " + scale);
+        } else {
+            getContentScaleTransform().setX(contentScaleWidth);
+            getContentScaleTransform().setY(contentScaleHeight);
+        }
 
         getContentPane().relocate(
                 getInsets().getLeft(), getInsets().getTop());
@@ -192,7 +211,6 @@ public class ScalableContentPane extends Pane {
         getContentPane().getChildren().addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-
 
                 while (c.next()) {
                     if (c.wasPermutated()) {

@@ -19,7 +19,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
-import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,7 +26,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
@@ -71,23 +69,35 @@ public class FlowNodeWindow extends Window {
 
 //        addSelectionRectangle(skin, root);
 
-
         addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 connectorsToFront();
             }
         });
-
+        
 //        // TODO shouldn't leaf nodes also have a visibility property?
 //        if (nodeSkinProperty.get().getModel() instanceof VFlowModel) {
 //            VFlowModel model = (VFlowModel) nodeSkinProperty.get().getModel();
 //            model.visibleProperty().addListener(new ChangeListener<Boolean>() {
 //                @Override
 //                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                    parentContent.requestOptimization();
+//                    
+//                    for (Node n : content.getContentPane().getChildren()) {
+//                        if (n instanceof Window) {
+//                            Window w = (Window) n;
+//                            w.requestLayout();
+//                            w.getContentPane().requestLayout();
+//                        }
+//                    }
+//                    
+////                    System.out.println("TEST");
+//////                    parentContent.requestOptimization();
 ////                    requestLayout();
-//                    requestParentLayout();
+////                    getParent().requestLayout();
+//////                    requestParentLayout();
+////                    content.requestLayout();
+////                    content.getContentPane().requestLayout();
 //                }
 //            });
 //        }

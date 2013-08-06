@@ -55,7 +55,10 @@ public class OptimizableContentPane extends StackPane {
                 }
             }
         });
-
+    }
+    
+    public void requestOptimization() {
+        updateOptimizationRule();
     }
 
     private synchronized void updateOptimizationRule() {

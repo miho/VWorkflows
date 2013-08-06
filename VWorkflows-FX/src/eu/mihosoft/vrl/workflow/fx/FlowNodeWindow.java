@@ -21,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -40,7 +41,8 @@ import jfxtras.labs.util.event.MouseControlUtil;
 public class FlowNodeWindow extends Window {
 
     private ObjectProperty<FXFlowNodeSkin> nodeSkinProperty = new SimpleObjectProperty<>();
-    private ScalableContentPane content;
+    private Canvas content;
+    private OptimizableContentPane parentContent;
 
     public FlowNodeWindow(FXFlowNodeSkin skin) {
 
@@ -56,17 +58,15 @@ public class FlowNodeWindow extends Window {
 //                + "    -fx-border-width: 2;");
 
 
-        OptimizableContentPane parentContent = new OptimizableContentPane();
+        parentContent = new OptimizableContentPane();
 
-        content = new ScalableContentPane();
+        content = new Canvas();
 
         parentContent.getChildren().add(content);
 
-        Pane root = new Pane();
-        content.setContentPane(root);
-
         super.setContentPane(parentContent);
         addCollapseIcon(skin);
+        configureCanvas(skin);
 
 //        addSelectionRectangle(skin, root);
 
@@ -78,22 +78,23 @@ public class FlowNodeWindow extends Window {
             }
         });
 
-//        boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
-//                if (getParent() != null) {
-//                    getParent().requestLayout();
-//                }
-//            }
-//        });
+        // TODO shouldn't leaf nodes also have a visibility property?
+        if (nodeSkinProperty.get().getModel() instanceof VFlowModel) {
+            VFlowModel model = (VFlowModel) nodeSkinProperty.get().getModel();
+            model.visibleProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    parentContent.requestOptimization();
+                    requestLayout();
+                }
+            });
+        }
     }
 
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
 
         // create scalable root pane
-        ScalableContentPane canvas = new ScalableContentPane();
-
-        canvas.getStyleClass().add("vflow-background");
+        Canvas canvas = new Canvas();
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
@@ -253,5 +254,19 @@ public class FlowNodeWindow extends Window {
                 fxSkin.toFront();
             }
         }
+    }
+
+    private void configureCanvas(FXFlowNodeSkin skin) {
+
+
+//        if (skin == null) {
+//            return;
+//        }
+//
+//        if ((skin.getModel() instanceof VFlowModel)) {
+//            return;
+//        }
+
+        content.getStyleClass().setAll("vnode-content");
     }
 }

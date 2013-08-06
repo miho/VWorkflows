@@ -10,10 +10,12 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.MatrixType;
 import javafx.scene.transform.Transform;
 
 /**
@@ -123,10 +125,16 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
 
     @Override
     public boolean visible(OptimizableContentPane p, Transform t) {
-
+ 
         Bounds bounds = p.getBoundsInLocal();
+
+        bounds = transform(t, bounds);
         
-        t.transform(bounds);
+        // if bounds are NaN we assume visibility
+         if (Double.isNaN(bounds.getWidth()) 
+                 || Double.isNaN(bounds.getHeight())) {
+             return true;
+         }
 
         boolean visible = getMinSceneArea() <= bounds.getWidth() * bounds.getHeight();
 
@@ -164,5 +172,32 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
 
     public double getMinSceneDimension() {
         return minSceneDimension.get();
+    }
+
+    private Bounds transform(Transform t, Bounds bounds) {
+        final Point3D base = transform(t,
+                bounds.getMinX(),
+                bounds.getMinY(),
+                bounds.getMinZ());
+        final Point3D size = transformSize(t,
+                bounds.getWidth(),
+                bounds.getHeight(),
+                bounds.getDepth());
+        return new BoundingBox(base.getX(), base.getY(), base.getZ(),
+                size.getX(), size.getY(), size.getZ());
+    }
+
+    private Point3D transform(Transform t, double x, double y, double z) {
+        return new Point3D(
+                t.getMxx() * x + t.getMxy() * y + t.getMxz() * z + t.getTx(),
+                t.getMyx() * x + t.getMyy() * y + t.getMyz() * z + t.getTy(),
+                t.getMzx() * x + t.getMzy() * y + t.getMzz() * z + t.getTz());
+    }
+
+    private Point3D transformSize(Transform t, double x, double y, double z) {
+        return new Point3D(
+                t.getMxx() * x + t.getMxy() * y + t.getMxz() * z,
+                t.getMyx() * x + t.getMyy() * y + t.getMyz() * z,
+                t.getMzx() * x + t.getMzy() * y + t.getMzz() * z);
     }
 }

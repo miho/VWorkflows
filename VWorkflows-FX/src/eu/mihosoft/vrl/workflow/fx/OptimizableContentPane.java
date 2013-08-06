@@ -18,7 +18,7 @@ import javafx.scene.transform.Transform;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class OptimizableContentPane extends StackPane {
 
@@ -56,7 +56,7 @@ public class OptimizableContentPane extends StackPane {
             }
         });
     }
-    
+
     public void requestOptimization() {
         updateOptimizationRule();
     }
@@ -66,7 +66,7 @@ public class OptimizableContentPane extends StackPane {
         if (!visibility) {
             return;
         }
-        
+
         // TODO why does synchronized not work here!
         if (optimizing) {
             return;
@@ -88,7 +88,7 @@ public class OptimizableContentPane extends StackPane {
 
         if (attached != attachedReq) {
             if (attachedReq) {
-                
+
                 getChildren().addAll(detatched);
                 detatched.clear();
             } else {
@@ -125,14 +125,15 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
     public boolean visible(OptimizableContentPane p, Transform t) {
 
         Bounds bounds = p.getBoundsInLocal();
-        bounds = p.localToScene(bounds);
+        
+        t.transform(bounds);
 
         boolean visible = getMinSceneArea() <= bounds.getWidth() * bounds.getHeight();
-        
+
         if (visible) {
             visible = Math.min(bounds.getWidth(), bounds.getHeight()) > getMinSceneDimension();
         }
-        
+
         return visible;
     }
 
@@ -152,7 +153,7 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
     public double getMinSceneArea() {
         return minSceneArea.get();
     }
-    
+
     public DoubleProperty minSceneDimensionProperty() {
         return minSceneDimension;
     }

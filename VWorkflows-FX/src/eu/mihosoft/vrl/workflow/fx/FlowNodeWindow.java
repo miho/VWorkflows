@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
@@ -78,17 +79,18 @@ public class FlowNodeWindow extends Window {
             }
         });
 
-        // TODO shouldn't leaf nodes also have a visibility property?
-        if (nodeSkinProperty.get().getModel() instanceof VFlowModel) {
-            VFlowModel model = (VFlowModel) nodeSkinProperty.get().getModel();
-            model.visibleProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    parentContent.requestOptimization();
-                    requestLayout();
-                }
-            });
-        }
+//        // TODO shouldn't leaf nodes also have a visibility property?
+//        if (nodeSkinProperty.get().getModel() instanceof VFlowModel) {
+//            VFlowModel model = (VFlowModel) nodeSkinProperty.get().getModel();
+//            model.visibleProperty().addListener(new ChangeListener<Boolean>() {
+//                @Override
+//                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                    parentContent.requestOptimization();
+////                    requestLayout();
+//                    requestParentLayout();
+//                }
+//            });
+//        }
     }
 
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {

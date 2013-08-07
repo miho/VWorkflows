@@ -147,7 +147,7 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
             visible = Math.min(bounds.getWidth(), bounds.getHeight()) > getMinSceneDimension();
         }
 
-        p.requestLayout();
+        p.layout();
         
         return visible;
     }

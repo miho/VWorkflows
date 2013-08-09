@@ -10,10 +10,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.geometry.Point3D;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Transform;
 
@@ -76,7 +75,7 @@ public class OptimizableContentPane extends StackPane {
         optimizing = true;
 
 //        if (transform == null) {
-            transform = OptimizableContentPane.this.localToSceneTransformProperty().get();
+        transform = OptimizableContentPane.this.localToSceneTransformProperty().get();
 //        }
 
         boolean visible = optimizationRule.visible(this, transform);
@@ -89,9 +88,17 @@ public class OptimizableContentPane extends StackPane {
 
         if (attached != attachedReq) {
             if (attachedReq) {
-
                 getChildren().addAll(detatched);
                 detatched.clear();
+                
+//                for (Node n : getChildren()) {
+//                    if (n instanceof Parent) {
+//                        Parent p = (Parent) n;
+//                        p.layout();
+//                    }
+//                }
+
+
             } else {
                 detatched.addAll(getChildren());
                 getChildren().removeAll(detatched);
@@ -148,7 +155,7 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
         }
 
         p.layout();
-        
+
         return visible;
     }
 

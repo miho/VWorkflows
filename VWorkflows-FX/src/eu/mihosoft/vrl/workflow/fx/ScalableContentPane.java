@@ -153,6 +153,10 @@ public class ScalableContentPane extends Pane {
                 (contentWidth) / contentScaleWidth,
                 (contentHeight) / contentScaleHeight);
     }
+    
+    public void requestScale() {
+        computeScale();
+    }
 
     @Override
     protected double computeMinWidth(double d) {

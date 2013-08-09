@@ -40,7 +40,7 @@ public class InnerCanvas extends Pane {
             }
         }
         
-        // move windows to right
+        // move windows
         for(VNode n : nodeList) {
             n.setX(n.getX()-minX);
             n.setY(n.getY()-minY);

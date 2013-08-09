@@ -4,6 +4,9 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.VNode;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.window.Window;
@@ -20,13 +23,27 @@ public class InnerCanvas extends Pane {
 
     @Override
     protected void layoutChildren() {
+        
+        List<VNode> nodeList = new ArrayList<>();
+        
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
 
+        // search minX and minY of window nodes
         for (Node n : getChildrenUnmodifiable()) {
             if (n instanceof FlowNodeWindow) {
                 FlowNodeWindow w = (FlowNodeWindow) n;
-                w.nodeSkinProperty().get().getModel().setX(Math.max(0, n.getLayoutX()));
-                w.nodeSkinProperty().get().getModel().setY(Math.max(0, n.getLayoutY()));
+                nodeList.add(w.nodeSkinProperty().get().getModel());
+                
+                minX = Math.min(n.getLayoutX(), minX);
+                minY = Math.min(n.getLayoutY(), minY);
             }
+        }
+        
+        // move windows to right
+        for(VNode n : nodeList) {
+            n.setX(n.getX()-minX);
+            n.setY(n.getY()-minY);
         }
 
         super.layoutChildren();

@@ -19,7 +19,7 @@ import javafx.scene.paint.Color;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSkin> {
 
@@ -60,7 +60,7 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     
     public FXSkinFactory newInstance(Parent parent, FXSkinFactory parentFactory) {
 
-        FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), parentFactory);
+        FXSkinFactory result = new FXSkinFactory(parent, parentFactory);
 
         return result;
     }

@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
+apply from: 'jdkdetect.gradle'
 //apply from: 'maven-deployment.gradle'
 
 repositories {
@@ -11,21 +12,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.6'
 }
 
-String javaVersion = System.getProperty("java.version")
-
-project.ext.set("jdk", 7)
-
-if (javaVersion.startsWith("1.7")) {
-    project.jdk=7;
-} else if (javaVersion.startsWith("1.8")) {
-    project.jdk=8;
-} else {
-    System.err.println("Unsupported JDK: " + javaVersion);
-}
-    
-println(">> using jdk " + javaVersion)
-
-// finding jfxrt.jar for JDK 7
+// finding jfxrt.jar for JDK 7as we depend on binding API
 String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib";
 project.ext.set("javafx_jar", "$jreHome/jfxrt.jar")
 

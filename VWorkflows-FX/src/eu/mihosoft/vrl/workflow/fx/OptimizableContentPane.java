@@ -18,7 +18,7 @@ import javafx.scene.transform.Transform;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class OptimizableContentPane extends StackPane {
 
@@ -55,7 +55,10 @@ public class OptimizableContentPane extends StackPane {
                 }
             }
         });
+    }
 
+    public void requestOptimization() {
+        updateOptimizationRule();
     }
 
     private synchronized void updateOptimizationRule() {
@@ -63,7 +66,7 @@ public class OptimizableContentPane extends StackPane {
         if (!visibility) {
             return;
         }
-        
+
         // TODO why does synchronized not work here!
         if (optimizing) {
             return;
@@ -71,9 +74,9 @@ public class OptimizableContentPane extends StackPane {
 
         optimizing = true;
 
-        if (transform == null) {
-            transform = OptimizableContentPane.this.localToSceneTransformProperty().get();
-        }
+//        if (transform == null) {
+        transform = OptimizableContentPane.this.localToSceneTransformProperty().get();
+//        }
 
         boolean visible = optimizationRule.visible(this, transform);
 
@@ -85,9 +88,17 @@ public class OptimizableContentPane extends StackPane {
 
         if (attached != attachedReq) {
             if (attachedReq) {
-                
                 getChildren().addAll(detatched);
                 detatched.clear();
+                
+//                for (Node n : getChildren()) {
+//                    if (n instanceof Parent) {
+//                        Parent p = (Parent) n;
+//                        p.layout();
+//                    }
+//                }
+
+
             } else {
                 detatched.addAll(getChildren());
                 getChildren().removeAll(detatched);
@@ -122,14 +133,29 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
     public boolean visible(OptimizableContentPane p, Transform t) {
 
         Bounds bounds = p.getBoundsInLocal();
+
+        // if bounds are infinite we assume visibility
+        if (Double.isInfinite(bounds.getWidth())
+                || Double.isInfinite(bounds.getHeight())) {
+            return true;
+        }
+
         bounds = p.localToScene(bounds);
 
+        // if bounds are NaN we assume visibility
+        if (Double.isNaN(bounds.getWidth())
+                || Double.isNaN(bounds.getHeight())) {
+            return true;
+        }
+
         boolean visible = getMinSceneArea() <= bounds.getWidth() * bounds.getHeight();
-        
+
         if (visible) {
             visible = Math.min(bounds.getWidth(), bounds.getHeight()) > getMinSceneDimension();
         }
-        
+
+        p.layout();
+
         return visible;
     }
 
@@ -149,7 +175,7 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
     public double getMinSceneArea() {
         return minSceneArea.get();
     }
-    
+
     public DoubleProperty minSceneDimensionProperty() {
         return minSceneDimension;
     }

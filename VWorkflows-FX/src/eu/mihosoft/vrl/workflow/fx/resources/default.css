@@ -1,7 +1,7 @@
 /* 
     Document   : default.css
     Created on : 08.10.2012, 10:17:51
-    Author     : Michael Hoffer <info@michaelhoffer.de>
+    Author     : Michael Hoffer  &lt;info@michaelhoffer.de&gt;
     Description:
         Purpose of the stylesheet follows.
 */
@@ -69,7 +69,6 @@
     -fx-stroke: rgba(120,140,255,0.2);
     -fx-stroke-width: 5px;
 }
-
 
 /*.window-titlebar {
 

@@ -21,7 +21,7 @@ import javafx.scene.layout.StackPane;
  * Custom flownode skin. In addition to the basic node visualization from
  * VWorkflows this skin adds custom visualization of value objects.
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
 
@@ -31,7 +31,6 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
      * Constructor.
      *
      * @param skinFactory skin factory that created this skin
-     * @param parent FX parent node
      * @param model node model that shall be visualized
      * @param controller parent flow controller
      */

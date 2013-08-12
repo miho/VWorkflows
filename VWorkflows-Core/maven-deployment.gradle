@@ -1,14 +1,18 @@
-// doc for deployment: http://jedicoder.blogspot.de/2011/11/automated-gradle-project-deployment-to.html
+apply from: 'jdkdetect.gradle'
 
 // sonatype dependencies
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 // maven deployment properties
-group = 'eu.mihosoft.vrl.workflow'
-version = '0.1-SNAPSHOT'
+if (project.jdk == 8) {
+    group = 'eu.mihosoft.vrl.workflow-8.0'
+} else {
+    group = 'eu.mihosoft.vrl.workflow'
+}
+version = '0.1-r1-SNAPSHOT'
 
-file("/media/truecrypt1/sonatype.properties").withReader { reader ->
+file("E:\\sonatype.properties").withReader { reader ->
   def userProps = new Properties()
   userProps.load(reader)
   userProps.each{

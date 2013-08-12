@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class PersistentNode {
 
@@ -179,7 +179,7 @@ public class PersistentNode {
     }
     
         /**
-     * @param connectors the inputTypes to set
+     * @param connector the inputTypes to set
      */
     public void addConnector(PersistentConnector connector ) {
 

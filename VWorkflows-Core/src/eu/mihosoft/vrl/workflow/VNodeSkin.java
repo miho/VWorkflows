@@ -6,7 +6,7 @@ package eu.mihosoft.vrl.workflow;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VNodeSkin<T extends VNode> extends Skin<T> {
 //    public void setFlow(V flow);

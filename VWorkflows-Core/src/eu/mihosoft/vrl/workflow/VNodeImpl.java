@@ -21,7 +21,7 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class VNodeImpl implements VNode {
 

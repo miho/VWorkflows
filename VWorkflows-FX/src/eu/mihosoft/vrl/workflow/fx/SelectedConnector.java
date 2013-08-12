@@ -9,7 +9,7 @@ import javafx.scene.Node;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class SelectedConnector {
     private Node node;

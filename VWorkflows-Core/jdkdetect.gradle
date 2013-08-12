@@ -1,0 +1,13 @@
+String javaVersion = System.getProperty("java.version")
+
+project.ext.set("jdk", 7)
+
+if (javaVersion.startsWith("1.7")) {
+    project.jdk=7;
+} else if (javaVersion.startsWith("1.8")) {
+    project.jdk=8;
+} else {
+    System.err.println("Unsupported JDK: " + javaVersion);
+}
+    
+println(">> using jdk " + javaVersion)

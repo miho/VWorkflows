@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
  * cases are searching for nodes at specific locations, adding/removing nodes
  * to/from parents (Parent interface does not give write access to children).
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class NodeUtil {
 
@@ -212,7 +212,7 @@ public class NodeUtil {
      *
      * @param p parent
      * @param n node
-     *
+     * @param index child index (z buffer)
      * @throws IllegalArgumentException if an unsupported parent class has been
      * specified or the parent is <code>null</code>
      */
@@ -272,7 +272,7 @@ public class NodeUtil {
      * @param p parent node
      * @param sceneX x coordinate
      * @param sceneY y coordinate
-     * @param nodeClass node class to search for
+     * @param nodeClasses node classes to search for
      * @return a node that contains the specified screen coordinates and is an
      * instance of the specified class or <code>null</code> if no such node
      * exist

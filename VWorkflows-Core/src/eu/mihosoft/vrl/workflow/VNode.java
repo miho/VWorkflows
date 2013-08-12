@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VNode extends Model {
 

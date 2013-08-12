@@ -23,7 +23,7 @@ import jfxtras.labs.scene.control.gauge.StyleModelBuilder;
  * Custom flownode skin. In addition to the basic node visualization from
  * VWorkflows this skin adds custom visualization of value objects.
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class IntegerFlowNodeSkin extends FXFlowNodeSkinBase {
 

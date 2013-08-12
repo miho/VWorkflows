@@ -9,7 +9,7 @@ import javafx.beans.property.ObjectProperty;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class ConnectorIOImpl implements Connector {
 

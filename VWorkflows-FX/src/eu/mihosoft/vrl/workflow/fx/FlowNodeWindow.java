@@ -18,8 +18,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.CacheHint;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -34,12 +35,13 @@ import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FlowNodeWindow extends Window {
 
     private ObjectProperty<FXFlowNodeSkin> nodeSkinProperty = new SimpleObjectProperty<>();
-    private ScalableContentPane content;
+    private Canvas content;
+    private OptimizableContentPane parentContent;
 
     public FlowNodeWindow(FXFlowNodeSkin skin) {
 
@@ -55,20 +57,17 @@ public class FlowNodeWindow extends Window {
 //                + "    -fx-border-width: 2;");
 
 
-        OptimizableContentPane parentContent = new OptimizableContentPane();
+        parentContent = new OptimizableContentPane();
 
-        content = new ScalableContentPane();
+        content = new Canvas();
 
         parentContent.getChildren().add(content);
 
-        Pane root = new Pane();
-        content.setContentPane(root);
-
         super.setContentPane(parentContent);
         addCollapseIcon(skin);
+        configureCanvas(skin);
 
 //        addSelectionRectangle(skin, root);
-
 
         addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
             @Override
@@ -76,20 +75,44 @@ public class FlowNodeWindow extends Window {
                 connectorsToFront();
             }
         });
+        
+//        // TODO shouldn't leaf nodes also have a visibility property?
+//        if (nodeSkinProperty.get().getModel() instanceof VFlowModel) {
+//            VFlowModel model = (VFlowModel) nodeSkinProperty.get().getModel();
+//            model.visibleProperty().addListener(new ChangeListener<Boolean>() {
+//                @Override
+//                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                    
+//                    for (Node n : content.getContentPane().getChildren()) {
+//                        if (n instanceof Window) {
+//                            Window w = (Window) n;
+//                            w.requestLayout();
+//                            w.getContentPane().requestLayout();
+//                        }
+//                    }
+//                    
+////                    System.out.println("TEST");
+//////                    parentContent.requestOptimization();
+////                    requestLayout();
+////                    getParent().requestLayout();
+//////                    requestParentLayout();
+////                    content.requestLayout();
+////                    content.getContentPane().requestLayout();
+//                }
+//            });
+//        }
     }
 
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
 
         // create scalable root pane
-        ScalableContentPane canvas = new ScalableContentPane();
-        
-        canvas.getStyleClass().add("vflow-background");
+        Canvas canvas = new Canvas();
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
-        
+
         // create skin factory for flow visualization
-        FXSkinFactory fXSkinFactory = 
+        FXSkinFactory fXSkinFactory =
                 nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
 
         // copy colors from prototype
@@ -243,5 +266,19 @@ public class FlowNodeWindow extends Window {
                 fxSkin.toFront();
             }
         }
+    }
+
+    private void configureCanvas(FXFlowNodeSkin skin) {
+
+
+//        if (skin == null) {
+//            return;
+//        }
+//
+//        if ((skin.getModel() instanceof VFlowModel)) {
+//            return;
+//        }
+
+        content.getStyleClass().setAll("vnode-content");
     }
 }

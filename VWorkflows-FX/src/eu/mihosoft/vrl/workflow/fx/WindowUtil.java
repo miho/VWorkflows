@@ -12,7 +12,7 @@ import jfxtras.labs.scene.control.window.Window;
 
 /**
  *
- * @author Michael Hoffer <info@michaelhoffer.de>
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class WindowUtil {
     public static Window createWindow(String title) {

@@ -10,6 +10,8 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 ## Maven Coordinates
 
+Repository: https://oss.sonatype.org/content/repositories/snapshots
+
 VWorkflows-FX:
 
     <dependency>

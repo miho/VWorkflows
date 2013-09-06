@@ -40,7 +40,7 @@ import jfxtras.labs.util.event.MouseControlUtil;
 public class FlowNodeWindow extends Window {
 
     private ObjectProperty<FXFlowNodeSkin> nodeSkinProperty = new SimpleObjectProperty<>();
-    private Canvas content;
+    private VCanvas content;
     private OptimizableContentPane parentContent;
 
     public FlowNodeWindow(FXFlowNodeSkin skin) {
@@ -59,7 +59,7 @@ public class FlowNodeWindow extends Window {
 
         parentContent = new OptimizableContentPane();
 
-        content = new Canvas();
+        content = new VCanvas();
 
         parentContent.getChildren().add(content);
 
@@ -106,7 +106,7 @@ public class FlowNodeWindow extends Window {
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
 
         // create scalable root pane
-        Canvas canvas = new Canvas();
+        VCanvas canvas = new VCanvas();
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");

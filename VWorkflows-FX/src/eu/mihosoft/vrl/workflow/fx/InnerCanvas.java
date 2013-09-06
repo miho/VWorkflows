@@ -7,6 +7,8 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.VNode;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -18,8 +20,21 @@ import javafx.scene.layout.Pane;
  */
 public class InnerCanvas extends Pane {
 
-    public InnerCanvas() {
+    private BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
 
+    public InnerCanvas() {
+       
+        
+        translateToMinNodePosProperty.addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+                requestLayout();
+            }
+        });
+        
+        
+        
 //        needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
 //            @Override
 //            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -49,8 +64,8 @@ public class InnerCanvas extends Pane {
 //                }
 //            }
 //        });
-
     }
+
     @Override
     protected void layoutChildren() {
 
@@ -63,16 +78,21 @@ public class InnerCanvas extends Pane {
 //
         setNeedsLayout(true);
 
+        if (!translateToMinNodePosProperty.get()) {
+            return;
+        }
+
         List<VNode> nodeList = new ArrayList<>();
 
         double minX = Double.MAX_VALUE;
         double minY = Double.MAX_VALUE;
 
+
         // search minX and minY of window nodes
         for (Node n : getChildrenUnmodifiable()) {
             if (n instanceof FlowNodeWindow) {
                 FlowNodeWindow w = (FlowNodeWindow) n;
-                
+
                 VNode node = w.nodeSkinProperty().get().getModel();
                 nodeList.add(node);
 
@@ -86,5 +106,9 @@ public class InnerCanvas extends Pane {
             n.setX(n.getX() - minX);
             n.setY(n.getY() - minY);
         }
+    }
+
+    public BooleanProperty translateToMinNodePosProperty() {
+        return translateToMinNodePosProperty;
     }
 }

@@ -7,7 +7,7 @@ package eu.mihosoft.vrl.workflow.demo;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.fx.Canvas;
+import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
@@ -41,7 +41,7 @@ public class MainWindowFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Canvas canvas = new Canvas();
+        VCanvas canvas = new VCanvas();
 
         Pane root = canvas.getContentPane();
 

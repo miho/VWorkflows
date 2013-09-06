@@ -1,5 +1,5 @@
 /*
- * ConnectionSkinFactory.java
+ * VCanvas.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,14 +34,49 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.fx;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.layout.Pane;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public interface ConnectionSkinFactory<T extends Skin> {
+public class VCanvas extends ScalableContentPane {
 
-    ConnectionSkin createSkin(Connection c, VFlow flow, String type);
-   
+    private BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
+    private InnerCanvas innerCanvas = new InnerCanvas();
+
+    public VCanvas() {
+        setContentPane(innerCanvas);
+        getStyleClass().add("vflow-background");
+
+    }
+
+    public BooleanProperty translateToMinNodePosProperty() {
+
+        if (!(getContentPane() instanceof InnerCanvas)) {
+            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+        }
+
+        return ((InnerCanvas) getContentPane()).translateToMinNodePosProperty();
+    }
+
+    public void setTranslateToMinNodePos(boolean value) {
+        if (!(getContentPane() instanceof InnerCanvas)) {
+            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+        }
+
+        ((InnerCanvas) getContentPane()).translateToMinNodePosProperty().set(value);
+    }
+
+    public boolean getTranslateToMinNodePos() {
+        if (!(getContentPane() instanceof InnerCanvas)) {
+            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+        }
+
+        return ((InnerCanvas) getContentPane()).translateToMinNodePosProperty().get();
+    }
 }

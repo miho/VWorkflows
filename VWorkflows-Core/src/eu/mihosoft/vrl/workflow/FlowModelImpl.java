@@ -4,7 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import com.sun.javafx.collections.UnmodifiableObservableMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -29,8 +28,8 @@ public class FlowModelImpl implements FlowModel {
 
     private final ObservableMap<String, Connections> connections =
             FXCollections.observableHashMap();
-    private final UnmodifiableObservableMap<String, Connections> readOnlyObservableConnections =
-            (UnmodifiableObservableMap<String, Connections>) FXCollections.unmodifiableObservableMap(connections);
+    private final ObservableMap<String, Connections> readOnlyObservableConnections =
+            FXCollections.unmodifiableObservableMap(connections);
     private final ObservableList<VNode> observableNodes =
             FXCollections.observableArrayList();
     private final ObservableList<VNode> readOnlyObservableNodes =
@@ -174,7 +173,7 @@ public class FlowModelImpl implements FlowModel {
     }
 
     @Override
-    public UnmodifiableObservableMap<String, Connections> getAllConnections() {
+    public ObservableMap<String, Connections> getAllConnections() {
         return readOnlyObservableConnections;
     }
 

@@ -4,8 +4,8 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import com.sun.javafx.collections.UnmodifiableObservableMap;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  *
@@ -32,7 +32,7 @@ interface FlowModel extends Model, VisibleState{
     
     public void addConnections(Connections connections, String flowType);
     public Connections getConnections(String flowType);
-    public UnmodifiableObservableMap<String,Connections> getAllConnections();
+    public ObservableMap<String,Connections> getAllConnections();
     
     public void setFlowNodeClass(Class<? extends VNode> cls);
     

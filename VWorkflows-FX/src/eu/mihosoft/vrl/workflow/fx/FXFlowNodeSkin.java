@@ -37,7 +37,7 @@ import jfxtras.labs.util.NodeUtil;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FXFlowNodeSkin
         implements FXSkin<VNode, Window>, VNodeSkin<VNode> {
@@ -377,8 +377,10 @@ public class FXFlowNodeSkin
 
     private void adjustConnectorSize() {
 
-        inputConnectorSize = Math.min(inputConnectorSize, outputConnectorSize);
-        outputConnectorSize = inputConnectorSize;
+        if (!inputList.isEmpty() && !outputList.isEmpty()) {
+            inputConnectorSize = Math.min(inputConnectorSize, outputConnectorSize);
+            outputConnectorSize = inputConnectorSize;
+        }
 
         for (Circle connector : inputList) {
             connector.setRadius(inputConnectorSize / 2.0);

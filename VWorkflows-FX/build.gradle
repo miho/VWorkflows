@@ -6,7 +6,7 @@ apply from: 'jdkdetect.gradle'
 //repairHeaders.licenseHeaderText = new File(projectDir,'../license-template.txt')
 
 apply from: 'lib/gradle/javafx.plugin'
-apply from: 'maven-deployment.gradle'
+//apply from: 'maven-deployment.gradle'
 
 repositories {
     mavenCentral()

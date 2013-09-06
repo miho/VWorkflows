@@ -4,7 +4,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import com.sun.javafx.collections.UnmodifiableObservableMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -15,6 +14,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  *
@@ -120,7 +120,7 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public UnmodifiableObservableMap<String, Connections> getAllConnections() {
+    public ObservableMap<String, Connections> getAllConnections() {
         return flow.getAllConnections();
     }
 

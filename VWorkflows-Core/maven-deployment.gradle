@@ -54,7 +54,7 @@ uploadArchives {
                name 'VWorkflows-Core'
                packaging 'jar'
                description 'VWorkflows is a workflow/graph library with JavaFX bindings'
-               url 'http://gradlefx.github.com/'
+               url 'https://github.com/miho/VWorkflows'
  
                scm {
                    url 'scm:https://github.com/miho/VWorkflows.git'

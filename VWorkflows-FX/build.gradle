@@ -2,8 +2,11 @@ apply from: 'jdkdetect.gradle'
 
 //apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
 
+//apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
+//repairHeaders.licenseHeaderText = new File(projectDir,'../license-template.txt')
+
 apply from: 'lib/gradle/javafx.plugin'
-//apply from: 'maven-deployment.gradle'
+apply from: 'maven-deployment.gradle'
 
 repositories {
     mavenCentral()
@@ -20,11 +23,11 @@ dependencies {
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"
     if (project.jdk == 7) {
-        compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
-        //compile "org.jfxtras:jfxtras-labs:2.2-r6-SNAPSHOT"
+//        compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
+        compile "org.jfxtras:jfxtras-labs:2.2-r6-SNAPSHOT"
     } else if (project.jdk == 8) {
-        //compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
-        compile fileTree (dir: 'lib/jfxtras/jdk8/', includes: ['*.jar'])
+        compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
+        //compile fileTree (dir: 'lib/jfxtras/jdk8/', includes: ['*.jar'])
     }
     compile project(':vworkflows-core')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])

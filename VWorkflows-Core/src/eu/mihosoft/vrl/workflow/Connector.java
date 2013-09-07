@@ -37,6 +37,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.event.EventHandler;
 
 /**
  *
@@ -63,4 +64,7 @@ public interface Connector extends Model {
     public ValueObject getValueObject();
 
     public ObjectProperty<ValueObject> valueObjectProperty();
+    
+    public void addConnectionEventListener(EventHandler<ConnectionEvent> handler);
+    public void removeConnectionEventListener(EventHandler<ConnectionEvent> handler);
 }

@@ -38,6 +38,7 @@ package eu.mihosoft.vrl.workflow.io;
 
 import eu.mihosoft.vrl.workflow.*;
 import javafx.beans.property.ObjectProperty;
+import javafx.event.EventHandler;
 
 /**
  *
@@ -129,6 +130,16 @@ class ConnectorIOImpl implements Connector {
 
     @Override
     public ObjectProperty<ValueObject> valueObjectProperty() {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public void addConnectionEventListener(EventHandler<ConnectionEvent> handler) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public void removeConnectionEventListener(EventHandler<ConnectionEvent> handler) {
         throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
 }

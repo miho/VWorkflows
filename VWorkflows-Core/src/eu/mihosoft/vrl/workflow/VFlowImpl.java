@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import java.util.ArrayList;
@@ -55,10 +54,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.EventHandler;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class VFlowImpl implements VFlow {
 
@@ -161,7 +161,7 @@ class VFlowImpl implements VFlow {
         connectionsListener = new ListChangeListener<Connection>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Connection> change) {
-                
+
                 while (change.next()) {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
@@ -172,6 +172,39 @@ class VFlowImpl implements VFlow {
                     } else if (change.wasRemoved()) {
                         // removed
                         for (Connection c : change.getRemoved()) {
+
+                            // fire events <begin>
+
+                            // 07.09.2013
+                            // TODO add connector references to connections
+                            //      reason: lookup is too expensive
+                            Connector s = getNodeLookup().getConnectorById(c.getSenderId());
+                            Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
+
+                            ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.REMOVE, s, r);
+
+                            Collection<EventHandler<ConnectionEvent>> eventHandlersS =
+                                    ((ConnectorImpl) s).getConnectionEventHandlers();
+
+                            if (eventHandlersS != null) {
+                                for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
+                                    evtHandler.handle(evt);
+                                }
+                            }
+
+                            Collection<EventHandler<ConnectionEvent>> eventHandlersR =
+                                    ((ConnectorImpl) r).getConnectionEventHandlers();
+
+                            if (eventHandlersR != null) {
+                                for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
+                                    evtHandler.handle(evt);
+                                }
+                            }
+
+                            // fire events <end>
+
+                            // remove skins for each connection 
+                            // that have been removed
                             removeConnectionSkinFromAllSkinFactories(c);
 //                            System.out.println("remove skin: " + c);
                         }
@@ -179,12 +212,43 @@ class VFlowImpl implements VFlow {
                         // added
                         for (Connection c : change.getAddedSubList()) {
 
+                            // fire events <begin>
+
+                            // 07.09.2013
+                            // TODO add connector references to connections
+                            //      reason: lookup is too expensive
+                            Connector s = getNodeLookup().getConnectorById(c.getSenderId());
+                            Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
+
+                            ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.ADD, s, r);
+
+                            Collection<EventHandler<ConnectionEvent>> eventHandlersS =
+                                    ((ConnectorImpl) s).getConnectionEventHandlers();
+
+                            if (eventHandlersS != null) {
+                                for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
+                                    evtHandler.handle(evt);
+                                }
+                            }
+
+                            Collection<EventHandler<ConnectionEvent>> eventHandlersR =
+                                    ((ConnectorImpl) r).getConnectionEventHandlers();
+
+                            if (eventHandlersR != null) {
+                                for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
+                                    evtHandler.handle(evt);
+                                }
+                            }
+
+                            // fire events <end>
+
+                            // create skins for added connections
                             createConnectionSkins(c, c.getType(), getSkinFactories());
 //                            System.out.println("add skin: " + c);
                         }
                     }
                 }
-                
+
             }
         };
 

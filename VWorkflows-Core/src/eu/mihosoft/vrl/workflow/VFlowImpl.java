@@ -36,7 +36,6 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +43,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -188,7 +189,11 @@ class VFlowImpl implements VFlow {
 
                             if (eventHandlersS != null) {
                                 for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
-                                    evtHandler.handle(evt);
+                                    try {
+                                        evtHandler.handle(evt);
+                                    } catch (Throwable tr) {
+                                        Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                    }
                                 }
                             }
 
@@ -197,7 +202,11 @@ class VFlowImpl implements VFlow {
 
                             if (eventHandlersR != null) {
                                 for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
-                                    evtHandler.handle(evt);
+                                    try {
+                                        evtHandler.handle(evt);
+                                    } catch (Throwable tr) {
+                                        Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                    }
                                 }
                             }
 
@@ -227,7 +236,11 @@ class VFlowImpl implements VFlow {
 
                             if (eventHandlersS != null) {
                                 for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
-                                    evtHandler.handle(evt);
+                                    try {
+                                        evtHandler.handle(evt);
+                                    } catch (Throwable tr) {
+                                        Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                    }
                                 }
                             }
 
@@ -236,7 +249,11 @@ class VFlowImpl implements VFlow {
 
                             if (eventHandlersR != null) {
                                 for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
-                                    evtHandler.handle(evt);
+                                    try {
+                                        evtHandler.handle(evt);
+                                    } catch (Throwable tr) {
+                                        Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                    }
                                 }
                             }
 

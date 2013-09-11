@@ -132,7 +132,23 @@ class VFlowImpl implements VFlow {
                         for (VNode n : change.getRemoved()) {
 //                            if (nodeSkins.containsKey(n.getId())) {
                             if (!getNodeSkinsById(n.getId()).isEmpty()) {
+
                                 removeNodeSkinFromAllSkinFactories(n);
+
+                                for (Connector connector : n.getConnectors()) {
+
+                                    System.out.println("conn: " + connector);
+
+                                    Collection<Connection> connections =
+                                            getConnections(connector.getType()).
+                                            getAllWith(connector.getId());
+
+                                    for (Connection connection : connections) {
+                                        VFlowImpl.this.getConnections(connector.getType()).
+                                                remove(connection);
+                                    }
+                                }
+
 //                                System.out.println("remove node: " + n.getId());
                             }
 
@@ -184,28 +200,34 @@ class VFlowImpl implements VFlow {
 
                             ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.REMOVE, s, r);
 
-                            Collection<EventHandler<ConnectionEvent>> eventHandlersS =
-                                    ((ConnectorImpl) s).getConnectionEventHandlers();
+                            if (s != null) {
 
-                            if (eventHandlersS != null) {
-                                for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
-                                    try {
-                                        evtHandler.handle(evt);
-                                    } catch (Throwable tr) {
-                                        Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                Collection<EventHandler<ConnectionEvent>> eventHandlersS =
+                                        ((ConnectorImpl) s).getConnectionEventHandlers();
+
+                                if (eventHandlersS != null) {
+                                    for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
+                                        try {
+                                            evtHandler.handle(evt);
+                                        } catch (Throwable tr) {
+                                            Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                        }
                                     }
                                 }
                             }
 
-                            Collection<EventHandler<ConnectionEvent>> eventHandlersR =
-                                    ((ConnectorImpl) r).getConnectionEventHandlers();
+                            if (r != null) {
 
-                            if (eventHandlersR != null) {
-                                for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
-                                    try {
-                                        evtHandler.handle(evt);
-                                    } catch (Throwable tr) {
-                                        Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                Collection<EventHandler<ConnectionEvent>> eventHandlersR =
+                                        ((ConnectorImpl) r).getConnectionEventHandlers();
+
+                                if (eventHandlersR != null) {
+                                    for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
+                                        try {
+                                            evtHandler.handle(evt);
+                                        } catch (Throwable tr) {
+                                            Logger.getLogger(VFlowImpl.class.getName()).log(Level.SEVERE, null, tr);
+                                        }
                                     }
                                 }
                             }

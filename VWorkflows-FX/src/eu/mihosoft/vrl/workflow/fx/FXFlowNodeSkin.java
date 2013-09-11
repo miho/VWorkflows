@@ -429,14 +429,14 @@ public class FXFlowNodeSkin
 
         if (connectorNode != null && connectorNode.getParent() != null) {
 
-            Collection<Connection> connections =
-                    controller.getConnections(connector.getType()).
-                    getAllWith(connector.getId());
-
-            for (Connection connection : connections) {
-                controller.getConnections(connector.getType()).
-                        remove(connection);
-            }
+//            Collection<Connection> connections =
+//                    controller.getConnections(connector.getType()).
+//                    getAllWith(connector.getId());
+//
+//            for (Connection connection : connections) {
+//                controller.getConnections(connector.getType()).
+//                        remove(connection);
+//            }
 
             if (connector.isInput()) {
                 inputList.remove(connectorNode);

@@ -56,4 +56,5 @@ Navigate to the gradle project (e.g., `path/to/VWorkflows/VWorkflows-FX`) and en
     
 ## Test It
 
-`VWorkflows-FX` comes with a demo. To test it call the `run` task.
+Besides the tests defined in `VWorkflows-Core` (`test` task) it is also possible to run a graphical demo that comes with 
+`VWorkflows-FX`. To test it call the `run` task.

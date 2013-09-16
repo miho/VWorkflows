@@ -27,3 +27,29 @@ VWorkflows-Core:
       <artifactId>vworkflows-core</artifactId>
       <version>0.1-r1-SNAPSHOT</version>
     </dependency>
+
+
+## How To Build
+
+### Reqirements
+
+- Java >= 1.7.25 (Preview Builds of Java 8 >= b105 are also supported)
+- Internet connection (other dependencies are downloaded automatically)
+
+
+### IDE
+
+Open the `VWorkflows-Core/VWorkflows-FX` Gradle project in your favourite IDE (tested with NetBeans 7.3.1) and build it.
+`VWorkflows-FX` comes with a demo. To test it call the `run` task.
+
+### Command Line
+
+Navigate to the gradle project (e.g., `path/to/VWorkflows/VWorkflows-FX`) and enter the following command
+
+#### Bash (Linux/OS X/Cygwin/other Unix-like OS)
+
+    ./gradlew build
+    
+#### Windows
+
+    gradlew build

@@ -4,13 +4,7 @@ apply from: 'jdkdetect.gradle'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-// maven deployment properties
-if (project.jdk == 8) {
-    group = 'eu.mihosoft.vrl.workflow-8.0'
-} else {
-    group = 'eu.mihosoft.vrl.workflow'
-}
-version = '0.1-r1-SNAPSHOT'
+apply from: 'version-info.gradle'
 
 //file("E:\\sonatype.properties").withReader { reader ->
 //  def userProps = new Properties()

@@ -69,7 +69,7 @@ import jfxtras.labs.util.NodeUtil;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FXFlowNodeSkin
         implements FXSkin<VNode, Window>, VNodeSkin<VNode> {
@@ -409,8 +409,10 @@ public class FXFlowNodeSkin
 
     private void adjustConnectorSize() {
 
-        inputConnectorSize = Math.min(inputConnectorSize, outputConnectorSize);
-        outputConnectorSize = inputConnectorSize;
+        if (!inputList.isEmpty() && !outputList.isEmpty()) {
+            inputConnectorSize = Math.min(inputConnectorSize, outputConnectorSize);
+            outputConnectorSize = inputConnectorSize;
+        }
 
         for (Circle connector : inputList) {
             connector.setRadius(inputConnectorSize / 2.0);
@@ -426,15 +428,8 @@ public class FXFlowNodeSkin
         Node connectorNode = connectors.remove(connector.getId());
 
         if (connectorNode != null && connectorNode.getParent() != null) {
-
-            Collection<Connection> connections =
-                    controller.getConnections(connector.getType()).
-                    getAllWith(connector.getId());
-
-            for (Connection connection : connections) {
-                controller.getConnections(connector.getType()).
-                        remove(connection);
-            }
+            
+            // TODO: remove connectors&connections?
 
             if (connector.isInput()) {
                 inputList.remove(connectorNode);

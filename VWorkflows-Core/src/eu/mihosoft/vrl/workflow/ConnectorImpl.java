@@ -32,16 +32,18 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ConnectorImpl implements Connector {
 
@@ -52,6 +54,7 @@ class ConnectorImpl implements Connector {
     private boolean input;
     private boolean output;
     private ObjectProperty<ValueObject> valueObjectProperty = new SimpleObjectProperty<>();
+    private List<EventHandler<ConnectionEvent>> connectionEventHandlers;
 
     public ConnectorImpl(VNode node, String type, String localId, boolean input) {
         this.type = type;
@@ -61,7 +64,7 @@ class ConnectorImpl implements Connector {
         this.output = !input;
         setValueObject(new DefaultConnectorValueObject(this));
     }
-    
+
     public ConnectorImpl(VNode node, Connector c) {
         this(node, c.getType(), c.getLocalId(), c.isInput());
     }
@@ -130,5 +133,36 @@ class ConnectorImpl implements Connector {
     @Override
     public ObjectProperty<ValueObject> valueObjectProperty() {
         return this.valueObjectProperty;
+    }
+
+    private List<EventHandler<ConnectionEvent>> getEventHandlers() {
+        if (this.getConnectionEventHandlers() == null) {
+            this.connectionEventHandlers = new ArrayList<>();
+        }
+
+        return this.getConnectionEventHandlers();
+    }
+
+    @Override
+    public void addConnectionEventListener(EventHandler<ConnectionEvent> handler) {
+        getEventHandlers().add(handler);
+    }
+
+    @Override
+    public void removeConnectionEventListener(EventHandler<ConnectionEvent> handler) {
+        getEventHandlers().remove(handler);
+
+        // we throw unused lists away since this can lead to serious memory 
+        // overhead for large flows
+        if (getEventHandlers().isEmpty()) {
+            this.connectionEventHandlers = null;
+        }
+    }
+
+    /**
+     * @return the connectionEventHandlers
+     */
+    public List<EventHandler<ConnectionEvent>> getConnectionEventHandlers() {
+        return connectionEventHandlers;
     }
 }

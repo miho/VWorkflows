@@ -39,8 +39,8 @@ VWorkflows-Core:
 
 ### IDE
 
-Open the `VWorkflows-Core/VWorkflows-FX` Gradle project in your favourite IDE (tested with NetBeans 7.3.1) and build it.
-`VWorkflows-FX` comes with a demo. To test it call the `run` task.
+Open the `VWorkflows-Core/VWorkflows-FX` Gradle project in your favourite IDE (tested with NetBeans 7.3.1) and build it
+by calling the `assemble` task.
 
 ### Command Line
 
@@ -48,8 +48,12 @@ Navigate to the gradle project (e.g., `path/to/VWorkflows/VWorkflows-FX`) and en
 
 #### Bash (Linux/OS X/Cygwin/other Unix-like OS)
 
-    ./gradlew build
+    ./gradlew assemble
     
 #### Windows
 
-    gradlew build
+    gradlew assemble
+    
+## Test It
+
+`VWorkflows-FX` comes with a demo. To test it call the `run` task.

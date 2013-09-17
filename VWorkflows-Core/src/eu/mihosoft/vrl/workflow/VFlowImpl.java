@@ -198,7 +198,7 @@ class VFlowImpl implements VFlow {
                             Connector s = getNodeLookup().getConnectorById(c.getSenderId());
                             Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
 
-                            ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.REMOVE, s, r);
+                            ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.REMOVE, s, r, c);
 
                             if (s != null) {
 
@@ -251,7 +251,7 @@ class VFlowImpl implements VFlow {
                             Connector s = getNodeLookup().getConnectorById(c.getSenderId());
                             Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
 
-                            ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.ADD, s, r);
+                            ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.ADD, s, r, c);
 
                             Collection<EventHandler<ConnectionEvent>> eventHandlersS =
                                     ((ConnectorImpl) s).getConnectionEventHandlers();

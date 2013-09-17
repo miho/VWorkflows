@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'idea'
 
 apply from: 'jdkdetect.gradle'
 apply from: 'version-info.gradle'

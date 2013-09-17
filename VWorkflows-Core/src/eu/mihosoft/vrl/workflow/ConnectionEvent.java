@@ -19,11 +19,13 @@ public class ConnectionEvent extends Event {
     public static final EventType<ConnectionEvent> REMOVE = new EventType<>(ANY, "ConnectionEvent:REMOVE");
     private transient Connector sConnector;
     private transient Connector rConnector;
+    private transient Connection connection;
 
-    public ConnectionEvent(EventType<? extends Event> et, Connector sConnector, Connector rConnector) {
+    public ConnectionEvent(EventType<? extends Event> et, Connector sConnector, Connector rConnector, Connection connection) {
         super(et);
         this.sConnector = sConnector;
         this.rConnector = rConnector;
+        this.connection = connection;
     }
 
     /**
@@ -38,5 +40,13 @@ public class ConnectionEvent extends Event {
      */
     public Connector getReceiverConnector() {
         return this.rConnector;
+    }
+
+    /**
+     *
+     * @return the connection
+     */
+    public Connection getConnection() {
+        return this.connection;
     }
 }

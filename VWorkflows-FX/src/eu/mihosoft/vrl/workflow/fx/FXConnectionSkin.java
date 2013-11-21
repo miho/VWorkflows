@@ -64,25 +64,25 @@ import jfxtras.labs.util.event.MouseControlUtil;
  */
 public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
-    private ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
-    private Path connectionPath;
-    private LineTo lineTo;
-    private MoveTo moveTo;
-    private CubicCurveTo curveTo;
+    private final ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
+    private final Path connectionPath;
+    private final LineTo lineTo;
+    private final MoveTo moveTo;
+    private final CubicCurveTo curveTo;
 //    private Shape startConnector;
-    private Circle receiverConnectorUI;
+    private final Circle receiverConnectorUI;
     private Window receiverWindow;
     private VFlow controller;
-    private Connection connection;
-    private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
-    private String type;
+    private final Connection connection;
+    private final ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private final String type;
     private Node lastNode;
     private boolean valid = true;
 //    private Window clipboard;
     private Window prevWindow;
-    private FXSkinFactory skinFactory;
+    private final FXSkinFactory skinFactory;
     private Shape senderNode;
     private Shape receiverNode;
     private ConnectionListener connectionListener;

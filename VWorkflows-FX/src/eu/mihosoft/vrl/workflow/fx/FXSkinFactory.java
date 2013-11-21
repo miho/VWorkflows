@@ -43,11 +43,7 @@ import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VNodeSkin;
 import eu.mihosoft.vrl.workflow.Skin;
 import eu.mihosoft.vrl.workflow.SkinFactory;
-import java.util.Collection;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import javafx.scene.Parent;
-import javafx.scene.paint.Color;
 
 /**
  *

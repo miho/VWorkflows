@@ -147,18 +147,18 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        final FlowNode sender = getController().getSender(connection);
 //        final FlowNode receiver = getController().getReceiver(connection);
 
-        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getSenderId());
+        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getSender().getId());
         final Window senderWindow = senderSkin.getNode();
-        senderNode = (Shape) senderSkin.getConnectorById(connection.getSenderId());
+        senderNode = (Shape) senderSkin.getConnectorNodeByReference(connection.getSender());
 
-        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getReceiverId());
+        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getReceiver().getId());
         receiverWindow = receiverSkin.getNode();
-        receiverNode = (Shape) receiverSkin.getConnectorById(connection.getReceiverId());
+        receiverNode = (Shape) receiverSkin.getConnectorNodeByReference(connection.getReceiver());
 
         addToClipboard();
 
-        setSender(getController().getNodeLookup().getConnectorById(connection.getSenderId()));
-        setReceiver(getController().getNodeLookup().getConnectorById(connection.getReceiverId()));
+        setSender(getController().getNodeLookup().getConnectorById(connection.getSender().getId()));
+        setReceiver(getController().getNodeLookup().getConnectorById(connection.getReceiver().getId()));
 
         if (getReceiverNode() instanceof ConnectorCircle) {
             ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
@@ -498,8 +498,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 }
 
                 // remove error notification etc.
-                if (controller.getConnections(type).contains(connection.getSenderId(),
-                        connection.getReceiverId())) {
+                if (controller.getConnections(type).contains(connection.getSender(),
+                        connection.getReceiver())) {
                     connectionListener.onNoConnection(receiverConnectorUI);
                 }
 

@@ -135,7 +135,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         final VNode sender = getSender().getNode();
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, getSender().getId());
-        final Node senderNode = senderSkin.getConnectorById(getSender().getId());
+        final Node senderNode = senderSkin.getConnectorNodeByReference(getSender());
 
         senderConnectorUI = (Circle) senderNode;
 

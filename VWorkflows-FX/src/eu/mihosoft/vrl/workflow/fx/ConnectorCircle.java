@@ -105,7 +105,7 @@ class ConnectorCircle extends Circle {
     private void moveConnectionReceiverToFront() {
         connectionSkin = null;
 
-        if (connector.isInput() && flow.getConnections(connector.getType()).isInputConnected(connector.getId())) {
+        if (connector.isInput() && flow.getConnections(connector.getType()).isInputConnected(connector)) {
             for (Connection conn : flow.getConnections(connector.getType()).getConnections()) {
                 ConnectionSkin skinI = flow.getNodeSkinLookup().getById(skinFactory, conn);
 

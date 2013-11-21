@@ -39,6 +39,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connections;
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -50,9 +51,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -284,9 +283,9 @@ public class FlowNodeWindow extends Window {
 
         List<Connection> connections = new ArrayList<>();
 
-        for (String connId : skin.connectors.keySet()) {
+        for (Connector connector : skin.connectors.keySet()) {
             for (Connections connectionsI : skin.controller.getAllConnections().values()) {
-                connections.addAll(connectionsI.getAllWith(connId));
+                connections.addAll(connectionsI.getAllWith(connector));
             }
         }
 

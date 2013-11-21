@@ -90,7 +90,7 @@ public class FXFlowNodeSkin
     private FXNewConnectionSkin newConnectionSkin;
     private boolean removeSkinOnly = false;
     VFlow controller;
-    Map<String, Shape> connectors = new HashMap<>();
+    Map<Connector, Shape> connectors = new HashMap<>();
     List<Circle> inputList = new ArrayList<>();
     List<Circle> outputList = new ArrayList<>();
     private FXSkinFactory skinFactory;
@@ -214,7 +214,7 @@ public class FXFlowNodeSkin
 
         final Circle connectorNode = circle;
 
-        connectors.put(connector.getId(), connectorNode);
+        connectors.put(connector, connectorNode);
 
         if (connector.isInput()) {
             inputList.add(connectorNode);
@@ -300,7 +300,7 @@ public class FXFlowNodeSkin
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
                 if (controller.getConnections(connector.getType()).
-                        isInputConnected(connector.getId())) {
+                        isInputConnected(connector)) {
                     return;
                 }
 
@@ -323,7 +323,7 @@ public class FXFlowNodeSkin
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
                 if (controller.getConnections(connector.getType()).
-                        isInputConnected(connector.getId())) {
+                        isInputConnected(connector)) {
                     return;
                 }
 
@@ -340,7 +340,7 @@ public class FXFlowNodeSkin
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
                 if (controller.getConnections(connector.getType()).
-                        isInputConnected(connector.getId())) {
+                        isInputConnected(connector)) {
                     return;
                 }
 
@@ -624,7 +624,7 @@ public class FXFlowNodeSkin
         return this.skinFactory;
     }
 
-    public Node getConnectorById(String id) {
-        return connectors.get(id);
+    public Node getConnectorNodeByReference(Connector c) {
+        return connectors.get(c);
     }
 }

@@ -141,7 +141,7 @@ class VFlowImpl implements VFlow {
 
                                     Collection<Connection> connections =
                                             getConnections(connector.getType()).
-                                            getAllWith(connector.getId());
+                                            getAllWith(connector);
 
                                     for (Connection connection : connections) {
                                         VFlowImpl.this.getConnections(connector.getType()).
@@ -195,8 +195,10 @@ class VFlowImpl implements VFlow {
                             // 07.09.2013
                             // TODO add connector references to connections
                             //      reason: lookup is too expensive
-                            Connector s = getNodeLookup().getConnectorById(c.getSenderId());
-                            Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
+//                            Connector s = getNodeLookup().getConnectorById(c.getSenderId());
+//                            Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
+                            Connector s = c.getSender();
+                            Connector r = c.getReceiver();
 
                             ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.REMOVE, s, r, c);
 
@@ -248,8 +250,10 @@ class VFlowImpl implements VFlow {
                             // 07.09.2013
                             // TODO add connector references to connections
                             //      reason: lookup is too expensive
-                            Connector s = getNodeLookup().getConnectorById(c.getSenderId());
-                            Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
+//                            Connector s = getNodeLookup().getConnectorById(c.getSenderId());
+//                            Connector r = getNodeLookup().getConnectorById(c.getReceiverId());
+                            Connector s = c.getSender();
+                            Connector r = c.getReceiver();
 
                             ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.ADD, s, r, c);
 
@@ -385,7 +389,7 @@ class VFlowImpl implements VFlow {
 
     // TODO duplicated code
     static String connectionId(Connection c) {
-        return connectionId(c.getId(), c.getSenderId(), c.getReceiverId());
+        return connectionId(c.getId(), c.getSender().getId(), c.getReceiver().getId());
     }
 
     @Override

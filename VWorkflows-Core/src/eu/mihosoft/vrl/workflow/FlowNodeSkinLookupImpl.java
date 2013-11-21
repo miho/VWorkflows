@@ -169,8 +169,8 @@ class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
     @Override
     public ConnectionSkin<?> getById(SkinFactory skinFactory, Connection c) {
 
-        String sender = c.getSenderId();
-        String receiver = c.getReceiverId();
+        String sender = c.getSender().getId();
+        String receiver = c.getReceiver().getId();
 
         VFlowModel senderFlow = root.getNodeLookup().getById(sender.split(":")[0]).getFlow();
         VFlowModel receiverFlow = root.getNodeLookup().getById(receiver.split(":")[0]).getFlow();

@@ -74,7 +74,7 @@ class ConnectionsImpl implements Connections {
     }
 
     private static String connectionId(Connection c) {
-        return connectionId(c.getId(), c.getSenderId(), c.getReceiverId());
+        return connectionId(c.getId(), c.getSender().getId(), c.getReceiver().getId());
     }
 
     @Override
@@ -87,13 +87,13 @@ class ConnectionsImpl implements Connections {
     }
 
     @Override
-    public Connection add(String s, String r) {
+    public Connection add(Connector s, Connector r) {
 
         // search id:
         String id = "0";
         int count = 0;
 
-        while (connections.containsKey(connectionId(id, s, r))) {
+        while (connections.containsKey(connectionId(id, s.getId(), r.getId()))) {
             count++;
             id = "" + count;
         }
@@ -106,7 +106,7 @@ class ConnectionsImpl implements Connections {
     }
     
     @Override
-    public Connection add(String id, String s, String r, VisualizationRequest vReq) {
+    public Connection add(String id, Connector s, Connector r, VisualizationRequest vReq) {
         Connection c = createConnection(id, s, r);
         c.setVisualizationRequest(vReq);
         add(c);
@@ -124,16 +124,16 @@ class ConnectionsImpl implements Connections {
     }
 
     @Override
-    public Connection get(String id, String s, String r) {
-        return connections.get(connectionId(id, s, r));
+    public Connection get(String id, Connector s, Connector r) {
+        return connections.get(connectionId(id, s.getId(), r.getId()));
     }
 
     @Override
-    public void remove(String id, String s, String r) {
+    public void remove(String id, Connector s, Connector r) {
 
         observableConnections.remove(get(id, s, r));
 
-        connections.remove(connectionId(id, s, r));
+        connections.remove(connectionId(id, s.getId(), r.getId()));
 
 
 //        decSenderCounter(s);
@@ -143,8 +143,8 @@ class ConnectionsImpl implements Connections {
     @Override
     public void setConnectionClass(Class<? extends Connection> cls) {
         try {
-            Constructor constructor = cls.getConstructor(Connections.class, String.class, String.class, String.class, String.class);
-            throw new IllegalArgumentException("constructor missing: (Connections, String, String, String)");
+            Constructor constructor = cls.getConstructor(Connections.class, String.class, Connector.class, Connector.class, String.class);
+            throw new IllegalArgumentException("constructor missing: (Connections, String, Connector, Connector, String)");
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -157,12 +157,12 @@ class ConnectionsImpl implements Connections {
         return connectionClass;
     }
 
-    private Connection createConnection(String id, String s, String r) {
+    private Connection createConnection(String id, Connector s, Connector r) {
 
         Connection result = null;
 
         try {
-            Constructor constructor = getConnectionClass().getConstructor(Connections.class, String.class, String.class, String.class, String.class);
+            Constructor constructor = getConnectionClass().getConstructor(Connections.class, String.class, Connector.class, Connector.class, String.class);
             try {
                 result = (Connection) constructor.newInstance(this, id, s, r, type);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -181,13 +181,29 @@ class ConnectionsImpl implements Connections {
     }
 
     @Override
-    public Collection<Connection> getAllWith(String id) {
+    public Collection<Connection> getAllWith(Connector c) {
 
         Collection<Connection> result = new ArrayList<>();
 
-        for (Connection c : getConnections()) {
-            if (c.getSenderId().equals(id) || c.getReceiverId().equals(id)) {
-                result.add(c);
+        for (Connection conn : getConnections()) {
+            if (conn.getSender().getId().equals(c.getId()) 
+                    || conn.getReceiver().getId().equals(c.getId())) {
+                result.add(conn);
+            }
+        }
+
+        return result;
+    }
+    
+    @Override
+    public Collection<Connection> getAllWithNode(VNode n) {
+
+        Collection<Connection> result = new ArrayList<>();
+
+        for (Connection conn : getConnections()) {
+            // TODO: reference check (==) ok? 20.11.2013
+            if (conn.getSender().getNode()==n || conn.getReceiver().getNode()==n) {
+                result.add(conn);
             }
         }
 
@@ -272,12 +288,13 @@ class ConnectionsImpl implements Connections {
 //    }
 
     @Override
-    public Iterable<Connection> getAll(String s, String r) {
+    public Iterable<Connection> getAll(Connector s, Connector r) {
 
         Collection<Connection> result = new ArrayList<>();
 
         for (Connection c : connections.values()) {
-            if (c.getSenderId().equals(s) && c.getReceiverId().equals(r)) {
+            if (c.getSender().getId().equals(s.getId()) 
+                    && c.getReceiver().getId().equals(r.getId())) {
                 result.add(c);
             }
         }
@@ -286,12 +303,12 @@ class ConnectionsImpl implements Connections {
     }
 
     @Override
-    public void removeAll(String s, String r) {
+    public void removeAll(Connector s, Connector r) {
 
         Collection<Connection> delList = new ArrayList<>();
 
         for (Connection c : connections.values()) {
-            if (c.getSenderId().equals(s) && c.getReceiverId().equals(r)) {
+            if (c.getSender().getId().equals(s.getId()) && c.getReceiver().getId().equals(r.getId())) {
                 delList.add(c);
             }
         }
@@ -329,11 +346,11 @@ class ConnectionsImpl implements Connections {
 //    }
 
     @Override
-    public boolean isInputConnected(String id) {
-        Collection<Connection> connectionsWith = getAllWith(id);
+    public boolean isInputConnected(Connector input) {
+        Collection<Connection> connectionsWith = getAllWith(input);
 
         for (Connection connection : connectionsWith) {
-            if (connection.getReceiverId().equals(id)) {
+            if (connection.getReceiver().getId().equals(input.getId())) {
                 return true;
             }
         }
@@ -342,11 +359,11 @@ class ConnectionsImpl implements Connections {
     }
 
     @Override
-    public boolean isOutputConnected(String id) {
-        Collection<Connection> connectionsWith = getAllWith(id);
+    public boolean isOutputConnected(Connector output) {
+        Collection<Connection> connectionsWith = getAllWith(output);
 
         for (Connection connection : connectionsWith) {
-            if (connection.getSenderId().equals(id)) {
+            if (connection.getSender().getId().equals(output.getId())) {
                 return true;
             }
         }
@@ -355,7 +372,7 @@ class ConnectionsImpl implements Connections {
     }
 
     @Override
-    public boolean contains(String s, String r) {
+    public boolean contains(Connector s, Connector r) {
         return getAll(s, r).iterator().hasNext();
     }
 

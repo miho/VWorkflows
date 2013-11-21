@@ -94,7 +94,7 @@ public class FlowModelImpl implements FlowModel {
 
     // TODO duplicated code
     private static String connectionId(Connection c) {
-        return connectionId(c.getId(), c.getSenderId(), c.getReceiverId());
+        return connectionId(c.getId(), c.getSender().getId(), c.getReceiver().getId());
     }
 
     @Override
@@ -126,18 +126,18 @@ public class FlowModelImpl implements FlowModel {
             return result;
         }
 
-        String senderId = null;
-        String receiverId = null;
+        Connector sender = null;
+        Connector receiver = null;
 
         if (s.getMainOutput(type) != null) {
-            senderId = s.getMainOutput(type).getId();
+            sender = s.getMainOutput(type);
         }
 
         if (s.getMainInput(type) != null) {
-            receiverId = r.getMainInput(type).getId();
+            receiver = r.getMainInput(type);
         }
 
-        Connection connection = getConnections(type).add(senderId, receiverId);
+        Connection connection = getConnections(type).add(sender, receiver);
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -159,7 +159,7 @@ public class FlowModelImpl implements FlowModel {
             return result;
         }
 
-        Connection connection = getConnections(s.getType()).add(s.getId(), r.getId());
+        Connection connection = getConnections(s.getType()).add(s, r);
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -193,7 +193,7 @@ public class FlowModelImpl implements FlowModel {
         for (Connections cns : getAllConnections().values()) {
 
             Collection<Connection> connectionsToRemove =
-                    cns.getAllWith(n.getId());
+                    cns.getAllWithNode(n);
 
             for (Connection c : connectionsToRemove) {
                 cns.remove(c);
@@ -224,12 +224,12 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public VNode getSender(Connection c) {
-        return getNodeLookup().getById(c.getSenderId());
+        return getNodeLookup().getById(c.getSender().getId());
     }
 
     @Override
     public VNode getReceiver(Connection c) {
-        return getNodeLookup().getById(c.getReceiverId());
+        return getNodeLookup().getById(c.getReceiver().getId());
     }
 
     @Override

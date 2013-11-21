@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
@@ -44,6 +43,7 @@ import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.IdGenerator;
+import eu.mihosoft.vrl.workflow.NodeLookupImpl;
 import eu.mihosoft.vrl.workflow.VConnections;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -51,7 +51,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +59,7 @@ import java.util.Map;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class WorkflowIO {
 
@@ -122,10 +121,10 @@ public class WorkflowIO {
                 for (eu.mihosoft.vrl.workflow.Connection c : connections.getConnections()) {
                     connectionList.add(
                             new PersistentConnection(c.getId(),
-                            c.getSenderId(),
-                            c.getReceiverId(),
-                            c.getType(),
-                            c.getVisualizationRequest()));
+                                    c.getSender().getId(),
+                                    c.getReceiver().getId(),
+                                    c.getType(),
+                                    c.getVisualizationRequest()));
                 }
             }
 
@@ -156,7 +155,7 @@ public class WorkflowIO {
             for (String mainType : node.getMainInputTypes()) {
                 pFlow.getMainInputs().put(mainType, node.getMainInput(mainType).getLocalId());
             }
-            
+
             for (String mainType : node.getMainOutputTypes()) {
                 pFlow.getMainOutputs().put(mainType, node.getMainOutput(mainType).getLocalId());
             }
@@ -180,11 +179,11 @@ public class WorkflowIO {
             for (Connector c : node.getConnectors()) {
                 pNode.addConnector(toPersistentConnector(c));
             }
-            
+
             for (String mainType : node.getMainInputTypes()) {
                 pNode.getMainInputs().put(mainType, node.getMainInput(mainType).getLocalId());
             }
-            
+
             for (String mainType : node.getMainOutputTypes()) {
                 pNode.getMainOutputs().put(mainType, node.getMainOutput(mainType).getLocalId());
             }
@@ -206,6 +205,7 @@ public class WorkflowIO {
         if (parent == null) {
             result = FlowFactory.newFlowModel();
             result.setIdGenerator(generator);
+            result.setNodeLookup(new NodeLookupImpl(result));
         } else {
             result = parent.newFlowNode();
         }
@@ -228,11 +228,11 @@ public class WorkflowIO {
         for (PersistentConnector connector : flow.getConnectors()) {
             result.addConnector(fromPersistentConnector(connector, result));
         }
-        
+
         for (String type : flow.getMainInputs().keySet()) {
             result.setMainInput(result.getConnector(flow.getMainInputs().get(type)));
         }
-        
+
         for (String type : flow.getMainOutputs().keySet()) {
             result.setMainOutput(result.getConnector(flow.getMainOutputs().get(type)));
         }
@@ -252,10 +252,9 @@ public class WorkflowIO {
         for (String type : flowConnections.keySet()) {
             List<PersistentConnection> connections = flowConnections.get(type);
             if (!connections.isEmpty()) {
-                result.addConnections(fromPersistentConnections(type, connections), type);
+                result.addConnections(fromPersistentConnections(type, connections, result), type);
             }
         }
-
 
         return result;
     }
@@ -285,11 +284,14 @@ public class WorkflowIO {
 //    public static PersistentConnection toPersistentConnection(eu.mihosoft.vrl.workflow.Connection c) {
 //        return new PersistentConnection(c.getId(), c.getSenderId(), c.getReceiverId(), c.getType(), c.getVisualizationRequest());
 //    }
-    public static eu.mihosoft.vrl.workflow.Connections fromPersistentConnections(String connectionType, List<PersistentConnection> connections) {
+    public static eu.mihosoft.vrl.workflow.Connections fromPersistentConnections(String connectionType, List<PersistentConnection> connections, VFlowModel flow) {
         eu.mihosoft.vrl.workflow.Connections result = VConnections.newConnections(connectionType);
 
         for (PersistentConnection c : connections) {
-            result.add(c.getId(), c.getSenderId(), c.getReceiverId(), c.getVReq());
+            
+            Connector s = flow.getNodeLookup().getConnectorById(c.getSenderId());
+            Connector r = flow.getNodeLookup().getConnectorById(c.getReceiverId());
+            result.add(c.getId(), s, r, c.getVReq());
         }
 
         return result;
@@ -303,8 +305,8 @@ public class WorkflowIO {
 
     public static Connector fromPersistentConnector(PersistentConnector c, VNode n) {
 
-        ConnectorIOImpl result =
-                new ConnectorIOImpl(n, c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+        ConnectorIOImpl result
+                = new ConnectorIOImpl(n, c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
 
         return result;
     }
@@ -313,8 +315,8 @@ public class WorkflowIO {
      * Converts a connector to an equivalent persistent connector.
      * <b>Note:</b> the corresponding node won't be defined. If the persistent
      * connector is added to the persistent node, the node will call the
-     * connectors
-     * <code>setNode()</code> method to ensure the correct node is referenced.
+     * connectors <code>setNode()</code> method to ensure the correct node is
+     * referenced.
      *
      * @param c connector to convert
      * @return the equivalent persistent connector to the specified connector

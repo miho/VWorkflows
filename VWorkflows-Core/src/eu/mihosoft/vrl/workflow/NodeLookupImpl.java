@@ -36,6 +36,9 @@
 
 package eu.mihosoft.vrl.workflow;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
@@ -43,6 +46,7 @@ package eu.mihosoft.vrl.workflow;
 public class NodeLookupImpl implements NodeLookup {
 
     private VFlowModel root;
+    private Map<String, VNode> cache = new HashMap<String, VNode>();
 
     public NodeLookupImpl(VFlowModel root) {
         this.root = root;
@@ -72,8 +76,14 @@ public class NodeLookupImpl implements NodeLookup {
 
     @Override
     public VNode getById(String globalId) {
+        
+        VNode result = cache.get(globalId);
+        
+        if (result!=null)return result;
 
-        VNode result = getNodeByGlobalId(root, globalId);
+        /*VNode*/ result = getNodeByGlobalId(root, globalId);
+        
+        cache.put(globalId, result);
 
         return result;
     }

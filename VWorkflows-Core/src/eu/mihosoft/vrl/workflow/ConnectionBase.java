@@ -32,16 +32,14 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import java.util.Objects;
 
-
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ConnectionBase implements Connection {
 
@@ -51,54 +49,66 @@ class ConnectionBase implements Connection {
     private String type;
     private VisualizationRequest vReq;
     private Connections connections;
-
+    private Connector sender;
+    private Connector receiver;
 
 //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
     public ConnectionBase() {
     }
 
-    public ConnectionBase(Connections connections, String id, String senderId, String receiverId, String type) {
+//    public ConnectionBase(Connections connections, String id, String senderId, String receiverId, String type) {
+//        this.connections = connections;
+//        this.id = id;
+//        this.senderId = senderId;
+//        this.receiverId = receiverId;
+//        this.type = type;
+//    }
+    public ConnectionBase(Connections connections, String id, Connector sender, Connector receiver, String type) {
         this.connections = connections;
         this.id = id;
-        this.senderId = senderId;
-        this.receiverId = receiverId;
+        setSender(sender);
+        setReceiver(receiver);
         this.type = type;
     }
 
-    @Override
-    public String getSenderId() {
-        return senderId;
-    }
+//    @Override
+//    public String getSenderId() {
+//        return senderId;
+//    }
 
     @Override
-    public void setSenderId(String id) {
-        this.senderId = id;
+    public void setSender(Connector s) {
+        this.senderId = s.getId();
+        this.sender = s;
 
         updateConnection();
     }
 
     private void updateConnection() {
-        if (connections.get(getId(), getSenderId(), getReceiverId()) != null) {
-            connections.remove(this);
-            connections.add(this);
+        if (getSender() != null && getReceiver() != null) {
+            if (connections.get(getId(), getSender(), getReceiver()) != null) {
+                connections.remove(this);
+                connections.add(this);
+            }
         }
     }
 
-    @Override
-    public String getReceiverId() {
-        return receiverId;
-    }
+//    @Override
+//    public String getReceiverId() {
+//        return receiverId;
+//    }
 
     @Override
-    public void setReceiverId(String id) {
-        this.receiverId = id;
+    public void setReceiver(Connector r) {
+        this.receiverId = r.getId();
+        this.receiver = r;
 
         updateConnection();
     }
 
     @Override
     public String toString() {
-        return "c: " + getId() + " = s: [" + getSenderId() + "] -> r: [" + getReceiverId() + "]";
+        return "c: " + getId() + " = s: [" + getSender().getId() + "] -> r: [" + getReceiver().getId() + "]";
     }
 
     @Override
@@ -159,8 +169,6 @@ class ConnectionBase implements Connection {
         return type;
     }
 
-
-
     @Override
     public int hashCode() {
         int hash = 3;
@@ -195,5 +203,20 @@ class ConnectionBase implements Connection {
         return true;
     }
 
-    
+    /**
+     * @return the sender
+     */
+    @Override
+    public Connector getSender() {
+        return sender;
+    }
+
+    /**
+     * @return the receiver
+     */
+    @Override
+    public Connector getReceiver() {
+        return receiver;
+    }
+
 }

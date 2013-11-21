@@ -47,19 +47,19 @@ public interface Connections extends Model {
 
     public void add(Connection c);
 
-    public Connection add(String s, String r);
+    public Connection add(Connector s, Connector r);
 
-    public Connection add(String id, String s, String r, VisualizationRequest vReq);
+    public Connection add(String id, Connector s, Connector r, VisualizationRequest vReq);
 
     public void remove(Connection c);
 
-    public Connection get(String id, String s, String r);
+    public Connection get(String id, Connector s, Connector r);
 
-    public Iterable<Connection> getAll(String s, String r);
+    public Iterable<Connection> getAll(Connector s, Connector r);
 
-    public void remove(String id, String s, String r);
+    public void remove(String id, Connector s, Connector r);
 
-    public void removeAll(String s, String r);
+    public void removeAll(Connector s, Connector r);
 
     public void setConnectionClass(Class<? extends Connection> cls);
 
@@ -67,13 +67,14 @@ public interface Connections extends Model {
 
     public ObservableList<Connection> getConnections();
 
-    public Collection<Connection> getAllWith(String id);
+    public Collection<Connection> getAllWith(Connector c);
+    public Collection<Connection> getAllWithNode(VNode n);
 
-    public boolean isInputConnected(String id);
+    public boolean isInputConnected(Connector id);
 
-    public boolean isOutputConnected(String id);
+    public boolean isOutputConnected(Connector id);
 
-    public boolean contains(String s, String r);
+    public boolean contains(Connector s, Connector r);
 
     public String getType();
 }

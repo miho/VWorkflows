@@ -41,10 +41,15 @@ package eu.mihosoft.vrl.workflow;
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Connection extends Model{
-    public String getSenderId();
-    public void setSenderId(String id);
-    public String getReceiverId();
-    public void setReceiverId(String id);
+//    public String getSenderId();
+//    public void setSenderId(String id);
+//    public String getReceiverId();
+//    public void setReceiverId(String id);
+    public void setSender(Connector s);
+    public void setReceiver(Connector r);
+    public Connector getReceiver();
+    public Connector getSender();
+    
     public String getId();
     public void setId(String id);
     

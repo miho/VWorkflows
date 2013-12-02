@@ -194,8 +194,8 @@ class ConnectorImpl implements Connector {
     }
 
     @Override
-    public void click(MouseButton btn) {
-        ClickEvent evt = new ClickEvent(ClickEvent.ANY,this, btn);
+    public void click(MouseButton btn, Object event) {
+        ClickEvent evt = new ClickEvent(ClickEvent.ANY,this, btn, event);
         
         for (EventHandler<ClickEvent> evth : clickEventHandlers) {
             evth.handle(evt);

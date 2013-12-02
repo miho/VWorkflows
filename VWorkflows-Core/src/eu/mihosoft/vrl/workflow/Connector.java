@@ -71,5 +71,5 @@ public interface Connector extends Model {
     public void addClickEventListener(EventHandler<ClickEvent> handler);
     public void removeClickEventListener(EventHandler<ClickEvent> handler);
     
-    public void click(MouseButton btn);
+    public void click(MouseButton btn, Object event);
 }

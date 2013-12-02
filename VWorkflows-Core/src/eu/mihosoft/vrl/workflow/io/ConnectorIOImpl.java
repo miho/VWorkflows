@@ -154,7 +154,7 @@ class ConnectorIOImpl implements Connector {
     }
 
     @Override
-    public void click(MouseButton btn) {
+    public void click(MouseButton btn, Object event) {
         throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
 }

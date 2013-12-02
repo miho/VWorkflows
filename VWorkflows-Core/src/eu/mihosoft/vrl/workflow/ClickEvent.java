@@ -6,6 +6,7 @@ package eu.mihosoft.vrl.workflow;
 
 import javafx.event.Event;
 import javafx.event.EventType;
+import javafx.scene.input.MouseEvent;
 
 /**
  *
@@ -17,11 +18,13 @@ public class ClickEvent extends Event {
 
     private final Object object;
     private final MouseButton button;
+    private final Object event;
 
-    public ClickEvent(EventType<? extends Event> et, Object obj, MouseButton btn) {
+    public ClickEvent(EventType<? extends Event> et, Object obj, MouseButton btn, Object evt) {
         super(et);
         this.object = obj;
         this.button = btn;
+        this.event = evt;
     }
 
     /**
@@ -36,6 +39,13 @@ public class ClickEvent extends Event {
      */
     public MouseButton getButton() {
         return button;
+    }
+
+    /**
+     * @return the event
+     */
+    public Object getEvent() {
+        return event;
     }
 
     

@@ -116,6 +116,10 @@ public class FXValueSkinFactory extends FXSkinFactory {
         String connectionType = c.getType();
 
         Class<? extends FXConnectionSkin> skinClass = connectionSkins.get(connectionType);
+        
+        if (skinClass==null) {
+            skinClass = FXConnectionSkin.class;
+        }
 
         try {
 

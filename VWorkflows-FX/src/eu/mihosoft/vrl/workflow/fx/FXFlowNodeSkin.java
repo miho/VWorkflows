@@ -345,7 +345,7 @@ public class FXFlowNodeSkin
             public void handle(MouseEvent t) {
 
                 
-                connector.click(NodeUtil.mouseBtnFromEvent(t));
+                connector.click(NodeUtil.mouseBtnFromEvent(t), t);
 
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one

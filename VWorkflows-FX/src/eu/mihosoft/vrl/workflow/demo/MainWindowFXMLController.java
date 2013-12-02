@@ -39,6 +39,7 @@ package eu.mihosoft.vrl.workflow.demo;
 import eu.mihosoft.vrl.workflow.ClickEvent;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowFactory;
+import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
@@ -56,6 +57,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.window.Window;
 
@@ -209,7 +213,19 @@ public class MainWindowFXMLController implements Initializable {
 
                     @Override
                     public void handle(ClickEvent t) {
+                        
+                        if (t.getButton()!=MouseButton.SECONDARY) {
+                            return;
+                        }
+                        
                         System.out.println("Connector: " + connector.getId() + ", btn: " + t.getButton());
+                        if (t.getEvent() instanceof MouseEvent) {
+                            MouseEvent evt = (MouseEvent) t.getEvent();
+                            
+                            ContextMenu menu = new ContextMenu(new MenuItem("Connector: " + connector.getId() + ", btn: " + t.getButton()));
+                            
+                            menu.show(rootPane, evt.getScreenX(), evt.getScreenY());
+                        }
                     }
                 });
             }

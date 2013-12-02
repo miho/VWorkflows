@@ -53,8 +53,9 @@ class ConnectorImpl implements Connector {
     private VisualizationRequest vRequest;
     private boolean input;
     private boolean output;
-    private ObjectProperty<ValueObject> valueObjectProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<ValueObject> valueObjectProperty = new SimpleObjectProperty<>();
     private List<EventHandler<ConnectionEvent>> connectionEventHandlers;
+    private List<EventHandler<ClickEvent>> clickEventHandlers;
 
     public ConnectorImpl(VNode node, String type, String localId, boolean input) {
         this.type = type;
@@ -121,7 +122,7 @@ class ConnectorImpl implements Connector {
     }
 
     @Override
-    public void setValueObject(ValueObject vObj) {
+    public final void setValueObject(ValueObject vObj) {
         valueObjectProperty().set(vObj);
     }
 
@@ -164,5 +165,40 @@ class ConnectorImpl implements Connector {
      */
     public List<EventHandler<ConnectionEvent>> getConnectionEventHandlers() {
         return connectionEventHandlers;
+    }
+
+    @Override
+    public void addClickEventListener(EventHandler<ClickEvent> handler) {
+        getClickEventHandlers().add(handler);
+    }
+
+    @Override
+    public void removeClickEventListener(EventHandler<ClickEvent> handler) {
+        getClickEventHandlers().remove(handler);
+        
+        // we throw unused lists away since this can lead to serious memory 
+        // overhead for large flows
+        if (getClickEventHandlers().isEmpty()) {
+            this.clickEventHandlers = null;
+        }
+    }
+
+    /**
+     * @return the clickEventHandlers
+     */
+    public List<EventHandler<ClickEvent>> getClickEventHandlers() {
+        if (clickEventHandlers == null) {
+            this.clickEventHandlers = new ArrayList<>();
+        }
+        return clickEventHandlers;
+    }
+
+    @Override
+    public void click(MouseButton btn) {
+        ClickEvent evt = new ClickEvent(ClickEvent.ANY,this, btn);
+        
+        for (EventHandler<ClickEvent> evth : clickEventHandlers) {
+            evth.handle(evt);
+        }
     }
 }

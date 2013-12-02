@@ -142,4 +142,19 @@ class ConnectorIOImpl implements Connector {
     public void removeConnectionEventListener(EventHandler<ConnectionEvent> handler) {
         throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
     }
+
+    @Override
+    public void addClickEventListener(EventHandler<ClickEvent> handler) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public void removeClickEventListener(EventHandler<ClickEvent> handler) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
+
+    @Override
+    public void click(MouseButton btn) {
+        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+    }
 }

@@ -32,36 +32,30 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
-import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VNodeSkin;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import jfxtras.labs.scene.control.window.Window;
@@ -88,6 +82,7 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> nodeHeightListener;
 //    private Node output;
     private FXNewConnectionSkin newConnectionSkin;
+    private MouseEvent newConnectionPressEvent;
     private boolean removeSkinOnly = false;
     VFlow controller;
     Map<Connector, Shape> connectors = new HashMap<>();
@@ -158,7 +153,6 @@ public class FXFlowNodeSkin
             }
         });
 
-
 //        skinFactory.connectionFillColorTypes().addListener(new MapChangeListener<String, Color>() {
 //            @Override
 //            public void onChanged(MapChangeListener.Change<? extends String, ? extends Color> change) {
@@ -210,8 +204,6 @@ public class FXFlowNodeSkin
 //        circle.setStroke(strokeColor);
 //
 //        circle.setStrokeWidth(3);
-
-
         final Circle connectorNode = circle;
 
         connectors.put(connector, connectorNode);
@@ -303,16 +295,18 @@ public class FXFlowNodeSkin
                         isInputConnected(connector)) {
                     return;
                 }
+                
+                
 
-                newConnectionSkin =
-                        new FXNewConnectionSkin(getSkinFactory(),
-                        getParent(), connector, getController(), connector.getType());
-
-                newConnectionSkin.add();
-
+//                newConnectionSkin
+//                        = new FXNewConnectionSkin(getSkinFactory(),
+//                                getParent(), connector, getController(), connector.getType());
+//
+//                newConnectionSkin.add();
+//
                 t.consume();
-                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
-
+                newConnectionPressEvent = t;
+//                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
             }
         });
 
@@ -327,6 +321,19 @@ public class FXFlowNodeSkin
                     return;
                 }
 
+                if (newConnectionSkin == null) {
+                    newConnectionSkin
+                            = new FXNewConnectionSkin(getSkinFactory(),
+                                    getParent(), connector, getController(), connector.getType());
+
+                    newConnectionSkin.add();
+
+                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), newConnectionPressEvent);
+                }
+
+                t.consume();
+                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+
                 t.consume();
                 MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
 
@@ -336,6 +343,22 @@ public class FXFlowNodeSkin
         connectorNode.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+
+                MouseButton btn = MouseButton.NONE;
+
+                switch (t.getButton()) {
+                    case PRIMARY:
+                        btn = MouseButton.PRIMARY;
+                        break;
+                    case MIDDLE:
+                        btn = MouseButton.MIDDLE;
+                        break;
+                    case SECONDARY:
+                        btn = MouseButton.SECONDARY;
+                        break;
+                }
+
+                connector.click(btn);
 
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
@@ -350,6 +373,9 @@ public class FXFlowNodeSkin
                 } catch (Exception ex) {
                     // TODO exception is not critical here (node already removed)
                 }
+
+                newConnectionSkin = null;
+
             }
         });
     }
@@ -428,9 +454,8 @@ public class FXFlowNodeSkin
         Node connectorNode = connectors.remove(connector.getId());
 
         if (connectorNode != null && connectorNode.getParent() != null) {
-            
-            // TODO: remove connectors&connections?
 
+            // TODO: remove connectors&connections?
             if (connector.isInput()) {
                 inputList.remove(connectorNode);
             } else if (connector.isOutput()) {

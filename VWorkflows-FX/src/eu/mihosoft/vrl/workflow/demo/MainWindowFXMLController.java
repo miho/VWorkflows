@@ -36,6 +36,8 @@
 
 package eu.mihosoft.vrl.workflow.demo;
 
+import eu.mihosoft.vrl.workflow.ClickEvent;
+import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -51,6 +53,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
@@ -199,6 +202,16 @@ public class MainWindowFXMLController implements Initializable {
 
             for (int j = 0; j < 3; j++) {
                 n.addOutput(type);
+            }
+            
+            for (final Connector connector : n.getConnectors()) {
+                connector.addClickEventListener(new EventHandler<ClickEvent>() {
+
+                    @Override
+                    public void handle(ClickEvent t) {
+                        System.out.println("Connector: " + connector.getId() + ", btn: " + t.getButton());
+                    }
+                });
             }
 
             n.setWidth(300);

@@ -175,7 +175,7 @@ class ConnectorImpl implements Connector {
     @Override
     public void removeClickEventListener(EventHandler<ClickEvent> handler) {
         getClickEventHandlers().remove(handler);
-        
+
         // we throw unused lists away since this can lead to serious memory 
         // overhead for large flows
         if (getClickEventHandlers().isEmpty()) {
@@ -195,8 +195,13 @@ class ConnectorImpl implements Connector {
 
     @Override
     public void click(MouseButton btn, Object event) {
-        ClickEvent evt = new ClickEvent(ClickEvent.ANY,this, btn, event);
-        
+
+        if (clickEventHandlers == null) {
+            return;
+        }
+
+        ClickEvent evt = new ClickEvent(ClickEvent.ANY, this, btn, event);
+
         for (EventHandler<ClickEvent> evth : clickEventHandlers) {
             evth.handle(evt);
         }

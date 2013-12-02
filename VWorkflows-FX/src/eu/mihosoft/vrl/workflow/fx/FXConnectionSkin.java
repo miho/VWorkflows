@@ -86,6 +86,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Shape senderNode;
     private Shape receiverNode;
     private ConnectionListener connectionListener;
+    
+    private boolean receiverDraggingStarted = false;
 
     public FXConnectionSkin(FXSkinFactory skinFactory, Parent parent, Connection connection, VFlow flow, String type) {
         setParent(parent);
@@ -347,6 +349,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         MouseControlUtil.makeDraggable(getReceiverUI(), new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                
+                receiverDraggingStarted = true;
 
                 if (lastNode != null) {
 //                    lastNode.setEffect(null);
@@ -431,6 +435,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             public void handle(MouseEvent event) {
                 getReceiverUI().layoutXProperty().unbind();
                 getReceiverUI().layoutYProperty().unbind();
+                receiverConnectorUI.radiusProperty().unbind();
+                connection.getReceiver().click(NodeUtil.mouseBtnFromEvent(event));
+                receiverDraggingStarted = false;
             }
         });
 
@@ -441,6 +448,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         getReceiverUI().onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                
+                if (!receiverDraggingStarted) {
+                    return;
+                }
 
                 if (lastNode != null) {
 //                    lastNode.setEffect(null);

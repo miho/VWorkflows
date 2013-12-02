@@ -32,10 +32,10 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.MouseButton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +44,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 /**
@@ -51,7 +52,7 @@ import javafx.scene.layout.Pane;
  * cases are searching for nodes at specific locations, adding/removing nodes
  * to/from parents (Parent interface does not give write access to children).
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class NodeUtil {
 
@@ -139,7 +140,6 @@ public class NodeUtil {
     public static List<String> getStylesheetsOfAncestors(Node n) {
 
 //        System.out.println(">> searching stylesheets of ancestors of: " + n);
-
         List<String> result = new ArrayList<>();
 
         if (n instanceof Parent) {
@@ -147,7 +147,6 @@ public class NodeUtil {
 //            for (String css : ((Parent) n).getStylesheets()) {
 //                System.out.println(" --> n-css: " + css);
 //            }
-
             result.addAll(((Parent) n).getStylesheets());
         }
 
@@ -160,7 +159,6 @@ public class NodeUtil {
 //            for (String css : p.getStylesheets()) {
 //                System.out.println("  --> p-css: " + p + ": " + css);
 //            }
-
             result.addAll(p.getStylesheets());
 
             if (scene == null) {
@@ -171,7 +169,6 @@ public class NodeUtil {
         if (scene != null) {
 
 //            System.out.println(" --> scene: " + scene);
-
             result.addAll(scene.getStylesheets());
 
 //            for (String css : scene.getStylesheets()) {
@@ -179,7 +176,6 @@ public class NodeUtil {
 //            }
 //
 //            System.out.println(" --> done");
-
         }
 
         return result;
@@ -371,5 +367,23 @@ public class NodeUtil {
         }
 
         return result;
+    }
+
+    public static MouseButton mouseBtnFromEvent(MouseEvent t) {
+        MouseButton btn = MouseButton.NONE;
+
+        switch (t.getButton()) {
+            case PRIMARY:
+                btn = MouseButton.PRIMARY;
+                break;
+            case MIDDLE:
+                btn = MouseButton.MIDDLE;
+                break;
+            case SECONDARY:
+                btn = MouseButton.SECONDARY;
+                break;
+        }
+
+        return btn;
     }
 }

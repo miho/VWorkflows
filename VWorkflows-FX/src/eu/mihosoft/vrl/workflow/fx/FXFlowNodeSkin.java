@@ -59,7 +59,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import jfxtras.labs.scene.control.window.Window;
-import jfxtras.labs.util.NodeUtil;
+
 
 /**
  *
@@ -344,21 +344,8 @@ public class FXFlowNodeSkin
             @Override
             public void handle(MouseEvent t) {
 
-                MouseButton btn = MouseButton.NONE;
-
-                switch (t.getButton()) {
-                    case PRIMARY:
-                        btn = MouseButton.PRIMARY;
-                        break;
-                    case MIDDLE:
-                        btn = MouseButton.MIDDLE;
-                        break;
-                    case SECONDARY:
-                        btn = MouseButton.SECONDARY;
-                        break;
-                }
-
-                connector.click(btn);
+                
+                connector.click(NodeUtil.mouseBtnFromEvent(t));
 
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one

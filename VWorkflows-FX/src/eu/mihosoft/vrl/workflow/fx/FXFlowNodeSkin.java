@@ -438,7 +438,7 @@ public class FXFlowNodeSkin
 
     private void removeConnector(Connector connector) {
         connectorList.remove(connector);
-        Node connectorNode = connectors.remove(connector.getId());
+        Node connectorNode = connectors.remove(connector);
 
         if (connectorNode != null && connectorNode.getParent() != null) {
 

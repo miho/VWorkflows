@@ -9,10 +9,7 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.event.EventHandler;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -54,8 +51,13 @@ public class ConnectionEventTest {
         VNode n1 = flow.newNode();
         n1.setMainOutput(n1.addOutput("control"));
         VNode n2 = flow.newNode();
-        Connector receiver = n2.addInput("control");
-        n2.setMainInput(receiver);
+        Connector receiver2 = n2.addInput("control");
+        n2.setMainInput(receiver2);
+        Connector sender2 = n2.addOutput("control");
+        n2.setMainOutput(sender2);
+        VNode n3 = flow.newNode();
+        Connector receiver3 = n3.addInput("control");
+        n3.setMainInput(receiver3);
         
         class CountingListener implements EventHandler<ConnectionEvent>{
             
@@ -76,15 +78,22 @@ public class ConnectionEventTest {
         
         CountingListener countingListener = new CountingListener();
         
-        receiver.addConnectionEventListener(countingListener);
+        receiver2.addConnectionEventListener(countingListener);
         
 //        System.out.println("-> " + n1.getMainOutput("control") + ", " + n2.getMainInput("control"));
         
-        flow.connect(n1, n2, "control");
+        ConnectionResult result = flow.connect(n1, n2, "control");
         
 //        System.out.println(" --> count" + countingListener.getCounter());
         
-        assertTrue("Event must be fired exactly once!", countingListener.getCounter() == 1);
+        assertTrue("Connection must be valid", result.getStatus().isCompatible());
+        // add event has been fired once
+        assertTrue("Add-Event must be fired exactly once!", countingListener.getCounter() == 1);
+        
+        // remove the connection
+        result.getConnection().getConnections().remove(result.getConnection());
+        // remove event has been fired once
+        assertTrue("Remove-Event must be fired exactly once!", countingListener.getCounter() == 2);
     }
 
 }

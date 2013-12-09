@@ -133,9 +133,11 @@ public class FlowModelImpl implements FlowModel {
             sender = s.getMainOutput(type);
         }
 
-        if (s.getMainInput(type) != null) {
+        if (r.getMainInput(type) != null) {
             receiver = r.getMainInput(type);
         }
+        
+//        System.out.println("ADD: " + sender + ", " + receiver);
 
         Connection connection = getConnections(type).add(sender, receiver);
 

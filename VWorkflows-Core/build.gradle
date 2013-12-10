@@ -5,7 +5,7 @@ apply plugin: 'idea'
 apply from: 'jdkdetect.gradle'
 apply from: 'version-info.gradle'
 //apply from: 'maven-deployment.gradle'
-apply from: 'maven-deployment-local.gradle'
+//apply from: 'maven-deployment-local.gradle'
 
 //apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
 //repairHeaders.licenseHeaderText = new File(projectDir,'../license-template.txt')
@@ -18,7 +18,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.6'
+    gradleVersion = '1.9'
 }
 
 // finding jfxrt.jar for JDK 7as we depend on binding API
@@ -49,6 +49,7 @@ sourceSets {
         resources {
             srcDirs = ['src/']
         }
+       
     }
 
     test {

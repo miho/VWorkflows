@@ -12,6 +12,8 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 Repository: https://oss.sonatype.org/content/repositories/snapshots
 
+### Java 7 ###
+
 VWorkflows-FX:
 
     <dependency>
@@ -24,6 +26,24 @@ VWorkflows-Core:
 
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
+      <artifactId>vworkflows-core</artifactId>
+      <version>0.1-r2-SNAPSHOT</version>
+    </dependency>
+    
+### Java 8 ###
+
+VWorkflows-FX:
+
+    <dependency>
+      <groupId>eu.mihosoft.vrl.workflow-8.0</groupId>
+      <artifactId>vworkflows-fx</artifactId>
+      <version>0.1-r2-SNAPSHOT</version>
+    </dependency>
+
+VWorkflows-Core:
+
+    <dependency>
+      <groupId>eu.mihosoft.vrl.workflow-8.0</groupId>
       <artifactId>vworkflows-core</artifactId>
       <version>0.1-r2-SNAPSHOT</version>
     </dependency>

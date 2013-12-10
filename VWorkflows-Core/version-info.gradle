@@ -7,5 +7,5 @@ if (project.jdk == 8) {
 } else {
     group = 'eu.mihosoft.vrl.workflow'
 }
-version = '0.1-r1-SNAPSHOT'
+version = '0.1-r2-SNAPSHOT'
 

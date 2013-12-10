@@ -6,7 +6,7 @@ apply plugin: 'signing'
 
 apply from: 'version-info.gradle'
 
-//file("E:\\sonatype.properties").withReader { reader ->
+//file("E:\\sonatype-windows.properties").withReader { reader ->
 //  def userProps = new Properties()
 //  userProps.load(reader)
 //  userProps.each{
@@ -14,7 +14,15 @@ apply from: 'version-info.gradle'
 //  }
 //}
 
-file("/media/truecrypt1/sonatype.properties").withReader { reader ->
+//file("/media/truecrypt1/sonatype-linux.properties").withReader { reader ->
+//  def userProps = new Properties()
+//  userProps.load(reader)
+//  userProps.each{
+//    it->  project.ext.set(it.key, it.value)
+//  }
+//}
+
+file("/Volumes/TRUECRYPT/sonatype-osx.properties").withReader { reader ->
   def userProps = new Properties()
   userProps.load(reader)
   userProps.each{

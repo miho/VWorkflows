@@ -17,7 +17,7 @@ VWorkflows-FX:
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
       <artifactId>vworkflows-fx</artifactId>
-      <version>0.1-r1-SNAPSHOT</version>
+      <version>0.1-r2-SNAPSHOT</version>
     </dependency>
 
 VWorkflows-Core:
@@ -25,7 +25,7 @@ VWorkflows-Core:
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
       <artifactId>vworkflows-core</artifactId>
-      <version>0.1-r1-SNAPSHOT</version>
+      <version>0.1-r2-SNAPSHOT</version>
     </dependency>
 
 

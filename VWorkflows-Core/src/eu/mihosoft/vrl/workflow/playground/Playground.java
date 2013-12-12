@@ -83,13 +83,13 @@ public class Playground {
         }
 
         try {
-            WorkflowIO.saveToXML(Paths.get("/Users/miho/tmp/flow01.xml"), flow.getModel());
+            WorkflowIO.saveToXML(Paths.get("flow01.xml"), flow.getModel());
         } catch (IOException ex) {
             Logger.getLogger(Playground.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            VFlow flowFromFile = WorkflowIO.loadFromXML(Paths.get("/Users/miho/tmp/flow01.xml"));
+            VFlow flowFromFile = WorkflowIO.loadFromXML(Paths.get("flow01.xml"));
             System.out.println(flowFromFile.getConnections("control").toString());
         } catch (IOException ex) {
             Logger.getLogger(Playground.class.getName()).log(Level.SEVERE, null, ex);

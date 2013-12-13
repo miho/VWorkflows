@@ -70,7 +70,7 @@ Navigate to the gradle project (e.g., `path/to/VWorkflows/VWorkflows-FX`) and en
 
     ./gradlew assemble
     
-#### Windows
+#### Windows (CMD)
 
     gradlew assemble
     

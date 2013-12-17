@@ -108,7 +108,6 @@ public class VFlowTest {
 //                    System.out.print(" " + vNode.getOutputs().get(0).getType());
 //                }
 //                System.out.println("");
-
                 for (int j = 0; j < prevNodes.size(); j++) {
 
                     ConnectionResult[] results = new ConnectionResult[connectionTypes.length];
@@ -116,29 +115,28 @@ public class VFlowTest {
                     for (int k = 0; k < connectionTypes.length; k++) {
 
                         VNode senderNode = prevNodes.get(k);
-                        Connector output = senderNode.getOutputs().get(0);
-                        Connector inputSender = senderNode.getOutputs().get(0);
-                        Connector input = receiverNode.getInputs().get(0);
+                        Connector inputSender = senderNode.getInputs().get(0);
+                        Connector outputSender = senderNode.getOutputs().get(0);
+                        Connector inputReceiver = receiverNode.getInputs().get(0);
                         Connector outputReceiver = receiverNode.getOutputs().get(0);
 
-                        results[j] = flow.connect(output, input);
-
+                        results[j] = flow.connect(outputSender, inputReceiver);
+                        
                         if (k == 0) {
                             assertTrue("Connection between compatible types failed: "
-                                    + output.getType() + " -> " + input.getType(),
+                                    + outputSender.getType() + " -> " + inputReceiver.getType(),
                                     results[j].getStatus().isCompatible());
                         } else {
                             assertFalse("Connection between incompatible types must fail: "
-                                    + output.getType() + " -> " + input.getType(),
+                                    + outputSender.getType() + " -> " + inputReceiver.getType(),
                                     results[j].getStatus().isCompatible());
                         }
 
-
                         assertFalse("Connection between two outputs must fail",
-                                flow.connect(inputSender, outputReceiver).getStatus().isCompatible());
+                                flow.connect(outputSender, outputReceiver).getStatus().isCompatible());
 
                         assertFalse("Connection between two inputs must fail",
-                                flow.connect(output, outputReceiver).getStatus().isCompatible());
+                                flow.connect(inputSender, inputReceiver).getStatus().isCompatible());
 
                     } // end for k
                 } // end for j
@@ -168,7 +166,7 @@ public class VFlowTest {
         assertTrue("Node that represent flows must implement VFlowModel interface",
                 (subNode instanceof VFlowModel));
     }
-    
+
     @Test
     public void connectorsParentNode() {
         VFlow flow = FlowFactory.newFlow();
@@ -180,7 +178,7 @@ public class VFlowTest {
         VFlow subFlow = flow.newSubFlow();
 
         VNode subNode = subFlow.getModel();
-        
+
         Connector connector = subNode.addInput("control");
 
         System.out.println(" --> subnode class (as referenced by connector): " + connector.getNode().getClass());

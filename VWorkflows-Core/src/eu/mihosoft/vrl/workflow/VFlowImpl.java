@@ -77,7 +77,6 @@ class VFlowImpl implements VFlow {
 
     public VFlowImpl(VFlowModel model, SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
 
-
         init();
 
         if (model.getIdGenerator() != null) {
@@ -90,8 +89,6 @@ class VFlowImpl implements VFlow {
 
         setModel(model);
         setSkinFactories(skinFactories);
-
-
 
     }
 
@@ -108,7 +105,6 @@ class VFlowImpl implements VFlow {
 
         setModel(model);
         setSkinFactories(skinFactories);
-
 
     }
 
@@ -137,10 +133,10 @@ class VFlowImpl implements VFlow {
 
                                 for (Connector connector : n.getConnectors()) {
 
-                                    System.out.println("conn: " + connector);
+//                                    System.out.println("conn: " + connector);
 
-                                    Collection<Connection> connections =
-                                            getConnections(connector.getType()).
+                                    Collection<Connection> connections
+                                            = getConnections(connector.getType()).
                                             getAllWith(connector);
 
                                     for (Connection connection : connections) {
@@ -155,7 +151,6 @@ class VFlowImpl implements VFlow {
                             if (n instanceof FlowModel) {
                                 subControllers.remove(n.getId());
                             }
-
 
                         }
                     } else if (change.wasAdded()) {
@@ -191,7 +186,6 @@ class VFlowImpl implements VFlow {
                         for (Connection c : change.getRemoved()) {
 
                             // fire events <begin>
-
                             // 07.09.2013
                             // TODO add connector references to connections
                             //      reason: lookup is too expensive
@@ -204,8 +198,8 @@ class VFlowImpl implements VFlow {
 
                             if (s != null) {
 
-                                Collection<EventHandler<ConnectionEvent>> eventHandlersS =
-                                        ((ConnectorImpl) s).getConnectionEventHandlers();
+                                Collection<EventHandler<ConnectionEvent>> eventHandlersS
+                                        = ((ConnectorImpl) s).getConnectionEventHandlers();
 
                                 if (eventHandlersS != null) {
                                     for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
@@ -220,8 +214,8 @@ class VFlowImpl implements VFlow {
 
                             if (r != null) {
 
-                                Collection<EventHandler<ConnectionEvent>> eventHandlersR =
-                                        ((ConnectorImpl) r).getConnectionEventHandlers();
+                                Collection<EventHandler<ConnectionEvent>> eventHandlersR
+                                        = ((ConnectorImpl) r).getConnectionEventHandlers();
 
                                 if (eventHandlersR != null) {
                                     for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
@@ -235,7 +229,6 @@ class VFlowImpl implements VFlow {
                             }
 
                             // fire events <end>
-
                             // remove skins for each connection 
                             // that have been removed
                             removeConnectionSkinFromAllSkinFactories(c);
@@ -246,7 +239,6 @@ class VFlowImpl implements VFlow {
                         for (Connection c : change.getAddedSubList()) {
 
                             // fire events <begin>
-
                             // 07.09.2013
                             // TODO add connector references to connections
                             //      reason: lookup is too expensive
@@ -257,8 +249,8 @@ class VFlowImpl implements VFlow {
 
                             ConnectionEvent evt = new ConnectionEvent(ConnectionEvent.ADD, s, r, c);
 
-                            Collection<EventHandler<ConnectionEvent>> eventHandlersS =
-                                    ((ConnectorImpl) s).getConnectionEventHandlers();
+                            Collection<EventHandler<ConnectionEvent>> eventHandlersS
+                                    = ((ConnectorImpl) s).getConnectionEventHandlers();
 
                             if (eventHandlersS != null) {
                                 for (EventHandler<ConnectionEvent> evtHandler : eventHandlersS) {
@@ -270,8 +262,8 @@ class VFlowImpl implements VFlow {
                                 }
                             }
 
-                            Collection<EventHandler<ConnectionEvent>> eventHandlersR =
-                                    ((ConnectorImpl) r).getConnectionEventHandlers();
+                            Collection<EventHandler<ConnectionEvent>> eventHandlersR
+                                    = ((ConnectorImpl) r).getConnectionEventHandlers();
 
                             if (eventHandlersR != null) {
                                 for (EventHandler<ConnectionEvent> evtHandler : eventHandlersR) {
@@ -284,7 +276,6 @@ class VFlowImpl implements VFlow {
                             }
 
                             // fire events <end>
-
                             // create skins for added connections
                             createConnectionSkins(c, c.getType(), getSkinFactories());
 //                            System.out.println("add skin: " + c);
@@ -295,13 +286,11 @@ class VFlowImpl implements VFlow {
             }
         };
 
-
         visibilityListener = new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
 
 //                System.out.println("visible: " + t1 + " : " + getModel().isVisible() + " : " + getModel().getId());
-
                 if (t1) {
                     setSkinFactories(getSkinFactories());
                 } else {
@@ -485,7 +474,6 @@ class VFlowImpl implements VFlow {
     @Override
     public VNode newNode(ValueObject obj) {
 
-
         return getModel().newNode(obj);
     }
 
@@ -505,11 +493,9 @@ class VFlowImpl implements VFlow {
         }
 
 //        System.out.println(">> creating skins for node: " + n.getId());
-
         List<VNodeSkin<VNode>> skins = new ArrayList<>();
 
 //        System.out.println(" --> #skinFactories: " + skinFactories.length);
-
         for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : skinFactories) {
 
             if (skinFactory == null) {
@@ -518,11 +504,9 @@ class VFlowImpl implements VFlow {
             }
 
 //            System.out.println(" --> adding to skinfsctory: " + skinFactory);
-
             VNodeSkin skin = skinFactory.createSkin(n, this);
 
 //        nodeSkins.put(n.getId(), skin);
-
             putNodeSkin(skinFactory, skin);
 
             skin.add();
@@ -538,8 +522,6 @@ class VFlowImpl implements VFlow {
         Map<String, VNodeSkin> nodeSkinMap = getNodeSkinMap(skinFactory);
 
 //        System.out.println("put skin " + skin + "for: " + skin.getModel().getId() + ", factory: " + skinFactory);
-
-
         nodeSkinMap.put(skin.getModel().getId(), skin);
     }
 
@@ -549,7 +531,6 @@ class VFlowImpl implements VFlow {
         VNodeSkin<VNode> nodeSkin = nodeSkinMap.get(id);
 
 //        System.out.println("skin for " + id + " = " + nodeSkin + ", factory: " + skinFactory);
-
         return nodeSkin;
     }
 
@@ -573,7 +554,6 @@ class VFlowImpl implements VFlow {
         }
 
         // if id references a subflow, remove all node skins from the subflow that
-
         VFlow flow = null;
 
         for (VFlow subFlow : getSubControllers()) {
@@ -593,7 +573,6 @@ class VFlowImpl implements VFlow {
             }
             flow.removeSkinFactories(delList);
         }
-
 
         return skin;
     }
@@ -806,7 +785,6 @@ class VFlowImpl implements VFlow {
                 sFlow.removeSkinFactories(delList);
             }
 
-
         }
 
 //        System.out.println(" --> #skinFactories: " + getSkinFactories().size());
@@ -861,6 +839,8 @@ class VFlowImpl implements VFlow {
         for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : getSkinFactories()) {
 
             VNodeSkin<VNode> skin = getNodeSkin(skinFactory, flowNode.getId());//nodeSkins.get(flowNode.getId());
+            
+//            System.out.println("skin: " + skin);
 
             SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> childFactory = null;
 
@@ -868,15 +848,13 @@ class VFlowImpl implements VFlow {
                 childFactory = skinFactory.createChild(skin);
                 childFactories.add(childFactory);
             }
-
         }
-
+        
         VFlow controller = new VFlowImpl(flowNode, childFactories);
 
         controller.setIdGenerator(getIdGenerator());
         controller.setNodeLookup(getNodeLookup());
         controller.setNodeSkinLookup(getNodeSkinLookup());
-
 
         for (String connectionType : getAllConnections().keySet()) {
             if (flowNode.getConnections(connectionType) == null) {

@@ -134,14 +134,20 @@ public class MainWindowFXMLController implements Initializable {
         System.out.print(" >> generate workflow");
 
         workflow = FlowFactory.newFlow();
+        
+        
+        
         workflowTest(workflow, 5, 10);
 //        workflowTest(workflow, 2, 2);
+        
+        updateUI();
+       
 
         System.out.println(" [done]");
 
         System.out.println(" --> #nodes: " + counter);
 
-        updateUI();
+        
     }
     @FXML
     public Pane contentPane;
@@ -249,11 +255,16 @@ public class MainWindowFXMLController implements Initializable {
 //            return;
 //        }
 
+        
         workflow.getModel().setVisible(true);
 
         FXSkinFactory skinFactory = new FXSkinFactory(rootPane);
 
         workflow.setSkinFactories(skinFactory);
+        
+        
+        
+        
 
 
 //        skinFactory.setConnectionFillColor("control", new Color(1.0, 1.0, 0.0, 0.75));

@@ -80,6 +80,8 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
     @Override
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
+        
+//        System.out.println("parent: " + parent);
 
         FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), this);
 

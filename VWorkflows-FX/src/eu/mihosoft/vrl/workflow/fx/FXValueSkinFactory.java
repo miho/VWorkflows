@@ -58,7 +58,7 @@ import javafx.scene.Parent;
 public class FXValueSkinFactory extends FXSkinFactory {
 
     private Map<String, Class<? extends FXFlowNodeSkinBase>> valueSkins = new HashMap<>();
-    private Map<String, Class<? extends FXConnectionSkin>> connectionSkins = new HashMap<>();
+    private final Map<String, Class<? extends FXConnectionSkin>> connectionSkins = new HashMap<>();
 
     public FXValueSkinFactory(Parent parent) {
         super(parent);

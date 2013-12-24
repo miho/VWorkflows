@@ -49,8 +49,8 @@ import javafx.scene.shape.Circle;
 class ConnectorCircle extends Circle {
 
     private Connector connector;
-    private VFlow flow;
-    private FXSkinFactory skinFactory;
+    private final VFlow flow;
+    private final FXSkinFactory skinFactory;
     private FXConnectionSkin connectionSkin;
 
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector) {
@@ -88,7 +88,7 @@ class ConnectorCircle extends Circle {
     /**
      * @param connector the connector to set
      */
-    public void setConnector(Connector connector) {
+    public final void setConnector(Connector connector) {
         
         if (getConnector()!=null) {
             getStyleClass().remove("vnode-connector-"+getConnector().getType());

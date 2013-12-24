@@ -134,7 +134,6 @@ class VFlowImpl implements VFlow {
                                 for (Connector connector : n.getConnectors()) {
 
 //                                    System.out.println("conn: " + connector);
-
                                     Collection<Connection> connections
                                             = getConnections(connector.getType()).
                                             getAllWith(connector);
@@ -836,20 +835,23 @@ class VFlowImpl implements VFlow {
 
         Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> childFactories = new ArrayList<>();
 
-        for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : getSkinFactories()) {
+        if (isVisible()) {
 
-            VNodeSkin<VNode> skin = getNodeSkin(skinFactory, flowNode.getId());//nodeSkins.get(flowNode.getId());
-            
-//            System.out.println("skin: " + skin);
+            for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory : getSkinFactories()) {
 
-            SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> childFactory = null;
+                VNodeSkin<VNode> skin = getNodeSkin(skinFactory, flowNode.getId());//nodeSkins.get(flowNode.getId());
 
-            if (skinFactory != null) {
-                childFactory = skinFactory.createChild(skin);
-                childFactories.add(childFactory);
+//                System.out.println("skin: " + skin + ", node: " + flowNode.getId());
+
+                SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> childFactory = null;
+
+                if (skinFactory != null) {
+                    childFactory = skinFactory.createChild(skin);
+                    childFactories.add(childFactory);
+                }
             }
         }
-        
+
         VFlow controller = new VFlowImpl(flowNode, childFactories);
 
         controller.setIdGenerator(getIdGenerator());

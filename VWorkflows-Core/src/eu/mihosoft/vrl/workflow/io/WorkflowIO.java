@@ -48,10 +48,12 @@ import eu.mihosoft.vrl.workflow.VConnections;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,19 +75,52 @@ public class WorkflowIO {
         return workflow;
     }
 
+    public static VFlowModel loadFromXML(String xml, IdGenerator generator) {
+        XStream xstream = new XStream();
+
+        configureStream(xstream);
+
+        return flowFromPersistentFlow((PersistentFlow) xstream.fromXML(xml), generator);
+    }
+
+    public static VFlow loadFromXML(String xml) {
+        VFlow workflow = FlowFactory.newFlow();
+
+        VFlowModel flow = WorkflowIO.loadFromXML(xml, workflow.getIdGenerator());
+        workflow.setNodeLookup(flow.getNodeLookup());
+        workflow.setModel(flow);
+
+        return workflow;
+    }
+
+    public static VFlow loadFromXML(InputStream xmlStream) throws IOException {
+        VFlow workflow = FlowFactory.newFlow();
+
+        VFlowModel flow = WorkflowIO.loadFromXML(xmlStream, workflow.getIdGenerator());
+        workflow.setNodeLookup(flow.getNodeLookup());
+        workflow.setModel(flow);
+
+        return workflow;
+    }
+
     public static VFlowModel loadFromXML(Path p, IdGenerator generator) throws IOException {
 
         XStream xstream = new XStream();
 
         configureStream(xstream);
 
-        StringBuilder xml = new StringBuilder();
+        InputStream is = Files.newInputStream(p, StandardOpenOption.READ);
 
-        for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
-            xml.append(line).append("\n");
-        }
+        return flowFromPersistentFlow((PersistentFlow) xstream.fromXML(is), generator);
+    }
 
-        return flowFromPersistentFlow((PersistentFlow) xstream.fromXML(xml.toString()), generator);
+    public static VFlowModel loadFromXML(InputStream xmlStream, IdGenerator generator) throws IOException {
+
+        XStream xstream = new XStream();
+
+        configureStream(xstream);
+
+        return flowFromPersistentFlow((PersistentFlow) xstream.fromXML(xmlStream), generator);
     }
 
     private static void configureStream(XStream xstream) {
@@ -99,14 +134,31 @@ public class WorkflowIO {
     }
 
     public static void saveToXML(Path p, VFlowModel flow) throws IOException {
+        
+        OutputStream os = Files.newOutputStream(p,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.WRITE,
+                StandardOpenOption.TRUNCATE_EXISTING);
+        
+        saveToXML(flow, os);
+    }
+
+    public static void saveToXML(VFlowModel flow, OutputStream xmlStream) {
+        XStream xstream = new XStream();
+
+        configureStream(xstream);
+
+        xstream.toXML(toPersistentNode(flow, null), xmlStream);
+    }
+
+    public static String saveToXML(VFlowModel flow) {
         XStream xstream = new XStream();
 
         configureStream(xstream);
 
         String xml = xstream.toXML(toPersistentNode(flow, null));
 
-        InputStream is = new ByteArrayInputStream(xml.getBytes());
-        Files.copy(is, p, StandardCopyOption.REPLACE_EXISTING);
+        return xml;
     }
 
     public static PersistentNode toPersistentNode(VNode node, PersistentFlow parent) {
@@ -288,7 +340,7 @@ public class WorkflowIO {
         eu.mihosoft.vrl.workflow.Connections result = VConnections.newConnections(connectionType);
 
         for (PersistentConnection c : connections) {
-            
+
             Connector s = flow.getNodeLookup().getConnectorById(c.getSenderId());
             Connector r = flow.getNodeLookup().getConnectorById(c.getReceiverId());
             result.add(c.getId(), s, r, c.getVReq());

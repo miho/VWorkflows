@@ -10,6 +10,8 @@ import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.logging.Level;
@@ -47,7 +49,7 @@ public class VFlowIOTest {
     }
 
     @Test
-    public void saveAndLoadFlow() {
+    public void saveAndLoadFlowFile() {
 
         VFlow flow1 = FlowFactory.newFlow();
 
@@ -75,7 +77,6 @@ public class VFlowIOTest {
         assertTrue("loadFromXML() must not throw an exception", couldLoad);
         assertNotNull("loadFromXML() must not return null", flow2);
 
-
         boolean couldSave2 = true;
         try {
             WorkflowIO.saveToXML(Paths.get("test-flow-02.xml"), flow2.getModel());
@@ -87,12 +88,102 @@ public class VFlowIOTest {
         assertTrue("saveToXML() must not throw an exception", couldSave2);
 
         // compare both flows (samples)
+        compare(flow1, flow2);
+    }
 
+    @Test
+    public void saveAndLoadFlowString() {
+
+        VFlow flow1 = FlowFactory.newFlow();
+
+        FlowUtil.createFlow(flow1, 1, 5);
+
+        String xml = "";
+        boolean couldSave = true;
+        try {
+            xml = WorkflowIO.saveToXML(flow1.getModel());
+        } catch (Exception ex) {
+            Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
+            couldSave = false;
+        }
+
+        assertTrue("saveToXML() must not throw an exception", couldSave);
+
+        boolean couldLoad = true;
+        VFlow flow2 = null;
+        try {
+            flow2 = WorkflowIO.loadFromXML(xml);
+        } catch (Exception ex) {
+            Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
+            couldLoad = false;
+        }
+
+        assertTrue("loadFromXML() must not throw an exception", couldLoad);
+        assertNotNull("loadFromXML() must not return null", flow2);
+
+        boolean couldSave2 = true;
+        try {
+            xml = WorkflowIO.saveToXML(flow2.getModel());
+        } catch (Exception ex) {
+            Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
+            couldSave2 = false;
+        }
+
+        assertTrue("saveToXML() must not throw an exception", couldSave2);
+
+        // compare both flows (samples)
+        compare(flow1, flow2);
+    }
+    
+    @Test
+    public void saveAndLoadFlowStream() {
+
+        VFlow flow1 = FlowFactory.newFlow();
+
+        FlowUtil.createFlow(flow1, 1, 5);
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        boolean couldSave = true;
+        try {
+            WorkflowIO.saveToXML(flow1.getModel(), os);
+        } catch (Exception ex) {
+            Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
+            couldSave = false;
+        }
+
+        assertTrue("saveToXML() must not throw an exception", couldSave);
+
+        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+        
+        boolean couldLoad = true;
+        VFlow flow2 = null;
+        try {
+            flow2 = WorkflowIO.loadFromXML(is);
+        } catch (Exception ex) {
+            Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
+            couldLoad = false;
+        }
+
+        assertTrue("loadFromXML() must not throw an exception", couldLoad);
+        assertNotNull("loadFromXML() must not return null", flow2);
+
+        ByteArrayOutputStream os2 = new ByteArrayOutputStream();
+        boolean couldSave2 = true;
+        try {
+            WorkflowIO.saveToXML(flow2.getModel(), os2);
+        } catch (Exception ex) {
+            Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
+            couldSave2 = false;
+        }
+
+        assertTrue("saveToXML() must not throw an exception", couldSave2);
+
+        // compare both flows (samples)
         compare(flow1, flow2);
     }
 
     private void compare(VFlow flow1, VFlow flow2) {
-        
+
         assertEquals("Both flows must have equal id",
                 flow1.getModel().getId(), flow2.getModel().getId());
 
@@ -106,7 +197,6 @@ public class VFlowIOTest {
         // (however, number of connections must be the same, see below)
 //        assertEquals("Both flows must have an equal number of connection types,",
 //                flow1.getAllConnections().values().size(), flow2.getAllConnections().values().size());
-
         for (Connections connections1 : flow1.getAllConnections().values()) {
 
             Connections connections2 = flow2.getConnections(connections1.getType());

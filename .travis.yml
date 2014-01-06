@@ -1,15 +1,15 @@
 language: java
 jdk:
   - oraclejdk7
-  - oraclejdk8
   
 before_install:
   - "export DISPLAY=:99.0"
   - "export TERM=dumb"
   - "sh -e /etc/init.d/xvfb start"
+  - "cd VWorkflows-Core"
 
 install:
-    - TERM=dumb cd VWorkflows-Core; ./gradlew --refresh-dependencies --stacktrace
+    - TERM=dumb ./gradlew --refresh-dependencies --stacktrace
 
 script:
     - TERM=dumb ./gradlew build --stacktrace

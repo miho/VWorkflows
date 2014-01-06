@@ -6,7 +6,7 @@ before_install:
   - "export DISPLAY=:99.0"
   - "export TERM=dumb"
   - "sh -e /etc/init.d/xvfb start"
-  - "cd VWorkflows-Core"
+  - "cd VWorkflows-FX"
 
 install:
     - TERM=dumb ./gradlew --refresh-dependencies --stacktrace

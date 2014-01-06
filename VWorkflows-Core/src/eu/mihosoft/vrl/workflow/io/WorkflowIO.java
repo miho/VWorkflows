@@ -93,7 +93,7 @@ public class WorkflowIO {
         return workflow;
     }
 
-    public static VFlow loadFromXML(InputStream xmlStream) throws IOException {
+    public static VFlow loadFromXML(InputStream xmlStream) {
         VFlow workflow = FlowFactory.newFlow();
 
         VFlowModel flow = WorkflowIO.loadFromXML(xmlStream, workflow.getIdGenerator());
@@ -114,7 +114,7 @@ public class WorkflowIO {
         return flowFromPersistentFlow((PersistentFlow) xstream.fromXML(is), generator);
     }
 
-    public static VFlowModel loadFromXML(InputStream xmlStream, IdGenerator generator) throws IOException {
+    public static VFlowModel loadFromXML(InputStream xmlStream, IdGenerator generator) {
 
         XStream xstream = new XStream();
 

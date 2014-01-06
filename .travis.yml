@@ -2,3 +2,9 @@ language: java
 jdk:
   - oraclejdk7
   - openjdk7
+
+install:
+    - TERM=dumb cd VWorkflows-FX; ./gradlew --refresh-dependencies
+
+script:
+    - TERM=dumb cd VWorkflows-FX; ./gradlew build

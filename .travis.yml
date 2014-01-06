@@ -4,7 +4,7 @@ jdk:
   - openjdk7
 
 install:
-    - TERM=dumb cd VWorkflows-FX; ./gradlew --refresh-dependencies
+    - TERM=dumb cd VWorkflows-FX; ./gradlew --refresh-dependencies --stacktrace
 
 script:
-    - TERM=dumb cd VWorkflows-FX; ./gradlew build
+    - TERM=dumb cd VWorkflows-FX; ./gradlew build --stacktrace

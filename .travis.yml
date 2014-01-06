@@ -9,10 +9,10 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-    - TERM=dumb cd VWorkflows-FX; ./gradlew --refresh-dependencies --stacktrace
+    - TERM=dumb cd VWorkflows-Core; ./gradlew --refresh-dependencies --stacktrace
 
 script:
-    - TERM=dumb cd VWorkflows-FX; ./gradlew build --stacktrace
+    - TERM=dumb ./gradlew build --stacktrace
 
 after_failure:
   - "cat ./build/test-results/*.xml"

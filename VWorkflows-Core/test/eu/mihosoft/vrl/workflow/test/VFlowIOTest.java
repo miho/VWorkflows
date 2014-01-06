@@ -158,7 +158,7 @@ public class VFlowIOTest {
         boolean couldLoad = true;
         VFlow flow2 = null;
         try {
-            flow2 = WorkflowIO.loadFromXML(is);
+            flow2 = WorkflowIO.loadFromXML(is); 
         } catch (Exception ex) {
             Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
             couldLoad = false;

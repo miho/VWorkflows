@@ -26,6 +26,10 @@ task wrapper(type: Wrapper) {
 }
 
 dependencies {
+    
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+    testCompile group: 'org.loadui', name: 'testFx', version: '3.0.0'
+    
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"
     if (project.jdk == 7) {

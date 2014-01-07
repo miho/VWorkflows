@@ -187,6 +187,8 @@ public class FXFlowNodeSkin
     private void addConnector(final Connector connector) {
         connectorList.add(connector);
         ConnectorCircle circle = new ConnectorCircle(controller, getSkinFactory(), connector, 20);
+        
+        circle.setId(connector.getId());
 
 //        Color fillColor = skinFactory.getConnectionFillColor(connector.getType());
 //        Color strokeColor = skinFactory.getConnectionStrokeColor(connector.getType());

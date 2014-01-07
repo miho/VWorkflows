@@ -1,10 +1,18 @@
 language: java
 jdk:
   - oraclejdk7
-  - openjdk7
+  
+before_install:
+  - "export DISPLAY=:99.0"
+  - "export TERM=dumb"
+  - "sh -e /etc/init.d/xvfb start"
+  - "cd VWorkflows-FX"
 
 install:
-    - TERM=dumb cd VWorkflows-FX; ./gradlew --refresh-dependencies
+    - TERM=dumb ./gradlew --refresh-dependencies --stacktrace
 
 script:
-    - TERM=dumb cd VWorkflows-FX; ./gradlew build
+    - TERM=dumb ./gradlew build --stacktrace
+
+after_failure:
+  - "cat ./build/test-results/*.xml"

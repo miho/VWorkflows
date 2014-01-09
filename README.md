@@ -57,16 +57,16 @@ VWorkflows-Core:
 
 - Java >= 1.7.25 (Preview Builds of Java 8 >= b105 are also supported)
 - Internet connection (other dependencies are downloaded automatically)
-- IDE: Gradle Plugin (not necessary for command line usage)
+- IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 
 ### IDE
 
-Open the `VWorkflows-Core/VWorkflows-FX` Gradle project in your favourite IDE (tested with NetBeans 7.3.1) and build it
+Open the `VWorkflows-Core/VWorkflows-FX` [Gradle](http://www.gradle.org/) project in your favourite IDE (tested with NetBeans 7.3.1) and build it
 by calling the `assemble` task.
 
 ### Command Line
 
-Navigate to the gradle project (e.g., `path/to/VWorkflows/VWorkflows-FX`) and enter the following command
+Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/VWorkflows/VWorkflows-FX`) and enter the following command
 
 #### Bash (Linux/OS X/Cygwin/other Unix-like OS)
 

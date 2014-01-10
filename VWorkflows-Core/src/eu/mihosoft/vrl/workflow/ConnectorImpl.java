@@ -54,8 +54,8 @@ class ConnectorImpl implements Connector {
     private boolean input;
     private boolean output;
     private final ObjectProperty<ValueObject> valueObjectProperty = new SimpleObjectProperty<>();
-    private List<EventHandler<ConnectionEvent>> connectionEventHandlers;
-    private List<EventHandler<ClickEvent>> clickEventHandlers;
+    private transient List<EventHandler<ConnectionEvent>> connectionEventHandlers;
+    private transient List<EventHandler<ClickEvent>> clickEventHandlers;
 
     public ConnectorImpl(VNode node, String type, String localId, boolean input) {
         this.type = type;

@@ -129,6 +129,7 @@ public class WorkflowIO {
         xstream.alias("connection", PersistentConnection.class);
         xstream.alias("vobj", DefaultValueObject.class);
         xstream.alias("connector", PersistentConnector.class);
+       
 
 //        xstream.setMode(XStream.ID_REFERENCES);
     }

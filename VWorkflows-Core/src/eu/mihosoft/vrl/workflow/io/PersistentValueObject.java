@@ -31,8 +31,6 @@ public class PersistentValueObject {
     }
     
     
-    
-    
     public String getParentId() {
         return parentId;
     }

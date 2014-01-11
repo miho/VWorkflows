@@ -53,7 +53,7 @@ public class PersistentNode {
     private double width;
     private double height;
     private String title;
-    private ValueObject valueObject;
+    private PersistentValueObject valueObject;
     private VisualizationRequest vReq;
     private String id;
     private List<PersistentConnector> connectors;
@@ -73,7 +73,7 @@ public class PersistentNode {
         this.width = width;
         this.height = height;
         this.title = title;
-        this.valueObject = valueObject;
+        this.valueObject = WorkflowIO.toPersistentValueObject(valueObject);
         this.vReq = vReq;
         this.id = id;
         this.connectors = WorkflowIO.listToSerializableList(connectors);
@@ -154,14 +154,14 @@ public class PersistentNode {
     /**
      * @return the valueObject
      */
-    public ValueObject getValueObject() {
+    public PersistentValueObject getValueObject() {
         return valueObject;
     }
 
     /**
      * @param valueObject the valueObject to set
      */
-    public void setValueObject(ValueObject valueObject) {
+    public void setValueObject(PersistentValueObject valueObject) {
         this.valueObject = valueObject;
     }
 

@@ -45,6 +45,7 @@ import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.NodeLookupImpl;
 import eu.mihosoft.vrl.workflow.VConnections;
+import eu.mihosoft.vrl.workflow.ValueObject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -269,7 +270,7 @@ public class WorkflowIO {
         result.setY(flow.getY());
         result.setWidth(flow.getWidth());
         result.setHeight(flow.getHeight());
-        result.setValueObject(flow.getValueObject());
+        result.setValueObject(toValueObject(result, flow.getValueObject()));
         result.setVisible(flow.isVisible());
         result.setVisualizationRequest(flow.getVReq());
 
@@ -324,7 +325,7 @@ public class WorkflowIO {
             result.setY(node.getY());
             result.setWidth(node.getWidth());
             result.setHeight(node.getHeight());
-            result.setValueObject(node.getValueObject());
+            result.setValueObject(toValueObject(result, node.getValueObject()));
             result.setVisualizationRequest(node.getVReq());
 
             for (PersistentConnector c : node.getConnectors()) {
@@ -375,5 +376,19 @@ public class WorkflowIO {
      */
     public static PersistentConnector toPersistentConnector(Connector c) {
         return new PersistentConnector(c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+    }
+    
+    public static PersistentValueObject toPersistentValueObject(ValueObject vObj) {
+        return new PersistentValueObject(vObj.getParent().getId(), vObj.getValue(), vObj.getVisualizationRequest());
+    }
+    
+    public static ValueObject toValueObject(VNode node, PersistentValueObject vObj) {
+        ValueObject result = new DefaultValueObject();
+        
+        result.setParent(node);
+        result.setValue(vObj.getValue());
+        // resulult. // .. TODO visualizationRequest isnot persistent! 11.01.2014
+        
+        return result;
     }
 }

@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import javafx.beans.property.ObjectProperty;
@@ -41,12 +40,13 @@ import javafx.beans.property.SimpleObjectProperty;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultValueObject implements ValueObject {
 
-    private transient VNode parent;
-    private ObjectProperty valueProperty = new SimpleObjectProperty();
+    private VNode parent;
+    private final ObjectProperty valueProperty = new SimpleObjectProperty();
+    private VisualizationRequest vReq = new DefaultVisualizationRequest();
 
     public DefaultValueObject() {
     }
@@ -89,7 +89,7 @@ public class DefaultValueObject implements ValueObject {
 
             @Override
             public String getMessage() {
-                return "incompatible: " + sender.getParent().getId()  + " -> " +  getParent().getId();
+                return "incompatible: " + sender.getParent().getId() + " -> " + getParent().getId();
             }
 
             @Override
@@ -101,17 +101,12 @@ public class DefaultValueObject implements ValueObject {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return new VisualizationRequest() {
-            @Override
-            public String getStyle() {
-                return "default";
-            }
-
-            @Override
-            public String getOptions() {
-                return "";
-            }
-        };
+        return vReq;
+    }
+    
+    @Override
+    public void setVisualizationRequest(VisualizationRequest vReq) {
+        this.vReq = vReq;
     }
 
     /**
@@ -122,3 +117,16 @@ public class DefaultValueObject implements ValueObject {
         this.parent = parent;
     }
 }
+
+class DefaultVisualizationRequest implements VisualizationRequest {
+
+    @Override
+    public String getStyle() {
+        return "default";
+    }
+
+    @Override
+    public String getOptions() {
+        return "";
+    }
+};

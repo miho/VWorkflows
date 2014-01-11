@@ -46,6 +46,7 @@ public class DefaultConnectorValueObject implements ValueObject {
 
     private transient VNode parent;
     private transient Connector c;
+    private VisualizationRequest vReq;
 
     public DefaultConnectorValueObject() {
     }
@@ -121,17 +122,12 @@ public class DefaultConnectorValueObject implements ValueObject {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return new VisualizationRequest() {
-            @Override
-            public String getStyle() {
-                return "default";
-            }
-
-            @Override
-            public String getOptions() {
-                return "";
-            }
-        };
+        return vReq;
+    }
+    
+    @Override
+    public void setVisualizationRequest(VisualizationRequest vReq) {
+        this.vReq = vReq;
     }
 
     /**

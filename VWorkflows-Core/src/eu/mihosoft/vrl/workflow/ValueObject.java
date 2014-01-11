@@ -51,4 +51,5 @@ public interface ValueObject {
     // assumes we are receiver
     public CompatibilityResult compatible(ValueObject sender, String flowTpe);
     public VisualizationRequest getVisualizationRequest();
+    public void setVisualizationRequest(VisualizationRequest vReq);
 }

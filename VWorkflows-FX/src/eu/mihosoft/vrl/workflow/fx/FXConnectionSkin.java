@@ -417,9 +417,11 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         }, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                getReceiverUI().layoutXProperty().unbind();
-                getReceiverUI().layoutYProperty().unbind();
-                receiverConnectorUI.radiusProperty().unbind();
+                if (event.getButton() == javafx.scene.input.MouseButton.PRIMARY) {
+                    getReceiverUI().layoutXProperty().unbind();
+                    getReceiverUI().layoutYProperty().unbind();
+                    receiverConnectorUI.radiusProperty().unbind();
+                }
                 connection.getReceiver().click(NodeUtil.mouseBtnFromEvent(event), event);
                 receiverDraggingStarted = false;
             }

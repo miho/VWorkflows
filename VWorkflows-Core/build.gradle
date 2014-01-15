@@ -23,7 +23,9 @@ task wrapper(type: Wrapper) {
 
 // finding jfxrt.jar for JDK 7as we depend on binding API
 String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib";
+
 project.ext.set("javafx_jar", "$jreHome/jfxrt.jar")
+project.ext.set("javafx8_jar", "$jreHome/ext/jfxrt.jar")
 
 dependencies {
 
@@ -31,6 +33,7 @@ dependencies {
     
 //    if (project.jdk==7) {
          compile files(project.javafx_jar)
+         compile files(project.javafx8_jar)
 //    }
 
     // compile project('..:VRLInstrumentation')    

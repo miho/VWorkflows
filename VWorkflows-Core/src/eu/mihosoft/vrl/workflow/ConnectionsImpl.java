@@ -48,7 +48,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- *
+ * This class provides a default implementation of the {@code Connections} interface.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class ConnectionsImpl implements Connections {

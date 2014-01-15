@@ -42,7 +42,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 
 /**
- *
+ * This class provides the default implementation of a {@code Connector} in VWorkflows
+ * 
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ConnectorImpl implements Connector {

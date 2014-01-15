@@ -40,6 +40,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * This class allows nodes to be looked up by id.
+ * Ids have the format <node id>:<connector id>.
+ * 
+ * The class can also be used to look up connectors.
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */

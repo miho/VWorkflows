@@ -36,6 +36,8 @@
 
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.skin.Skin;
+
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;

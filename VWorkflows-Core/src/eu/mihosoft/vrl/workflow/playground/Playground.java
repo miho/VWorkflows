@@ -38,6 +38,8 @@ package eu.mihosoft.vrl.workflow.playground;
 
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.DefaultConnectorValueObject;
+import eu.mihosoft.vrl.workflow.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
@@ -61,7 +63,10 @@ public class Playground {
         VNode n = flow.newNode();
 
         Connector c1 = n.addInput("control"); // returns 
+        
         Connector c2 = n.addOutput("control"); // returns 0
+        DefaultValueObject defaultValueObject = new DefaultValueObject();
+        defaultValueObject.setValue(new String("Testing"));
 
         Connector d1 = n.addInput("data");  // returns 0
         Connector d2 = n.addInput("data");  // returns 1
@@ -75,6 +80,7 @@ public class Playground {
         Connector c4 = n2.addOutput("control"); // returns 
 
         ConnectionResult result = flow.connect(c2, c3);
+        
 
 //        ConnectionResult result2 = flow.tryConnect(c1, c3);
 

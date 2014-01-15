@@ -37,7 +37,6 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,14 +45,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 /**
- *
+ * This class implements the flow model. The flow model manages the connections
+ * between nodes.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FlowModelImpl implements FlowModel {

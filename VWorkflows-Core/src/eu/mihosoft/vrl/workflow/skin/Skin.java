@@ -1,5 +1,5 @@
 /*
- * VNodeSkinFactory.java
+ * Skin.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,15 +34,23 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
+
+import eu.mihosoft.vrl.workflow.Model;
+import eu.mihosoft.vrl.workflow.VFlow;
+import javafx.beans.property.ObjectProperty;
 
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface VNodeSkinFactory<T extends Skin> {
-
-    VNodeSkin createSkin(VNode n, VFlow controller);
-
-    
+public interface Skin<T extends Model> {
+    public void add();
+    public void remove();
+    public void setModel(T model);
+    public T getModel();
+    public ObjectProperty<T> modelProperty();
+    public VFlow getController();
+    public void setController(VFlow flow);
+    public SkinFactory getSkinFactory();
 }

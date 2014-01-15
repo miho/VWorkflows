@@ -35,6 +35,11 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
+import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookupImpl;
+import eu.mihosoft.vrl.workflow.skin.SkinFactory;
+import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,10 +63,10 @@ import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 
 /**
- *
+ * An implementation of the {@code VFlow} interface. This class manages the workflow
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class VFlowImpl implements VFlow {
+public class VFlowImpl implements VFlow {
 
     ObjectProperty<VFlowModel> modelProperty = new SimpleObjectProperty<>();
     private ListChangeListener<VNode> nodesListener;
@@ -371,12 +376,12 @@ class VFlowImpl implements VFlow {
     }
 
     // TODO duplicated code
-    static String connectionId(String id, String s, String r) {
+    public static String connectionId(String id, String s, String r) {
         return "id=" + id + ";[" + s + "]->[" + r + "]";
     }
 
     // TODO duplicated code
-    static String connectionId(Connection c) {
+    public static String connectionId(Connection c) {
         return connectionId(c.getId(), c.getSender().getId(), c.getReceiver().getId());
     }
 
@@ -975,7 +980,7 @@ class VFlowImpl implements VFlow {
 //    public ObservableList<String> getOutputTypes() {
 //        return getModel().getOutputTypes();
 //    }
-    synchronized private Map<String, VNodeSkin> getNodeSkinMap(SkinFactory skinFactory) {
+    public synchronized Map<String, VNodeSkin> getNodeSkinMap(SkinFactory skinFactory) {
         Map<String, VNodeSkin> nodeSkinMap = nodeSkins.get(skinFactory);
         if (nodeSkinMap == null) {
             nodeSkinMap = new HashMap<>();
@@ -984,7 +989,7 @@ class VFlowImpl implements VFlow {
         return nodeSkinMap;
     }
 
-    synchronized Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory) {
+    public synchronized Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory) {
         Map<String, ConnectionSkin> connectionSkinMap = connectionSkins.get(skinFactory);
         if (connectionSkinMap == null) {
             connectionSkinMap = new HashMap<>();

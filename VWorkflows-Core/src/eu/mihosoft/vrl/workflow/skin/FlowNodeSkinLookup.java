@@ -1,5 +1,5 @@
 /*
- * ConnectionSkin.java
+ * FlowNodeSkinLookup.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,25 +34,18 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
 
-import javafx.beans.property.ObjectProperty;
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Lookup;
+import java.util.List;
 
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface ConnectionSkin<T extends Connection> extends Skin<Connection> {
+public interface FlowNodeSkinLookup extends Lookup<List<VNodeSkin>> {
 
-    public Connector getSender();
-
-    public void setSender(Connector n);
-
-    public ObjectProperty<Connector> senderProperty();
-
-    public Connector getReceiver();
-
-    public void setReceiver(Connector n);
-
-    public ObjectProperty<Connector> receiverProperty();
+    public VNodeSkin getById(SkinFactory skinFactory, String globalId);
+    public ConnectionSkin<?> getById(SkinFactory skinFactory, Connection c);
 }

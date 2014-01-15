@@ -38,7 +38,7 @@ package eu.mihosoft.vrl.workflow;
 import java.util.Objects;
 
 /**
- *
+ * This class provides a base implementation of connections. 
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ConnectionBase implements Connection {

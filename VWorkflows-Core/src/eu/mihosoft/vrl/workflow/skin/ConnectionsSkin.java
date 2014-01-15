@@ -1,5 +1,5 @@
 /*
- * ConnectionSkinFactory.java
+ * ConnectionsSkin.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,14 +34,14 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
+
+import eu.mihosoft.vrl.workflow.Connections;
 
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface ConnectionSkinFactory<T extends Skin> {
-
-    ConnectionSkin createSkin(Connection c, VFlow flow, String type);
-   
+public interface ConnectionsSkin extends Skin<Connections> {
+    
 }

@@ -1,5 +1,5 @@
 /*
- * Constants.java
+ * ConnectionSkinFactory.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,13 +34,17 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
+
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.VFlow;
 
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public class Constants {
-        public static final String DEFAULT_STYLE =
-            "/eu/mihosoft/vrl/fxconnections/resources/default.css";
+public interface ConnectionSkinFactory<T extends Skin> {
+
+    ConnectionSkin createSkin(Connection c, VFlow flow, String type);
+   
 }

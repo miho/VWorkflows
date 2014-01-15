@@ -40,7 +40,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 /**
- *
+ * Defines an interface for 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 interface FlowModel extends Model, VisibleState{

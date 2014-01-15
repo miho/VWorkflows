@@ -40,7 +40,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.event.EventHandler;
 
 /**
- *
+ * This interface describes a connector. A connector is used to link nodes together.
+ * It serves as the input or output for the node. Methods allow you to detect
+ * whether the connector has been clicked or if it is used in a connection.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Connector extends Model {

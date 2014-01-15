@@ -39,7 +39,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
- *
+ *  This class defines a value object you can assign a value.
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultValueObject implements ValueObject {

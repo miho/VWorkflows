@@ -40,7 +40,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * This class generates ids for nodes and connectors
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class IdGeneratorImpl implements IdGenerator{

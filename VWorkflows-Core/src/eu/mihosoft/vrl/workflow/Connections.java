@@ -40,7 +40,8 @@ import java.util.Collection;
 import javafx.collections.ObservableList;
 
 /**
- *
+ * This interface defines a collection of {@code Connection}
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Connections extends Model {

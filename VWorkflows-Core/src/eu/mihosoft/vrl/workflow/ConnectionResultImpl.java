@@ -37,7 +37,9 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
+ * This class provides a default implementation of {@code  ConnectionResult}
+ * //TODO add documentation about the possible connection results.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 

@@ -37,7 +37,7 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
+ * This interface describes whether two connectors are compatible for a connection.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface CompatibilityResult {

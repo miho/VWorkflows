@@ -34,17 +34,21 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
 
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowImpl;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
 import java.util.Collection;
 import java.util.List;
-import javax.naming.OperationNotSupportedException;
 
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
+public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
     private VFlow root;
 

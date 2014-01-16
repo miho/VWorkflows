@@ -1,5 +1,5 @@
 /*
- * VNodeSkin.java
+ * Constants.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,14 +34,14 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
 
 /**
- *
+ * This class defines constants used library. It is currently used to wrap
+ * the default CSS.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface VNodeSkin<T extends VNode> extends Skin<T> {
-//    public void setFlow(V flow);
-//    public V getFlow();
-//    public ObjectProperty<V> flowProperty();
+public class Constants {
+        public static final String DEFAULT_STYLE =
+            "/eu/mihosoft/vrl/fxconnections/resources/default.css";
 }

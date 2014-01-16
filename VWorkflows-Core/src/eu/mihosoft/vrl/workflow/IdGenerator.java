@@ -39,7 +39,9 @@ package eu.mihosoft.vrl.workflow;
 import java.util.Set;
 
 /**
- *
+ * This interface specifies the methods necessary to define an Id generator
+ * Each node and connector is given a unique id. This interface defines how those
+ * ids are generated.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface IdGenerator {

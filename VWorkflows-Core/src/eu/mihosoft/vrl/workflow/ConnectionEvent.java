@@ -6,10 +6,10 @@ package eu.mihosoft.vrl.workflow;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import javafx.scene.input.MouseEvent;
 
 /**
- *
+ * This class defines a connection event. A connection event is fired when a
+ * connection is made between two connectors.
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class ConnectionEvent extends Event {

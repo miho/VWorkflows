@@ -36,12 +36,20 @@
 
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.skin.SkinFactory;
+import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
+import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
+
 /**
- *
+ * A factory class to create {@code VFlow}s.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FlowFactory {
 
+    /**
+     * Creates a new instance of a flow
+     * @return the newly created {@code VFlow}
+     */
     public static VFlow newFlow() {
 
         VFlowModel model = FlowFactory.newFlowModel();
@@ -51,17 +59,25 @@ public class FlowFactory {
         return flow;
     }
 
+    /**
+     * Creates a new instance of a flow and specify its skin
+     * @param skinFactory Defines the skin factory used to render the workflow
+     * @return the newly created {@code VFlow}
+     */
     public static VFlow newFlow(
             SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
-        
 
         VFlowModel model = FlowFactory.newFlowModel();
 
-        VFlow flow = new VFlowImpl(model,skinFactory);
+        VFlow flow = new VFlowImpl(model, skinFactory);
 
         return flow;
     }
 
+    /**
+     * Creates a new flow model
+     * @return 
+     */
     public static VFlowModel newFlowModel() {
         VFlowModel result = new VFlowModelImpl(null);
         result.setId("ROOT");

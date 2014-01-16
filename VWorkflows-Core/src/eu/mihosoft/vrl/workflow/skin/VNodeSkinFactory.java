@@ -1,5 +1,5 @@
 /*
- * DefaultWorkflow.java
+ * VNodeSkinFactory.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,49 +34,18 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
 
-///**
-// *
-// * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
-// */
-//public final class DefaultWorkflow extends VFlowImpl {
-//
-//    public DefaultWorkflow(SkinFactory<? extends ConnectionSkin,? extends VNodeSkin> skinFactory) {
-//
-//        super(skinFactory);
-//        
-//        VFlowModel model = FlowFactory.newFlowModel();
-//        setNodeLookup(new NodeLookupImpl(model));
-//        setModel(model);
-//    }
-//
-//    public DefaultWorkflow() {
-//
-//        super(null);
-//
-//        VFlowModel model = FlowFactory.newFlowModel();
-//        setNodeLookup(new NodeLookupImpl(model));
-//        setModel(model);
-//    }
-//}
-//
-//
-//class DummySkinFactoryImpl implements SkinFactory<ConnectionSkin,VNodeSkin> {
-//
-//    @Override
-//    public SkinFactory<ConnectionSkin, VNodeSkin> createChild(Skin parent) {
-//        return this;
-//    }
-//
-//    @Override
-//    public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
-//        return null;
-//    }
-//
-//    @Override
-//    public VNodeSkin createSkin(VNode n, VFlow flow) {
-//        return null;
-//    }
-//}
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VNode;
 
+/**
+ *
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ */
+public interface VNodeSkinFactory<T extends Skin> {
+
+    VNodeSkin createSkin(VNode n, VFlow controller);
+
+    
+}

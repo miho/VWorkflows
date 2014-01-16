@@ -1,5 +1,5 @@
 /*
- * Layout.java
+ * VNodeSkin.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,16 +34,16 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.worflow.layout;
+package eu.mihosoft.vrl.workflow.skin;
 
-import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VNode;
 
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface Layout {
-    
-    public void doLayout(VFlow flow);
-    
+public interface VNodeSkin<T extends VNode> extends Skin<T> {
+//    public void setFlow(V flow);
+//    public V getFlow();
+//    public ObjectProperty<V> flowProperty();
 }

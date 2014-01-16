@@ -37,7 +37,8 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
+ * This interface defines a lookup. Look ups are used to find nodes and connectors
+ * by id.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Lookup<T> {

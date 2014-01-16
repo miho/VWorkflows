@@ -37,7 +37,8 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
+ * This class define a visualization request. 
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Model {

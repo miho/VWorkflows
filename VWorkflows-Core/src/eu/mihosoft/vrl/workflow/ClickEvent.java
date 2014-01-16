@@ -6,7 +6,6 @@ package eu.mihosoft.vrl.workflow;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import javafx.scene.input.MouseEvent;
 
 /**
  *

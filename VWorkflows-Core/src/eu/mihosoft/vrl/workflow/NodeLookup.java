@@ -37,7 +37,7 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
+ * This interface define a node look up.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface NodeLookup extends Lookup<VNode>{

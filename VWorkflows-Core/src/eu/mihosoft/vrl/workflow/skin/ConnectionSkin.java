@@ -1,5 +1,5 @@
 /*
- * SkinFactory.java
+ * ConnectionSkin.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -34,16 +34,28 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */ 
 
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.skin;
+
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Connector;
+import javafx.beans.property.ObjectProperty;
 
 /**
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @param <T>
  */
-public interface SkinFactory<T extends Skin, V extends Skin> extends ConnectionSkinFactory<T>, VNodeSkinFactory<V> {
+public interface ConnectionSkin<T extends Connection> extends Skin<Connection> {
 
-    SkinFactory<T, V> createChild(Skin parent);
-    
-    public SkinFactory<T, V> getParent();
+    public Connector getSender();
 
+    public void setSender(Connector n);
+
+    public ObjectProperty<Connector> senderProperty();
+
+    public Connector getReceiver();
+
+    public void setReceiver(Connector n);
+
+    public ObjectProperty<Connector> receiverProperty();
 }

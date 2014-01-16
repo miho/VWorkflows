@@ -37,7 +37,7 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
+ * This interface defines a connection between two connectors.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Connection extends Model{

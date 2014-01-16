@@ -37,7 +37,7 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Model;
-import eu.mihosoft.vrl.workflow.Skin;
+import eu.mihosoft.vrl.workflow.skin.Skin;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 

@@ -39,7 +39,10 @@ package eu.mihosoft.vrl.workflow;
 import javafx.beans.property.ObjectProperty;
 
 /**
- *
+ * This class defines a default connector value object. ValueObjects are used
+ * to store data in connectors. It is a placeholder for a value object as it's 
+ * get/setValue methods are not implemented.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultConnectorValueObject implements ValueObject {

@@ -443,10 +443,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     lastNode = null;
                 }
 
-                if (!valid) {
-                    init();
-                    return;
-                }
+//                if (!valid) {
+//                    init();
+//                    return;
+//                }
 
                 getReceiverUI().toFront();
                 connectionPath.toBack();

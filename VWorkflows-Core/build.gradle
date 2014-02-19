@@ -34,7 +34,7 @@ project.ext.set("javafx8_jar", "$jreHome/ext/jfxrt.jar")
 
 dependencies {
 
-    compile "com.thoughtworks.xstream:xstream:1.4.4"
+    compile "com.thoughtworks.xstream:xstream:1.4.7"
     
     println("Gradle uses JDK "+project.jdk)
     

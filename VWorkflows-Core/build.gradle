@@ -7,6 +7,11 @@ apply from: 'version-info.gradle'
 //apply from: 'maven-deployment.gradle'
 //apply from: 'maven-deployment-local.gradle'
 
+// all projects must be comatible with the java version specified here
+// overriding this property in subprojects is not allowed
+sourceCompatibility = '1.7'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
 //apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
 //repairHeaders.licenseHeaderText = new File(projectDir,'../license-template.txt')
 
@@ -18,7 +23,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.9'
+    gradleVersion = '1.10'
 }
 
 // finding jfxrt.jar for JDK 7as we depend on binding API
@@ -30,6 +35,8 @@ project.ext.set("javafx8_jar", "$jreHome/ext/jfxrt.jar")
 dependencies {
 
     compile "com.thoughtworks.xstream:xstream:1.4.4"
+    
+    println("Gradle uses JDK "+project.jdk)
     
 //    if (project.jdk==7) {
          compile files(project.javafx_jar)

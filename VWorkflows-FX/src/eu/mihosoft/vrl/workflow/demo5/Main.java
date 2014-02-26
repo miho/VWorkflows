@@ -99,8 +99,6 @@ public class Main extends Application {
 
         // create skin factory for flow visualization
         FXValueSkinFactory fXSkinFactory = new FXValueSkinFactory(canvas.getContentPane());
-        
-        fXSkinFactory.addSkinClassForValueType(Integer.class, IntegerFlowNodeSkin.class);
 
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);

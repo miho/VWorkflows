@@ -716,7 +716,7 @@ public class VFlowImpl implements VFlow {
     }
 
     /**
-     * @param nodeSkinFactory the nodeSkinFactory to set
+     * @param skinFactories  the nodeskin factories to set
      */
     @Override
     public final void addSkinFactories(SkinFactory... skinFactories) {

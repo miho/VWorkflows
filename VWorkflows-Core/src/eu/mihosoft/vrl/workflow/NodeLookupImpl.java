@@ -41,7 +41,7 @@ import java.util.Map;
 
 /**
  * This class allows nodes to be looked up by id.
- * Ids have the format <node id>:<connector id>.
+ * Ids have the format {@code <node id>:<connector id>}.
  * 
  * The class can also be used to look up connectors.
  *

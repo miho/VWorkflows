@@ -7,7 +7,7 @@ package eu.mihosoft.vrl.workflow;
 
 /**
  * This enum encapsulates the different mouse buttons that can be detected.
- * {@see ClickEvent}
+ * @see ClickEvent
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public enum MouseButton {

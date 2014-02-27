@@ -22,11 +22,14 @@ apply from: 'version-info.gradle'
 //  }
 //}
 
-file("/Volumes/TRUECRYPT/sonatype-osx.properties").withReader { reader ->
-    def userProps = new Properties()
-    userProps.load(reader)
-    userProps.each{
-        it->  project.ext.set(it.key, it.value)
+if (file("/Volumes/TRUECRYPT/sonatype-osx.properties").exists()) {
+
+    file("/Volumes/TRUECRYPT/sonatype-osx.properties").withReader { reader ->
+        def userProps = new Properties()
+        userProps.load(reader)
+        userProps.each{
+            it->  project.ext.set(it.key, it.value)
+        }
     }
 }
 
@@ -60,6 +63,8 @@ uploadArchives.onlyIf {
 }
 
 uploadArchives {
+        if (!project.hasProperty('sonatypeUsername') || !project.hasProperty('sonatypePassword'))
+			  return
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signPom(deployment) }

@@ -4,7 +4,7 @@ apply plugin: 'idea'
 
 apply from: 'jdkdetect.gradle'
 apply from: 'version-info.gradle'
-//apply from: 'maven-deployment.gradle'
+apply from: 'maven-deployment.gradle'
 //apply from: 'maven-deployment-local.gradle'
 
 // all projects must be comatible with the java version specified here

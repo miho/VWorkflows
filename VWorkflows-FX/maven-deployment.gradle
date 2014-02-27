@@ -23,11 +23,11 @@ apply from: 'version-info.gradle'
 //}
 
 file("/Volumes/TRUECRYPT/sonatype-osx.properties").withReader { reader ->
-  def userProps = new Properties()
-  userProps.load(reader)
-  userProps.each{
-    it->  project.ext.set(it.key, it.value)
-  }
+    def userProps = new Properties()
+    userProps.load(reader)
+    userProps.each{
+        it->  project.ext.set(it.key, it.value)
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -51,42 +51,50 @@ signing {
     sign configurations.archives
 }
 
+signArchives.onlyIf {
+    project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')
+}
+
+uploadArchives.onlyIf {
+    project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
  
             repository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-              authentication(userName: sonatypeUsername, password: sonatypePassword)
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
  
             pom.project {
-               name 'VWorkflows-Core'
-               packaging 'jar'
-               description 'VWorkflows is a workflow/graph library with JavaFX bindings'
-               url 'https://github.com/miho/VWorkflows'
+                name 'VWorkflows-Core'
+                packaging 'jar'
+                description 'VWorkflows is a workflow/graph library with JavaFX bindings'
+                url 'https://github.com/miho/VWorkflows'
  
-               scm {
-                   url 'scm:https://github.com/miho/VWorkflows.git'
-                   connection 'scm:https://github.com/miho/VWorkflows.git'
-                   developerConnection 'scm:https://github.com/miho/VWorkflows.git'
-               }
+                scm {
+                    url 'scm:https://github.com/miho/VWorkflows.git'
+                    connection 'scm:https://github.com/miho/VWorkflows.git'
+                    developerConnection 'scm:https://github.com/miho/VWorkflows.git'
+                }
  
-               licenses {
-                   license {
-                       name 'The BSD 2-Clause License'
-                       url 'http://opensource.org/licenses/bsd-license.php'
-                       distribution 'repo'
-                   }
-               }
+                licenses {
+                    license {
+                        name 'The BSD 2-Clause License'
+                        url 'http://opensource.org/licenses/bsd-license.php'
+                        distribution 'repo'
+                    }
+                }
  
-               developers {
-                   developer {
-                       id 'miho'
-                       name 'Michael Hoffer'
-                   }
-               }
-           }
+                developers {
+                    developer {
+                        id 'miho'
+                        name 'Michael Hoffer'
+                    }
+                }
+            }
         }
     }
 }

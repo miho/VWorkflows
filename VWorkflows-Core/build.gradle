@@ -50,7 +50,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
-sourceSets {
+/*sourceSets {
     main {
         java {
             srcDirs = ['src/']
@@ -67,7 +67,7 @@ sourceSets {
             srcDirs = ['test/']
         }
     }
-}
+}*/
 
 
 mainClassName =  "eu.mihosoft.vrl.workflow.playground.Playground"

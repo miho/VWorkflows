@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -31,4 +32,7 @@
       </menus>
     </MenuBar>
   </children>
+  <stylesheets>
+    <URL value="@../fx/default.css" />
+  </stylesheets>
 </AnchorPane>

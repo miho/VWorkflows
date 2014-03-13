@@ -25,15 +25,6 @@
     -fx-background-color: rgba(120,140,255,0.2);
     -fx-border-color: rgba(120,140,255,0.42);
     -fx-border-width: 2;
-
-/*     -fx-background-color : radial-gradient(center 50% 25%,
-                                       radius 75%,
-                                       rgb(122,255,77) 0%,
-                                       rgb(0,102,0) 100%);
-     
-     -fx-effect: dropshadow(gaussian,
-                               rgba(0, 0, 0, 0.65),
-                               20, 0.0, 10, 16);*/
 }
 
 .vnode-connector {
@@ -70,16 +61,16 @@
     -fx-stroke-width: 5px;
 }
 
-/*.window-titlebar {
+.window-titlebar {
 
-    -fx-background-color: rgba(120,140,255,0.2);
+    -fx-background-color: rgba(20,20,45,0.4);
     -fx-border-color: rgba(120,140,255,0.42);
     -fx-border-width: 0;
     -fx-padding: 6 4 3 4;
-    -fx-background-insets: 0 0 -2 0;
+    -fx-background-insets: 2 2 -2 2;
 
     -fx-alignment: center;
 
-    -fx-stroke: rgba(255,255,255,50);
+    /*-fx-stroke: rgba(255,255,255,50);*/
     -fx-fill: rgba(255,255,255,50);
-}*/
+}

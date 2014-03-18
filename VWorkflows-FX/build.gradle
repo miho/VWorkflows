@@ -16,9 +16,6 @@ apply from: 'maven-deployment.gradle'
 //apply from: 'maven-deployment-local.gradle'
 
 repositories {
-    
-    mavenLocal()
-    
     mavenCentral()
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots"
@@ -26,8 +23,13 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.9'
+    gradleVersion = '1.11'
 }
+
+// all projects must be comatible with the java version specified here
+// overriding this property in subprojects is not allowed
+//sourceCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 // finding jfxrt.jar for JDK 7 
 String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib";
@@ -43,40 +45,13 @@ dependencies {
 //        compile fileTree (dir: 'lib/jfxtras/jdk7/', includes: ['*.jar'])
         compile "org.jfxtras:jfxtras-labs:2.2-r6-SNAPSHOT"
     } else if (project.jdk == 8) {
-        compile "org.jfxtras:jfxtras-labs:8.0-r1-SNAPSHOT"
+        compile "org.jfxtras:jfxtras-labs:8.0-r1"
 //        compile "org.jfxtras:jfxtras-window:8.0-r1-SNAPSHOT"
         //compile fileTree (dir: 'lib/jfxtras/jdk8/', includes: ['*.jar'])
     }
     compile project(':vworkflows-core')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
 }
-
-tasks.withType(Compile) {
-    options.encoding = 'UTF-8'
-}
-
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/']
-//        }
-//        
-//        resources {
-//            srcDirs = ['src/']
-//        }
-//    }
-//
-//    test {
-//        java {
-//            srcDirs = ['test/']
-//        }
-//    }
-//}
-
-//compileJava {
-//    options.fork=true
-//    options.compilerArgs+="-Xlint:unchecked"
-//}
 
 
 mainClassName = "eu.mihosoft.vrl.workflow.demo.Main"
@@ -88,7 +63,3 @@ mainClassName = "eu.mihosoft.vrl.workflow.demo.Main"
 // jfxDeploy {
 //    packaging = "image"
 // }
-
-tasks.withType(Compile) {
-    options.encoding = 'UTF-8'
-}

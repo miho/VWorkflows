@@ -23,7 +23,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.10'
+    gradleVersion = '1.11'
 }
 
 // finding jfxrt.jar for JDK 7as we depend on binding API

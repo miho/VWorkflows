@@ -6,25 +6,27 @@ apply plugin: 'signing'
 
 apply from: 'version-info.gradle'
 
-//file("E:\\sonatype-windows.properties").withReader { reader ->
-//  def userProps = new Properties()
-//  userProps.load(reader)
-//  userProps.each{
-//    it->  project.ext.set(it.key, it.value)
-//  }
-//}
 
-//file("/media/truecrypt1/sonatype-linux.properties").withReader { reader ->
-//  def userProps = new Properties()
-//  userProps.load(reader)
-//  userProps.each{
-//    it->  project.ext.set(it.key, it.value)
-//  }
-//}
 
-if (file("/Volumes/TRUECRYPT/sonatype-osx.properties").exists()) {
+if (file("/media/realcrypt1/sonatype-linux.properties").exists()) {
+    file("/media/realcrypt1/sonatype-linux.properties").withReader { reader ->
+        def userProps = new Properties()
+        userProps.load(reader)
+        userProps.each{
+            it->  project.ext.set(it.key, it.value)
+        }
+    }
+} else if (file("/Volumes/TRUECRYPT/sonatype-osx.properties").exists()) {
 
     file("/Volumes/TRUECRYPT/sonatype-osx.properties").withReader { reader ->
+        def userProps = new Properties()
+        userProps.load(reader)
+        userProps.each{
+            it->  project.ext.set(it.key, it.value)
+        }
+    }
+} else if(file("E:\\sonatype-windows.properties").exists()) {
+    file("E:\\sonatype-windows.properties").withReader { reader ->
         def userProps = new Properties()
         userProps.load(reader)
         userProps.each{
@@ -63,8 +65,8 @@ uploadArchives.onlyIf {
 }
 
 uploadArchives {
-        if (!project.hasProperty('sonatypeUsername') || !project.hasProperty('sonatypePassword'))
-			  return
+    if (!project.hasProperty('sonatypeUsername') || !project.hasProperty('sonatypePassword'))
+    return
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signPom(deployment) }

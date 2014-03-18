@@ -25,14 +25,6 @@ if (file("/media/realcrypt1/sonatype-linux.properties").exists()) {
             it->  project.ext.set(it.key, it.value)
         }
     }
-} else if(file("E:\\sonatype-windows.properties").exists()) {
-    file("E:\\sonatype-windows.properties").withReader { reader ->
-        def userProps = new Properties()
-        userProps.load(reader)
-        userProps.each{
-            it->  project.ext.set(it.key, it.value)
-        }
-    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {

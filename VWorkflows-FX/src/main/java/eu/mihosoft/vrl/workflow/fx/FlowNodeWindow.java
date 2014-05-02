@@ -74,7 +74,7 @@ public class FlowNodeWindow extends Window {
     private VCanvas content;
     private OptimizableContentPane parentContent;
 
-    public FlowNodeWindow(FXFlowNodeSkin skin) {
+    public FlowNodeWindow(final FXFlowNodeSkin skin) {
 
         nodeSkinProperty().set(skin);
 

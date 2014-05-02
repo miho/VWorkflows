@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
@@ -53,6 +52,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -82,12 +82,9 @@ public class FlowNodeWindow extends Window {
         getLeftIcons().add(new MinimizeIcon(this));
 
 //        setTitleBarStyleClass("my-titlebar");
-
 //        setStyle("    -fx-background-color: rgba(120,140,255,0.2);\n"
 //                + "    -fx-border-color: rgba(120,140,255,0.42);\n"
 //                + "    -fx-border-width: 2;");
-
-
         parentContent = new OptimizableContentPane();
 
         content = new VCanvas();
@@ -99,14 +96,55 @@ public class FlowNodeWindow extends Window {
         configureCanvas(skin);
 
 //        addSelectionRectangle(skin, root);
-
         addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
                 connectorsToFront();
             }
         });
+
+        setSelectable(skin.getModel().isSelectable());
+        skin.getModel().selectableProperty().bindBidirectional(this.selectableProperty());
+
+        requestSelection(skin.getModel().isSelected());
+        skin.getModel().selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                FlowNodeWindow.this.requestSelection(newValue);
+            }
+        });
         
+        FlowNodeWindow.this.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                skin.getModel().requestSelection(newValue);
+            }
+        });
+
+        skinProperty().addListener(new ChangeListener<Skin<?>>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Skin<?>> observable, Skin<?> oldValue, Skin<?> newValue) {
+
+                if (newValue != null) {
+                    Node titlebar = getSkin().getNode().lookup(".window-titlebar");
+
+                    titlebar.addEventHandler(MouseEvent.ANY,
+                            (MouseEvent evt) -> {
+                                if (evt.getClickCount()==1 
+                                        && evt.getEventType() == MouseEvent.MOUSE_RELEASED
+                                        && evt.isDragDetect()) {
+                                    skin.getModel().requestSelection(!skin.getModel().isSelected());
+                                }
+                            }
+                    );
+                }
+
+            }
+        });
+
 //        // TODO shouldn't leaf nodes also have a visibility property?
 //        if (nodeSkinProperty.get().getModel() instanceof VFlowModel) {
 //            VFlowModel model = (VFlowModel) nodeSkinProperty.get().getModel();
@@ -141,17 +179,15 @@ public class FlowNodeWindow extends Window {
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
-
         // create skin factory for flow visualization
-        FXSkinFactory fXSkinFactory =
-                nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
+        FXSkinFactory fXSkinFactory
+                = nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
 
         // copy colors from prototype
 //        if (nodeSkinProperty.get().getSkinFactory() != null) {
 //            fXSkinFactory.connectionFillColors = nodeSkinProperty.get().getSkinFactory().connectionFillColorTypes();
 //            fXSkinFactory.connectionStrokeColors = nodeSkinProperty.get().getSkinFactory().connectionStrokeColorTypes();
 //        }
-
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);
 
@@ -215,9 +251,7 @@ public class FlowNodeWindow extends Window {
             });
         }
 
-
         // adds an icon that opens a new view in a separate window
-
         final WindowIcon newViewIcon = new WindowIcon();
 
         newViewIcon.setOnAction(new EventHandler<ActionEvent>() {
@@ -237,7 +271,7 @@ public class FlowNodeWindow extends Window {
                         if (vf.getModel().getId().equals(nodeId)) {
                             showFlowInWindow(vf,
                                     NodeUtil.getStylesheetsOfAncestors(
-                                    FlowNodeWindow.this),
+                                            FlowNodeWindow.this),
                                     stage, getTitle());
                             break;
                         }
@@ -301,7 +335,6 @@ public class FlowNodeWindow extends Window {
 
     private void configureCanvas(FXFlowNodeSkin skin) {
 
-
 //        if (skin == null) {
 //            return;
 //        }
@@ -309,7 +342,6 @@ public class FlowNodeWindow extends Window {
 //        if ((skin.getModel() instanceof VFlowModel)) {
 //            return;
 //        }
-
         content.getStyleClass().setAll("vnode-content");
     }
 }

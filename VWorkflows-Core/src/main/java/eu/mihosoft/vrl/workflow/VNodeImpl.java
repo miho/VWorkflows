@@ -42,6 +42,7 @@ import java.util.Map;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -77,6 +78,7 @@ class VNodeImpl implements VNode {
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
     
     private BooleanProperty selectedProperty = new SimpleBooleanProperty();
+    private BooleanProperty selectableProperty = new SimpleBooleanProperty();
     
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
@@ -479,19 +481,43 @@ class VNodeImpl implements VNode {
     }
 
     @Override
-    public boolean isSelected() {
+    public final boolean isSelected() {
         return selectedProperty().get();
     }
 
     @Override
-    public void setSelected(boolean b) {
-        selectedProperty().set(b);
+    public final boolean requestSelection(boolean select) {
+
+        if (!select) {
+            selectedProperty.set(false);
+        }
+
+        if (isSelectable()) {
+            selectedProperty.set(select);
+            return true;
+        } else {
+            return false;
+        }
     }
+    
 
     @Override
-    public final BooleanProperty selectedProperty() {
+    public final ReadOnlyBooleanProperty selectedProperty() {
         return this.selectedProperty;
     }
-
+    
+    @Override
+    public final BooleanProperty selectableProperty() {
+        return selectableProperty;
+    }
+    
+    @Override
+    public final boolean isSelectable() {
+        return selectableProperty().get();
+    }
+    
+    public final void setSelectable(boolean b) {
+        selectableProperty().set(b);
+    }
     
 }

@@ -6,7 +6,7 @@
 
 package eu.mihosoft.vrl.workflow;
 
-import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 
 /**
  *
@@ -16,8 +16,8 @@ public interface Selectable {
 
     boolean isSelected();
 
-    BooleanProperty selectedProperty();
+    ReadOnlyBooleanProperty selectedProperty();
 
-    void setSelected(boolean b);
-    
+    boolean requestSelection(boolean b);
+  
 }

@@ -44,6 +44,7 @@ import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -461,12 +462,22 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public void setSelected(boolean b) {
-        node.setSelected(b);
+    public boolean requestSelection(boolean b) {
+        return node.requestSelection(b);
     }
 
     @Override
-    public BooleanProperty selectedProperty() {
+    public ReadOnlyBooleanProperty selectedProperty() {
         return node.selectedProperty();
+    }
+
+    @Override
+    public BooleanProperty selectableProperty() {
+       return node.selectableProperty();
+    }
+
+    @Override
+    public boolean isSelectable() {
+        return node.isSelectable();
     }
 }

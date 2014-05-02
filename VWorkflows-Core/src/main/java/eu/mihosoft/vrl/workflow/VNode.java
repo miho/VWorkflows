@@ -149,4 +149,7 @@ public interface VNode extends Model, Selectable {
 
     public ObservableList<Connector> getOutputs();
     
+    public BooleanProperty selectableProperty();
+    public boolean isSelectable();
+    
 }

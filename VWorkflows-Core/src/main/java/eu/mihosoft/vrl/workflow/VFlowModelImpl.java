@@ -454,4 +454,19 @@ class VFlowModelImpl implements VFlowModel {
     public Collection<String> getMainOutputTypes() {
         return this.node.getMainOutputTypes();
     }
+
+    @Override
+    public boolean isSelected() {
+        return node.isSelected();
+    }
+
+    @Override
+    public void setSelected(boolean b) {
+        node.setSelected(b);
+    }
+
+    @Override
+    public BooleanProperty selectedProperty() {
+        return node.selectedProperty();
+    }
 }

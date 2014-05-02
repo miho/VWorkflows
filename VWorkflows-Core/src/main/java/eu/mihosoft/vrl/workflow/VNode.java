@@ -37,6 +37,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.util.Collection;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -46,7 +47,7 @@ import javafx.collections.ObservableList;
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface VNode extends Model {
+public interface VNode extends Model, Selectable {
 
     public StringProperty titleProperty();
 
@@ -147,4 +148,5 @@ public interface VNode extends Model {
     public ObservableList<Connector> getInputs();
 
     public ObservableList<Connector> getOutputs();
+    
 }

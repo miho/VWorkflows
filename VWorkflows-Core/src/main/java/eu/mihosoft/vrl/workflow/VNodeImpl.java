@@ -39,8 +39,10 @@ package eu.mihosoft.vrl.workflow;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -73,6 +75,9 @@ class VNodeImpl implements VNode {
     private DoubleProperty yProperty = new SimpleDoubleProperty();
     private DoubleProperty widthProperty = new SimpleDoubleProperty();
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
+    
+    private BooleanProperty selectedProperty = new SimpleBooleanProperty();
+    
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
@@ -471,6 +476,21 @@ class VNodeImpl implements VNode {
     @Override
     public ObservableList<Connector> getOutputs() {
         return this.unmodifiableOutputs;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selectedProperty().get();
+    }
+
+    @Override
+    public void setSelected(boolean b) {
+        selectedProperty().set(b);
+    }
+
+    @Override
+    public final BooleanProperty selectedProperty() {
+        return this.selectedProperty;
     }
 
     

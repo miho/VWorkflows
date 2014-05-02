@@ -131,15 +131,16 @@ public class FlowNodeWindow extends Window {
                 if (newValue != null) {
                     Node titlebar = getSkin().getNode().lookup(".window-titlebar");
 
-                    titlebar.addEventHandler(MouseEvent.ANY,
-                            (MouseEvent evt) -> {
-                                if (evt.getClickCount()==1 
-                                        && evt.getEventType() == MouseEvent.MOUSE_RELEASED
-                                        && evt.isDragDetect()) {
-                                    skin.getModel().requestSelection(!skin.getModel().isSelected());
-                                }
+                    titlebar.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+
+                        public void handle(MouseEvent evt) {
+                            if (evt.getClickCount()==1
+                                    && evt.getEventType() == MouseEvent.MOUSE_RELEASED
+                                    && evt.isDragDetect()) {
+                                skin.getModel().requestSelection(!skin.getModel().isSelected());
                             }
-                    );
+                        }
+                    });
                 }
 
             }

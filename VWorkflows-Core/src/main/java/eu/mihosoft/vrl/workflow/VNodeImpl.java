@@ -77,8 +77,8 @@ class VNodeImpl implements VNode {
     private DoubleProperty widthProperty = new SimpleDoubleProperty();
     private DoubleProperty heightProperty = new SimpleDoubleProperty();
     
-    private BooleanProperty selectedProperty = new SimpleBooleanProperty();
-    private BooleanProperty selectableProperty = new SimpleBooleanProperty();
+    private BooleanProperty selectedProperty = new SimpleBooleanProperty(false);
+    private BooleanProperty selectableProperty = new SimpleBooleanProperty(true);
     
     private ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();

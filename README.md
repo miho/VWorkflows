@@ -57,7 +57,7 @@ VWorkflows-Core:
 
 ### Reqirements
 
-- Java >= 1.7.25 (Preview Builds of Java 8 >= b105 are also supported)
+- Java >= 1.7.25 (Java 8 is also supported)
 - Internet connection (other dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 

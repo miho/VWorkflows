@@ -37,6 +37,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * This class defines a default connector value object. ValueObjects are used
@@ -50,6 +51,7 @@ public class DefaultConnectorValueObject implements ValueObject {
     private transient VNode parent;
     private transient Connector c;
     private VisualizationRequest vReq;
+    private ObjectProperty<Object> valueProperty = new SimpleObjectProperty<>();
 
     public DefaultConnectorValueObject() {
     }
@@ -70,17 +72,17 @@ public class DefaultConnectorValueObject implements ValueObject {
 
     @Override
     public Object getValue() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return valueProperty().get();
     }
 
     @Override
     public void setValue(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        valueProperty().set(o);
     }
 
     @Override
     public ObjectProperty<Object> valueProperty() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.valueProperty;
     }
 
     @Override

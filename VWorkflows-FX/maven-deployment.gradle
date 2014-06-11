@@ -6,6 +6,15 @@ apply plugin: 'signing'
 
 apply from: 'version-info.gradle'
 
+boolean driveExists(String drive) {
+    for(File f : File.listRoots()) {
+        if (f.name.startsWith(drive+":")) {
+            return true;
+        }
+    }
+    return false;
+}
+
 if (file("/media/realcrypt1/sonatype-linux.properties").exists()) {
     file("/media/realcrypt1/sonatype-linux.properties").withReader { reader ->
         def userProps = new Properties()
@@ -23,7 +32,7 @@ if (file("/media/realcrypt1/sonatype-linux.properties").exists()) {
             it->  project.ext.set(it.key, it.value)
         }
     }
-}  else if (file("F:/sonatype-windows.properties").exists()) {
+} else if (driveExists() && file("F:/sonatype-windows.properties").exists()) {
 
     file("F:/sonatype-windows.properties").withReader { reader ->
         def userProps = new Properties()

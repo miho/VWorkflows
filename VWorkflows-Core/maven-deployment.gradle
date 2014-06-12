@@ -17,8 +17,8 @@ boolean driveExists(String drive) {
     return false;
 }
 
-if (file("/media/realcrypt1/sonatype-linux.properties").exists()) {
-    file("/media/realcrypt1/sonatype-linux.properties").withReader { reader ->
+if (file("/media/truecrypt1/sonatype-linux.properties").exists()) {
+    file("/media/truecrypt1/sonatype-linux.properties").withReader { reader ->
         def userProps = new Properties()
         userProps.load(reader)
         userProps.each{

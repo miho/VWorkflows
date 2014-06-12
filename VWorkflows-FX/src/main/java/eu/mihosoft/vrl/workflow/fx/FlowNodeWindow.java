@@ -129,7 +129,7 @@ public class FlowNodeWindow extends Window {
             public void changed(ObservableValue<? extends Skin<?>> observable, Skin<?> oldValue, Skin<?> newValue) {
 
                 if (newValue != null) {
-                    Node titlebar = getSkin().getNode().lookup(".window-titlebar");
+                    Node titlebar = newValue.getNode().lookup("."+getTitleBarStyleClass());
 
                     titlebar.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
 

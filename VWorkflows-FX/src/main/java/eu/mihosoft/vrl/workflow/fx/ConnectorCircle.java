@@ -76,6 +76,7 @@ class ConnectorCircle extends Circle {
 
     private void init() {
         this.getStyleClass().add("vnode-connector");
+        this.setManaged(false);
     }
 
     /**

@@ -1,11 +1,46 @@
+# Java
+
 *.class
+*.jar
+*.war
+*.ear
 
-# Package Files #
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
 
-/VFXConnections/nbproject/private/
-/VFXConnections/build/
-/VFXConnections/dist/
-/VWorkflows/nbproject/private/
-/VWorkflows/build/
-/VWorkflows/dist/
+# Gradle
 
+build/
+dist/
+.gradle/
+
+# Netbeans
+
+nbproject/private/
+nbbuild/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Eclipse
+
+.classpath
+.project
+.settings/
+
+# IntelliJ
+
+.idea/
+# if you remove the above rule, at least ignore user-specific stuff:
+# .idea/workspace.xml
+# .idea/tasks.xml
+# and these sensitive or high-churn files:
+# .idea/dataSources.ids
+# .idea/dataSources.xml
+# .idea/sqlDataSources.xml
+# .idea/dynamic.xml
+
+## File-based project format
+*.ipr
+*.iml
+*.iws

@@ -78,61 +78,49 @@ class ConnectionListenerImpl implements ConnectionListener {
     
 
     @Override
-    public void onConnectionCompatible(Node n) {
-        System.out.println("connection compatible");
-        
+    public void onConnectionCompatible(Node n) {       
         FXConnectorUtil.connectAnim(receiverConnectorUI, n);
     }
     
     @Override
-    public void onConnectionCompatibleReleased(Node n) {
-        System.out.println("connection compatible");
-        
+    public void onConnectionCompatibleReleased(Node n) {      
         FXConnectorUtil.connectAnim(receiverConnectorUI, n);
     }
     
     @Override
-    public void onConnectionIncompatible() {
-        System.out.println("connection incompatible");
-        
+    public void onConnectionIncompatible() {        
         FXConnectorUtil.incompatibleAnim(receiverConnectorUI);
     }
     
     @Override
     public void onNoConnection(Node n) {
-        System.out.println("no connection");
-        
+
         FXConnectorUtil.unconnectAnim(receiverConnectorUI);
     }
     
     @Override
     public void onConnectionIncompatibleReleased(Node n) {
-        System.out.println("connection incompatible");
 
         FXConnectorUtil.connnectionIncompatibleAnim(n);
     }
     
     @Override
     public void onCreateNewConnectionReleased(ConnectionResult connResult) {
-        System.out.println("connection created");
         newConnectionAnim(connResult);
     }
     
     @Override
     public void onCreateNewConnectionReverseReleased(ConnectionResult connResult) {
-        System.out.println("connection created (reverse)");
         newConnectionReverseAnim(connResult);
     }
     
     @Override
     public void onRemoveConnectionReleased() {
-        System.out.println("remove connection");
         
         FXConnectorUtil.unconnectAnim(receiverConnectorUI);
     }
     
     private void newConnectionAnim(ConnectionResult connResult) {
-        System.out.println("new-connection anim");
         if (connResult.getConnection() != null) {
             FXConnectionSkin connectionSkin =
                     (FXConnectionSkin) flowController.getNodeSkinLookup().getById(

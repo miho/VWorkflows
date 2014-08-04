@@ -40,6 +40,7 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VNode;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -146,6 +147,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, connection.getReceiver().getId());
         receiverWindow = receiverSkin.getNode();
         receiverNode = (Shape) receiverSkin.getConnectorNodeByReference(connection.getReceiver());
+
+        if (receiverNode.getParent() != senderNode.getParent()) {
+            createIntermediateConnection(senderNode, receiverNode, connection);
+        }
 
         addToClipboard();
 
@@ -447,7 +452,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //                    init();
 //                    return;
 //                }
-
                 getReceiverUI().toFront();
                 connectionPath.toBack();
 
@@ -697,5 +701,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
      */
     public Shape getReceiverNode() {
         return receiverNode;
+    }
+
+    private void createIntermediateConnection(Shape senderNode, Shape receiverNode, Connection connection) {
+        VNode sender = connection.getSender().getNode();
+        VNode receiver = connection.getReceiver().getNode();
+        
+        throw new UnsupportedOperationException("Cannot visualize connection with different parent flows!");
     }
 }

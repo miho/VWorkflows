@@ -45,7 +45,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -59,7 +61,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import jfxtras.labs.scene.control.window.Window;
-
 
 /**
  *
@@ -92,6 +93,7 @@ public class FXFlowNodeSkin
     private double inputConnectorSize;
     private double outputConnectorSize;
     private List<Connector> connectorList = new ArrayList<>();
+    private final IntegerProperty numConnectorsProperty = new SimpleIntegerProperty();
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
         this.skinFactory = skinFactory;
@@ -130,6 +132,7 @@ public class FXFlowNodeSkin
         getModel().getConnectors().addListener(new ListChangeListener<Connector>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Connector> change) {
+                boolean numConnectorsHasChanged = false;
                 while (change.next()) {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
@@ -138,11 +141,13 @@ public class FXFlowNodeSkin
                     } else if (change.wasUpdated()) {
                         //update item
                     } else if (change.wasRemoved()) {
+                        numConnectorsHasChanged = true;
                         // removed
                         for (Connector connector : change.getRemoved()) {
                             removeConnector(connector);
                         }
                     } else if (change.wasAdded()) {
+                        numConnectorsHasChanged = true;
                         // added
                         for (Connector connector : change.getAddedSubList()) {
                             addConnector(connector);
@@ -150,6 +155,15 @@ public class FXFlowNodeSkin
                     }
 
                 } // end while change.next()
+
+                if (numConnectorsHasChanged) {
+                   
+                    computeInputConnectorSize();
+                    computeOutputConnectorSize();
+                    adjustConnectorSize();
+                    
+                     numConnectorsProperty.set(getModel().getConnectors().size());
+                }
             }
         });
 
@@ -234,7 +248,7 @@ public class FXFlowNodeSkin
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(node.layoutYProperty(), node.heightProperty());
+                super.bind(node.layoutYProperty(), node.heightProperty(), numConnectorsProperty);
             }
 
             @Override
@@ -295,8 +309,6 @@ public class FXFlowNodeSkin
                         isInputConnected(connector)) {
                     return;
                 }
-                
-                
 
 //                newConnectionSkin
 //                        = new FXNewConnectionSkin(getSkinFactory(),
@@ -344,7 +356,6 @@ public class FXFlowNodeSkin
             @Override
             public void handle(MouseEvent t) {
 
-                
                 connector.click(NodeUtil.mouseBtnFromEvent(t), t);
 
                 // we are already connected and manipulate the existing connection

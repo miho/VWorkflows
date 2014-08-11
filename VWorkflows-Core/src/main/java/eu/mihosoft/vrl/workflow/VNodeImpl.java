@@ -60,35 +60,34 @@ import javafx.collections.ObservableList;
  */
 class VNodeImpl implements VNode {
 
-    private ObservableList<Connector> connectors =
+    private final ObservableList<Connector> connectors =
             FXCollections.observableArrayList();
     private ObservableList<Connector> inputs =
             FXCollections.observableArrayList();
     private ObservableList<Connector> outputs =
             FXCollections.observableArrayList();
-    private ObservableList<Connector> unmodifiableInputs =
+    private final ObservableList<Connector> unmodifiableInputs =
             FXCollections.unmodifiableObservableList(inputs);
-    private ObservableList<Connector> unmodifiableOutputs =
+    private final ObservableList<Connector> unmodifiableOutputs =
             FXCollections.unmodifiableObservableList(outputs);
-    private StringProperty idProperty = new SimpleStringProperty();
-    private StringProperty titleProperty = new SimpleStringProperty();
-    private DoubleProperty xProperty = new SimpleDoubleProperty();
-    private DoubleProperty yProperty = new SimpleDoubleProperty();
-    private DoubleProperty widthProperty = new SimpleDoubleProperty();
-    private DoubleProperty heightProperty = new SimpleDoubleProperty();
+    private final StringProperty idProperty = new SimpleStringProperty();
+    private final StringProperty titleProperty = new SimpleStringProperty();
+    private final DoubleProperty xProperty = new SimpleDoubleProperty();
+    private final DoubleProperty yProperty = new SimpleDoubleProperty();
+    private final DoubleProperty widthProperty = new SimpleDoubleProperty();
+    private final DoubleProperty heightProperty = new SimpleDoubleProperty();
     
-    private BooleanProperty selectedProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty selectableProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty selectedProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty selectableProperty = new SimpleBooleanProperty(true);
     
-    private ObjectProperty<ValueObject> valueObjectProperty =
+    private final ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
     private VisualizationRequest vReq;
     private VFlowModel flow;
-//    private ObservableList<String> inputTypes = FXCollections.observableArrayList();
-//    private ObservableList<String> outputTypes = FXCollections.observableArrayList();
+
     private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
-    private Map<String, Connector> mainInputs = new HashMap<>();
-    private Map<String, Connector> mainOutputs = new HashMap<>();
+    private final Map<String, Connector> mainInputs = new HashMap<>();
+    private final Map<String, Connector> mainOutputs = new HashMap<>();
 
     public VNodeImpl(VFlowModel flow) {
 

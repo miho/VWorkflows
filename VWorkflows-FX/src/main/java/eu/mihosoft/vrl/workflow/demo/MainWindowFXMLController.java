@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.ClickEvent;
@@ -42,6 +41,7 @@ import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
@@ -53,6 +53,10 @@ import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -61,6 +65,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import jfxtras.labs.scene.control.window.Window;
 
 /**
@@ -80,7 +85,7 @@ public class MainWindowFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        VCanvas canvas = new VCanvas();
+       canvas = new VCanvas();
 
         Pane root = canvas.getContentPane();
 
@@ -91,7 +96,8 @@ public class MainWindowFXMLController implements Initializable {
         onGenerateAction(null);
     }
     private Pane rootPane;
-    private VFlow workflow;
+    private VCanvas canvas;
+    VFlow workflow;
 
     @FXML
     public void onLoadAction(ActionEvent e) {
@@ -134,18 +140,16 @@ public class MainWindowFXMLController implements Initializable {
         System.out.print(" >> generate workflow");
 
         workflow = FlowFactory.newFlow();
-        
+
         updateUI();
-        
+
         workflowTest(workflow, 5, 10);
 //        workflowTest(workflow, 2, 2);
-        
 
         System.out.println(" [done]");
 
         System.out.println(" --> #nodes: " + counter);
 
-        
     }
     @FXML
     public Pane contentPane;
@@ -193,7 +197,6 @@ public class MainWindowFXMLController implements Initializable {
 
             String type = connectionTypes[i % connectionTypes.length];
 
-
             n.setMainInput(n.addInput(type));
             n.setMainInput(n.addInput("event"));
 
@@ -203,7 +206,6 @@ public class MainWindowFXMLController implements Initializable {
 
 //            n.addInput(type);
 //            n.addInput(type);
-
             n.addOutput(type);
             n.setMainOutput(n.addOutput("event"));
             n.addOutput(type);
@@ -211,23 +213,23 @@ public class MainWindowFXMLController implements Initializable {
             for (int j = 0; j < 3; j++) {
                 n.addOutput(type);
             }
-            
+
             for (final Connector connector : n.getConnectors()) {
                 connector.addClickEventListener(new EventHandler<ClickEvent>() {
 
                     @Override
                     public void handle(ClickEvent t) {
-                        
-                        if (t.getButton()!=MouseButton.SECONDARY) {
+
+                        if (t.getButton() != MouseButton.SECONDARY) {
                             return;
                         }
-                        
+
                         System.out.println("Connector: " + connector.getId() + ", btn: " + t.getButton());
                         if (t.getEvent() instanceof MouseEvent) {
                             MouseEvent evt = (MouseEvent) t.getEvent();
-                            
+
                             ContextMenu menu = new ContextMenu(new MenuItem("Connector: " + connector.getId() + ", btn: " + t.getButton()));
-                            
+
                             menu.show(rootPane, evt.getScreenX(), evt.getScreenY());
                         }
                     }
@@ -252,13 +254,13 @@ public class MainWindowFXMLController implements Initializable {
 //        if (workflow == null) {
 //            return;
 //        }
-
         workflow.getModel().setVisible(true);
 
         FXSkinFactory skinFactory = new FXSkinFactory(rootPane);
 
         workflow.setSkinFactories(skinFactory);
-
+        
+       
 
 //        skinFactory.setConnectionFillColor("control", new Color(1.0, 1.0, 0.0, 0.75));
 //        skinFactory.setConnectionStrokeColor("control", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
@@ -268,11 +270,8 @@ public class MainWindowFXMLController implements Initializable {
 //
 //        skinFactory.setConnectionFillColor("event", new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
 //        skinFactory.setConnectionStrokeColor("event", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-
-
 //        workflow.addSkinFactories(new FXSkinFactory(minimapPane1.getContentPane()),
 //                new FXSkinFactory(minimapPane2.getContentPane()));
-
 //        ScalableContentPane minimapPane3 = createMinimap("Minimap 3");
 //        ScalableContentPane minimapPane4 = createMinimap("Minimap 4");
 //

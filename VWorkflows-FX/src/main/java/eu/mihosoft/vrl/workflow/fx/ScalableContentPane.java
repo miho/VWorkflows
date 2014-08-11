@@ -65,10 +65,10 @@ public class ScalableContentPane extends Pane {
     private boolean aspectScale = true;
     private boolean autoRescale = true;
     private static boolean applyJDK7Fix = false;
-    private DoubleProperty minScaleXProperty = new SimpleDoubleProperty(Double.MIN_VALUE);
-    private DoubleProperty maxScaleXProperty = new SimpleDoubleProperty(Double.MAX_VALUE);
-    private DoubleProperty minScaleYProperty = new SimpleDoubleProperty(Double.MIN_VALUE);
-    private DoubleProperty maxScaleYProperty = new SimpleDoubleProperty(Double.MAX_VALUE);
+    private final DoubleProperty minScaleXProperty = new SimpleDoubleProperty(Double.MIN_VALUE);
+    private final DoubleProperty maxScaleXProperty = new SimpleDoubleProperty(Double.MAX_VALUE);
+    private final DoubleProperty minScaleYProperty = new SimpleDoubleProperty(Double.MIN_VALUE);
+    private final DoubleProperty maxScaleYProperty = new SimpleDoubleProperty(Double.MAX_VALUE);
 
     static {
         // JDK7 fix:
@@ -119,6 +119,20 @@ public class ScalableContentPane extends Pane {
         getContentPane().getTransforms().add(getContentScaleTransform());
 
         getChildren().add(contentPane);
+        
+        ChangeListener<Number> changeListener = new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                requestScale();
+            }
+        };
+        
+        minScaleXProperty().addListener(changeListener);
+        minScaleYProperty().addListener(changeListener);
+        maxScaleXProperty().addListener(changeListener);
+        maxScaleYProperty().addListener(changeListener);
+                
 
 //        getContentPane().setStyle("-fx-border-color: red; -fx-border-width: 1;");
     }

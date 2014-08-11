@@ -45,7 +45,7 @@ public class Main extends Application {
 
         VNode n1 = flow.newNode();
         Connector output = n1.addOutput("data");
-        VFlow n2 = flow.newSubFlow();
+        final VFlow n2 = flow.newSubFlow();
         Connector input = n2.addInput("data");
         VNode n3 = n2.newNode();
         Connector inputN3 = n3.addInput("data");

@@ -219,6 +219,7 @@ public class FXFlowNodeSkin
 //
 //        circle.setStrokeWidth(3);
         final Circle connectorNode = circle;
+        connectorNode.setManaged(false);
 
         connectors.put(connector, connectorNode);
 

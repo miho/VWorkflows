@@ -85,13 +85,13 @@ public class FlowNodeWindow extends Window {
 //        setStyle("    -fx-background-color: rgba(120,140,255,0.2);\n"
 //                + "    -fx-border-color: rgba(120,140,255,0.42);\n"
 //                + "    -fx-border-width: 2;");
-        parentContent = new OptimizableContentPane();
+        if (skin.getModel() instanceof VFlowModel) {
+            parentContent = new OptimizableContentPane();
+            content = new VCanvas();
+            parentContent.getChildren().add(content);
+            super.setContentPane(parentContent);
+        }
 
-        content = new VCanvas();
-
-        parentContent.getChildren().add(content);
-
-        super.setContentPane(parentContent);
         addCollapseIcon(skin);
         configureCanvas(skin);
 
@@ -114,7 +114,7 @@ public class FlowNodeWindow extends Window {
                 FlowNodeWindow.this.requestSelection(newValue);
             }
         });
-        
+
         FlowNodeWindow.this.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -129,12 +129,12 @@ public class FlowNodeWindow extends Window {
             public void changed(ObservableValue<? extends Skin<?>> observable, Skin<?> oldValue, Skin<?> newValue) {
 
                 if (newValue != null) {
-                    Node titlebar = newValue.getNode().lookup("."+getTitleBarStyleClass());
+                    Node titlebar = newValue.getNode().lookup("." + getTitleBarStyleClass());
 
                     titlebar.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
 
                         public void handle(MouseEvent evt) {
-                            if (evt.getClickCount()==1
+                            if (evt.getClickCount() == 1
                                     && evt.getEventType() == MouseEvent.MOUSE_RELEASED
                                     && evt.isDragDetect()) {
                                 skin.getModel().requestSelection(!skin.getModel().isSelected());
@@ -343,8 +343,9 @@ public class FlowNodeWindow extends Window {
 //        if ((skin.getModel() instanceof VFlowModel)) {
 //            return;
 //        }
-        content.getStyleClass().setAll("vnode-content");
-        
-        skin.configureCanvas(content);
+        if (content != null) {
+            content.getStyleClass().setAll("vnode-content");
+            skin.configureCanvas(content);
+        }
     }
 }

@@ -651,4 +651,8 @@ public class FXFlowNodeSkin
     public Node getConnectorNodeByReference(Connector c) {
         return connectors.get(c);
     }
+
+    public void configureCanvas(VCanvas content) {
+        //
+    }
 }

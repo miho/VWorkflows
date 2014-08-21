@@ -344,5 +344,7 @@ public class FlowNodeWindow extends Window {
 //            return;
 //        }
         content.getStyleClass().setAll("vnode-content");
+        
+        skin.configureCanvas(content);
     }
 }

@@ -184,6 +184,7 @@ public class FlowNodeWindow extends Window {
         FXSkinFactory fXSkinFactory
                 = nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
 
+
         // copy colors from prototype
 //        if (nodeSkinProperty.get().getSkinFactory() != null) {
 //            fXSkinFactory.connectionFillColors = nodeSkinProperty.get().getSkinFactory().connectionFillColorTypes();

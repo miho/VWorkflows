@@ -43,6 +43,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -82,12 +83,12 @@ class VNodeImpl implements VNode {
     
     private final ObjectProperty<ValueObject> valueObjectProperty =
             new SimpleObjectProperty<>();
-    private VisualizationRequest vReq;
     private VFlowModel flow;
 
     private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
     private final Map<String, Connector> mainInputs = new HashMap<>();
     private final Map<String, Connector> mainOutputs = new HashMap<>();
+    private ObjectProperty<VisualizationRequest> vReqProperty;
 
     public VNodeImpl(VFlowModel flow) {
 
@@ -281,9 +282,12 @@ class VNodeImpl implements VNode {
         return valueObjectProperty;
     }
 
+    /**
+     * @return the vReq
+     */
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return vReq;
+        return visualizationRequestProperty().getValue();
     }
 
     /**
@@ -291,7 +295,20 @@ class VNodeImpl implements VNode {
      */
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vReq = vReq;
+        _visualizationRequestProperty().set(vReq);
+    }
+
+    private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
+        if (vReqProperty == null) {
+            vReqProperty = new SimpleObjectProperty<>();
+        }
+
+        return vReqProperty;
+    }
+
+    @Override
+    public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
+        return _visualizationRequestProperty();
     }
 
 //    @Override

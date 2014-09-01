@@ -45,6 +45,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -169,12 +170,12 @@ class VFlowModelImpl implements VFlowModel {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return null;
+        return node.getVisualizationRequest();
     }
 
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.setVisualizationRequest(vReq);
     }
 
     @Override
@@ -479,5 +480,10 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public boolean isSelectable() {
         return node.isSelectable();
+    }
+
+    @Override
+    public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
+        return node.visualizationRequestProperty();
     }
 }

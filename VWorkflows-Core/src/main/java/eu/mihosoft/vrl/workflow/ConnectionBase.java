@@ -36,9 +36,13 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.util.Objects;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
- * This class provides a base implementation of connections. 
+ * This class provides a base implementation of connections.
+ *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ConnectionBase implements Connection {
@@ -47,7 +51,7 @@ class ConnectionBase implements Connection {
     private String receiverId;
     private String id;
     private String type;
-    private VisualizationRequest vReq;
+    private ObjectProperty<VisualizationRequest> vReqProperty;
     private Connections connections;
     private Connector sender;
     private Connector receiver;
@@ -75,7 +79,6 @@ class ConnectionBase implements Connection {
 //    public String getSenderId() {
 //        return senderId;
 //    }
-
     @Override
     public void setSender(Connector s) {
         this.senderId = s.getId();
@@ -97,7 +100,6 @@ class ConnectionBase implements Connection {
 //    public String getReceiverId() {
 //        return receiverId;
 //    }
-
     @Override
     public void setReceiver(Connector r) {
         this.receiverId = r.getId();
@@ -128,7 +130,7 @@ class ConnectionBase implements Connection {
      */
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return vReq;
+        return visualizationRequestProperty().getValue();
     }
 
     /**
@@ -136,7 +138,20 @@ class ConnectionBase implements Connection {
      */
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vReq = vReq;
+        _visualizationRequestProperty().set(vReq);
+    }
+
+    private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
+        if (vReqProperty == null) {
+            vReqProperty = new SimpleObjectProperty<>();
+        }
+
+        return vReqProperty;
+    }
+
+    @Override
+    public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
+        return _visualizationRequestProperty();
     }
 //    @Override
 //    public void setSkin(Skin<?> skin) {

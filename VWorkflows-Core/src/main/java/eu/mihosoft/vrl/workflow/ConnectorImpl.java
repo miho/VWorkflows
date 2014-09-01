@@ -38,6 +38,7 @@ package eu.mihosoft.vrl.workflow;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 
@@ -51,7 +52,7 @@ class ConnectorImpl implements Connector {
     private VNode node;
     private String type;
     private String localId;
-    private VisualizationRequest vRequest;
+    private ObjectProperty<VisualizationRequest> vReqProperty;
     private boolean input;
     private boolean output;
     private final ObjectProperty<ValueObject> valueObjectProperty = new SimpleObjectProperty<>();
@@ -96,14 +97,33 @@ class ConnectorImpl implements Connector {
         return this.node;
     }
 
+    /**
+     * @return the vReq
+     */
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return this.vRequest;
+        return visualizationRequestProperty().getValue();
+    }
+
+    /**
+     * @param vReq the vReq to set
+     */
+    @Override
+    public void setVisualizationRequest(VisualizationRequest vReq) {
+        _visualizationRequestProperty().set(vReq);
+    }
+
+    private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
+        if (vReqProperty == null) {
+            vReqProperty = new SimpleObjectProperty<>();
+        }
+
+        return vReqProperty;
     }
 
     @Override
-    public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vRequest = vReq;
+    public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
+        return _visualizationRequestProperty();
     }
 
     /**

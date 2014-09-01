@@ -46,7 +46,7 @@ public class DefaultValueObject implements ValueObject {
 
     private VNode parent;
     private final ObjectProperty valueProperty = new SimpleObjectProperty();
-    private VisualizationRequest vReq = new DefaultVisualizationRequest();
+    private VisualizationRequest vReq = null;
 
     public DefaultValueObject() {
     }
@@ -101,6 +101,11 @@ public class DefaultValueObject implements ValueObject {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
+        
+        if (vReq == null) {
+            vReq = new VisualizationRequestImpl();
+        }
+        
         return vReq;
     }
     
@@ -117,16 +122,3 @@ public class DefaultValueObject implements ValueObject {
         this.parent = parent;
     }
 }
-
-class DefaultVisualizationRequest implements VisualizationRequest {
-
-    @Override
-    public String getStyle() {
-        return "default";
-    }
-
-    @Override
-    public String getOptions() {
-        return "";
-    }
-};

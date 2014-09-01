@@ -40,7 +40,12 @@ package eu.mihosoft.vrl.workflow;
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface VisualizationRequest {
+public interface VisualizationRequest extends PropertyStorage{
+    
+    static final String KEY_STYLE = "visualization-request:style";
+    static final String KEY_MAX_CONNECTOR_SIZE = "visualization-request:connector:max-size";
+    static final String KEY_CONNECTOR_AUTO_LAYOUT = "visualization-request:connector:auto-layout";
+    
+    public void setStyle(String style);
     public String getStyle();
-    public String getOptions();
 }

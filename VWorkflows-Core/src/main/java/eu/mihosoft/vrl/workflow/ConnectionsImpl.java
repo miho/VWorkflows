@@ -44,6 +44,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -61,7 +64,7 @@ class ConnectionsImpl implements Connections {
 //    Map<String, Integer> receivers = new HashMap<>();
     private ObservableList<Connection> observableConnections =
             FXCollections.observableArrayList();
-    private VisualizationRequest vReq;
+    private ObjectProperty<VisualizationRequest> vReqProperty;
 
     //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
     
@@ -319,9 +322,13 @@ class ConnectionsImpl implements Connections {
         }
     }
 
+
+        /**
+     * @return the vReq
+     */
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        return vReq;
+        return visualizationRequestProperty().getValue();
     }
 
     /**
@@ -329,8 +336,22 @@ class ConnectionsImpl implements Connections {
      */
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vReq = vReq;
+        _visualizationRequestProperty().set(vReq);
     }
+
+    private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
+        if (vReqProperty == null) {
+            vReqProperty = new SimpleObjectProperty<>();
+        }
+
+        return vReqProperty;
+    }
+
+    @Override
+    public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
+        return _visualizationRequestProperty();
+    }
+    
 //    @Override
 //    public void setSkin(Skin<?> skin) {
 //        skinProperty.set(skin);

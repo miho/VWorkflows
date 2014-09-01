@@ -31,21 +31,15 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '2.0'
 }
 
 // all projects must be comatible with the java version specified here
 // overriding this property in subprojects is not allowed
-//sourceCompatibility = '1.8'
+sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-// finding jfxrt.jar for JDK 7 
-String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib";
-project.ext.set("javafx_jar", "$jreHome/jfxrt.jar")
-
 dependencies {
-    
-    compile files(project.javafx_jar)
     
     //    compile "org.jfxtras:jfxtras-labs-8.0:8.0-r1-SNAPSHOT"
     compile "com.thoughtworks.xstream:xstream:1.4.4"

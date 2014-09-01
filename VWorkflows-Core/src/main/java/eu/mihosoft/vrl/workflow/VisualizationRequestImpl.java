@@ -5,9 +5,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Optional;
-import javafx.collections.MapChangeListener;
-
 /**
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;

@@ -51,6 +51,10 @@ dependencies {
 //        compile "org.jfxtras:jfxtras-window:8.0-r1-SNAPSHOT"
         //compile fileTree (dir: 'lib/jfxtras/jdk8/', includes: ['*.jar'])
     }
+    
+    compile group: 'org.apache.commons', name:'commons-math3', version: '3.3'
+    compile group: 'org.apache.commons', name:'commons-math3', version: '3.3', classifier: 'sources'
+    
     compile project(':vworkflows-core')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
 }

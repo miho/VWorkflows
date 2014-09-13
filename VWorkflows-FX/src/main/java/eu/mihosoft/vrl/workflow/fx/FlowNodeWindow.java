@@ -56,6 +56,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import jfxtras.labs.scene.control.window.CloseIcon;
@@ -184,7 +185,6 @@ public class FlowNodeWindow extends Window {
         FXSkinFactory fXSkinFactory
                 = nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
 
-
         // copy colors from prototype
 //        if (nodeSkinProperty.get().getSkinFactory() != null) {
 //            fXSkinFactory.connectionFillColors = nodeSkinProperty.get().getSkinFactory().connectionFillColorTypes();
@@ -310,11 +310,10 @@ public class FlowNodeWindow extends Window {
         // move connectors to front
         FXFlowNodeSkin skin = nodeSkinProperty().get();
 
-        for (Node n : skin.inputList) {
-            n.toFront();
-        }
-        for (Node n : skin.outputList) {
-            n.toFront();
+        for (List<Circle> shapeList : skin.shapeLists) {
+            for (Node n : shapeList) {
+                n.toFront();
+            }
         }
 
         List<Connection> connections = new ArrayList<>();

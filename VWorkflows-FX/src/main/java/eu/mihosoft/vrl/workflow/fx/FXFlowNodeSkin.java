@@ -75,9 +75,9 @@ import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 public class FXFlowNodeSkin
         implements FXSkin<VNode, Window>, VNodeSkin<VNode> {
 
-    private ObjectProperty<VNode> modelProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<VNode> modelProperty = new SimpleObjectProperty<>();
     private FlowNodeWindow node;
-    private ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
     private ChangeListener<String> modelTitleListener;
     private ChangeListener<Number> modelXListener;
     private ChangeListener<Number> modelYListener;
@@ -93,15 +93,18 @@ public class FXFlowNodeSkin
     private boolean removeSkinOnly = false;
     VFlow controller;
     Map<Connector, Shape> connectors = new HashMap<>();
-    List<Circle> inputList = new ArrayList<>();
-    List<Circle> outputList = new ArrayList<>();
     List<List<Circle>> shapeLists = new ArrayList<>();
-    private FXSkinFactory skinFactory;
-    private List<Double> connectorSizes = new ArrayList<Double>();
+    private final FXSkinFactory skinFactory;
+    private final List<Double> connectorSizes = new ArrayList<>();
 //    private double inputConnectorSize;
 //    private double outputConnectorSize;
-    private List<Connector> connectorList = new ArrayList<>();
+    private final List<Connector> connectorList = new ArrayList<>();
     private final IntegerProperty numConnectorsProperty = new SimpleIntegerProperty();
+
+    private final int TOP = 0;
+    private final int RIGHT = 1;
+    private final int BOTTOM = 2;
+    private final int LEFT = 3;
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
         this.skinFactory = skinFactory;
@@ -180,25 +183,26 @@ public class FXFlowNodeSkin
                 }
             }
         });
-        
+
         node.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
-            
+
             if (connectorList.isEmpty()) {
                 return;
             }
-            
+
             Connector c = connectorList.get(0);
-            
-            Collection<Connection>conns = getModel().getFlow().getConnections(c.getType()).getAllWith(c);
-            
+
+            Collection<Connection> conns = getModel().getFlow().
+                    getConnections(c.getType()).getAllWith(c);
+
             if (conns.isEmpty()) {
                 return;
             }
-            
-            Pair<Integer,Integer> edges = getConnectorEdges(conns.iterator().next());
-            
+
+            Pair<Integer, Integer> edges = getConnectorEdges(conns.iterator().next());
+
             System.out.println("edges: " + edges.toString());
-            
+
         });
 
 //        skinFactory.connectionFillColorTypes().addListener(new MapChangeListener<String, Color>() {
@@ -230,8 +234,6 @@ public class FXFlowNodeSkin
 //                }
 //            }
 //        });
-        
-        
     }
 
     private void addConnector(final Connector connector) {
@@ -260,10 +262,11 @@ public class FXFlowNodeSkin
         connectors.put(connector, connectorNode);
 
         if (connector.isInput()) {
-            inputList.add(connectorNode);
-        }
-        if (connector.isOutput()) {
-            outputList.add(connectorNode);
+//            inputList.add(connectorNode);
+            shapeLists.get(LEFT).add(connectorNode);
+        } else if (connector.isOutput()) {
+//            outputList.add(connectorNode);
+            shapeLists.get(RIGHT).add(connectorNode);
         }
 
         DoubleBinding startXBinding = new DoubleBinding() {
@@ -285,7 +288,8 @@ public class FXFlowNodeSkin
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(node.layoutYProperty(), node.heightProperty(), numConnectorsProperty);
+                super.bind(node.layoutYProperty(),
+                        node.heightProperty(), numConnectorsProperty);
             }
 
             @Override
@@ -294,22 +298,25 @@ public class FXFlowNodeSkin
                 double connectorHeight = connectorNode.getRadius() * 2;
                 double gap = 5;
 
-                double numConnectors = inputList.size();
+                double numConnectors = shapeLists.get(LEFT).size();
 
-                int connectorIndex = inputList.indexOf(connectorNode);
+                int connectorIndex = shapeLists.get(LEFT).indexOf(connectorNode);
 
                 if (connector.isOutput()) {
-                    numConnectors = outputList.size();
-                    connectorIndex = outputList.indexOf(connectorNode);
+                    numConnectors = shapeLists.get(RIGHT).size();
+                    connectorIndex = shapeLists.get(RIGHT).indexOf(connectorNode);
                 }
 
-                double totalHeight = numConnectors * connectorHeight + (numConnectors - 1) * gap;
+                double totalHeight = numConnectors * connectorHeight
+                        + (numConnectors - 1) * gap;
 
-                double midPointOfNode = node.getLayoutY() + node.getHeight() / 2;
+                double midPointOfNode = node.getLayoutY()
+                        + node.getHeight() / 2;
 
                 double startY = midPointOfNode - totalHeight / 2;
 
-                double y = startY + (connectorHeight + gap) * connectorIndex + (connectorHeight + gap) / 2;
+                double y = startY + (connectorHeight + gap) * connectorIndex
+                        + (connectorHeight + gap) / 2;
 
                 return y;
             }
@@ -320,7 +327,8 @@ public class FXFlowNodeSkin
 
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
             @Override
-            public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
+            public void changed(ObservableValue<? extends Bounds> observable,
+                    Bounds oldValue, Bounds newValue) {
 //                computeInputConnectorSize();
 //                computeOutputConnectorSize();
                 computeConnectorSizes();
@@ -374,11 +382,14 @@ public class FXFlowNodeSkin
                 if (newConnectionSkin == null) {
                     newConnectionSkin
                             = new FXNewConnectionSkin(getSkinFactory(),
-                                    getParent(), connector, getController(), connector.getType());
+                                    getParent(), connector,
+                                    getController(), connector.getType());
 
                     newConnectionSkin.add();
 
-                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), newConnectionPressEvent);
+                    MouseEvent.fireEvent(
+                            newConnectionSkin.getReceiverConnector(),
+                            newConnectionPressEvent);
                 }
 
                 t.consume();
@@ -423,8 +434,8 @@ public class FXFlowNodeSkin
         double minSize = 8;
 
         connectorSizes.clear();
+        
         for (int i = 0; i < shapeLists.size(); i++) {
-
             List<Circle> shapeList = shapeLists.get(i);
 
             double connectorHeight = computeConnectorSize(inset, shapeList.size());
@@ -455,6 +466,8 @@ public class FXFlowNodeSkin
 //        outputConnectorSize = connectorHeight;
 //    }
     private double computeConnectorSize(double inset, int numConnectors) {
+        
+        if (numConnectors == 0) return 0;
 
         double maxSize = 10;
 
@@ -462,9 +475,11 @@ public class FXFlowNodeSkin
         double originalConnectorHeight = connectorHeight;
         double gap = 5;
 
-        double totalHeight = numConnectors * connectorHeight + (numConnectors - 1) * gap;
-
-        connectorHeight = Math.min(totalHeight, node.getPrefHeight() - inset) / (numConnectors);
+        double totalHeight = numConnectors * connectorHeight
+                + (numConnectors - 1) * gap;
+        
+        connectorHeight = Math.min(totalHeight,
+                node.getPrefHeight() - inset) / (numConnectors);
         connectorHeight = Math.min(connectorHeight, maxSize * 2);
 
         if (numConnectors == 1) {
@@ -489,7 +504,9 @@ public class FXFlowNodeSkin
 
         Vector2D np0 = new Vector2D(n.getX(), n.getY());
         Vector2D np1 = new Vector2D(n.getX() + n.getWidth(), n.getY());
-        Vector2D np2 = new Vector2D(n.getX() + n.getWidth(), n.getY() + n.getHeight());
+        Vector2D np2 = new Vector2D(
+                n.getX() + n.getWidth(),
+                n.getY() + n.getHeight());
         Vector2D np3 = new Vector2D(n.getX(), n.getY() + n.getHeight());
 
         Line edge0 = new Line(np0, np1, 1e-5);
@@ -504,60 +521,60 @@ public class FXFlowNodeSkin
 
         return result;
     }
-    
-     private Optional<Integer> getIntersectionIndex(
-             Segment connectionSegment, List<Segment> edges) {
-         
-         SubLine connectionSegmentL = new SubLine(connectionSegment);
-         
-         int i = 0;
-         for(Segment s : edges) {
-             
-             if (new SubLine(s).intersection(connectionSegmentL, true)!=null) {
-                 return Optional.of(i);
-             }
-                          
-             i++;
-         }
-         
-         return Optional.empty();
-     }
-     
+
+    private Optional<Integer> getIntersectionIndex(
+            Segment connectionSegment, List<Segment> edges) {
+
+        SubLine connectionSegmentL = new SubLine(connectionSegment);
+
+        int i = 0;
+        for (Segment s : edges) {
+
+            if (new SubLine(s).intersection(connectionSegmentL, true) != null) {
+                return Optional.of(i);
+            }
+
+            i++;
+        }
+
+        return Optional.empty();
+    }
+
     private Vector2D getNodeCenter(VNode n) {
         return new Vector2D(
-                n.getX()+n.getWidth()*0.5,
-                n.getY()+n.getHeight()*0.5);
+                n.getX() + n.getWidth() * 0.5,
+                n.getY() + n.getHeight() * 0.5);
     }
-    
-    private Segment getConnectionSegment(VNode sender, VNode receiver) {
+
+    private Segment getConnectionEdge(VNode sender, VNode receiver) {
         Vector2D senderC = getNodeCenter(sender);
         Vector2D receiverC = getNodeCenter(receiver);
-        
+
         Line l = new Line(senderC, receiverC, 1e-5);
-        
+
         return new Segment(senderC, receiverC, l);
     }
-            
+
     private Pair<Integer, Integer> getConnectorEdges(Connection c) {
 
         VNode senderN = c.getSender().getNode();
         List<Segment> n1Edges = nodeToSegments(senderN);
-        VNode receiverN = c.getSender().getNode();
+        VNode receiverN = c.getReceiver().getNode();
         List<Segment> n2Edges = nodeToSegments(receiverN);
-        
-        Segment segment = getConnectionSegment(senderN, receiverN);
-        
-        Optional<Integer> n1Intersection = 
-                getIntersectionIndex(segment, n1Edges);
-        Optional<Integer> n2Intersection = 
-                getIntersectionIndex(segment, n2Edges);
-        
-        if (!n1Intersection.isPresent() || !n2Intersection.isPresent()  ) {
-            throw new IllegalStateException(
-                    "We should always have intersections. Please fix me :(");
+
+        Segment segment = getConnectionEdge(senderN, receiverN);
+
+        Optional<Integer> senderIntersection
+                = getIntersectionIndex(segment, n1Edges);
+        Optional<Integer> receiverIntersection
+                = getIntersectionIndex(segment, n2Edges);
+
+        if (!senderIntersection.isPresent() || !receiverIntersection.isPresent()) {
+            // rectangles overlap. therefore we use default layout
+            return new Pair<>(RIGHT, LEFT);
         }
 
-        return new Pair<>(n1Intersection.get(), n2Intersection.get());
+        return new Pair<>(senderIntersection.get(), receiverIntersection.get());
     }
 
     private void adjustConnectorSize() {
@@ -591,9 +608,11 @@ public class FXFlowNodeSkin
 
             // TODO: remove connectors&connections?
             if (connector.isInput()) {
-                inputList.remove(connectorNode);
+//                inputList.remove(connectorNode);
+                shapeLists.get(LEFT).remove(connectorNode);
             } else if (connector.isOutput()) {
-                outputList.remove(connectorNode);
+//                outputList.remove(connectorNode);
+                shapeLists.get(RIGHT).remove(connectorNode);
             }
             NodeUtil.removeFromParent(connectorNode);
         }

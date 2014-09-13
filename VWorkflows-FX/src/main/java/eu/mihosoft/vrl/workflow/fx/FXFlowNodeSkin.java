@@ -35,15 +35,17 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -61,6 +63,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import jfxtras.labs.scene.control.window.Window;
+import org.apache.commons.math3.geometry.euclidean.twod.Line;
+import org.apache.commons.math3.geometry.euclidean.twod.Segment;
+import org.apache.commons.math3.geometry.euclidean.twod.SubLine;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
  *
@@ -89,9 +95,11 @@ public class FXFlowNodeSkin
     Map<Connector, Shape> connectors = new HashMap<>();
     List<Circle> inputList = new ArrayList<>();
     List<Circle> outputList = new ArrayList<>();
+    List<List<Circle>> shapeLists = new ArrayList<>();
     private FXSkinFactory skinFactory;
-    private double inputConnectorSize;
-    private double outputConnectorSize;
+    private List<Double> connectorSizes = new ArrayList<Double>();
+//    private double inputConnectorSize;
+//    private double outputConnectorSize;
     private List<Connector> connectorList = new ArrayList<>();
     private final IntegerProperty numConnectorsProperty = new SimpleIntegerProperty();
 
@@ -106,6 +114,11 @@ public class FXFlowNodeSkin
     }
 
     private void init() {
+
+        for (int i = 0; i < 4; i++) {
+            shapeLists.add(new ArrayList<>());
+        }
+
         node = new FlowNodeWindow(this);
 
         node.setTitle(getModel().getTitle());
@@ -157,14 +170,35 @@ public class FXFlowNodeSkin
                 } // end while change.next()
 
                 if (numConnectorsHasChanged) {
-                   
-                    computeInputConnectorSize();
-                    computeOutputConnectorSize();
+
+                    computeConnectorSizes();
+//                    computeInputConnectorSize();
+//                    computeOutputConnectorSize();
                     adjustConnectorSize();
-                    
-                     numConnectorsProperty.set(getModel().getConnectors().size());
+
+                    numConnectorsProperty.set(getModel().getConnectors().size());
                 }
             }
+        });
+        
+        node.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
+            
+            if (connectorList.isEmpty()) {
+                return;
+            }
+            
+            Connector c = connectorList.get(0);
+            
+            Collection<Connection>conns = getModel().getFlow().getConnections(c.getType()).getAllWith(c);
+            
+            if (conns.isEmpty()) {
+                return;
+            }
+            
+            Pair<Integer,Integer> edges = getConnectorEdges(conns.iterator().next());
+            
+            System.out.println("edges: " + edges.toString());
+            
         });
 
 //        skinFactory.connectionFillColorTypes().addListener(new MapChangeListener<String, Color>() {
@@ -196,6 +230,8 @@ public class FXFlowNodeSkin
 //                }
 //            }
 //        });
+        
+        
     }
 
     private void addConnector(final Connector connector) {
@@ -285,8 +321,9 @@ public class FXFlowNodeSkin
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-                computeInputConnectorSize();
-                computeOutputConnectorSize();
+//                computeInputConnectorSize();
+//                computeOutputConnectorSize();
+                computeConnectorSizes();
                 adjustConnectorSize();
             }
         });
@@ -379,39 +416,44 @@ public class FXFlowNodeSkin
         });
     }
 
-    private void computeInputConnectorSize() {
+    private void computeConnectorSizes() {
 
         double inset = 120;
         double minInset = 60;
         double minSize = 8;
 
-        double connectorHeight = computeConnectorSize(inset, inputList.size());
+        connectorSizes.clear();
+        for (int i = 0; i < shapeLists.size(); i++) {
 
-        if (connectorHeight < minSize) {
-            double diff = minSize - connectorHeight;
-            inset = Math.max(inset - diff * inputList.size(), minInset);
-            connectorHeight = computeConnectorSize(inset, inputList.size());
+            List<Circle> shapeList = shapeLists.get(i);
+
+            double connectorHeight = computeConnectorSize(inset, shapeList.size());
+
+            if (connectorHeight < minSize) {
+                double diff = minSize - connectorHeight;
+                inset = Math.max(inset - diff * shapeList.size(), minInset);
+                connectorHeight = computeConnectorSize(inset, shapeList.size());
+            }
+
+            connectorSizes.add(connectorHeight);
         }
-
-        inputConnectorSize = connectorHeight;
     }
 
-    private void computeOutputConnectorSize() {
-        double inset = 120;
-        double minInset = 60;
-        double minSize = 8;
-
-        double connectorHeight = computeConnectorSize(inset, outputList.size());
-
-        if (connectorHeight < minSize) {
-            double diff = minSize - connectorHeight;
-            inset = Math.max(inset - diff * outputList.size(), minInset);
-            connectorHeight = computeConnectorSize(inset, outputList.size());
-        }
-
-        outputConnectorSize = connectorHeight;
-    }
-
+//    private void computeOutputConnectorSize() {
+//        double inset = 120;
+//        double minInset = 60;
+//        double minSize = 8;
+//
+//        double connectorHeight = computeConnectorSize(inset, outputList.size());
+//
+//        if (connectorHeight < minSize) {
+//            double diff = minSize - connectorHeight;
+//            inset = Math.max(inset - diff * outputList.size(), minInset);
+//            connectorHeight = computeConnectorSize(inset, outputList.size());
+//        }
+//
+//        outputConnectorSize = connectorHeight;
+//    }
     private double computeConnectorSize(double inset, int numConnectors) {
 
         double maxSize = 10;
@@ -432,20 +474,113 @@ public class FXFlowNodeSkin
         return connectorHeight;
     }
 
+    private double getMinConnectorSize() {
+        Optional<Double> minSize = connectorSizes.stream().min(Double::compare);
+
+        if (minSize.isPresent()) {
+            return minSize.get();
+        }
+
+        return 0;
+    }
+
+    private List<Segment> nodeToSegments(VNode n) {
+        List<Segment> result = new ArrayList<>();
+
+        Vector2D np0 = new Vector2D(n.getX(), n.getY());
+        Vector2D np1 = new Vector2D(n.getX() + n.getWidth(), n.getY());
+        Vector2D np2 = new Vector2D(n.getX() + n.getWidth(), n.getY() + n.getHeight());
+        Vector2D np3 = new Vector2D(n.getX(), n.getY() + n.getHeight());
+
+        Line edge0 = new Line(np0, np1, 1e-5);
+        Line edge1 = new Line(np1, np2, 1e-5);
+        Line edge2 = new Line(np2, np3, 1e-5);
+        Line edge3 = new Line(np3, np0, 1e-5);
+
+        result.add(new Segment(np0, np1, edge0));
+        result.add(new Segment(np1, np2, edge1));
+        result.add(new Segment(np2, np3, edge2));
+        result.add(new Segment(np3, np0, edge3));
+
+        return result;
+    }
+    
+     private Optional<Integer> getIntersectionIndex(
+             Segment connectionSegment, List<Segment> edges) {
+         
+         SubLine connectionSegmentL = new SubLine(connectionSegment);
+         
+         int i = 0;
+         for(Segment s : edges) {
+             
+             if (new SubLine(s).intersection(connectionSegmentL, true)!=null) {
+                 return Optional.of(i);
+             }
+                          
+             i++;
+         }
+         
+         return Optional.empty();
+     }
+     
+    private Vector2D getNodeCenter(VNode n) {
+        return new Vector2D(
+                n.getX()+n.getWidth()*0.5,
+                n.getY()+n.getHeight()*0.5);
+    }
+    
+    private Segment getConnectionSegment(VNode sender, VNode receiver) {
+        Vector2D senderC = getNodeCenter(sender);
+        Vector2D receiverC = getNodeCenter(receiver);
+        
+        Line l = new Line(senderC, receiverC, 1e-5);
+        
+        return new Segment(senderC, receiverC, l);
+    }
+            
+    private Pair<Integer, Integer> getConnectorEdges(Connection c) {
+
+        VNode senderN = c.getSender().getNode();
+        List<Segment> n1Edges = nodeToSegments(senderN);
+        VNode receiverN = c.getSender().getNode();
+        List<Segment> n2Edges = nodeToSegments(receiverN);
+        
+        Segment segment = getConnectionSegment(senderN, receiverN);
+        
+        Optional<Integer> n1Intersection = 
+                getIntersectionIndex(segment, n1Edges);
+        Optional<Integer> n2Intersection = 
+                getIntersectionIndex(segment, n2Edges);
+        
+        if (!n1Intersection.isPresent() || !n2Intersection.isPresent()  ) {
+            throw new IllegalStateException(
+                    "We should always have intersections. Please fix me :(");
+        }
+
+        return new Pair<>(n1Intersection.get(), n2Intersection.get());
+    }
+
     private void adjustConnectorSize() {
 
-        if (!inputList.isEmpty() && !outputList.isEmpty()) {
-            inputConnectorSize = Math.min(inputConnectorSize, outputConnectorSize);
-            outputConnectorSize = inputConnectorSize;
+        for (int i = 0; i < connectorSizes.size(); i++) {
+            for (Circle connector : shapeLists.get(i)) {
+                double size = connectorSizes.get(i);
+                connector.setRadius(size * 0.5);
+            }
         }
 
-        for (Circle connector : inputList) {
-            connector.setRadius(inputConnectorSize / 2.0);
-        }
-
-        for (Circle connector : outputList) {
-            connector.setRadius(outputConnectorSize / 2.0);
-        }
+//        if (!inputList.isEmpty() && !outputList.isEmpty()) {
+//            inputConnectorSize = Math.min(inputConnectorSize, outputConnectorSize);
+//            outputConnectorSize = inputConnectorSize;
+//        }
+//
+//        for (Circle connector : inputList) {
+//            connector.setRadius(inputConnectorSize / 2.0);
+//        }
+//
+//        for (Circle connector : outputList) {
+//            connector.setRadius(outputConnectorSize / 2.0);
+//        }
     }
 
     private void removeConnector(Connector connector) {

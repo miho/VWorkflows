@@ -234,7 +234,7 @@ public class FXFlowNodeSkin
                     shapeLists.get(newEdgeIndex).add(connectorShape);
                 }
 
-                System.out.println("edges: " + edges.toString());
+//                System.out.println("edges: " + edges.toString());
             }
 
         });
@@ -273,11 +273,34 @@ public class FXFlowNodeSkin
 
                 if (edgeIndex == RIGHT) {
                     posX += node.getWidth();
-                } else if (edgeIndex == TOP || edgeIndex == BOTTOM) {
-                    posX += node.getWidth() * 0.5;
                 }
+                
+                if (edgeIndex==LEFT || edgeIndex == RIGHT) {
+                    return posX;
+                }
+                
+                double midPointOfNode = posX + node.getWidth() * 0.5;
+                
+                double connectorWidth = connectorNode.getRadius() * 2;
+                double gap = 5;
 
-                return posX;
+                double numConnectors = shapeLists.get(edgeIndex).size();
+
+                int connectorIndex = shapeLists.get(edgeIndex).indexOf(connectorNode);
+
+                double totalWidth = numConnectors * connectorWidth
+                        + (numConnectors - 1) * gap;
+
+                double startX = midPointOfNode - totalWidth / 2;
+                
+                double offsetX = + (connectorWidth + gap) * connectorIndex
+                        + (connectorWidth + gap) / 2;;
+
+
+                        
+                double x = startX +offsetX;
+
+                return x;
             }
         };
 
@@ -290,7 +313,17 @@ public class FXFlowNodeSkin
             @Override
             protected double computeValue() {
 
+                double posY = node.getLayoutY();
+
                 final int edgeIndex = connectorToIndexMap.get(connector);
+
+                if (edgeIndex == BOTTOM) {
+                    posY += node.getHeight();
+                }
+                
+                if (edgeIndex==TOP || edgeIndex == BOTTOM) {
+                    return posY;
+                }
 
                 double connectorHeight = connectorNode.getRadius() * 2;
                 double gap = 5;
@@ -299,10 +332,6 @@ public class FXFlowNodeSkin
 
                 int connectorIndex = shapeLists.get(edgeIndex).indexOf(connectorNode);
 
-//                if (connector.isOutput()) {
-//                    numConnectors = shapeLists.get(RIGHT).size();
-//                    connectorIndex = shapeLists.get(RIGHT).indexOf(connectorNode);
-//                }
                 double totalHeight = numConnectors * connectorHeight
                         + (numConnectors - 1) * gap;
 
@@ -311,8 +340,12 @@ public class FXFlowNodeSkin
 
                 double startY = midPointOfNode - totalHeight / 2;
 
-                double y = startY + (connectorHeight + gap) * connectorIndex
-                        + (connectorHeight + gap) / 2;
+                double y = startY;
+                
+                double offsetY =  + (connectorHeight + gap) * connectorIndex
+                        + (connectorHeight + gap) / 2;;
+                
+                y+=offsetY;
 
                 return y;
             }

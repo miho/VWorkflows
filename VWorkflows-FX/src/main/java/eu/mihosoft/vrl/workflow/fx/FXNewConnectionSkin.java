@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
@@ -43,6 +42,8 @@ import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
+import java.util.List;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -62,7 +63,7 @@ import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Connection, Path> {
 
@@ -112,10 +113,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //        connectionPath.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 //        connectionPath.setStrokeWidth(5);
 //        connectionPath.setStrokeLineCap(StrokeLineCap.ROUND);
-
 //        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
 //        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
-
 //        if (type.equals("control")) {
 //            receiverConnectorUI.setFill(new Color(1.0, 1.0, 0.0, 0.75));
 //            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
@@ -126,13 +125,11 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //            receiverConnectorUI.setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
 //            receiverConnectorUI.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 //        }
-
         receiverConnectorUI.setStrokeWidth(3);
 
 //        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //    
-
         final VNode sender = getSender().getNode();
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, getSender().getId());
         final Node senderNode = senderSkin.getConnectorNodeByReference(getSender());
@@ -171,7 +168,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             @Override
             protected double computeValue() {
 
-                return senderNode.getLayoutX() +(receiverConnectorUI.getLayoutX() - senderNode.getLayoutX())/2;
+                return senderNode.getLayoutX() + (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX()) / 2;
 
             }
         };
@@ -197,7 +194,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
             @Override
             protected double computeValue() {
 
-                return receiverConnectorUI.getLayoutX() - (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX())/2;
+                return receiverConnectorUI.getLayoutX() - (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX()) / 2;
 
             }
         };
@@ -230,9 +227,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         receiverConnectorUI.setLayoutX(senderNode.getLayoutX());
         receiverConnectorUI.setLayoutY(senderNode.getLayoutY());
 
-        connectionListener =
-                new ConnectionListenerImpl(
-                skinFactory, flowController, receiverConnectorUI);
+        connectionListener
+                = new ConnectionListenerImpl(
+                        skinFactory, flowController, receiverConnectorUI);
 
     }
 
@@ -289,7 +286,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                    if (model == getSender()) {
 //                        return;
 //                    }
-
                     ConnectionResult connResult = null;
 
                     if (getSender().isInput() && receiverConnectorModel.isOutput()) {
@@ -349,7 +345,6 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //                Node n = NodeUtil.getDeepestNode(
 //                        getParent(),
 //                        t.getSceneX(), t.getSceneY(), FlowNodeWindow.class, ConnectorCircle.class);
-
                 SelectedConnector selConnector = null;
 
                 if (getSender().isOutput()) {

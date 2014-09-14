@@ -6,6 +6,8 @@
 
 package eu.mihosoft.vrl.workflow.fx;
 
+import java.util.Objects;
+
 /**
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
@@ -27,7 +29,36 @@ public class Pair<T,V> {
         return second;
     }
     
+    @Override
     public String toString() {
         return "[" + first +", " + second+ "]"; 
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Pair<?, ?> other = (Pair<?, ?>) obj;
+        if (!Objects.equals(this.first, other.first)) {
+            return false;
+        }
+        if (!Objects.equals(this.second, other.second)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.first);
+        hash = 53 * hash + Objects.hashCode(this.second);
+        return hash;
+    }
+    
+    
 }

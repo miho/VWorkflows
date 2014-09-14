@@ -56,8 +56,8 @@ import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
@@ -310,7 +310,7 @@ public class FlowNodeWindow extends Window {
         // move connectors to front
         FXFlowNodeSkin skin = nodeSkinProperty().get();
 
-        for (List<Circle> shapeList : skin.shapeLists) {
+        for (List<Shape> shapeList : skin.shapeLists) {
             for (Node n : shapeList) {
                 n.toFront();
             }

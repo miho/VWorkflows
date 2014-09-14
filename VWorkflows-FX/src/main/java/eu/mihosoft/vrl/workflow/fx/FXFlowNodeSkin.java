@@ -675,13 +675,25 @@ public class FXFlowNodeSkin
     }
 
     private void adjustConnectorSize() {
+        
+        double maxConnectorSize = Double.MAX_VALUE;
+        
+        Optional<Double> maxSize = 
+                getModel().getVisualizationRequest().
+                        get(VisualizationRequest.KEY_MAX_CONNECTOR_SIZE);
+        
+        if (maxSize.isPresent()) {
+            maxConnectorSize = maxSize.get();
+        }
 
         for (int i = 0; i < connectorSizes.size(); i++) {
             for (Shape connector : shapeLists.get(i)) {
                 double size = connectorSizes.get(i);
 
                 if (connector instanceof Circle) {
-                    ((Circle) connector).setRadius(size * 0.5);
+
+                    ((Circle) connector).setRadius(
+                            Math.min(size * 0.5,maxConnectorSize*0.5));
                 }
             }
         }

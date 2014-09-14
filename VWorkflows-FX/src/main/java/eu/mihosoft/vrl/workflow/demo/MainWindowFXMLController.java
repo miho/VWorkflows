@@ -195,6 +195,8 @@ public class MainWindowFXMLController implements Initializable {
             }
 
             n.setTitle("Node " + n.getId());
+            
+//            n.getVisualizationRequest().set(VisualizationRequest.KEY_MAX_CONNECTOR_SIZE, 10.0);
 
             String type = connectionTypes[i % connectionTypes.length];
 

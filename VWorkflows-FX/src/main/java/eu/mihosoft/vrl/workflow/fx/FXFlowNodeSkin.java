@@ -39,6 +39,7 @@ import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -204,6 +205,17 @@ public class FXFlowNodeSkin
     }
 
     private void layoutConnector(Connector c, boolean updateOthers) {
+
+        Optional<Boolean> autoLayout
+                = c.getVisualizationRequest().
+                get(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT);
+
+        boolean switchEdges = false;
+
+        if (autoLayout.isPresent()) {
+            switchEdges = autoLayout.get();
+        }
+
         Circle connectorShape = (Circle) connectors.get(c);
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
@@ -217,65 +229,69 @@ public class FXFlowNodeSkin
         }
 
         Pair<Integer, Integer> edges = new Pair<>(LEFT, RIGHT);
-        List<Pair<Integer, Integer>> edgesList = new ArrayList<>(conns.size());
 
-        for (Connection connection : conns) {
-            Pair<Integer, Integer> tmpEdges
-                    = getConnectorEdges(connection);
-            edgesList.add(tmpEdges);
-        }
+        if (switchEdges) {
+            List<Pair<Integer, Integer>> edgesList
+                    = new ArrayList<>(conns.size());
 
-        List<Integer> frequencies = edgesList.stream().distinct().
-                map(e -> Collections.frequency(edgesList, e)).
-                collect(Collectors.toList());
-
-        int max = 0;
-        int maxIndex = -1;
-
-        for (int i = 0; i < frequencies.size(); i++) {
-            int freq = frequencies.get(i);
-            if (freq > max) {
-                max = freq;
-                maxIndex = i;
-            }
-        }
-
-        if (maxIndex > -1) {
-            edges = edgesList.get(maxIndex);
-        }
-
-        int oldEdgeIndex = connectorToIndexMap.get(c);
-        int newEdgeIndex;
-
-        if (c.isInput()) {
-            newEdgeIndex = edges.getSecond();
-
-            if (newEdgeIndex == RIGHT) {
-                newEdgeIndex = TOP;
-            } else if (newEdgeIndex == BOTTOM) {
-                newEdgeIndex = LEFT;
+            for (Connection connection : conns) {
+                Pair<Integer, Integer> tmpEdges
+                        = getConnectorEdges(connection);
+                edgesList.add(tmpEdges);
             }
 
-        } else {
-            newEdgeIndex = edges.getFirst();
+            List<Integer> frequencies = edgesList.stream().distinct().
+                    map(e -> Collections.frequency(edgesList, e)).
+                    collect(Collectors.toList());
 
-            if (newEdgeIndex == TOP) {
-                newEdgeIndex = RIGHT;
-            } else if (newEdgeIndex == LEFT) {
-                newEdgeIndex = BOTTOM;
+            int max = 0;
+            int maxIndex = -1;
+
+            for (int i = 0; i < frequencies.size(); i++) {
+                int freq = frequencies.get(i);
+                if (freq > max) {
+                    max = freq;
+                    maxIndex = i;
+                }
             }
-        }
 
-        if (newEdgeIndex != oldEdgeIndex) {
+            if (maxIndex > -1) {
+                edges = edgesList.get(maxIndex);
+            }
 
-            shapeLists.get(oldEdgeIndex).remove(connectorShape);
- 
-            shapeLists.get(newEdgeIndex).add(connectorShape);
-            connectorToIndexMap.put(c, newEdgeIndex);
-            
-            // update all other connectors
-            layoutConnectors();
-        }
+            int oldEdgeIndex = connectorToIndexMap.get(c);
+            int newEdgeIndex;
+
+            if (c.isInput()) {
+                newEdgeIndex = edges.getSecond();
+
+                if (newEdgeIndex == RIGHT) {
+                    newEdgeIndex = TOP;
+                } else if (newEdgeIndex == BOTTOM) {
+                    newEdgeIndex = LEFT;
+                }
+
+            } else {
+                newEdgeIndex = edges.getFirst();
+
+                if (newEdgeIndex == TOP) {
+                    newEdgeIndex = RIGHT;
+                } else if (newEdgeIndex == LEFT) {
+                    newEdgeIndex = BOTTOM;
+                }
+            }
+
+            if (newEdgeIndex != oldEdgeIndex) {
+
+                shapeLists.get(oldEdgeIndex).remove(connectorShape);
+
+                shapeLists.get(newEdgeIndex).add(connectorShape);
+                connectorToIndexMap.put(c, newEdgeIndex);
+
+                // update all other connectors
+                layoutConnectors();
+            }
+        } // end if switchEdges
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
         connectorShape.setLayoutY(computeConnectorYValue(c));

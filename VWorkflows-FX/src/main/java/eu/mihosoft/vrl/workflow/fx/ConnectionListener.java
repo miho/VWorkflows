@@ -69,9 +69,9 @@ public interface ConnectionListener {
 
 class ConnectionListenerImpl implements ConnectionListener {
 
-    private Node receiverConnectorUI;
-    private FXSkinFactory skinFactory;
-    private VFlow flowController;
+    private final Node receiverConnectorUI;
+    private final FXSkinFactory skinFactory;
+    private final VFlow flowController;
 
     public ConnectionListenerImpl(FXSkinFactory skinFactory, VFlow vflow, Node receiverConnectorUI) {
         this.skinFactory = skinFactory;

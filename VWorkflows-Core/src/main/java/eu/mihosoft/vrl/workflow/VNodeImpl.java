@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import java.util.Collection;
@@ -57,32 +56,32 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class VNodeImpl implements VNode {
 
-    private final ObservableList<Connector> connectors =
-            FXCollections.observableArrayList();
-    private ObservableList<Connector> inputs =
-            FXCollections.observableArrayList();
-    private ObservableList<Connector> outputs =
-            FXCollections.observableArrayList();
-    private final ObservableList<Connector> unmodifiableInputs =
-            FXCollections.unmodifiableObservableList(inputs);
-    private final ObservableList<Connector> unmodifiableOutputs =
-            FXCollections.unmodifiableObservableList(outputs);
+    private final ObservableList<Connector> connectors
+            = FXCollections.observableArrayList();
+    private ObservableList<Connector> inputs
+            = FXCollections.observableArrayList();
+    private ObservableList<Connector> outputs
+            = FXCollections.observableArrayList();
+    private final ObservableList<Connector> unmodifiableInputs
+            = FXCollections.unmodifiableObservableList(inputs);
+    private final ObservableList<Connector> unmodifiableOutputs
+            = FXCollections.unmodifiableObservableList(outputs);
     private final StringProperty idProperty = new SimpleStringProperty();
     private final StringProperty titleProperty = new SimpleStringProperty();
     private final DoubleProperty xProperty = new SimpleDoubleProperty();
     private final DoubleProperty yProperty = new SimpleDoubleProperty();
     private final DoubleProperty widthProperty = new SimpleDoubleProperty();
     private final DoubleProperty heightProperty = new SimpleDoubleProperty();
-    
+
     private final BooleanProperty selectedProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty selectableProperty = new SimpleBooleanProperty(true);
-    
-    private final ObjectProperty<ValueObject> valueObjectProperty =
-            new SimpleObjectProperty<>();
+
+    private final ObjectProperty<ValueObject> valueObjectProperty
+            = new SimpleObjectProperty<>();
     private VFlowModel flow;
 
     private IdGenerator connectorIdGenerator = new IdGeneratorImpl();
@@ -153,7 +152,6 @@ class VNodeImpl implements VNode {
             }
         });
 
-
 //
 //        outputs.addListener(new ListChangeListener<Connector<FlowNode>>() {
 //            @Override
@@ -161,7 +159,6 @@ class VNodeImpl implements VNode {
 //                throw new UnsupportedOperationException("Not supported yet.");
 //            }
 //        });
-
     }
 
 //    @Override
@@ -301,6 +298,7 @@ class VNodeImpl implements VNode {
     private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
         if (vReqProperty == null) {
             vReqProperty = new SimpleObjectProperty<>();
+            vReqProperty.set(new VisualizationRequestImpl());
         }
 
         return vReqProperty;
@@ -352,19 +350,19 @@ class VNodeImpl implements VNode {
 //    }
     @Override
     public Connector addInput(String type) {
-       return addInput(this, type);
+        return addInput(this, type);
     }
 
     @Override
     public Connector addOutput(String type) {
-       return this.addOutput(this,type);
+        return this.addOutput(this, type);
     }
 
     @Override
     public Connector addConnector(Connector c) {
-       return addConnector(this, c);
+        return addConnector(this, c);
     }
-    
+
     Connector addInput(VNode node, String type) {
         Connector c = new ConnectorImpl(
                 node, type, null, true);
@@ -373,21 +371,21 @@ class VNodeImpl implements VNode {
     }
 
     Connector addOutput(VNode node, String type) {
-         Connector c = new ConnectorImpl(
+        Connector c = new ConnectorImpl(
                 node, type, null, false);
         connectors.add(c);
         return c;
     }
 
     Connector addConnector(VNode node, Connector c) {
-         String localId = c.getLocalId();
+        String localId = c.getLocalId();
 
         if (connectorIdGenerator.getIds().contains(localId)) {
             throw new IllegalArgumentException(
                     "Cannot add connector: id \"" + localId + "\" already in use");
         }
 
-        Connector result = new ConnectorImpl(node,c);
+        Connector result = new ConnectorImpl(node, c);
         connectors.add(result);
 
         connectorIdGenerator.addId(localId);
@@ -461,13 +459,15 @@ class VNodeImpl implements VNode {
     }
 
     @Override
-    public void setMainInput(Connector connector) {
+    public Connector setMainInput(Connector connector) {
         mainInputs.put(connector.getType(), connector);
+        return connector;
     }
 
     @Override
-    public void setMainOutput(Connector connector) {
+    public Connector setMainOutput(Connector connector) {
         mainOutputs.put(connector.getType(), connector);
+        return connector;
     }
 
     @Override
@@ -515,25 +515,24 @@ class VNodeImpl implements VNode {
             return false;
         }
     }
-    
 
     @Override
     public final ReadOnlyBooleanProperty selectedProperty() {
         return this.selectedProperty;
     }
-    
+
     @Override
     public final BooleanProperty selectableProperty() {
         return selectableProperty;
     }
-    
+
     @Override
     public final boolean isSelectable() {
         return selectableProperty().get();
     }
-    
+
     public final void setSelectable(boolean b) {
         selectableProperty().set(b);
     }
-    
+
 }

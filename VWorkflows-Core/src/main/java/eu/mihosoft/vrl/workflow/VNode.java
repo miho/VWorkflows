@@ -137,9 +137,9 @@ public interface VNode extends Model, Selectable {
 
     public Connector getMainOutput(String type);
 
-    public void setMainInput(Connector connector);
+    public Connector setMainInput(Connector connector);
 
-    public void setMainOutput(Connector connector);
+    public Connector setMainOutput(Connector connector);
 
     public Connector getConnector(String localId);
 

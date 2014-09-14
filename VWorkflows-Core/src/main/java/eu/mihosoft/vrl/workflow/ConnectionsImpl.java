@@ -342,6 +342,7 @@ class ConnectionsImpl implements Connections {
     private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
         if (vReqProperty == null) {
             vReqProperty = new SimpleObjectProperty<>();
+            setVisualizationRequest(new VisualizationRequestImpl());
         }
 
         return vReqProperty;

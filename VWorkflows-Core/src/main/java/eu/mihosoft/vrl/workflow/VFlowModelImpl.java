@@ -438,13 +438,15 @@ class VFlowModelImpl implements VFlowModel {
     }
 
     @Override
-    public void setMainInput(Connector connector) {
+    public Connector setMainInput(Connector connector) {
         this.node.setMainInput(connector);
+        return connector;
     }
 
     @Override
-    public void setMainOutput(Connector connector) {
+    public Connector setMainOutput(Connector connector) {
         this.node.setMainOutput(connector);
+        return connector;
     }
 
     @Override

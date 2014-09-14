@@ -43,8 +43,18 @@ package eu.mihosoft.vrl.workflow;
 public interface VisualizationRequest extends PropertyStorage{
     
     static final String KEY_STYLE = "visualization-request:style";
+    /**
+     * Defines the maximum connector size.
+     */
     static final String KEY_MAX_CONNECTOR_SIZE = "visualization-request:connector:max-size";
+    /**
+     * Defines whether connectors can change their layout position (switch edges).
+     */
     static final String KEY_CONNECTOR_AUTO_LAYOUT = "visualization-request:connector:auto-layout";
+    /**
+     * Defines whether to disable editing, i.e., changes to nodes and connections.
+     */
+    static final String KEY_DISABLE_EDITING = "visualization-request:skin:disable-editing";
     
     public void setStyle(String style);
     public String getStyle();

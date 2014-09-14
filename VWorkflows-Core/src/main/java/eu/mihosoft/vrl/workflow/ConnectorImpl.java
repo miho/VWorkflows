@@ -116,6 +116,7 @@ class ConnectorImpl implements Connector {
     private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
         if (vReqProperty == null) {
             vReqProperty = new SimpleObjectProperty<>();
+            setVisualizationRequest(new VisualizationRequestImpl());
         }
 
         return vReqProperty;

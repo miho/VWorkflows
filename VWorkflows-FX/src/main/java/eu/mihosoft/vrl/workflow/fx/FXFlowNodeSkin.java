@@ -190,19 +190,20 @@ public class FXFlowNodeSkin
         });
 
         node.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
-
-            if (connectorList.isEmpty()) {
-                return;
-            }
-
             for (Connector c : connectorList) {
                 layoutConnector(c, true);
-            } // end for each connector
+            }
 
         });
     }
 
-    void layoutConnector(Connector c, boolean updateOthers) {
+    void layoutConnectors() {
+        for (Connector c : connectorList) {
+            layoutConnector(c, false);
+        }
+    }
+
+    private void layoutConnector(Connector c, boolean updateOthers) {
         Circle connectorShape = (Circle) connectors.get(c);
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
@@ -268,8 +269,12 @@ public class FXFlowNodeSkin
         if (newEdgeIndex != oldEdgeIndex) {
 
             shapeLists.get(oldEdgeIndex).remove(connectorShape);
+ 
             shapeLists.get(newEdgeIndex).add(connectorShape);
             connectorToIndexMap.put(c, newEdgeIndex);
+            
+            // update all other connectors
+            layoutConnectors();
         }
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
@@ -296,7 +301,6 @@ public class FXFlowNodeSkin
                     FXFlowNodeSkin fxSkin = (FXFlowNodeSkin) skin;
                     fxSkin.layoutConnector(cTmp, false);
                 }
-
             }
         }
     }

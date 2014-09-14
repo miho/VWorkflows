@@ -120,13 +120,13 @@ class ConnectionListenerImpl implements ConnectionListener {
                     getById(senderNode.getId());
             for (VNodeSkin skin : senderSkins) {
                 FXFlowNodeSkin fxSkin = (FXFlowNodeSkin) skin;
-                fxSkin.layoutConnector(connection.getSender(), false);
+                fxSkin.layoutConnectors();
             }
             List<VNodeSkin> receiverSkins = flowController.getNodeSkinLookup().
                     getById(receiverNode.getId());
             for (VNodeSkin skin : receiverSkins) {
                 FXFlowNodeSkin fxSkin = (FXFlowNodeSkin) skin;
-                fxSkin.layoutConnector(connection.getReceiver(), false);
+                fxSkin.layoutConnectors();
             }
         }
 

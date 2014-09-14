@@ -59,6 +59,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -106,6 +107,8 @@ public class FXFlowNodeSkin
 //    private double outputConnectorSize;
     private final List<Connector> connectorList = new ArrayList<>();
     private final IntegerProperty numConnectorsProperty = new SimpleIntegerProperty();
+
+    private MapChangeListener<String, Object> vReqLister;
 
     private final int TOP = 0;
     private final int RIGHT = 1;
@@ -187,6 +190,8 @@ public class FXFlowNodeSkin
 
                     numConnectorsProperty.set(getModel().getConnectors().size());
                 }
+                
+                configureEditCapability();
             }
         });
 
@@ -196,6 +201,37 @@ public class FXFlowNodeSkin
             }
 
         });
+    }
+
+    private void initVReqListeners() {
+
+        configureEditCapability();
+
+        vReqLister = (MapChangeListener.Change<? extends String, ? extends Object> change) -> {
+            
+            configureEditCapability();
+        };
+
+        getModel().getVisualizationRequest().addListener(vReqLister);
+    }
+
+    private void configureEditCapability() {
+        Optional<Boolean> disableEditing
+                = getModel().getVisualizationRequest().
+                get(VisualizationRequest.KEY_DISABLE_EDITING);
+
+        if (disableEditing.isPresent()) {
+
+            boolean disableEditingV = disableEditing.get();
+
+            node.setMovable(!disableEditingV);
+            node.setResizableWindow(!disableEditingV);
+
+            for (Shape connectorShape : connectors.values()) {
+                connectorShape.setMouseTransparent(disableEditingV);
+            }
+        }
+
     }
 
     void layoutConnectors() {
@@ -467,6 +503,10 @@ public class FXFlowNodeSkin
         connectorNode.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                
+                if (connectorNode.isMouseTransparent()) {
+                    return;
+                }
 
                 // we are already connected and manipulate the existing connection
                 // rather than creating a new one
@@ -500,6 +540,10 @@ public class FXFlowNodeSkin
         connectorNode.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
+                
+                if (connectorNode.isMouseTransparent()) {
+                    return;
+                }
 
                 connector.click(NodeUtil.mouseBtnFromEvent(t), t);
 
@@ -675,13 +719,13 @@ public class FXFlowNodeSkin
     }
 
     private void adjustConnectorSize() {
-        
+
         double maxConnectorSize = Double.MAX_VALUE;
-        
-        Optional<Double> maxSize = 
-                getModel().getVisualizationRequest().
-                        get(VisualizationRequest.KEY_MAX_CONNECTOR_SIZE);
-        
+
+        Optional<Double> maxSize
+                = getModel().getVisualizationRequest().
+                get(VisualizationRequest.KEY_MAX_CONNECTOR_SIZE);
+
         if (maxSize.isPresent()) {
             maxConnectorSize = maxSize.get();
         }
@@ -693,7 +737,7 @@ public class FXFlowNodeSkin
                 if (connector instanceof Circle) {
 
                     ((Circle) connector).setRadius(
-                            Math.min(size * 0.5,maxConnectorSize*0.5));
+                            Math.min(size * 0.5, maxConnectorSize * 0.5));
                 }
             }
         }
@@ -737,6 +781,10 @@ public class FXFlowNodeSkin
         if (node != null && node.getParent() != null) {
             NodeUtil.removeFromParent(node);
         }
+        
+        removeListeners(getModel());
+
+        getModel().getVisualizationRequest().removeListener(vReqLister);
     }
 
     @Override
@@ -782,6 +830,8 @@ public class FXFlowNodeSkin
         node.layoutYProperty().removeListener(nodeXListener);
         node.prefWidthProperty().removeListener(nodeWidthListener);
         node.prefHeightProperty().removeListener(nodeHeightListener);
+        
+        flowNode.getVisualizationRequest().addListener(vReqLister);
     }
 
     private void initListeners() {
@@ -872,6 +922,8 @@ public class FXFlowNodeSkin
         node.layoutYProperty().addListener(nodeYListener);
         node.prefWidthProperty().addListener(nodeWidthListener);
         node.prefHeightProperty().addListener(nodeHeightListener);
+        
+        initVReqListeners();
 
     }
 

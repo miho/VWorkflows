@@ -48,6 +48,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -57,6 +59,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
@@ -85,13 +88,13 @@ public class FlowNodeWindow extends Window {
 //        setStyle("    -fx-background-color: rgba(120,140,255,0.2);\n"
 //                + "    -fx-border-color: rgba(120,140,255,0.42);\n"
 //                + "    -fx-border-width: 2;");
-        parentContent = new OptimizableContentPane();
+        if (skin.getModel() instanceof VFlowModel) {
+            parentContent = new OptimizableContentPane();
+            content = new VCanvas();
+            parentContent.getChildren().add(content);
+            super.setContentPane(parentContent);
+        }
 
-        content = new VCanvas();
-
-        parentContent.getChildren().add(content);
-
-        super.setContentPane(parentContent);
         addCollapseIcon(skin);
         configureCanvas(skin);
 
@@ -114,7 +117,7 @@ public class FlowNodeWindow extends Window {
                 FlowNodeWindow.this.requestSelection(newValue);
             }
         });
-        
+
         FlowNodeWindow.this.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -129,12 +132,12 @@ public class FlowNodeWindow extends Window {
             public void changed(ObservableValue<? extends Skin<?>> observable, Skin<?> oldValue, Skin<?> newValue) {
 
                 if (newValue != null) {
-                    Node titlebar = newValue.getNode().lookup("."+getTitleBarStyleClass());
+                    Node titlebar = newValue.getNode().lookup("." + getTitleBarStyleClass());
 
                     titlebar.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
 
                         public void handle(MouseEvent evt) {
-                            if (evt.getClickCount()==1
+                            if (evt.getClickCount() == 1
                                     && evt.getEventType() == MouseEvent.MOUSE_RELEASED
                                     && evt.isDragDetect()) {
                                 skin.getModel().requestSelection(!skin.getModel().isSelected());
@@ -171,6 +174,10 @@ public class FlowNodeWindow extends Window {
 //                }
 //            });
 //        }
+    }
+    
+    ObservableList<Node> getChildrenModifiable() {
+        return super.getChildren();
     }
 
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
@@ -309,11 +316,10 @@ public class FlowNodeWindow extends Window {
         // move connectors to front
         FXFlowNodeSkin skin = nodeSkinProperty().get();
 
-        for (Node n : skin.inputList) {
-            n.toFront();
-        }
-        for (Node n : skin.outputList) {
-            n.toFront();
+        for (List<Shape> shapeList : skin.shapeLists) {
+            for (Node n : shapeList) {
+                n.toFront();
+            }
         }
 
         List<Connection> connections = new ArrayList<>();
@@ -343,8 +349,9 @@ public class FlowNodeWindow extends Window {
 //        if ((skin.getModel() instanceof VFlowModel)) {
 //            return;
 //        }
-        content.getStyleClass().setAll("vnode-content");
-        
-        skin.configureCanvas(content);
+        if (content != null) {
+            content.getStyleClass().setAll("vnode-content");
+            skin.configureCanvas(content);
+        }
     }
 }

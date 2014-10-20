@@ -36,6 +36,8 @@
 
 package eu.mihosoft.vrl.workflow;
 
+import javafx.beans.property.ReadOnlyProperty;
+
 /**
  * This class define a visualization request. 
  * 
@@ -47,6 +49,7 @@ public interface Model {
 
     public void setVisualizationRequest(VisualizationRequest vReq);
     
+    ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty();
 
 
 //    public void setSkin(Skin<?> skin);

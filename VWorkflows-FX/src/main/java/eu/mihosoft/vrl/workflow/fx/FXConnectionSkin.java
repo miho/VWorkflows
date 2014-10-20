@@ -44,9 +44,13 @@ import eu.mihosoft.vrl.workflow.VNode;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -329,6 +333,26 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        connectionListener =
 //                new ConnectionListenerImpl(
 //                skinFactory, controller, receiverConnectorUI);
+        
+        
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem removeITem = new MenuItem("Remove Connection");
+        contextMenu.getItems().addAll(removeITem);
+        removeITem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.getConnections(type).remove(connection);
+            }
+        });
+        connectionPath.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton()==MouseButton.SECONDARY) {
+                    contextMenu.show(connectionPath, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+
     } // end init
 
     private void makeDraggable(
@@ -706,7 +730,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private void createIntermediateConnection(Shape senderNode, Shape receiverNode, Connection connection) {
         VNode sender = connection.getSender().getNode();
         VNode receiver = connection.getReceiver().getNode();
-        
+
         throw new UnsupportedOperationException("Cannot visualize connection with different parent flows!");
     }
 }

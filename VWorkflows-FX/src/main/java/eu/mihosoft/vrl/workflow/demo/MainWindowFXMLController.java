@@ -41,6 +41,7 @@ import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
@@ -194,11 +195,15 @@ public class MainWindowFXMLController implements Initializable {
             }
 
             n.setTitle("Node " + n.getId());
+            
+//            n.getVisualizationRequest().set(VisualizationRequest.KEY_MAX_CONNECTOR_SIZE, 10.0);
 
             String type = connectionTypes[i % connectionTypes.length];
 
-            n.setMainInput(n.addInput(type));
-            n.setMainInput(n.addInput("event"));
+            n.setMainInput(n.addInput(type)).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
+            n.setMainInput(n.addInput("event")).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
+            
+            n.getVisualizationRequest().set(VisualizationRequest.KEY_DISABLE_EDITING, true);
 
             for (int j = 0; j < 3; j++) {
                 n.addInput(type);
@@ -206,12 +211,12 @@ public class MainWindowFXMLController implements Initializable {
 
 //            n.addInput(type);
 //            n.addInput(type);
-            n.addOutput(type);
-            n.setMainOutput(n.addOutput("event"));
-            n.addOutput(type);
+            n.addOutput(type).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
+            n.setMainOutput(n.addOutput("event")).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
+            n.addOutput(type).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
 
             for (int j = 0; j < 3; j++) {
-                n.addOutput(type);
+                n.addOutput(type).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
             }
 
             for (final Connector connector : n.getConnectors()) {

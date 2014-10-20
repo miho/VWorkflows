@@ -10,7 +10,7 @@ apply from: 'maven-deployment.gradle'
 
 // all projects must be comatible with the java version specified here
 // overriding this property in subprojects is not allowed
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 //apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
@@ -24,7 +24,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '2.0'
 }
 
 // finding jfxrt.jar for JDK 7as we depend on binding API

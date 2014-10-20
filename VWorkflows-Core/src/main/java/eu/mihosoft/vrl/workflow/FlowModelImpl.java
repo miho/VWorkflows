@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -313,5 +314,10 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public void setNodeLookup(NodeLookup nodeLookup) {
         this.nodeLookup = nodeLookup;
+    }
+
+    @Override
+    public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
+         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

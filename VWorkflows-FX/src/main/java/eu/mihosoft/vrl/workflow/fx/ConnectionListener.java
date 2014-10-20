@@ -32,17 +32,20 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
+import java.util.List;
 import javafx.scene.Node;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface ConnectionListener {
 
@@ -61,70 +64,90 @@ public interface ConnectionListener {
     void onNoConnection(Node n);
 
     void onRemoveConnectionReleased();
-    
+
 }
 
 class ConnectionListenerImpl implements ConnectionListener {
-    
-    private Node receiverConnectorUI;
-    private FXSkinFactory skinFactory;
-    private VFlow flowController;
+
+    private final Node receiverConnectorUI;
+    private final FXSkinFactory skinFactory;
+    private final VFlow flowController;
 
     public ConnectionListenerImpl(FXSkinFactory skinFactory, VFlow vflow, Node receiverConnectorUI) {
         this.skinFactory = skinFactory;
         this.flowController = vflow;
         this.receiverConnectorUI = receiverConnectorUI;
     }
-    
 
     @Override
-    public void onConnectionCompatible(Node n) {       
+    public void onConnectionCompatible(Node n) {
         FXConnectorUtil.connectAnim(receiverConnectorUI, n);
     }
-    
+
     @Override
-    public void onConnectionCompatibleReleased(Node n) {      
+    public void onConnectionCompatibleReleased(Node n) {
         FXConnectorUtil.connectAnim(receiverConnectorUI, n);
     }
-    
+
     @Override
-    public void onConnectionIncompatible() {        
+    public void onConnectionIncompatible() {
         FXConnectorUtil.incompatibleAnim(receiverConnectorUI);
     }
-    
+
     @Override
     public void onNoConnection(Node n) {
 
         FXConnectorUtil.unconnectAnim(receiverConnectorUI);
     }
-    
+
     @Override
     public void onConnectionIncompatibleReleased(Node n) {
 
         FXConnectorUtil.connnectionIncompatibleAnim(n);
     }
-    
+
     @Override
     public void onCreateNewConnectionReleased(ConnectionResult connResult) {
         newConnectionAnim(connResult);
+
+        // update connector layout
+        if (connResult.getConnection() != null) {
+            Connection connection = connResult.getConnection();
+            VNode senderNode = connection.getSender().getNode();
+            VNode receiverNode = connection.getReceiver().getNode();
+
+            List<VNodeSkin> senderSkins = flowController.getNodeSkinLookup().
+                    getById(senderNode.getId());
+            for (VNodeSkin skin : senderSkins) {
+                FXFlowNodeSkin fxSkin = (FXFlowNodeSkin) skin;
+                fxSkin.layoutConnectors();
+            }
+            List<VNodeSkin> receiverSkins = flowController.getNodeSkinLookup().
+                    getById(receiverNode.getId());
+            for (VNodeSkin skin : receiverSkins) {
+                FXFlowNodeSkin fxSkin = (FXFlowNodeSkin) skin;
+                fxSkin.layoutConnectors();
+            }
+        }
+
     }
-    
+
     @Override
     public void onCreateNewConnectionReverseReleased(ConnectionResult connResult) {
         newConnectionReverseAnim(connResult);
     }
-    
+
     @Override
     public void onRemoveConnectionReleased() {
-        
+
         FXConnectorUtil.unconnectAnim(receiverConnectorUI);
     }
-    
+
     private void newConnectionAnim(ConnectionResult connResult) {
         if (connResult.getConnection() != null) {
-            FXConnectionSkin connectionSkin =
-                    (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
-                    skinFactory, connResult.getConnection());
+            FXConnectionSkin connectionSkin
+                    = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
+                            skinFactory, connResult.getConnection());
             FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getReceiverUI());
         }
     }
@@ -132,12 +155,12 @@ class ConnectionListenerImpl implements ConnectionListener {
     private void newConnectionReverseAnim(ConnectionResult connResult) {
         // System.out.println("new-connection anim (reverse)");
         if (connResult.getConnection() != null) {
-            FXConnectionSkin connectionSkin =
-                    (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
-                    skinFactory, connResult.getConnection());
-  
+            FXConnectionSkin connectionSkin
+                    = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
+                            skinFactory, connResult.getConnection());
+
             FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getSenderNode());
         }
     }
-    
+
 }

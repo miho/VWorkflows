@@ -27,48 +27,18 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
 }
 
-// finding jfxrt.jar for JDK 7as we depend on binding API
-String jreHome = System.properties.find { it.key == "java.home" }.value + "/lib";
-
-project.ext.set("javafx_jar", "$jreHome/jfxrt.jar")
-project.ext.set("javafx8_jar", "$jreHome/ext/jfxrt.jar")
 
 dependencies {
 
     compile "com.thoughtworks.xstream:xstream:1.4.7"
     
     println("Gradle uses JDK "+project.jdk)
-    
-//    if (project.jdk==7) {
-         compile files(project.javafx_jar)
-         compile files(project.javafx8_jar)
-//    }
 
     // compile project('..:VRLInstrumentation')    
     // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
     
-    
     testCompile 'junit:junit:4.11'
 }
-
-/*sourceSets {
-    main {
-        java {
-            srcDirs = ['src/']
-        }
-        
-        resources {
-            srcDirs = ['src/']
-        }
-       
-    }
-
-    test {
-        java {
-            srcDirs = ['test/']
-        }
-    }
-}*/
 
 
 mainClassName =  "eu.mihosoft.vrl.workflow.playground.Playground"

@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import java.lang.reflect.Constructor;
@@ -54,18 +53,19 @@ import javafx.collections.ObservableMap;
 /**
  * This class implements the flow model. The flow model manages the connections
  * between nodes.
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FlowModelImpl implements FlowModel {
 
-    private final ObservableMap<String, Connections> connections =
-            FXCollections.observableHashMap();
-    private final ObservableMap<String, Connections> readOnlyObservableConnections =
-            FXCollections.unmodifiableObservableMap(connections);
-    private final ObservableList<VNode> observableNodes =
-            FXCollections.observableArrayList();
-    private final ObservableList<VNode> readOnlyObservableNodes =
-            FXCollections.unmodifiableObservableList(observableNodes);
+    private final ObservableMap<String, Connections> connections
+            = FXCollections.observableHashMap();
+    private final ObservableMap<String, Connections> readOnlyObservableConnections
+            = FXCollections.unmodifiableObservableMap(connections);
+    private final ObservableList<VNode> observableNodes
+            = FXCollections.observableArrayList();
+    private final ObservableList<VNode> readOnlyObservableNodes
+            = FXCollections.unmodifiableObservableList(observableNodes);
     private final Map<String, VNode> nodes = new HashMap<>();
     private Class<? extends VNode> flowNodeClass = VNodeImpl.class;
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
@@ -136,9 +136,8 @@ public class FlowModelImpl implements FlowModel {
         if (r.getMainInput(type) != null) {
             receiver = r.getMainInput(type);
         }
-        
-//        System.out.println("ADD: " + sender + ", " + receiver);
 
+//        System.out.println("ADD: " + sender + ", " + receiver);
         Connection connection = getConnections(type).add(sender, receiver);
 
         return new ConnectionResultImpl(result.getStatus(), connection);
@@ -186,16 +185,14 @@ public class FlowModelImpl implements FlowModel {
 //        if (n instanceof FlowModel) {
 //            ((FlowModel)n).clear();
 //        }
-
         VNode result = nodes.remove(n.getId());
         observableNodes.remove(n);
 
 //        removeNodeSkin(n);
-
         for (Connections cns : getAllConnections().values()) {
 
-            Collection<Connection> connectionsToRemove =
-                    cns.getAllWithNode(n);
+            Collection<Connection> connectionsToRemove
+                    = cns.getAllWithNode(n);
 
             for (Connection c : connectionsToRemove) {
                 cns.remove(c);
@@ -318,6 +315,11 @@ public class FlowModelImpl implements FlowModel {
 
     @Override
     public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
-         throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isVisualizationRequestInitialized() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

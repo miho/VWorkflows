@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import java.lang.reflect.Constructor;
@@ -52,7 +51,7 @@ import javafx.collections.ObservableMap;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class VFlowModelImpl implements VFlowModel {
 
@@ -409,17 +408,17 @@ class VFlowModelImpl implements VFlowModel {
 
     @Override
     public Connector addInput(String type) {
-        return this.node.addInput(this,type);
+        return this.node.addInput(this, type);
     }
 
     @Override
     public Connector addOutput(String type) {
-        return this.node.addOutput(this,type);
+        return this.node.addOutput(this, type);
     }
 
     @Override
     public Connector addConnector(Connector c) {
-        return this.node.addConnector(this,c);
+        return this.node.addConnector(this, c);
     }
 
     @Override
@@ -476,7 +475,7 @@ class VFlowModelImpl implements VFlowModel {
 
     @Override
     public BooleanProperty selectableProperty() {
-       return node.selectableProperty();
+        return node.selectableProperty();
     }
 
     @Override
@@ -487,5 +486,10 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
         return node.visualizationRequestProperty();
+    }
+
+    @Override
+    public boolean isVisualizationRequestInitialized() {
+        return node.isVisualizationRequestInitialized();
     }
 }

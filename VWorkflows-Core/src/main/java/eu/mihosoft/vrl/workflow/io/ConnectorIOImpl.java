@@ -163,4 +163,9 @@ class ConnectorIOImpl implements Connector {
     public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public boolean isVisualizationRequestInitialized() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

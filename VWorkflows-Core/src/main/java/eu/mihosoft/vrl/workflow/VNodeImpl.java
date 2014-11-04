@@ -535,4 +535,9 @@ class VNodeImpl implements VNode {
         selectableProperty().set(b);
     }
 
+    @Override
+    public boolean isVisualizationRequestInitialized() {
+        return vReqProperty!=null;
+    }
+
 }

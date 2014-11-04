@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import java.lang.reflect.Constructor;
@@ -51,9 +50,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * This class provides a default implementation of the {@code Connections} interface.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * This class provides a default implementation of the {@code Connections}
+ * interface.
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ConnectionsImpl implements Connections {
 
@@ -62,13 +62,11 @@ class ConnectionsImpl implements Connections {
     private Class<? extends Connection> connectionClass = ConnectionBase.class;
 //    Map<String, Integer> senders = new HashMap<>();
 //    Map<String, Integer> receivers = new HashMap<>();
-    private ObservableList<Connection> observableConnections =
-            FXCollections.observableArrayList();
+    private ObservableList<Connection> observableConnections
+            = FXCollections.observableArrayList();
     private ObjectProperty<VisualizationRequest> vReqProperty;
 
     //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
-    
-    
     public ConnectionsImpl(String type) {
         this.type = type;
     }
@@ -108,7 +106,7 @@ class ConnectionsImpl implements Connections {
 
         return c;
     }
-    
+
     @Override
     public Connection add(String id, Connector s, Connector r, VisualizationRequest vReq) {
         Connection c = createConnection(id, s, r);
@@ -138,7 +136,6 @@ class ConnectionsImpl implements Connections {
         observableConnections.remove(get(id, s, r));
 
         connections.remove(connectionId(id, s.getId(), r.getId()));
-
 
 //        decSenderCounter(s);
 //        decReceiverCounter(r);
@@ -190,7 +187,7 @@ class ConnectionsImpl implements Connections {
         Collection<Connection> result = new ArrayList<>();
 
         for (Connection conn : getConnections()) {
-            if (conn.getSender().getId().equals(c.getId()) 
+            if (conn.getSender().getId().equals(c.getId())
                     || conn.getReceiver().getId().equals(c.getId())) {
                 result.add(conn);
             }
@@ -198,7 +195,7 @@ class ConnectionsImpl implements Connections {
 
         return result;
     }
-    
+
     @Override
     public Collection<Connection> getAllWithNode(VNode n) {
 
@@ -206,7 +203,7 @@ class ConnectionsImpl implements Connections {
 
         for (Connection conn : getConnections()) {
             // TODO: reference check (==) ok? 20.11.2013
-            if (conn.getSender().getNode()==n || conn.getReceiver().getNode()==n) {
+            if (conn.getSender().getNode() == n || conn.getReceiver().getNode() == n) {
                 result.add(conn);
             }
         }
@@ -297,7 +294,7 @@ class ConnectionsImpl implements Connections {
         Collection<Connection> result = new ArrayList<>();
 
         for (Connection c : connections.values()) {
-            if (c.getSender().getId().equals(s.getId()) 
+            if (c.getSender().getId().equals(s.getId())
                     && c.getReceiver().getId().equals(r.getId())) {
                 result.add(c);
             }
@@ -322,8 +319,7 @@ class ConnectionsImpl implements Connections {
         }
     }
 
-
-        /**
+    /**
      * @return the vReq
      */
     @Override
@@ -352,7 +348,7 @@ class ConnectionsImpl implements Connections {
     public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
         return _visualizationRequestProperty();
     }
-    
+
 //    @Override
 //    public void setSkin(Skin<?> skin) {
 //        skinProperty.set(skin);
@@ -367,7 +363,6 @@ class ConnectionsImpl implements Connections {
 //    public ObjectProperty<?> skinProperty() {
 //        return skinProperty;
 //    }
-
     @Override
     public boolean isInputConnected(Connector input) {
         Collection<Connection> connectionsWith = getAllWith(input);
@@ -406,20 +401,25 @@ class ConnectionsImpl implements Connections {
     public String getType() {
         return type;
     }
-    
+
     @Override
     public String toString() {
 
         StringBuilder result = new StringBuilder();
-        
+
         result.append("[ type: ").append(getType()).append('\n');
-        
+
         for (Connection connection : observableConnections) {
             result.append(" --> ").append(connection.toString()).append('\n');
         }
-        
+
         result.append("]");
-        
+
         return result.toString();
+    }
+
+    @Override
+    public boolean isVisualizationRequestInitialized() {
+        return vReqProperty != null;
     }
 }

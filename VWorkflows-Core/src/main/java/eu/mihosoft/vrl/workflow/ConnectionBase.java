@@ -234,5 +234,10 @@ class ConnectionBase implements Connection {
     public Connector getReceiver() {
         return receiver;
     }
+    
+    @Override
+    public boolean isVisualizationRequestInitialized() {
+        return vReqProperty != null;
+    }
 
 }

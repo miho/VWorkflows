@@ -45,11 +45,13 @@ import javafx.beans.property.ReadOnlyProperty;
  */
 public interface Model {
     
-    public VisualizationRequest getVisualizationRequest();
+    VisualizationRequest getVisualizationRequest();
 
-    public void setVisualizationRequest(VisualizationRequest vReq);
+    void setVisualizationRequest(VisualizationRequest vReq);
     
     ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty();
+    
+    boolean isVisualizationRequestInitialized(); 
 
 
 //    public void setSkin(Skin<?> skin);

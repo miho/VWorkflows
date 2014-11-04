@@ -236,6 +236,7 @@ public class FXFlowNodeSkin
 
     void layoutConnectors() {
         for (Connector c : connectorList) {
+            
             layoutConnector(c, false);
         }
     }

@@ -206,7 +206,7 @@ public class MainWindowFXMLController implements Initializable {
 //            n.getVisualizationRequest().set(VisualizationRequest.KEY_DISABLE_EDITING, true);
 
             for (int j = 0; j < 3; j++) {
-                n.addInput(type);
+                n.addInput(type).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
             }
 
 //            n.addInput(type);

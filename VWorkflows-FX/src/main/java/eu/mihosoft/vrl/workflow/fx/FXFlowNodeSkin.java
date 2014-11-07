@@ -199,7 +199,6 @@ public class FXFlowNodeSkin
             for (Connector c : connectorList) {
                 layoutConnector(c, true);
             }
-
         });
     }
 
@@ -332,6 +331,8 @@ public class FXFlowNodeSkin
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
         connectorShape.setLayoutY(computeConnectorYValue(c));
+        
+//        System.out.println("c: " + c);
 
         if (updateOthers) {
             for (Connection connection : conns) {

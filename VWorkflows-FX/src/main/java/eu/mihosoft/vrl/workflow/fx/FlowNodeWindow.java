@@ -43,24 +43,27 @@ import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import jfxtras.labs.scene.control.BreadcrumbBar;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
@@ -175,7 +178,7 @@ public class FlowNodeWindow extends Window {
 //            });
 //        }
     }
-    
+
     ObservableList<Node> getChildrenModifiable() {
         return super.getChildren();
     }
@@ -280,7 +283,7 @@ public class FlowNodeWindow extends Window {
                             showFlowInWindow(vf,
                                     NodeUtil.getStylesheetsOfAncestors(
                                             FlowNodeWindow.this),
-                                    stage, getTitle());
+                                    stage, getLocation(vf));
                             break;
                         }
                     }
@@ -290,6 +293,28 @@ public class FlowNodeWindow extends Window {
 
         getLeftIcons().add(newViewIcon);
 
+    }
+
+    private String getLocation(VFlow f) {
+
+        VFlowModel parent = f.getModel().getFlow();
+
+        List<String> names = new ArrayList<>();
+
+        names.add(f.getModel().getTitle());
+
+        while (parent != null) {
+            names.add(parent.getTitle());
+            parent = parent.getFlow();
+        }
+        
+        Collections.reverse(names);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        names.forEach(n->sb.append("/").append(n));
+        
+        return sb.toString();
     }
 
     private void addSelectionRectangle(FXFlowNodeSkin skin, Pane root) {

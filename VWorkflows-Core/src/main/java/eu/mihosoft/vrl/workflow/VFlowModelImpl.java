@@ -311,6 +311,8 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public VFlowModel newFlowNode() {
         VFlowModel flowNode = new VFlowModelImpl(this);
+        
+        flowNode.setNodeLookup(getNodeLookup());
 
         DefaultValueObject valObj = new DefaultValueObject();
 

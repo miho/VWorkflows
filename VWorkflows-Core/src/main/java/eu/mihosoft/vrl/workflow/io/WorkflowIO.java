@@ -112,7 +112,9 @@ public class WorkflowIO {
 
         InputStream is = Files.newInputStream(p, StandardOpenOption.READ);
 
-        return flowFromPersistentFlow((PersistentFlow) xstream.fromXML(is), generator);
+        PersistentFlow pFlow = (PersistentFlow) xstream.fromXML(is);
+
+        return flowFromPersistentFlow(pFlow, generator);
     }
 
     public static VFlowModel loadFromXML(InputStream xmlStream, IdGenerator generator) {
@@ -128,19 +130,19 @@ public class WorkflowIO {
         xstream.alias("flow", PersistentFlow.class);
         xstream.alias("node", PersistentNode.class);
         xstream.alias("connection", PersistentConnection.class);
-        xstream.alias("vobj", DefaultValueObject.class);
+        xstream.alias("vobj", PersistentValueObject.class);
         xstream.alias("connector", PersistentConnector.class);
 
 //        xstream.setMode(XStream.ID_REFERENCES);
     }
 
     public static void saveToXML(Path p, VFlowModel flow) throws IOException {
-        
+
         OutputStream os = Files.newOutputStream(p,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.WRITE,
                 StandardOpenOption.TRUNCATE_EXISTING);
-        
+
         saveToXML(flow, os);
     }
 
@@ -247,7 +249,42 @@ public class WorkflowIO {
 
     public static VFlowModel flowFromPersistentFlow(
             PersistentFlow flow, IdGenerator generator) {
-        return createFlowFromPersistent(flow, null, generator);
+
+        VFlowModel flowModel = createFlowFromPersistent(flow, null, generator);
+
+        addConnectionsFromPersistentFlow(flow, flowModel, generator);
+
+        return flowModel;
+    }
+
+    private static void addConnectionsFromPersistentFlow(PersistentFlow flow, VFlowModel flowModel, IdGenerator generator) {
+
+        Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();
+
+        for (PersistentConnection c : flow.getConnections()) {
+            List<PersistentConnection> connectionsOfType = flowConnections.get(c.getType());
+
+            if (connectionsOfType == null) {
+                connectionsOfType = new ArrayList<>();
+                flowConnections.put(c.getType(), connectionsOfType);
+            }
+            connectionsOfType.add(c);
+        }
+
+        for (String type : flowConnections.keySet()) {
+            List<PersistentConnection> connections = flowConnections.get(type);
+            if (!connections.isEmpty()) {
+                flowModel.addConnections(fromPersistentConnections(type, connections, flowModel), type);
+            }
+        }
+        
+        for(PersistentNode pn : flow.getNodes()) {
+            VNode fn = flowModel.getNodeLookup().getById(pn.getId());
+            
+            if (fn instanceof VFlowModel && pn instanceof PersistentFlow) {
+                addConnectionsFromPersistentFlow((PersistentFlow) pn, (VFlowModel) fn, generator);
+            }
+        }
     }
 
     private static VFlowModel createFlowFromPersistent(
@@ -289,25 +326,25 @@ public class WorkflowIO {
         for (String type : flow.getMainOutputs().keySet()) {
             result.setMainOutput(result.getConnector(flow.getMainOutputs().get(type)));
         }
-
-        Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();
-
-        for (PersistentConnection c : flow.getConnections()) {
-            List<PersistentConnection> connectionsOfType = flowConnections.get(c.getType());
-
-            if (connectionsOfType == null) {
-                connectionsOfType = new ArrayList<>();
-                flowConnections.put(c.getType(), connectionsOfType);
-            }
-            connectionsOfType.add(c);
-        }
-
-        for (String type : flowConnections.keySet()) {
-            List<PersistentConnection> connections = flowConnections.get(type);
-            if (!connections.isEmpty()) {
-                result.addConnections(fromPersistentConnections(type, connections, result), type);
-            }
-        }
+//
+//        Map<String, List<PersistentConnection>> flowConnections = new HashMap<>();
+//
+//        for (PersistentConnection c : flow.getConnections()) {
+//            List<PersistentConnection> connectionsOfType = flowConnections.get(c.getType());
+//
+//            if (connectionsOfType == null) {
+//                connectionsOfType = new ArrayList<>();
+//                flowConnections.put(c.getType(), connectionsOfType);
+//            }
+//            connectionsOfType.add(c);
+//        }
+//
+//        for (String type : flowConnections.keySet()) {
+//            List<PersistentConnection> connections = flowConnections.get(type);
+//            if (!connections.isEmpty()) {
+//                result.addConnections(fromPersistentConnections(type, connections, result), type);
+//            }
+//        }
 
         return result;
     }
@@ -341,6 +378,10 @@ public class WorkflowIO {
         eu.mihosoft.vrl.workflow.Connections result = VConnections.newConnections(connectionType);
 
         for (PersistentConnection c : connections) {
+            
+            System.out.println("c: " + c.getSenderId() + " in flow: " + flow.getId());
+            
+            System.out.println("nlookup: " + flow.getNodeLookup());
 
             Connector s = flow.getNodeLookup().getConnectorById(c.getSenderId());
             Connector r = flow.getNodeLookup().getConnectorById(c.getReceiverId());
@@ -377,18 +418,19 @@ public class WorkflowIO {
     public static PersistentConnector toPersistentConnector(Connector c) {
         return new PersistentConnector(c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
     }
-    
+
     public static PersistentValueObject toPersistentValueObject(ValueObject vObj) {
         return new PersistentValueObject(vObj.getParent().getId(), vObj.getValue(), vObj.getVisualizationRequest());
     }
-    
+
     public static ValueObject toValueObject(VNode node, PersistentValueObject vObj) {
         ValueObject result = new DefaultValueObject();
-        
+
         result.setParent(node);
         result.setValue(vObj.getValue());
         // resulult. // .. TODO visualizationRequest isnot persistent! 11.01.2014
-        
+
         return result;
     }
+
 }

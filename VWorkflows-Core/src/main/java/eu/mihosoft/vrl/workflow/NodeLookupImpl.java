@@ -49,8 +49,8 @@ import java.util.Map;
  */
 public class NodeLookupImpl implements NodeLookup {
 
-    private VFlowModel root;
-    private Map<String, VNode> cache = new HashMap<String, VNode>();
+    private final VFlowModel root;
+    private final Map<String, VNode> cache = new HashMap<>();
 
     public NodeLookupImpl(VFlowModel root) {
         this.root = root;

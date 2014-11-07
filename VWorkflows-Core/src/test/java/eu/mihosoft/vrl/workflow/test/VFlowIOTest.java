@@ -53,7 +53,7 @@ public class VFlowIOTest {
 
         VFlow flow1 = FlowFactory.newFlow();
 
-        FlowUtil.createFlow(flow1, 1, 5);
+        FlowUtil.createFlow(flow1, 5, 5);
 
         boolean couldSave = true;
         try {

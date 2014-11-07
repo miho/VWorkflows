@@ -378,11 +378,6 @@ public class WorkflowIO {
         eu.mihosoft.vrl.workflow.Connections result = VConnections.newConnections(connectionType);
 
         for (PersistentConnection c : connections) {
-            
-            System.out.println("c: " + c.getSenderId() + " in flow: " + flow.getId());
-            
-            System.out.println("nlookup: " + flow.getNodeLookup());
-
             Connector s = flow.getNodeLookup().getConnectorById(c.getSenderId());
             Connector r = flow.getNodeLookup().getConnectorById(c.getReceiverId());
             result.add(c.getId(), s, r, c.getVReq());

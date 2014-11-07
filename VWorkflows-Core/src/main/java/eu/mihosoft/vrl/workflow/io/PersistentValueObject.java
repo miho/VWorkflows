@@ -24,7 +24,7 @@ public class PersistentValueObject {
     public PersistentValueObject(String parentId, Object value, VisualizationRequest vReq) {
         this.parentId = parentId;
         this.value = value;
-        this.vReq = vReq;
+        this.vReq = null;//vReq;
     }
 
     public PersistentValueObject() {

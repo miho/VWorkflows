@@ -54,7 +54,7 @@ public class FlowFactory {
 
         VFlowModel model = FlowFactory.newFlowModel();
         
-        VFlow flow = new VFlowImpl(model);
+        VFlow flow = new VFlowImpl(null,model);
 
         return flow;
     }
@@ -69,7 +69,7 @@ public class FlowFactory {
 
         VFlowModel model = FlowFactory.newFlowModel();
 
-        VFlow flow = new VFlowImpl(model, skinFactory);
+        VFlow flow = new VFlowImpl(null,model, skinFactory);
 
         return flow;
     }

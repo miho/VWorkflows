@@ -13,8 +13,8 @@ apply from: 'jdkdetect.gradle'
 
 //apply from: 'lib/gradle/javafx.plugin'
 
-apply from: 'maven-deployment.gradle'
-//apply from: 'maven-deployment-local.gradle'
+//apply from: 'maven-deployment.gradle'
+apply from: 'maven-deployment-local.gradle'
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'eu.mihosoft.vrl.workflow.demo.Main'

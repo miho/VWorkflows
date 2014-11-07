@@ -52,6 +52,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -79,8 +80,9 @@ public class VFlowImpl implements VFlow {
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
     private FlowNodeSkinLookup nodeSkinLookup;
+    private ObjectProperty<VFlow> parentProperty = new SimpleObjectProperty<>();
 
-    public VFlowImpl(VFlowModel model, SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
+    public VFlowImpl(VFlow parent, VFlowModel model, SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
 
         init();
 
@@ -96,8 +98,30 @@ public class VFlowImpl implements VFlow {
         setSkinFactories(skinFactories);
 
     }
+    
+    @Override
+    public ReadOnlyObjectProperty<VFlow> parentProperty() {
+        return parentProperty;
+    }
+    
+    @Override
+    public VFlow getParent() {
+        return parentProperty().get();
+    }
+    
+    public VFlow getRootFlow() {
+        VFlow root = this;
+        VFlow parent = this.getParent();
+        
+        while(parent!=null) {
+            root = parent;
+            parent = parent.getParent();
+        }
+        
+        return root;
+    }
 
-    public VFlowImpl(VFlowModel model, Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories) {
+    public VFlowImpl(VFlow parent, VFlowModel model, Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories) {
         init();
 
         if (model.getIdGenerator() != null) {
@@ -857,7 +881,7 @@ public class VFlowImpl implements VFlow {
             }
         }
 
-        VFlow controller = new VFlowImpl(flowNode, childFactories);
+        VFlow controller = new VFlowImpl(this,flowNode, childFactories);
 
         controller.setIdGenerator(getIdGenerator());
         controller.setNodeLookup(getNodeLookup());

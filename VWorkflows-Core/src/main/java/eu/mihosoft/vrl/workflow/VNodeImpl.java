@@ -300,6 +300,10 @@ class VNodeImpl implements VNode {
             vReqProperty = new SimpleObjectProperty<>();
             vReqProperty.set(new VisualizationRequestImpl());
         }
+        
+        if (vReqProperty.get()==null) {
+            vReqProperty.set(new VisualizationRequestImpl());
+        }
 
         return vReqProperty;
     }

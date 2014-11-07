@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
@@ -170,4 +171,10 @@ public interface VFlow {
      * exists
      */
     public VFlow getFlowById(String id);
+
+    VFlow getParent();
+
+    ReadOnlyObjectProperty<VFlow> parentProperty();
+
+    VFlow getRootFlow();
 }

@@ -7,10 +7,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="386.0000999999975" prefWidth="574.0" xmlns:fx="http://javafx.com/fxml" fx:controller="eu.mihosoft.vrl.workflow.demo.MainWindowFXMLController">
-  <children>
-    <StackPane fx:id="contentPane" prefHeight="359.0" prefWidth="574.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0" />
-    <MenuBar minHeight="23.000099999997474" prefHeight="23.000099999997474" prefWidth="574.0" style="-fx-font-size: 13px" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+<VBox minHeight="400.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.mihosoft.vrl.workflow.demo.MainWindowFXMLController">
+   <children>
+    <MenuBar style="-fx-font-size: 13px">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
@@ -31,8 +31,6 @@
         </Menu>
       </menus>
     </MenuBar>
-  </children>
-  <stylesheets>
-    <URL value="@../fx/default.css" />
-  </stylesheets>
-</AnchorPane>
+    <StackPane fx:id="contentPane" stylesheets="@../fx/default.css" VBox.vgrow="ALWAYS" />
+   </children>
+</VBox>

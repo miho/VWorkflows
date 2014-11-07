@@ -49,6 +49,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -183,7 +184,7 @@ public class FlowNodeWindow extends Window {
         return super.getChildren();
     }
 
-    private void showFlowInWindow(VFlow flow, List<String> stylesheets, Stage stage, String title) {
+    private void showFlowInWindow(VFlow flow, List<String> stylesheets, String title) {
 
         // create scalable root pane
         VCanvas canvas = new VCanvas();
@@ -206,9 +207,42 @@ public class FlowNodeWindow extends Window {
         Scene scene = new Scene(canvas, 800, 800);
 
         scene.getStylesheets().setAll(stylesheets);
+
+        Stage stage = new Stage() {
+//            private VFlow flow;
+            private String nodeId;
+
+            {
+
+                nodeId = FlowNodeWindow.this.
+                        nodeSkinProperty().get().getModel().getId();
+
+               
+                VFlow rootFlow = flow.getRootFlow();
+
+                rootFlow.getNodes().addListener(
+                        (ListChangeListener.Change<? extends VNode> c) -> {
+                            while (c.next()) {
+                                if (c.wasAdded()) {
+                                    for (VNode n : c.getAddedSubList()) {
+                                       if (n.getId().equals(nodeId)) {
+                                           canvas.getContentPane().getChildren().clear();
+                                           VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
+                                           flow.addSkinFactories(new FXValueSkinFactory(null));
+                                       }
+                                    }
+                                }
+                            }
+                        });
+            }
+        };
+        stage.setWidth(800);
+        stage.setHeight(600);
+
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
+
     }
 
     public Pane getWorkflowContentPane() {
@@ -272,10 +306,6 @@ public class FlowNodeWindow extends Window {
 
                 if (skin != null) {
 
-                    Stage stage = new Stage();
-                    stage.setWidth(800);
-                    stage.setHeight(600);
-
                     String nodeId = skin.getModel().getId();
 
                     for (VFlow vf : skin.getController().getSubControllers()) {
@@ -283,7 +313,7 @@ public class FlowNodeWindow extends Window {
                             showFlowInWindow(vf,
                                     NodeUtil.getStylesheetsOfAncestors(
                                             FlowNodeWindow.this),
-                                    stage, getLocation(vf));
+                                    getLocation(vf));
                             break;
                         }
                     }
@@ -307,13 +337,13 @@ public class FlowNodeWindow extends Window {
             names.add(parent.getTitle());
             parent = parent.getFlow();
         }
-        
+
         Collections.reverse(names);
-        
+
         StringBuilder sb = new StringBuilder();
-        
-        names.forEach(n->sb.append("/").append(n));
-        
+
+        names.forEach(n -> sb.append("/").append(n));
+
         return sb.toString();
     }
 

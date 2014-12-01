@@ -45,60 +45,19 @@ mainClassName =  "eu.mihosoft.vrl.workflow.playground.Playground"
 
 // -- coverage support (jacoco/coveralls) --
 
+
+apply plugin: 'cobertura'
+apply plugin: 'com.github.kt3k.coveralls'
+
 buildscript {
     repositories {
         mavenCentral()
     }
 
     dependencies {
+        classpath 'net.saliman:gradle-cobertura-plugin:2.0.0' // cobertura plugin
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
 
-
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
-
-
-// multiproject coverage report
-// http://csiebler.github.io/blog/2014/02/09/multi-project-code-coverage-using-gradle-and-jacoco/
-task codeCoverageReport(type: JacocoReport) {
-
-    executionData fileTree(project.rootDir.absolutePath)
-    .include("**/jacoco/*.exec")
-
-    // Add all relevant sourcesets from the subprojects 
-    allprojects.each {
-        
-        if (it.name!="vworkflows-fx") {
-            sourceSets it.sourceSets.main
-        }
-    }
-
-    reports {
-        // xml reports are used for coveralls
-        xml.enabled true
-        xml.destination = "${buildDir}/reports/jacoco/xml/report.xml"
-        
-        // html for uploading to webserver
-        html.enabled true
-        html.destination "${buildDir}/reports/jacoco/html"
-        
-        // we don't need csv
-        csv.enabled false
-    }
-}
-
-coveralls {
-    
-    // specify jacoco xml report location
-    jacocoReportPath = "${project.buildDir}/reports/jacoco/xml/report.xml"
-    
-    // add sources from the subprojects
-    sourceDirs = files(project.sourceSets.main.allSource.srcDirs).files.absolutePath
-}
-
-// always run the tests before generating the report
-codeCoverageReport.dependsOn {
-    allprojects*.test
-}
+cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report

@@ -58,7 +58,7 @@ buildscript {
     }
 }
 
-jacocoTestReport {
+codeCoverageReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true

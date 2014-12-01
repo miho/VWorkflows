@@ -16,3 +16,6 @@ script:
 
 after_failure:
   - "cat ./build/test-results/*.xml"
+  
+after_success:
+  - TERM=dumb ./gradlew clean test codeCoverageReport coveralls --stacktrace

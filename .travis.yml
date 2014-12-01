@@ -18,4 +18,4 @@ after_failure:
   - "cat ./build/test-results/*.xml"
   
 after_success:
-  - TERM=dumb ./gradlew codeCoverageReport coveralls --stacktrace
+  - TERM=dumb ./gradlew test codeCoverageReport coveralls --stacktrace

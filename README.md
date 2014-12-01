@@ -1,7 +1,7 @@
 VWorkflows
 ==============
 
-[![Build Status](https://travis-ci.org/miho/VWorkflows.png?branch=master)](https://travis-ci.org/miho/VWorkflows)
+[![Build Status](https://travis-ci.org/miho/VWorkflows.png?branch=master)](https://travis-ci.org/miho/VWorkflows) [![Coverage Status](https://coveralls.io/repos/miho/VWorkflows/badge.png)](https://coveralls.io/r/miho/VWorkflows)
 
 Workflow API with UI bindings for JavaFX.
 

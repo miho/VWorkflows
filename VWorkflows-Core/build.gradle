@@ -92,10 +92,10 @@ task codeCoverageReport(type: JacocoReport) {
 coveralls {
     
     // specify jacoco xml report location
-    jacocoReportPath = "${buildDir}/reports/jacoco/xml/report.xml"
+    jacocoReportPath = "${project.buildDir}/reports/jacoco/xml/report.xml"
     
     // add sources from the subprojects
-    sourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs).files.absolutePath
+    sourceDirs = files(project.sourceSets.main.allSource.srcDirs).files.absolutePath
 }
 
 // always run the tests before generating the report

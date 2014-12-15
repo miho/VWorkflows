@@ -46,6 +46,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
@@ -57,6 +58,15 @@ class VFlowModelImpl implements VFlowModel {
 
     private final VNodeImpl node;
     private final FlowModelImpl flow;
+
+    private ObservableList<ThruConnector> thruInputs
+            = FXCollections.observableArrayList();
+    private ObservableList<ThruConnector> thruOutputs
+            = FXCollections.observableArrayList();
+    private final ObservableList<ThruConnector> unmodifiableInputs
+            = FXCollections.unmodifiableObservableList(thruInputs);
+    private final ObservableList<ThruConnector> unmodifiableOutputs
+            = FXCollections.unmodifiableObservableList(thruOutputs);
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -311,7 +321,7 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public VFlowModel newFlowNode() {
         VFlowModel flowNode = new VFlowModelImpl(this);
-        
+
         flowNode.setNodeLookup(getNodeLookup());
 
         DefaultValueObject valObj = new DefaultValueObject();
@@ -493,5 +503,41 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public boolean isVisualizationRequestInitialized() {
         return node.isVisualizationRequestInitialized();
+    }
+
+    @Override
+    public ThruConnector addThruInput(String type) {
+
+        VNode innerNode = newNode();
+        Connector innerConnector = innerNode.
+                setMainOutput(innerNode.addOutput(type));
+
+        ThruConnector tC = node.addThruInput(
+                node, type, innerNode, innerConnector);
+
+        return tC;
+    }
+
+    @Override
+    public ThruConnector addThruOutput(String type) {
+
+        VNode innerNode = newNode();
+        Connector innerConnector = innerNode.
+                setMainInput(innerNode.addInput(type));
+
+        ThruConnector tC = node.addThruOutput(
+                node, type, innerNode, innerConnector);
+
+        return tC;
+    }
+
+    @Override
+    public ObservableList<ThruConnector> getThruInputs() {
+        return this.unmodifiableInputs;
+    }
+
+    @Override
+    public ObservableList<ThruConnector> getThruOutputs() {
+        return this.unmodifiableOutputs;
     }
 }

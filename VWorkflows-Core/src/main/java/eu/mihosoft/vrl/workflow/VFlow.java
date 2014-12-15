@@ -177,4 +177,11 @@ public interface VFlow {
     ReadOnlyObjectProperty<VFlow> parentProperty();
 
     VFlow getRootFlow();
+
+    public ThruConnector addThruInput(String type);
+
+    public ThruConnector addThruOutput(String type);
+    
+    public ObservableList<ThruConnector> getThruInputs();
+    public ObservableList<ThruConnector> getThruOutputs();
 }

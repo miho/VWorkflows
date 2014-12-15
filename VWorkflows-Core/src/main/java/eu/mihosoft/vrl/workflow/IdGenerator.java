@@ -48,6 +48,7 @@ public interface IdGenerator {
     public void addId(String id);
     public void addIds(IdGenerator generator);
     public String newId();
+    public String newId(String prefix);
     public Set<String> getIds();
     public IdGenerator newChild();
 }

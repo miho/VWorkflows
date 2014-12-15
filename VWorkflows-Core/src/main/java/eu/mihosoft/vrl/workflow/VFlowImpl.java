@@ -1070,4 +1070,24 @@ public class VFlowImpl implements VFlow {
 
         return null;
     }
+
+    @Override
+    public ThruConnector addThruInput(String type) {
+        return getModel().addThruInput(type);
+    }
+
+    @Override
+    public ThruConnector addThruOutput(String type) {
+        return getModel().addThruOutput(type);
+    }
+
+    @Override
+    public ObservableList<ThruConnector> getThruInputs() {
+        return getModel().getThruInputs();
+    }
+
+    @Override
+    public ObservableList<ThruConnector> getThruOutputs() {
+        return getModel().getThruOutputs();
+    }
 }

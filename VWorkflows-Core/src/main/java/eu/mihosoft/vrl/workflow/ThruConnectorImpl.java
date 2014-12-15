@@ -1,5 +1,5 @@
 /*
- * IdGeneratorImpl.java
+ * ConnectorImpl.java
  * 
  * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
@@ -35,68 +35,44 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 
 /**
- * This class generates ids for nodes and connectors
+ * This class provides the default implementation of a {@code Connector} in
+ * VWorkflows
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class IdGeneratorImpl implements IdGenerator {
+class ThruConnectorImpl extends ConnectorImpl implements ThruConnector{
+    
+    private VNode innerNode;
+    private Connector innerConnector;
 
-    private Set<String> ids = new HashSet<>();
-    private int lastId = 0;
+    public ThruConnectorImpl(VNode node, String type, String localId, boolean input, VNode innerNode, Connector innerConnector) {
+        super(node, type, localId, input);
+        
+        this.innerNode = innerNode;
+        this.innerConnector = innerConnector;
+    }
+//
+//    public ThruConnectorImpl(VNode node, Connector c) {
+//        super(node, c);
+//    }
 
-    public IdGeneratorImpl() {
-        //
+    @Override
+    public VNode getInnerNode() {
+        return this.innerNode;
     }
 
     @Override
-    public void addId(String id) {
-        ids.add(id);
+    public Connector getInnerConnector() {
+        return this.innerConnector;
     }
 
-    @Override
-    public void addIds(IdGenerator generator) {
-        ids.addAll(generator.getIds());
-    }
-
-    @Override
-    public String newId(String prefix) {
-
-        // TODO improve id generation
-        // Question: do we really want strings as id?
-        int counter = lastId + 1;
-
-        String id = prefix + "-" + counter; // verified that java / & 8 uses stringbuilder
-
-        while (ids.contains(id)) {
-            counter++;
-            id = "" + counter;
-        }
-
-        ids.add(id);
-
-        lastId = counter;
-
-        return id;
-    }
-
-    @Override
-    public String newId() {
-        return newId("");
-    }
-
-    @Override
-    public Set<String> getIds() {
-        Set<String> result = new HashSet<>(ids);
-        return result;
-    }
-
-    @Override
-    public IdGenerator newChild() {
-        return this;
-    }
-
+    
 }

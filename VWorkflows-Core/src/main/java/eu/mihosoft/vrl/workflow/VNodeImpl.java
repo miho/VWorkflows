@@ -143,8 +143,11 @@ class VNodeImpl implements VNode {
 //                                    System.out.println("added output:" + unmodifiableOutputs.size());
                                 }
 
-                                connector.setLocalId(connectorIdGenerator.newId());
-
+                                if (connector instanceof ThruConnector) {
+                                    connector.setLocalId(connectorIdGenerator.newId("thru"));
+                                } else {
+                                    connector.setLocalId(connectorIdGenerator.newId());
+                                }
                             }
                         }
                     }
@@ -300,8 +303,8 @@ class VNodeImpl implements VNode {
             vReqProperty = new SimpleObjectProperty<>();
             vReqProperty.set(new VisualizationRequestImpl());
         }
-        
-        if (vReqProperty.get()==null) {
+
+        if (vReqProperty.get() == null) {
             vReqProperty.set(new VisualizationRequestImpl());
         }
 
@@ -377,6 +380,20 @@ class VNodeImpl implements VNode {
     Connector addOutput(VNode node, String type) {
         Connector c = new ConnectorImpl(
                 node, type, null, false);
+        connectors.add(c);
+        return c;
+    }
+    
+    ThruConnector addThruInput(VNode node, String type, VNode innerNode, Connector innerConnector) {
+        ThruConnector c = new ThruConnectorImpl(
+                node, type, null, true, innerNode, innerConnector);
+        connectors.add(c);
+        return c;
+    }
+
+    ThruConnector addThruOutput(VNode node, String type, VNode innerNode, Connector innerConnector) {
+        ThruConnector c = new ThruConnectorImpl(
+                node, type, null, false, innerNode, innerConnector);
         connectors.add(c);
         return c;
     }
@@ -541,7 +558,7 @@ class VNodeImpl implements VNode {
 
     @Override
     public boolean isVisualizationRequestInitialized() {
-        return vReqProperty!=null;
+        return vReqProperty != null;
     }
 
 }

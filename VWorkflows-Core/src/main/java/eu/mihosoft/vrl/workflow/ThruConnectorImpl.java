@@ -48,7 +48,7 @@ import javafx.event.EventHandler;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class ThruConnectorImpl extends ConnectorImpl implements ThruConnector{
+public class ThruConnectorImpl extends ConnectorImpl implements ThruConnector{
     
     private VNode innerNode;
     private Connector innerConnector;

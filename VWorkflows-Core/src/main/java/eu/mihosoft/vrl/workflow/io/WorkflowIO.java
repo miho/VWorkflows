@@ -37,6 +37,7 @@ package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.ConnectorImpl;
 import eu.mihosoft.vrl.workflow.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.FlowFactory;
@@ -44,6 +45,8 @@ import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.NodeLookupImpl;
+import eu.mihosoft.vrl.workflow.ThruConnector;
+import eu.mihosoft.vrl.workflow.ThruConnectorImpl;
 import eu.mihosoft.vrl.workflow.VConnections;
 import eu.mihosoft.vrl.workflow.ValueObject;
 import java.io.ByteArrayInputStream;
@@ -277,10 +280,10 @@ public class WorkflowIO {
                 flowModel.addConnections(fromPersistentConnections(type, connections, flowModel), type);
             }
         }
-        
-        for(PersistentNode pn : flow.getNodes()) {
+
+        for (PersistentNode pn : flow.getNodes()) {
             VNode fn = flowModel.getNodeLookup().getById(pn.getId());
-            
+
             if (fn instanceof VFlowModel && pn instanceof PersistentFlow) {
                 addConnectionsFromPersistentFlow((PersistentFlow) pn, (VFlowModel) fn, generator);
             }
@@ -392,12 +395,35 @@ public class WorkflowIO {
         return result;
     }
 
-    public static Connector fromPersistentConnector(PersistentConnector c, VNode n) {
+    public static Connector fromPersistentConnector(PersistentConnector pC, VNode n) {
 
-        ConnectorIOImpl result
-                = new ConnectorIOImpl(n, c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+//        ConnectorIOImpl result
+//                = new ConnectorImpl(n, c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+//        
+        Connector c;
+        if (pC.isPassthru()) {
 
-        return result;
+            VFlowModel flowModel = (VFlowModel) n;
+
+            if (pC.isInput()) {
+                VNode innerNode = flowModel.newNode();
+                Connector innerConnector = innerNode.setMainInput(
+                        innerNode.addInput(pC.getType()));
+                c = new ThruConnectorImpl(n, pC.getType(),
+                        pC.getLocalId(), true, innerNode, innerConnector);
+            } else {
+                VNode innerNode = flowModel.newNode();
+                Connector innerConnector = innerNode.setMainOutput(
+                        innerNode.addOutput(pC.getType()));
+                c = new ThruConnectorImpl(n, pC.getType(),
+                        pC.getLocalId(), false, innerNode, innerConnector);
+            }
+
+        } else {
+            c = new ConnectorImpl(n, pC.getType(), pC.getLocalId(), pC.isInput());
+        }
+
+        return c;
     }
 
     /**
@@ -411,7 +437,7 @@ public class WorkflowIO {
      * @return the equivalent persistent connector to the specified connector
      */
     public static PersistentConnector toPersistentConnector(Connector c) {
-        return new PersistentConnector(c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
+        return new PersistentConnector(c.getType(), c.getLocalId(), c.isInput(), c.isOutput(), c instanceof ThruConnector);
     }
 
     public static PersistentValueObject toPersistentValueObject(ValueObject vObj) {

@@ -51,14 +51,16 @@ public class PersistentConnector{
     private VisualizationRequest vRequest;
     private boolean input;
     private boolean output;
+    private boolean passthru;
     private ValueObject valueObject;
 
-    public PersistentConnector(String type, String localId, boolean input, boolean output) {
+    public PersistentConnector(String type, String localId, boolean input, boolean output, boolean passthru) {
         this.type = type;
         this.localId = localId;
 //        this.node = node;
         this.input = input;
         this.output = output;
+        this.passthru = passthru;
     }
 
     public String getType() {
@@ -120,5 +122,19 @@ public class PersistentConnector{
      */
     public void setValueObject(ValueObject valueObject) {
         this.valueObject = valueObject;
+    }
+
+    /**
+     * @return the passthru
+     */
+    public boolean isPassthru() {
+        return passthru;
+    }
+
+    /**
+     * @param passthru the passthru to set
+     */
+    public void setPassthru(boolean passthru) {
+        this.passthru = passthru;
     }
 }

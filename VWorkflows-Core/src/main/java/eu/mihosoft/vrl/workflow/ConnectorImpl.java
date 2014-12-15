@@ -48,7 +48,7 @@ import javafx.event.EventHandler;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class ConnectorImpl implements Connector {
+public class ConnectorImpl implements Connector {
 
     private VNode node;
     private String type;

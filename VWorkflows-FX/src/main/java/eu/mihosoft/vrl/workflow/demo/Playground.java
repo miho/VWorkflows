@@ -36,12 +36,16 @@
 
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.NodeLookup;
-import eu.mihosoft.vrl.workflow.VConnections;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  *
@@ -67,7 +71,6 @@ public class Playground {
         
         System.out.println("lookup: " + lookup.getById(globalId));
         System.out.println("   sn1: " + sn1);
-
     }
     
     

@@ -68,8 +68,13 @@ class IdGeneratorImpl implements IdGenerator {
         // TODO improve id generation
         // Question: do we really want strings as id?
         int counter = lastId + 1;
+       
+        
+        if (prefix != null && !prefix.isEmpty()) {
+            prefix = prefix + "-";
+        }
 
-        String id = prefix + "-" + counter; // verified that java / & 8 uses stringbuilder
+        String id = prefix + counter; // verified that java / & 8 uses stringbuilder
 
         while (ids.contains(id)) {
             counter++;

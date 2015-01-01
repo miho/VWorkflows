@@ -47,6 +47,7 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
@@ -63,9 +64,9 @@ class VFlowModelImpl implements VFlowModel {
             = FXCollections.observableArrayList();
     private ObservableList<ThruConnector> thruOutputs
             = FXCollections.observableArrayList();
-    private final ObservableList<ThruConnector> unmodifiableInputs
+    private final ObservableList<ThruConnector> unmodifiableThruInputs
             = FXCollections.unmodifiableObservableList(thruInputs);
-    private final ObservableList<ThruConnector> unmodifiableOutputs
+    private final ObservableList<ThruConnector> unmodifiableThruOutputs
             = FXCollections.unmodifiableObservableList(thruOutputs);
 
     @Override
@@ -104,6 +105,26 @@ class VFlowModelImpl implements VFlowModel {
 
         node = new VNodeImpl(pFlow);
         setTitle("Node");
+        
+        node.getConnectors().addListener(
+                (ListChangeListener.Change<? extends Connector> c) -> {
+            while(c.next()) {
+                for (Connector connector : c.getRemoved()) {
+                    if (connector instanceof ThruConnector) {
+                        
+                        ThruConnector tC = (ThruConnector) connector;
+                        
+                        if (tC.isInput()) {
+                            thruInputs.remove(tC);
+                        } else if (tC.isOutput()) {
+                            thruOutputs.remove(tC);
+                        }
+                        
+                        flow.remove(tC.getInnerNode());
+                    }
+                }
+            }
+        });
 
     }
 
@@ -541,11 +562,11 @@ class VFlowModelImpl implements VFlowModel {
 
     @Override
     public ObservableList<ThruConnector> getThruInputs() {
-        return this.unmodifiableInputs;
+        return this.unmodifiableThruInputs;
     }
 
     @Override
     public ObservableList<ThruConnector> getThruOutputs() {
-        return this.unmodifiableOutputs;
+        return this.unmodifiableThruOutputs;
     }
 }

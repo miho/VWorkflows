@@ -509,6 +509,10 @@ class VFlowModelImpl implements VFlowModel {
     public ThruConnector addThruInput(String type) {
 
         VNode innerNode = newNode();
+        
+        innerNode.getVisualizationRequest().
+                set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
+        
         Connector innerConnector = innerNode.
                 setMainOutput(innerNode.addOutput(type));
 
@@ -522,6 +526,10 @@ class VFlowModelImpl implements VFlowModel {
     public ThruConnector addThruOutput(String type) {
 
         VNode innerNode = newNode();
+        
+        innerNode.getVisualizationRequest().
+                set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
+        
         Connector innerConnector = innerNode.
                 setMainInput(innerNode.addInput(type));
 

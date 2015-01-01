@@ -55,6 +55,10 @@ public interface VisualizationRequest extends PropertyStorage{
      * Defines whether to disable editing, i.e., changes to nodes and connections.
      */
     static final String KEY_DISABLE_EDITING = "visualization-request:skin:disable-editing";
+    /**
+     * Defines whether nodes can be removed.
+     */
+    static final String KEY_NODE_NOT_REMOVABLE = "visualization-request:skin:node-not-removable";
     
     public void setStyle(String style);
     public String getStyle();

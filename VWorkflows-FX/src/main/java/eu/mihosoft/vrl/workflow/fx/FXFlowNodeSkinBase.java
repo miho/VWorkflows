@@ -75,15 +75,14 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
         // update the view (uses value object of the model)
         updateView();
 
-        valueChangeListener = new ChangeListener<Object>() {
-            @Override
-            public void changed(ObservableValue<? extends Object> ov, Object t, Object t1) {
-                updateView();
-            }
+        valueChangeListener = (
+                ObservableValue<? extends Object> ov, Object t, Object t1) -> {
+            updateView();
         };
 
         // registers listener to update view if new value object has been defined
-        getModel().getValueObject().valueProperty().addListener(valueChangeListener);
+        getModel().getValueObject().valueProperty().
+                addListener(valueChangeListener);
     }
 
     public void updateView() {
@@ -103,7 +102,8 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
 
         StackPane nodePane = new StackPane();
 
-        nodePane.getChildren().add(new Button(getModel().getValueObject().getValue().toString()));
+        nodePane.getChildren().add(new Button(getModel().getValueObject().
+                getValue().toString()));
 
         getNode().setContentPane(nodePane);
     }
@@ -113,6 +113,11 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
         
         // we remove the listener since we are going to be removed from the scene graph
         getModel().getValueObject().valueProperty().removeListener(valueChangeListener);
+        
+        if (getNode() instanceof FlowNodeWindow) {
+            FlowNodeWindow window = (FlowNodeWindow) getNode();
+            window.onRemovedFromSceneGraph();
+        }
         
         super.remove();
     }

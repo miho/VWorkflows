@@ -42,29 +42,29 @@ import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-import jfxtras.labs.scene.control.BreadcrumbBar;
 import jfxtras.labs.scene.control.window.CloseIcon;
 import jfxtras.labs.scene.control.window.MinimizeIcon;
 import jfxtras.labs.scene.control.window.Window;
@@ -77,15 +77,54 @@ import jfxtras.labs.util.event.MouseControlUtil;
  */
 public class FlowNodeWindow extends Window {
 
-    private ObjectProperty<FXFlowNodeSkin> nodeSkinProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<FXFlowNodeSkin> nodeSkinProperty =
+            new SimpleObjectProperty<>();
     private VCanvas content;
     private OptimizableContentPane parentContent;
+    private final MapChangeListener<String, Object> changeListener;
 
     public FlowNodeWindow(final FXFlowNodeSkin skin) {
 
         nodeSkinProperty().set(skin);
 
-        getLeftIcons().add(new CloseIcon(this));
+        CloseIcon closeIcon = new CloseIcon(this);
+
+//        if (skin.getModel().isVisualizationRequestInitialized()) {
+        
+        Optional<Boolean> removable = skin.getModel().getVisualizationRequest().get(
+                VisualizationRequest.KEY_NODE_NOT_REMOVABLE);
+
+        if (removable.isPresent()) {
+            if (removable.get()) {
+                getLeftIcons().remove(closeIcon);
+            } else {
+                getLeftIcons().add(closeIcon);
+            }
+        } else {
+            getLeftIcons().add(closeIcon);
+        }
+
+        changeListener
+                = (MapChangeListener.Change<? extends String, ? extends Object> change) -> {
+
+                    Optional<Boolean> removable2 = skin.getModel().
+                    getVisualizationRequest().get(
+                            VisualizationRequest.KEY_NODE_NOT_REMOVABLE);
+
+                    if (removable2.isPresent()) {
+                        if (removable2.get()) {
+                            getLeftIcons().remove(closeIcon);
+                        } else {
+                            getLeftIcons().add(closeIcon);
+                        }
+                    } else {
+                        getLeftIcons().add(closeIcon);
+                    }
+                };
+
+        skin.getModel().getVisualizationRequest().addListener(changeListener);
+//        }
+
         getLeftIcons().add(new MinimizeIcon(this));
 
 //        setTitleBarStyleClass("my-titlebar");
@@ -103,53 +142,34 @@ public class FlowNodeWindow extends Window {
         configureCanvas(skin);
 
 //        addSelectionRectangle(skin, root);
-        addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                connectorsToFront();
-            }
+        addEventHandler(MouseEvent.MOUSE_ENTERED, (MouseEvent t) -> {
+            connectorsToFront();
         });
 
         setSelectable(skin.getModel().isSelectable());
         skin.getModel().selectableProperty().bindBidirectional(this.selectableProperty());
 
         requestSelection(skin.getModel().isSelected());
-        skin.getModel().selectedProperty().addListener(new ChangeListener<Boolean>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                FlowNodeWindow.this.requestSelection(newValue);
-            }
+        skin.getModel().selectedProperty().addListener(
+                (ov, oldValue, newValue) -> {
+            FlowNodeWindow.this.requestSelection(newValue);
         });
 
-        FlowNodeWindow.this.selectedProperty().addListener(new ChangeListener<Boolean>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                skin.getModel().requestSelection(newValue);
-            }
+        FlowNodeWindow.this.selectedProperty().addListener((ov, oldValue, newValue) -> {
+            skin.getModel().requestSelection(newValue);
         });
 
-        skinProperty().addListener(new ChangeListener<Skin<?>>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Skin<?>> observable, Skin<?> oldValue, Skin<?> newValue) {
-
-                if (newValue != null) {
-                    Node titlebar = newValue.getNode().lookup("." + getTitleBarStyleClass());
-
-                    titlebar.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
-
-                        public void handle(MouseEvent evt) {
-                            if (evt.getClickCount() == 1
-                                    && evt.getEventType() == MouseEvent.MOUSE_RELEASED
-                                    && evt.isDragDetect()) {
-                                skin.getModel().requestSelection(!skin.getModel().isSelected());
-                            }
-                        }
-                    });
-                }
-
+        skinProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue != null) {
+                Node titlebar = newValue.getNode().lookup("." + getTitleBarStyleClass());
+                
+                titlebar.addEventHandler(MouseEvent.ANY, (MouseEvent evt) -> {
+                    if (evt.getClickCount() == 1
+                            && evt.getEventType() == MouseEvent.MOUSE_RELEASED
+                            && evt.isDragDetect()) {
+                        skin.getModel().requestSelection(!skin.getModel().isSelected());
+                    }
+                });
             }
         });
 
@@ -217,7 +237,6 @@ public class FlowNodeWindow extends Window {
                 nodeId = FlowNodeWindow.this.
                         nodeSkinProperty().get().getModel().getId();
 
-               
                 VFlow rootFlow = flow.getRootFlow();
 
                 rootFlow.getNodes().addListener(
@@ -225,11 +244,11 @@ public class FlowNodeWindow extends Window {
                             while (c.next()) {
                                 if (c.wasAdded()) {
                                     for (VNode n : c.getAddedSubList()) {
-                                       if (n.getId().equals(nodeId)) {
-                                           canvas.getContentPane().getChildren().clear();
-                                           VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
-                                           flow.addSkinFactories(new FXValueSkinFactory(null));
-                                       }
+                                        if (n.getId().equals(nodeId)) {
+                                            canvas.getContentPane().getChildren().clear();
+                                            VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
+                                            flow.addSkinFactories(new FXValueSkinFactory(null));
+                                        }
                                     }
                                 }
                             }
@@ -268,30 +287,22 @@ public class FlowNodeWindow extends Window {
 
         final WindowIcon collapseIcon = new WindowIcon();
 
-        collapseIcon.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                FXFlowNodeSkin skin = nodeSkinProperty.get();
-
-                if (skin != null) {
-                    VFlowModel model = (VFlowModel) skin.getModel();
-                    model.setVisible(!model.isVisible());
-                }
+        collapseIcon.setOnAction((ActionEvent t) -> {
+            FXFlowNodeSkin skin1 = nodeSkinProperty.get();
+            if (skin1 != null) {
+                VFlowModel model = (VFlowModel) skin1.getModel();
+                model.setVisible(!model.isVisible());
             }
         });
 
         getRightIcons().add(collapseIcon);
 
         if (skin.modelProperty() != null) {
-            skin.modelProperty().addListener(new ChangeListener<VNode>() {
-                @Override
-                public void changed(ObservableValue<? extends VNode> ov,
-                        VNode t, VNode t1) {
-                    if (t1 instanceof VFlowModel) {
-                        getRightIcons().add(collapseIcon);
-                    } else {
-                        getRightIcons().remove(collapseIcon);
-                    }
+            skin.modelProperty().addListener((ov, oldValue, newValue) -> {
+                if (newValue instanceof VFlowModel) {
+                    getRightIcons().add(collapseIcon);
+                } else {
+                    getRightIcons().remove(collapseIcon);
                 }
             });
         }
@@ -299,23 +310,17 @@ public class FlowNodeWindow extends Window {
         // adds an icon that opens a new view in a separate window
         final WindowIcon newViewIcon = new WindowIcon();
 
-        newViewIcon.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                FXFlowNodeSkin skin = nodeSkinProperty.get();
-
-                if (skin != null) {
-
-                    String nodeId = skin.getModel().getId();
-
-                    for (VFlow vf : skin.getController().getSubControllers()) {
-                        if (vf.getModel().getId().equals(nodeId)) {
-                            showFlowInWindow(vf,
-                                    NodeUtil.getStylesheetsOfAncestors(
-                                            FlowNodeWindow.this),
-                                    getLocation(vf));
-                            break;
-                        }
+        newViewIcon.setOnAction((ActionEvent t) -> {
+            FXFlowNodeSkin skin1 = nodeSkinProperty.get();
+            if (skin1 != null) {
+                String nodeId = skin1.getModel().getId();
+                for (VFlow vf : skin1.getController().getSubControllers()) {
+                    if (vf.getModel().getId().equals(nodeId)) {
+                        showFlowInWindow(vf,
+                                NodeUtil.getStylesheetsOfAncestors(
+                                        FlowNodeWindow.this),
+                                getLocation(vf));
+                        break;
                     }
                 }
             }
@@ -386,7 +391,8 @@ public class FlowNodeWindow extends Window {
         }
 
         for (Connection conn : connections) {
-            ConnectionSkin skinI = skin.controller.getNodeSkinLookup().getById(skin.getSkinFactory(), conn);
+            ConnectionSkin skinI = skin.controller.getNodeSkinLookup().
+                    getById(skin.getSkinFactory(), conn);
 
             if (skinI instanceof FXConnectionSkin) {
                 FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
@@ -408,5 +414,13 @@ public class FlowNodeWindow extends Window {
             content.getStyleClass().setAll("vnode-content");
             skin.configureCanvas(content);
         }
+    }
+
+    void onRemovedFromSceneGraph() {
+//         if (nodeSkinProperty.get().getModel().
+//                 isVisualizationRequestInitialized()) {
+        nodeSkinProperty.get().getModel().getVisualizationRequest().
+                removeListener(changeListener);
+//         }
     }
 }

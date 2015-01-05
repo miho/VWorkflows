@@ -80,7 +80,7 @@ public class ConnectorImpl implements Connector {
 
     @Override
     public String getId() {
-        return this.node.getId() + ":" + this.localId;
+        return this.node.getId() + ":c:" + this.localId;
     }
 
     @Override

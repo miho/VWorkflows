@@ -159,6 +159,14 @@ class ConnectionsImpl implements Connections {
     }
 
     private Connection createConnection(String id, Connector s, Connector r) {
+        
+        if (s == null) {
+            throw new IllegalArgumentException("Sender must not be null.");
+        }
+        
+        if (r == null) {
+            throw new IllegalArgumentException("Receiver must not be null.");
+        }
 
         Connection result = null;
 

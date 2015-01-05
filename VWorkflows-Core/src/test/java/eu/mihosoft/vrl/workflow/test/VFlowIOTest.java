@@ -115,6 +115,7 @@ public class VFlowIOTest {
             flow2 = WorkflowIO.loadFromXML(xml);
         } catch (Exception ex) {
             Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, ("-- XML: --\n" + xml));
             couldLoad = false;
         }
 

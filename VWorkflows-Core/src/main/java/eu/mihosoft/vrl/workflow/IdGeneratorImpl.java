@@ -46,7 +46,7 @@ import java.util.Set;
 class IdGeneratorImpl implements IdGenerator {
 
     private Set<String> ids = new HashSet<>();
-    private int lastId = 0;
+//    private int lastId = 0;
 
     public IdGeneratorImpl() {
         //
@@ -67,23 +67,23 @@ class IdGeneratorImpl implements IdGenerator {
 
         // TODO improve id generation
         // Question: do we really want strings as id?
-        int counter = lastId + 1;
+        int counter = 0;//lastId + 1;
        
         
-        if (prefix != null && !prefix.isEmpty()) {
+        if (prefix != null && !prefix.isEmpty() && !prefix.endsWith(":")) {
             prefix = prefix + "-";
         }
 
-        String id = prefix + counter; // verified that java / & 8 uses stringbuilder
+        String id = prefix + counter;
 
         while (ids.contains(id)) {
+            id = prefix + counter;
             counter++;
-            id = "" + counter;
         }
 
         ids.add(id);
 
-        lastId = counter;
+//        lastId = counter;
 
         return id;
     }

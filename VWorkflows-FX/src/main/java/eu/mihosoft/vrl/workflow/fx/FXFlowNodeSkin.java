@@ -348,6 +348,7 @@ public class FXFlowNodeSkin
                     cTmp = connection.getReceiver();
                 }
 
+                // TODO analyze potential performance issue with lookup
                 List<VNodeSkin> skins = controller.getNodeSkinLookup().
                         getById(nId);
 

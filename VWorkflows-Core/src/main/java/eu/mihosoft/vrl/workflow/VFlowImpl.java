@@ -558,7 +558,7 @@ public class VFlowImpl implements VFlow {
 
         VNodeSkin<VNode> nodeSkin = nodeSkinMap.get(id);
 
-//        System.out.println("skin for " + id + " = " + nodeSkin + ", factory: " + skinFactory);
+//        System.out.println("skin for " + id + " = " + nodeSkin + ", factory: " + skinFactory + ", controller: " + getModel().getId());
         return nodeSkin;
     }
 
@@ -945,6 +945,7 @@ public class VFlowImpl implements VFlow {
 
     @Override
     public List<VNodeSkin> getNodeSkinsById(String id) {
+        
         List<VNodeSkin> result = new ArrayList<>();
 
         for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> sF : this.getSkinFactories()) {

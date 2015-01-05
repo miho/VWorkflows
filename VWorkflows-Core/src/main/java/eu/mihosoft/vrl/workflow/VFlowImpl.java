@@ -549,7 +549,7 @@ public class VFlowImpl implements VFlow {
     private void putNodeSkin(SkinFactory skinFactory, VNodeSkin<VNode> skin) {
         Map<String, VNodeSkin> nodeSkinMap = getNodeSkinMap(skinFactory);
 
-        System.out.println("put skin " + skin + "for: " + skin.getModel().getId() + ", factory: " + skinFactory);
+//        System.out.println("put skin " + skin + "for: " + skin.getModel().getId() + ", factory: " + skinFactory);
         nodeSkinMap.put(skin.getModel().getId(), skin);
     }
 
@@ -558,7 +558,7 @@ public class VFlowImpl implements VFlow {
 
         VNodeSkin<VNode> nodeSkin = nodeSkinMap.get(id);
 
-        System.out.println("skin for " + id + " = " + nodeSkin + ", factory: " + skinFactory);
+//        System.out.println("skin for " + id + " = " + nodeSkin + ", factory: " + skinFactory + ", controller: " + getModel().getId());
         return nodeSkin;
     }
 

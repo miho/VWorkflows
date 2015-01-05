@@ -63,7 +63,6 @@ public class NodeLookupImpl implements NodeLookup {
         if (ids.length < 2) {
             throw new IllegalArgumentException("wrong connector id format: "
                     + globalId + ", correct format: node-id:c:connector-id");
-//            return null;
         }
 
         String nodeId = ids[0];

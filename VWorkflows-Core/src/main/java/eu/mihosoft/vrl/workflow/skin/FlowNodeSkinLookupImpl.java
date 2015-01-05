@@ -84,14 +84,21 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
     }
 
     private VNodeSkin getNodeByGlobalId(SkinFactory skinFactory, VFlow parent, String id) {
+        
+//        System.out.println("id: " + id);
 
         // find flow that contains the requested node
-        VFlow flow = getFlowThatContains(parent, id);
+        VFlow flow;
+        
+        if (parent.getModel().getId().equals(id)) {
+            flow = parent;
+        } else {
+            flow = getFlowThatContains(parent, id);
+        }
 //        
 //        System.out.println("found flow: " + flow.getModel().getId());
 
         for (SkinFactory sF : flow.getSkinFactories()) {
-
             if (getRootSkinFactoryOf(skinFactory) == getRootSkinFactoryOf(sF)) {
                 List<VNodeSkin> s2 = flow.getNodeSkinsById(id);
                 return getBySkinFactory(sF, s2);
@@ -157,7 +164,7 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         // support for connector ids, we wan't to return node skin if connector
         // id is given
-        globalId = globalId.split(":")[0];
+        globalId = globalId.split(":c:")[0];
 
         VNodeSkin result = getNodeByGlobalId(skinFactory, root, globalId);
 
@@ -176,8 +183,8 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
         String sender = c.getSender().getId();
         String receiver = c.getReceiver().getId();
 
-        VFlowModel senderFlow = root.getNodeLookup().getById(sender.split(":")[0]).getFlow();
-        VFlowModel receiverFlow = root.getNodeLookup().getById(receiver.split(":")[0]).getFlow();
+        VFlowModel senderFlow = root.getNodeLookup().getById(sender.split(":c:")[0]).getFlow();
+        VFlowModel receiverFlow = root.getNodeLookup().getById(receiver.split(":c:")[0]).getFlow();
 
         if (senderFlow != receiverFlow) {
             throw new UnsupportedOperationException(

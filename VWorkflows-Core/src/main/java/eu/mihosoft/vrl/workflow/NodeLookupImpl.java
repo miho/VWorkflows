@@ -58,11 +58,11 @@ public class NodeLookupImpl implements NodeLookup {
 
     @Override
     public Connector getConnectorById(String globalId) {
-        String[] ids = globalId.split(":");
+        String[] ids = globalId.split(":c:");
 
         if (ids.length < 2) {
             throw new IllegalArgumentException("wrong connector id format: "
-                    + globalId + ", correct format: node-id:connector-id");
+                    + globalId + ", correct format: node-id:c:connector-id");
 //            return null;
         }
 

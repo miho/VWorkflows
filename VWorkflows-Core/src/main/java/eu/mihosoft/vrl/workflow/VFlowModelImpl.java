@@ -336,7 +336,7 @@ class VFlowModelImpl implements VFlowModel {
     public VFlowModel newFlowNode(ValueObject obj) {
         VFlowModel flowNode = new VFlowModelImpl(this);
 
-        return (VFlowModel) flow.newNode(flowNode, obj);
+        return (VFlowModel) flow.newNode(flowNode, obj, getId());
     }
 
     @Override
@@ -347,7 +347,7 @@ class VFlowModelImpl implements VFlowModel {
 
         DefaultValueObject valObj = new DefaultValueObject();
 
-        VFlowModel result = (VFlowModel) flow.newNode(flowNode, valObj); // end newNode()
+        VFlowModel result = (VFlowModel) flow.newNode(flowNode, valObj, getId()); // end newNode()
 
         valObj.setParent(result);
 
@@ -366,7 +366,7 @@ class VFlowModelImpl implements VFlowModel {
                 result = (VNode) constructor.newInstance(this);
                 result.setValueObject(obj);
 
-                result = flow.newNode(result, obj);
+                result = flow.newNode(result, obj, getId());
 
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);

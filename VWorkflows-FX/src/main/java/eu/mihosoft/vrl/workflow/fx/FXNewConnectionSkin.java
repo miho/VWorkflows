@@ -131,7 +131,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 //        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //    
         final VNode sender = getSender().getNode();
-        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, getSender().getId());
+        final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().getNodeSkinLookup().getById(skinFactory, sender.getId());
+        
+        System.out.println("SENDER-SKIN: " + senderSkin + " for id: " + sender.getId());
+        
         final Node senderNode = senderSkin.getConnectorNodeByReference(getSender());
 
         senderConnectorUI = (Circle) senderNode;
@@ -399,6 +402,11 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
     @Override
     public final void setSender(Connector n) {
+        
+        if (n==null) {
+            throw new IllegalArgumentException("Sender 'null' not supported.");
+        }
+        
         senderProperty.set(n);
     }
 

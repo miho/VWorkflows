@@ -42,22 +42,18 @@ import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
-import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -66,7 +62,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
+import javafx.stage.FileChooser;
 import jfxtras.labs.scene.control.window.Window;
 
 /**
@@ -86,7 +82,7 @@ public class MainWindowFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       canvas = new VCanvas();
+        canvas = new VCanvas();
 
         Pane root = canvas.getContentPane();
 
@@ -102,10 +98,17 @@ public class MainWindowFXMLController implements Initializable {
 
     @FXML
     public void onLoadAction(ActionEvent e) {
+
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+
+        File f = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+
         System.out.print(" >> loading workflow from xml");
 
         try {
-            workflow = WorkflowIO.loadFromXML(Paths.get("flow01.xml"));
+            workflow = WorkflowIO.loadFromXML(f.toPath());
 
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,9 +126,15 @@ public class MainWindowFXMLController implements Initializable {
             return;
         }
 
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+
+        File f = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
+
         System.out.print(" >> saving workflow as xml");
         try {
-            WorkflowIO.saveToXML(Paths.get("flow01.xml"), workflow.getModel());
+            WorkflowIO.saveToXML(f.toPath(), workflow.getModel());
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -195,16 +204,14 @@ public class MainWindowFXMLController implements Initializable {
             }
 
             n.setTitle("Node " + n.getId());
-            
-//            n.getVisualizationRequest().set(VisualizationRequest.KEY_MAX_CONNECTOR_SIZE, 10.0);
 
+//            n.getVisualizationRequest().set(VisualizationRequest.KEY_MAX_CONNECTOR_SIZE, 10.0);
             String type = connectionTypes[i % connectionTypes.length];
 
             n.setMainInput(n.addInput(type)).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
             n.setMainInput(n.addInput("event")).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
-            
-//            n.getVisualizationRequest().set(VisualizationRequest.KEY_DISABLE_EDITING, true);
 
+//            n.getVisualizationRequest().set(VisualizationRequest.KEY_DISABLE_EDITING, true);
             for (int j = 0; j < 3; j++) {
                 n.addInput(type).getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
             }
@@ -264,8 +271,6 @@ public class MainWindowFXMLController implements Initializable {
         FXSkinFactory skinFactory = new FXSkinFactory(rootPane);
 
         workflow.setSkinFactories(skinFactory);
-        
-       
 
 //        skinFactory.setConnectionFillColor("control", new Color(1.0, 1.0, 0.0, 0.75));
 //        skinFactory.setConnectionStrokeColor("control", new Color(120 / 255.0, 140 / 255.0, 1, 0.42));

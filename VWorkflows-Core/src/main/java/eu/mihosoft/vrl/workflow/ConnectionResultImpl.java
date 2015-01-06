@@ -36,6 +36,8 @@
 
 package eu.mihosoft.vrl.workflow;
 
+import java.util.List;
+
 /**
  * This class provides a default implementation of {@code  ConnectionResult}
  * //TODO add documentation about the possible connection results.
@@ -44,12 +46,18 @@ package eu.mihosoft.vrl.workflow;
  */
 
 class ConnectionResultImpl implements ConnectionResult {
-    private CompatibilityResult status;
+    private final CompatibilityResult status;
     private Connection connection;
+    private final List<Connection> path;
 
-    public ConnectionResultImpl(CompatibilityResult status, Connection connection) {
+    public ConnectionResultImpl(CompatibilityResult status, List<Connection> path) {
         this.status = status;
-        this.connection = connection;
+        
+        if (!path.isEmpty()) {
+            this.connection = path.get(0);
+        }
+        
+        this.path = path;
     }
 
     /**
@@ -68,5 +76,8 @@ class ConnectionResultImpl implements ConnectionResult {
         return connection;
     }
 
-
+    @Override
+    public List<Connection> getPath() {
+        return path;
+    }
 }

@@ -50,7 +50,7 @@ public interface ConnectionResult {
      */
     Connection getConnection();
     
-    List<Connection> getPath();
+//    List<Connection> getPath();
 
     /**
      * Get the status of the connection. 

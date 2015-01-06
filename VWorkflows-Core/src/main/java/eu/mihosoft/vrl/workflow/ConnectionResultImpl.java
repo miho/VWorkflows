@@ -48,16 +48,11 @@ import java.util.List;
 class ConnectionResultImpl implements ConnectionResult {
     private final CompatibilityResult status;
     private Connection connection;
-    private final List<Connection> path;
 
-    public ConnectionResultImpl(CompatibilityResult status, List<Connection> path) {
+    public ConnectionResultImpl(CompatibilityResult status, Connection connection) {
         this.status = status;
         
-        if (!path.isEmpty()) {
-            this.connection = path.get(0);
-        }
-        
-        this.path = path;
+        this.connection = connection;
     }
 
     /**
@@ -74,10 +69,5 @@ class ConnectionResultImpl implements ConnectionResult {
     @Override
     public Connection getConnection() {
         return connection;
-    }
-
-    @Override
-    public List<Connection> getPath() {
-        return path;
     }
 }

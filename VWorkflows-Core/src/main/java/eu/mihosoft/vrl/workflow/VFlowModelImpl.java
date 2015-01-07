@@ -123,6 +123,8 @@ class VFlowModelImpl implements VFlowModel {
                         flow.remove(tC.getInnerNode());
                     }
                 }
+                
+                
             }
         });
 
@@ -539,6 +541,8 @@ class VFlowModelImpl implements VFlowModel {
 
         ThruConnector tC = node.addThruInput(
                 node, type, innerNode, innerConnector);
+        
+        thruInputs.add(tC);
 
         return tC;
     }
@@ -556,6 +560,8 @@ class VFlowModelImpl implements VFlowModel {
 
         ThruConnector tC = node.addThruOutput(
                 node, type, innerNode, innerConnector);
+        
+        thruOutputs.add(tC);
 
         return tC;
     }

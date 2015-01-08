@@ -129,6 +129,10 @@ class VNodeImpl implements VNode {
                                 if (connector.isOutput()) {
                                     outputs.remove(connector);
                                 }
+                                
+                                Connections connections = getFlow().getConnections(connector.getType());
+                                connections.getConnections().removeAll(connections.getAllWith(connector));
+                                
                                 connectorIdGenerator.getIds().remove(connector.getId());
                             }
                         } else if (change.wasAdded()) {

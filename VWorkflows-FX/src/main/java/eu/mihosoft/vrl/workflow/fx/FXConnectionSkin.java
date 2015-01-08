@@ -41,9 +41,12 @@ import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import java.util.Optional;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -92,6 +95,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private ConnectionListener connectionListener;
 
     private boolean receiverDraggingStarted = false;
+    private MapChangeListener<String, Object> vReqLister;
 
     public FXConnectionSkin(FXSkinFactory skinFactory, Parent parent, Connection connection, VFlow flow, String type) {
         setParent(parent);
@@ -111,6 +115,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         connectionPath = new Path(moveTo, curveTo);
 
         init();
+        initVReqListeners();
     }
 
     private void init() {
@@ -333,8 +338,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        connectionListener =
 //                new ConnectionListenerImpl(
 //                skinFactory, controller, receiverConnectorUI);
-        
-        
         final ContextMenu contextMenu = new ContextMenu();
         MenuItem removeITem = new MenuItem("Remove Connection");
         contextMenu.getItems().addAll(removeITem);
@@ -347,13 +350,24 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         connectionPath.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.getButton()==MouseButton.SECONDARY) {
+                if (event.getButton() == MouseButton.SECONDARY) {
                     contextMenu.show(connectionPath, event.getScreenX(), event.getScreenY());
                 }
             }
         });
 
     } // end init
+
+    private void initVReqListeners() {
+
+        configureEditCapability(false);
+
+        vReqLister = (MapChangeListener.Change<? extends String, ? extends Object> change) -> {
+            configureEditCapability(false);
+        };
+
+        getModel().getVisualizationRequest().addListener(vReqLister);
+    }
 
     private void makeDraggable(
             final DoubleBinding receiveXBinding,
@@ -611,6 +625,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
     @Override
     public void remove() {
+
+        getModel().getVisualizationRequest().removeListener(vReqLister);
+
         if (connectionPath.getParent() == null || getReceiverUI().getParent() == null) {
             return;
         }
@@ -732,5 +749,21 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         VNode receiver = connection.getReceiver().getNode();
 
         throw new UnsupportedOperationException("Cannot visualize connection with different parent flows!");
+    }
+
+    void configureEditCapability(boolean notEditable) {
+
+        Optional<Boolean> disableEditing
+                = getModel().getVisualizationRequest().
+                get(VisualizationRequest.KEY_DISABLE_EDITING);
+
+        if (disableEditing.isPresent()) {
+            notEditable = disableEditing.get();
+        }
+
+        senderNode.setMouseTransparent(notEditable);
+        receiverConnectorUI.setMouseTransparent(notEditable);
+        connectionPath.setMouseTransparent(notEditable);
+
     }
 }

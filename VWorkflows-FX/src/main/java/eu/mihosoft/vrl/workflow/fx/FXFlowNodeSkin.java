@@ -38,6 +38,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
@@ -49,6 +50,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.beans.binding.DoubleBinding;
@@ -190,7 +193,7 @@ public class FXFlowNodeSkin
 
                     numConnectorsProperty.set(getModel().getConnectors().size());
                 }
-                
+
                 configureEditCapability();
             }
         });
@@ -207,7 +210,7 @@ public class FXFlowNodeSkin
         configureEditCapability();
 
         vReqLister = (MapChangeListener.Change<? extends String, ? extends Object> change) -> {
-            
+
             configureEditCapability();
         };
 
@@ -215,6 +218,7 @@ public class FXFlowNodeSkin
     }
 
     private void configureEditCapability() {
+
         Optional<Boolean> disableEditing
                 = getModel().getVisualizationRequest().
                 get(VisualizationRequest.KEY_DISABLE_EDITING);
@@ -223,19 +227,68 @@ public class FXFlowNodeSkin
 
             boolean disableEditingV = disableEditing.get();
 
-            node.setMovable(!disableEditingV);
-            node.setResizableWindow(!disableEditingV);
+            updateEditabilityConfig(disableEditingV);
+        } else {
 
-            for (Shape connectorShape : connectors.values()) {
-                connectorShape.setMouseTransparent(disableEditingV);
+            VFlowModel parent = getModel().getFlow();
+
+            while (parent != null) {
+                Optional<Boolean> disableEditingParent
+                        = parent.getVisualizationRequest().
+                        get(VisualizationRequest.KEY_DISABLE_EDITING);
+
+                if (disableEditingParent.isPresent()) {
+                    updateEditabilityConfig(disableEditingParent.get());
+                    break;
+                }
+
+                parent = parent.getFlow();
+            }
+
+            // if we din't find a parent with the requested value then we
+            // make it editable
+            if (parent == null) {
+                updateEditabilityConfig(false);
             }
         }
+    }
 
+    private void updateEditabilityConfig(boolean notEditable) {
+        node.setMovable(!notEditable);
+        node.setResizableWindow(!notEditable);
+
+        for (Shape connectorShape : connectors.values()) {
+            connectorShape.setMouseTransparent(notEditable);
+        }
+
+        if (this.getModel() instanceof VFlowModel) {
+
+            VFlowModel flowModel = (VFlowModel) this.getModel();
+
+            flowModel.getAllConnections().values().stream().flatMap(
+                    conns -> conns.getConnections().stream()).
+                    map(conn -> controller.
+                            getNodeSkinLookup().getById(skinFactory,
+                                    conn)).
+                    filter(cSkin -> cSkin instanceof FXConnectionSkin).
+                    map(cSkin -> (FXConnectionSkin) cSkin).
+                    forEach(cSkin -> cSkin.configureEditCapability(notEditable));
+
+            for (VNode vn : flowModel.getNodes()) {
+
+                FXFlowNodeSkin n = (FXFlowNodeSkin) controller.
+                        getNodeSkinLookup().getById(skinFactory, vn.getId());
+
+                if (n != null) {
+                    n.configureEditCapability();
+                }
+            }
+        }
     }
 
     void layoutConnectors() {
         for (Connector c : connectorList) {
-            
+
             layoutConnector(c, false);
         }
     }
@@ -331,9 +384,8 @@ public class FXFlowNodeSkin
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
         connectorShape.setLayoutY(computeConnectorYValue(c));
-        
-//        System.out.println("c: " + c);
 
+//        System.out.println("c: " + c);
         if (updateOthers) {
             for (Connection connection : conns) {
 
@@ -506,7 +558,7 @@ public class FXFlowNodeSkin
         connectorNode.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                
+
                 if (connectorNode.isMouseTransparent()) {
                     return;
                 }
@@ -543,7 +595,7 @@ public class FXFlowNodeSkin
         connectorNode.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                
+
                 if (connectorNode.isMouseTransparent()) {
                     return;
                 }
@@ -784,7 +836,7 @@ public class FXFlowNodeSkin
         if (node != null && node.getParent() != null) {
             NodeUtil.removeFromParent(node);
         }
-        
+
         removeListeners(getModel());
 
         getModel().getVisualizationRequest().removeListener(vReqLister);
@@ -833,7 +885,7 @@ public class FXFlowNodeSkin
         node.layoutYProperty().removeListener(nodeXListener);
         node.prefWidthProperty().removeListener(nodeWidthListener);
         node.prefHeightProperty().removeListener(nodeHeightListener);
-        
+
         flowNode.getVisualizationRequest().addListener(vReqLister);
     }
 
@@ -925,7 +977,7 @@ public class FXFlowNodeSkin
         node.layoutYProperty().addListener(nodeYListener);
         node.prefWidthProperty().addListener(nodeWidthListener);
         node.prefHeightProperty().addListener(nodeHeightListener);
-        
+
         initVReqListeners();
 
     }

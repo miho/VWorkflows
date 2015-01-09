@@ -149,57 +149,197 @@ public interface VFlow {
 
     public ConnectionResult connect(VFlow s, VFlow r, String flowType);
 
+    /**
+     * Removes the specified node from this flow.
+     *
+     * @param n the node to remove
+     * @return the removed node or <code>null</code> if no node has been removed
+     */
     public VNode remove(VNode n);
 
+    /**
+     * Returns the nodes of this flow.
+     *
+     * @return nodes of this flow
+     */
     public ObservableList<VNode> getNodes();
 
+    /**
+     * Clears this flow, i.e., removes all nodes and connections.
+     */
     public void clear();
 
+    /**
+     * Returns the sender of the specified connection.
+     *
+     * @param c connection
+     * @return the sender of the specified connection or <code>null</code> if
+     * the node does not exist
+     */
     public VNode getSender(Connection c);
 
+    /**
+     * Returns the receiver of the specified connection.
+     *
+     * @param c connection
+     * @return the receiver of the specified connection or <code>null</code> if
+     * the node does not exist
+     */
     public VNode getReceiver(Connection c);
 
+    /**
+     * Adds the specified connections to this flow controller.
+     *
+     * @param connections connections to add
+     * @param flowType connection type
+     */
     public void addConnections(Connections connections, String flowType);
 
+    /**
+     * Returns the all connections of the specified flow/connection type
+     *
+     * @param flowType connection type
+     * @return all connections of the specified flow/connection type
+     */
     public Connections getConnections(String flowType);
 
+    /**
+     * Returns all connections of this flow controller.
+     *
+     * @return all connections of this flow controller
+     */
     public ObservableMap<String, Connections> getAllConnections();
 
+    /**
+     * Defines the flow node implementation class used by this flow controller.
+     *
+     * @param cls flow node implementation class
+     */
     public void setFlowNodeClass(Class<? extends VNode> cls);
 
+    /**
+     * Returns the flow node implementation class used by this flow controller.
+     *
+     * @return the flow node implementation class used by this flow controller
+     */
     public Class<? extends VNode> getFlowNodeClass();
 
+    /**
+     * Adds a new node to this flow.
+     *
+     * @param obj value object that shall be used for the requested node
+     * @return new node
+     */
     public VNode newNode(ValueObject obj);
 
+    /**
+     * Adds a new node to this flow.
+     *
+     * @return new node
+     */
     public VNode newNode();
 
+    /**
+     * Adds a new subflow to this flow.
+     *
+     * @param obj value object that shall be used for the requested subflow
+     * @return new subflow
+     */
     public VFlow newSubFlow(ValueObject obj);
 
+    /**
+     * Adds a new subflow to this flow.
+     *
+     * @return new subflow
+     */
     public VFlow newSubFlow();
 
+    /**
+     * Returns all direct subcontrollers of this flow controller. Subcontrollers
+     * of subcontrollers won't be returned. Use the {@link #getFlowById(java.lang.String)
+     * } method to accomplish this.
+     *
+     * @return all direct subcontrollers of this flow controller
+     */
     public Collection<VFlow> getSubControllers();
 
-    // Doesn't use Generics because generic arrays are not supported. GENERICS ARE CRAPPY!
-    // see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971
-    public void setSkinFactories(SkinFactory... skinFactory);
+    /**
+     * Defines the skin factories for this flow controller.
+     *
+     * @param skinFactories skin factories that shall be used by this flow
+     * controller
+     *
+     * Doesn't use Generics because generic arrays are not supported. GENERICS
+     * ARE CRAPPY!
+     * {@link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971}
+     *
+     */
+    public void setSkinFactories(SkinFactory... skinFactories);
 
+    /**
+     * Defines the skin factories for this flow controller.
+     *
+     * @param skinFactories skin factories that shall be used by this flow
+     * controller
+     */
     public void setSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
 
+    /**
+     * Returns the skin factories that are used by this flow controller.
+     *
+     * @return the skin factories that are used by this flow controller
+     */
     public Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> getSkinFactories();
 
-    // Doesn't use Generics because generic arrays are not supported. GENERICS ARE CRAPPY!
-    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971
-    public void addSkinFactories(SkinFactory... skinFactory);
+    /**
+     * Adds the specified skin factories to this flow controller.
+     *
+     * @param skinFactories skin factories that shall be added to this flow
+     * controller
+     *
+     * Doesn't use Generics because generic arrays are not supported. GENERICS
+     * ARE CRAPPY!
+     * {@link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971}
+     *
+     */
+    public void addSkinFactories(SkinFactory... skinFactories);
 
+    /**
+     * Adds the specified skin factories to this flow controller.
+     *
+     * @param skinFactories skin factories that shall be added to this flow
+     * controller
+     */
     public void addSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
 
-    public void removeSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactory);
+    /**
+     * Removes the specified skin factories from this flow controller.
+     *
+     * @param skinFactories skin factories to be removed
+     */
+    public void removeSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories);
 
+    /**
+     * Removes the specified skin factories from this flow controller.
+     *
+     * @param skinFactories skin factories to be removed
+     */
     public void removeSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
 
+    /**
+     * Defines the id generator that shall be used by this flow controller.
+     *
+     * @param generator id generator
+     */
     public void setIdGenerator(IdGenerator generator);
 
+    /**
+     * Returns the id generator used by this flow controller.
+     *
+     * @return id generator
+     */
     public IdGenerator getIdGenerator();
+
 
     public List<VNodeSkin> getNodeSkinsById(String id);
 
@@ -213,19 +353,10 @@ public interface VFlow {
 
     public BooleanProperty visibleState();
 
-//    boolean isInputOfType(String type);
-//
-//    boolean isOutputOfType(String type);
-//    boolean isInput();
-//
-//    boolean isOutput();
     Connector addInput(String type);
 
     Connector addOutput(String type);
 
-//    ObservableList<String> getInputTypes();
-//
-//    ObservableList<String> getOutputTypes();
     /**
      * Returns child flow by id.
      *

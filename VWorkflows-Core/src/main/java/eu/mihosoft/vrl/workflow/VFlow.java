@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
@@ -49,29 +48,93 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 /**
- * The {@code VFlow} interface describes a workflow. A workflow is a network of
- * {@code VNode}s. {@code VNode}s are connected using {@code Connector}s.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * The {@code VFlow} interface describes a workflow controller. A workflow is a
+ * network of {@code VNode}s. {@code VNode}s are connected using
+ * {@code Connector}s.
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface VFlow {
 
+    /**
+     * Defines the model that shall be used by this flow controller.
+     *
+     * @param flow flow model
+     */
     public void setModel(VFlowModel flow);
 
+    /**
+     * Defines the node lookup that shall be used by this flow controller.
+     *
+     * @param nodeLookup
+     */
     public void setNodeLookup(NodeLookup nodeLookup);
 
+    /**
+     * Returns the node lookup that is used by this flow controller.
+     *
+     * @return
+     */
     public NodeLookup getNodeLookup();
 
+    /**
+     * Returns the model that is used by this flow controller.
+     *
+     * @return the model that is used by this flow controller
+     */
     public VFlowModel getModel();
 
+    /**
+     * Returns the property of the model that is used by this flow controller.
+     *
+     * @return the property of the model that is used by this flow controller
+     */
     public ObjectProperty modelProperty();
 
+    /**
+     * Attempts to create the specified connection. This method never creates an
+     * actual connection. It only checks whether the requested connection is
+     * valid.
+     *
+     * @param s sender connector
+     * @param r receiver connector
+     * @return connection result
+     */
     public ConnectionResult tryConnect(Connector s, Connector r);
 
+    /**
+     * Requests the specified connection. If the specified connection can be
+     * established it will be created.
+     *
+     * @param s sender node
+     * @param r receiver node
+     * @return connection result
+     */
     public ConnectionResult connect(Connector s, Connector r);
 
+    /**
+     * Attempts to create the specified connection. This method never creates an
+     * actual connection. It only checks whether the requested connection is
+     * valid.
+     *
+     * @param s sender node (uses main output connector of this node if
+     * specified)
+     * @param r receiver node (uses main input connector of this node if
+     * specified)
+     * @param flowType connection type
+     * @return connection result
+     */
     public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
 
+    /**
+     * Requests the specified connection. If the specified connection can be
+     * established it will be created.
+     *
+     * @param s sender node
+     * @param r receiver node
+     * @param flowType connection type
+     * @return connection result
+     */
     public ConnectionResult connect(VNode s, VNode r, String flowType);
 
     public ConnectionResult tryConnect(VFlow s, VNode r, String flowType);
@@ -181,7 +244,8 @@ public interface VFlow {
     public ThruConnector addThruInput(String type);
 
     public ThruConnector addThruOutput(String type);
-    
+
     public ObservableList<ThruConnector> getThruInputs();
+
     public ObservableList<ThruConnector> getThruOutputs();
 }

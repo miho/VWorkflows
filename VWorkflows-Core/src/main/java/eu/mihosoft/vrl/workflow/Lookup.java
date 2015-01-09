@@ -32,15 +32,23 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 /**
- * This interface defines a lookup. Look ups are used to find nodes and connectors
- * by id.
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * This interface defines a lookup. Look ups are used to find nodes and
+ * connectors by id.
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface Lookup<T> {
+
+    /**
+     * Returns the element with the specified id.
+     *
+     * @param id id of the requested element
+     * @return the requested element or <code>null</code> if the requested
+     * element does not exist
+     */
     public T getById(String id);
 }

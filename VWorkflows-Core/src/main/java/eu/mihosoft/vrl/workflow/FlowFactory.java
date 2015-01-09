@@ -84,6 +84,10 @@ public class FlowFactory {
         return result;
     }
     
+    /**
+     * Returns a new id generator.
+     * @return id generator
+     */
     public static IdGenerator newIdGenerator() {
         return new IdGeneratorImpl();
     }

@@ -32,47 +32,124 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.event.EventHandler;
 
 /**
- * This interface describes a connector. A connector is used to link nodes together.
- * It serves as the input or output for the node. Methods allow you to detect
- * whether the connector has been clicked or if it is used in a connection.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * This interface describes a connector. A connector is used to link nodes
+ * together. It serves as the input or output for the node. Methods allow you to
+ * detect whether the connector has been clicked or if it is used in a
+ * connection.
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface Connector extends Model {
 
+    /**
+     * Returns the conneciton type of this connector.
+     *
+     * @return connection type (e.g. <code>"control"</code> or
+     * <code>"data"</code>)
+     */
     public String getType();
 
+    /**
+     * Determines whether this connector is an input connector.
+     *
+     * @return <code>true</code> if this connector is an input connector;
+     * <code>false</code> otherwise
+     */
     public boolean isInput();
 
+    /**
+     * Determines whether this connector is an output connector.
+     *
+     * @return <code>true</code> if this connector is an output connector;
+     * <code>false</code> otherwise
+     */
     public boolean isOutput();
 
+    /**
+     * Returns the global id of this connector.
+     *
+     * @return global connector id
+     */
     public String getId();
 
+    /**
+     * Returns the local id of this connector.
+     *
+     * @return local connector id
+     */
     public String getLocalId();
 
+    /**
+     * Defines the local id of this connector.
+     *
+     * @param id the id to set
+     */
     public void setLocalId(String id);
 
+    /**
+     * Returns the parent node of this connector.
+     *
+     * @return parent node of this connector
+     */
     public VNode getNode();
 
+    /**
+     * Defines the value object of this connector.
+     *
+     * @param obj value object to set
+     */
     public void setValueObject(ValueObject obj);
 
+    /**
+     * Returns the value object of this connector.
+     *
+     * @return value object or <code>null</code> if no value object has been
+     * defined
+     */
     public ValueObject getValueObject();
 
+    /**
+     * Returns the value object property (can be used to get notified if the value object changes).
+     * @return value object property
+     */
     public ObjectProperty<ValueObject> valueObjectProperty();
-    
+
+    /**
+     * Adds the specified connection-event listener to this connector.
+     * 
+     * @param handler the listener to add
+     */
     public void addConnectionEventListener(EventHandler<ConnectionEvent> handler);
+
+    /**
+     * Removes the specified connection-event listener from this connector.
+     * @param handler the listener to remove
+     */
     public void removeConnectionEventListener(EventHandler<ConnectionEvent> handler);
-    
+
+    /**
+     * Adds the specified click-event listener to this connector.
+     * @param handler the listener to add
+     */
     public void addClickEventListener(EventHandler<ClickEvent> handler);
+
+    /**
+     * Removes the specified click-event listener from this connector.
+     * @param handler the listener to remove
+     */
     public void removeClickEventListener(EventHandler<ClickEvent> handler);
-    
+
+    /**
+     * Perform a mouse click on this connector.
+     * @param btn the click button
+     * @param event the event (e.g. javafx mouse-event)
+     */
     public void click(MouseButton btn, Object event);
 }

@@ -32,31 +32,49 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow;
 
 import javafx.beans.property.ReadOnlyProperty;
 
 /**
- * This class define a visualization request. 
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * This class represents a model. A model contains a visualization request.
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface Model {
-    
+
+    /**
+     * Returns the visualization request of this model.
+     *
+     * @return visualization request or <code>null</code> if no visualization
+     * request exists
+     */
     VisualizationRequest getVisualizationRequest();
 
+    /**
+     * Defines the visualization request for this model.
+     *
+     * @param vReq visualization request
+     */
     void setVisualizationRequest(VisualizationRequest vReq);
-    
+
+    /**
+     * Returns the visualization request property of this model.
+     *
+     * @return visualization request property
+     */
     ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty();
-    
-    boolean isVisualizationRequestInitialized(); 
 
+    /**
+     * Determines whether the visualization request is already initialized. Use
+     * this method to prevent unnecessary initialization. Depending on the model
+     * implementation {@link Model#getVisualizationRequest() } can cause
+     * initialization.
+     *
+     * @return <code>true</code> if the visualization request is already
+     * initialized
+     */
+    boolean isVisualizationRequestInitialized();
 
-//    public void setSkin(Skin<?> skin);
-//
-//    public Skin<?> getSkin();
-//
-//    public ObjectProperty<?> skinProperty();
 }

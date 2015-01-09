@@ -11,8 +11,20 @@ package eu.mihosoft.vrl.workflow;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public enum MouseButton {
+    /**
+     * No button.
+     */
     NONE,
+    /**
+     * Primary mouse button (usually the left mouse button).
+     */
     PRIMARY,
+    /**
+     * Middle mouse button.
+     */
     MIDDLE,
+    /**
+     * Secondary mouse button (usually the right mouse button).
+     */
     SECONDARY
 }

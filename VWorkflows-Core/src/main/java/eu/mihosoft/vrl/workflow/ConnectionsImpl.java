@@ -225,79 +225,11 @@ class ConnectionsImpl implements Connections {
             throw new IllegalStateException(
                     "Cannot add connection: a connection with equal id already added!");
         }
-
-//        if (c.getSenderId().equals(c.getReceiverId())) {
-//            throw new IllegalStateException(
-//                    "Cannot add connection: sender and receiver are equal: " + c.getSenderId());
-//        }
-//
-//        Integer senderCount = senders.get(c.getReceiverId());
-//        Integer receiverCount = receivers.get(c.getSenderId());
-//
-//        if (senderCount != null && senderCount > 0) {
-//            throw new IllegalStateException(
-//                    "Cannot add receiver: a sender with the name \""
-//                    + c.getReceiverId()
-//                    + "\" already exists!");
-//        }
-//
-//        if (receiverCount != null && receiverCount > 0) {
-//            throw new IllegalStateException(
-//                    "Cannot add sender: a receiver with the name \""
-//                    + c.getReceiverId()
-//                    + "\" already exists!");
-//        }
     }
-//    private void incSenderCounter(String id) {
-//        Integer count = senders.get(id);
-//
-//        if (count == null) {
-//            count = 0;
-//        }
-//
-//        count++;
-//
-//        senders.put(id, count);
-//    }
-//
-//    private void incReceiverCounter(String id) {
-//        Integer count = receivers.get(id);
-//
-//        if (count == null) {
-//            count = 0;
-//        }
-//
-//        count++;
-//
-//        receivers.put(id, count);
-//    }
-//
-//    private void decSenderCounter(String id) {
-//        Integer count = senders.get(id);
-//
-//        if (count == null) {
-//            count = 0;
-//        } else {
-//            count--;
-//        }
-//
-//        senders.put(id, count);
-//    }
-//
-//    private void decReceiverCounter(String id) {
-//        Integer count = receivers.get(id);
-//
-//        if (count == null) {
-//            count = 0;
-//        } else {
-//            count--;
-//        }
-//
-//        receivers.put(id, count);
-//    }
+
 
     @Override
-    public Iterable<Connection> getAll(Connector s, Connector r) {
+    public Collection<Connection> getAll(Connector s, Connector r) {
 
         Collection<Connection> result = new ArrayList<>();
 
@@ -317,7 +249,8 @@ class ConnectionsImpl implements Connections {
         Collection<Connection> delList = new ArrayList<>();
 
         for (Connection c : connections.values()) {
-            if (c.getSender().getId().equals(s.getId()) && c.getReceiver().getId().equals(r.getId())) {
+            if (c.getSender().getId().equals(s.getId())
+                    && c.getReceiver().getId().equals(r.getId())) {
                 delList.add(c);
             }
         }
@@ -357,20 +290,6 @@ class ConnectionsImpl implements Connections {
         return _visualizationRequestProperty();
     }
 
-//    @Override
-//    public void setSkin(Skin<?> skin) {
-//        skinProperty.set(skin);
-//    }
-//
-//    @Override
-//    public Skin<?> getSkin() {
-//        return skinProperty.get();
-//    }
-//
-//    @Override
-//    public ObjectProperty<?> skinProperty() {
-//        return skinProperty;
-//    }
     @Override
     public boolean isInputConnected(Connector input) {
         Collection<Connection> connectionsWith = getAllWith(input);

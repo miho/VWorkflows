@@ -56,7 +56,7 @@ public interface Connections extends Model {
 
     public Connection get(String id, Connector s, Connector r);
 
-    public Iterable<Connection> getAll(Connector s, Connector r);
+    public Collection<Connection> getAll(Connector s, Connector r);
 
     public void remove(String id, Connector s, Connector r);
 

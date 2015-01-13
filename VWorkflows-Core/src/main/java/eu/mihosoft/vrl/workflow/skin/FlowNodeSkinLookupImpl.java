@@ -86,6 +86,10 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
         } else {
             flow = getFlowThatContains(parent, id);
         }
+
+        if (flow == null) {
+            return null;
+        }
 //        
 //        System.out.println("found flow: " + flow.getModel().getId());
 

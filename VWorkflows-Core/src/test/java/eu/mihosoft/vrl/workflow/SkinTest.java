@@ -52,13 +52,13 @@ public class SkinTest {
 
         sf1.setVisible(true);
         Assert.assertTrue("Skin for sn1 must be present.",
-                 sfSkinFactry.get().getNodeSkins().get(sn1) != null);
-        
+                sfSkinFactry.get().getNodeSkins().get(sn1) != null);
+
         Assert.assertTrue("Skin must be skin of n1.",
                 sfSkinFactry.get().getNodeSkins().get(sn1).getModel() == sn1);
-        
+
     }
-    
+
     @Test
     public void nodeSkinLookupTest() {
         VFlow flow = FlowFactory.newFlow();
@@ -68,17 +68,40 @@ public class SkinTest {
         flow.setVisible(true);
         VNode n1 = flow.newNode();
 
-
         VNodeSkin lookupN1 = flow.getNodeSkinLookup().
                 getById(skinFactory, n1.getId());
-        
+
         Assert.assertTrue("Skin for n1 must be present.",
                 lookupN1 != null);
 
         Assert.assertTrue("Skin must be skin of n1.",
                 lookupN1.getModel() == n1);
+
+    }
+
+    @Test
+    public void connectionSkinLookupTest() {
+        VFlow flow = FlowFactory.newFlow();
+        VNodeSkinFactoryStub skinFactory = new VNodeSkinFactoryStub();
+        flow.setSkinFactories(skinFactory);
+
+        flow.setVisible(true);
+        VNode n1 = flow.newNode();
+        Connector s = n1.addOutput("mytype");
+        VNode n2 = flow.newNode();
+        Connector r = n2.addInput("mytype");
         
+        Connection connection = flow.connect(s, r).getConnection();
         
+        ConnectionSkin lookupC1 =  flow.getNodeSkinLookup().
+                getById(skinFactory, connection);
+        
+        Assert.assertTrue("Skin for connection must be present.",
+                lookupC1 != null);
+
+        Assert.assertTrue("Skin must be skin of connection.",
+                lookupC1.getModel() == connection);
+
     }
 }
 

@@ -145,9 +145,10 @@ class ConnectionsImpl implements Connections {
     public void setConnectionClass(Class<? extends Connection> cls) {
         try {
             Constructor constructor = cls.getConstructor(Connections.class, String.class, Connector.class, Connector.class, String.class);
-            throw new IllegalArgumentException("constructor missing: (Connections, String, Connector, Connector, String)");
+            
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException("constructor missing: (Connections, String, Connector, Connector, String)");
         }
 
         this.connectionClass = cls;

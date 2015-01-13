@@ -76,6 +76,47 @@ public class SkinTest {
 
         Assert.assertTrue("Skin must be skin of n1.",
                 lookupN1.getModel() == n1);
+
+
+
+    }
+    
+    @Test
+    public void nodeSkinLookupRemovalTest() {
+        VFlow flow = FlowFactory.newFlow();
+        VNodeSkinFactoryStub skinFactory = new VNodeSkinFactoryStub();
+        flow.setSkinFactories(skinFactory);
+
+        flow.setVisible(true);
+        VNode n1 = flow.newNode();
+        VNode n2 = flow.newNode();
+
+        VNodeSkin lookupN1 = flow.getNodeSkinLookup().
+                getById(skinFactory, n1.getId());
+
+        VNodeSkin lookupN2 = flow.getNodeSkinLookup().
+                getById(skinFactory, n2.getId());
+
+        Assert.assertTrue("Skin for n1 must be present.",
+                lookupN1 != null);
+
+        Assert.assertTrue("Skin must be skin of n1.",
+                lookupN1.getModel() == n1);
+
+        Assert.assertTrue("Skin for n2 must be present.",
+                lookupN2 != null);
+
+        Assert.assertTrue("Skin must be skin of n2.",
+                lookupN2.getModel() == n2);
+
+        flow.remove(n2);
+
+        VNodeSkin lookupN2AfterRemoval = flow.getNodeSkinLookup().
+                getById(skinFactory, n2.getId());
+
+        Assert.assertTrue("Skin for n2 must be removed after node removal.",
+                lookupN2AfterRemoval == null);
+
     }
 
     @Test
@@ -89,19 +130,19 @@ public class SkinTest {
         Connector s = n1.addOutput("mytype");
         VNode n2 = flow.newNode();
         Connector r = n2.addInput("mytype");
-        
+
         Connection connection = flow.connect(s, r).getConnection();
-        
-        ConnectionSkin lookupC1 =  flow.getNodeSkinLookup().
+
+        ConnectionSkin lookupC1 = flow.getNodeSkinLookup().
                 getById(skinFactory, connection);
-        
+
         Assert.assertTrue("Skin for connection must be present.",
                 lookupC1 != null);
 
         Assert.assertTrue("Skin must be skin of connection.",
                 lookupC1.getModel() == connection);
     }
-    
+
     @Test
     public void connectionSkinRemovalLookupTest() {
         VFlow flow = FlowFactory.newFlow();
@@ -114,34 +155,39 @@ public class SkinTest {
         VNode n2 = flow.newNode();
         Connector r1 = n2.addInput("mytype");
         Connector r2 = n2.addInput("mytype");
-        
+
         Connection connection1 = flow.connect(s1, r1).getConnection();
         Connection connection2 = flow.connect(s1, r2).getConnection();
-        
-        ConnectionSkin lookupC1 =  flow.getNodeSkinLookup().
+
+        ConnectionSkin lookupC1 = flow.getNodeSkinLookup().
                 getById(skinFactory, connection1);
-        
+
         Assert.assertTrue("Skin for connection must be present.",
                 lookupC1 != null);
 
         Assert.assertTrue("Skin must be skin of connection.",
                 lookupC1.getModel() == connection1);
-        
-        ConnectionSkinStub lookupC2 =  (ConnectionSkinStub) flow.getNodeSkinLookup().
+
+        ConnectionSkinStub lookupC2 = (ConnectionSkinStub) flow.getNodeSkinLookup().
                 getById(skinFactory, connection2);
-        
+
         Assert.assertTrue("Skin for connection must be present.",
                 lookupC2 != null);
 
         Assert.assertTrue("Skin must be skin of connection.",
                 lookupC2.getModel() == connection2);
-        
+
         flow.getConnections("mytype").remove(connection2);
-        
-        
+
         Assert.assertTrue("Skin has to be removed after connection removal.",
                 lookupC2.isRemoved());
- 
+
+        ConnectionSkinStub lookupC2AfterRemoval = (ConnectionSkinStub) flow.getNodeSkinLookup().
+                getById(skinFactory, connection2);
+
+        Assert.assertTrue("Skin has to be removed after connection removal.",
+                lookupC2AfterRemoval == null);
+
     }
 }
 
@@ -150,6 +196,8 @@ final class VNodeSkinStub implements VNodeSkin<VNode> {
     private final ObjectProperty<VNode> modelProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<VFlow> flowProperty = new SimpleObjectProperty<>();
     private final SkinFactory skinFactory;
+
+    private boolean removed;
 
     public VNodeSkinStub(SkinFactory skinFactory, VNode n, VFlow flow) {
         this.skinFactory = skinFactory;
@@ -164,7 +212,7 @@ final class VNodeSkinStub implements VNodeSkin<VNode> {
 
     @Override
     public void remove() {
-        //
+        removed = true;
     }
 
     @Override
@@ -196,6 +244,13 @@ final class VNodeSkinStub implements VNodeSkin<VNode> {
     public SkinFactory getSkinFactory() {
         return skinFactory;
     }
+
+    /**
+     * @return the removed
+     */
+    public boolean isRemoved() {
+        return removed;
+    }
 }
 
 final class ConnectionSkinStub implements ConnectionSkin<Connection> {
@@ -205,7 +260,7 @@ final class ConnectionSkinStub implements ConnectionSkin<Connection> {
     private final ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<VFlow> flowProperty = new SimpleObjectProperty<>();
     private final SkinFactory skinFactory;
-    
+
     private boolean removed;
 
     public ConnectionSkinStub(SkinFactory skinFactory, Connection c, VFlow flow) {

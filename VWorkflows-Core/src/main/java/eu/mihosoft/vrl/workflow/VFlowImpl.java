@@ -69,18 +69,18 @@ import javafx.event.EventHandler;
  */
 public class VFlowImpl implements VFlow {
 
-    ObjectProperty<VFlowModel> modelProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<VFlowModel> modelProperty = new SimpleObjectProperty<>();
     private ListChangeListener<VNode> nodesListener;
     private ListChangeListener<Connection> connectionsListener;
-    private ObservableList<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories = FXCollections.observableArrayList();
-    private Map<SkinFactory, Map<String, VNodeSkin>> nodeSkins = new WeakHashMap<>();
-    private Map<SkinFactory, Map<String, ConnectionSkin>> connectionSkins = new WeakHashMap<>();
-    private ObservableMap<String, VFlow> subControllers = FXCollections.observableHashMap();
+    private final ObservableList<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories = FXCollections.observableArrayList();
+    private final Map<SkinFactory, Map<String, VNodeSkin>> nodeSkins = new WeakHashMap<>();
+    private final Map<SkinFactory, Map<String, ConnectionSkin>> connectionSkins = new WeakHashMap<>();
+    private final ObservableMap<String, VFlow> subControllers = FXCollections.observableHashMap();
     private ChangeListener<Boolean> visibilityListener;
     private IdGenerator idGenerator;
     private NodeLookup nodeLookup;
     private FlowNodeSkinLookup nodeSkinLookup;
-    private ObjectProperty<VFlow> parentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<VFlow> parentProperty = new SimpleObjectProperty<>();
 
     public VFlowImpl(VFlow parent, VFlowModel model, SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories) {
 
@@ -109,6 +109,7 @@ public class VFlowImpl implements VFlow {
         return parentProperty().get();
     }
     
+    @Override
     public VFlow getRootFlow() {
         VFlow root = this;
         VFlow parent = this.getParent();

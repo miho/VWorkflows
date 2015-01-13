@@ -40,11 +40,19 @@ import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.VFlow;
 
 /**
- *
+ * Connection skin factory.
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @param <T> connection model type
  */
 public interface ConnectionSkinFactory<T extends Skin> {
 
+    /**
+     * Creates a skin for the specified connection.
+     * @param c connection that shall be skinned
+     * @param flow parent flow controller
+     * @param type connection type
+     * @return connection skin
+     */
     ConnectionSkin createSkin(Connection c, VFlow flow, String type);
    
 }

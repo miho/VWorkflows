@@ -38,10 +38,10 @@ package eu.mihosoft.vrl.workflow.skin;
 
 import eu.mihosoft.vrl.workflow.Connections;
 
-/**
- *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
- */
-public interface ConnectionsSkin extends Skin<Connections> {
-    
-}
+///**
+// * Skin that represents all connections
+// * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+// */
+//public interface ConnectionsSkin extends Skin<Connections> {
+//    
+//}

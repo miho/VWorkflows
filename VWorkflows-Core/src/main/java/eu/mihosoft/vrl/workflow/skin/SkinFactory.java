@@ -32,18 +32,35 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.skin;
 
 /**
+ * A skinfactory is responsible for creating skin based on model changes. It is
+ * used by the corresponding flow controller {@link eu.mihosoft.vrl.workflow.VFlow#setSkinFactories(eu.mihosoft.vrl.workflow.skin.SkinFactory...)
+ * }.
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
+ * @param <T> Connection skin type
+ * @param <V> Node skin type
  */
 public interface SkinFactory<T extends Skin, V extends Skin> extends ConnectionSkinFactory<T>, VNodeSkinFactory<V> {
 
+    /**
+     * Creates a child skin factory. This corresponds to the hierarchical layout
+     * of the model.
+     *
+     * @param parent parent skin
+     * @return child skin factory
+     */
     SkinFactory<T, V> createChild(Skin parent);
-    
+
+    /**
+     * Returns the parent skin factory.
+     *
+     * @return parent skin factory or <code>null</code> if no such skin factory
+     * exists
+     */
     public SkinFactory<T, V> getParent();
 
 }

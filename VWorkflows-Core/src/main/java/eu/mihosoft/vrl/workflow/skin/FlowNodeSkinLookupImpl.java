@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
-    private VFlow root;
+    private final VFlow root;
 
     public FlowNodeSkinLookupImpl(VFlow root) {
         this.root = root;

@@ -56,6 +56,29 @@ public class SkinTest {
         
         Assert.assertTrue("Skin must be skin of n1.",
                 sfSkinFactry.get().getNodeSkins().get(sn1).getModel() == sn1);
+        
+    }
+    
+    @Test
+    public void nodeSkinLookupTest() {
+        VFlow flow = FlowFactory.newFlow();
+        VNodeSkinFactoryStub skinFactory = new VNodeSkinFactoryStub();
+        flow.setSkinFactories(skinFactory);
+
+        flow.setVisible(true);
+        VNode n1 = flow.newNode();
+
+
+        VNodeSkin lookupN1 = flow.getNodeSkinLookup().
+                getById(skinFactory, n1.getId());
+        
+        Assert.assertTrue("Skin for n1 must be present.",
+                lookupN1 != null);
+
+        Assert.assertTrue("Skin must be skin of n1.",
+                lookupN1.getModel() == n1);
+        
+        
     }
 }
 

@@ -37,7 +37,6 @@ package eu.mihosoft.vrl.workflow;
 
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
-import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookupImpl;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ import javafx.event.EventHandler;
  * An implementation of the {@code VFlow} interface. This class manages the workflow
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class VFlowImpl implements VFlow {
+class VFlowImpl implements VFlow {
 
     final ObjectProperty<VFlowModel> modelProperty = new SimpleObjectProperty<>();
     private ListChangeListener<VNode> nodesListener;

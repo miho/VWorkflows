@@ -37,7 +37,6 @@ package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.ConnectorImpl;
 import eu.mihosoft.vrl.workflow.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.FlowFactory;
@@ -45,6 +44,7 @@ import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.NodeLookupImpl;
+import eu.mihosoft.vrl.workflow.IOConnector;
 import eu.mihosoft.vrl.workflow.ThruConnector;
 import eu.mihosoft.vrl.workflow.ThruConnectorImpl;
 import eu.mihosoft.vrl.workflow.VConnections;
@@ -420,7 +420,7 @@ public class WorkflowIO {
             }
 
         } else {
-            c = new ConnectorImpl(n, pC.getType(), pC.getLocalId(), pC.isInput());
+            c = new IOConnector(n, pC.getType(), pC.getLocalId(), pC.isInput());
         }
 
         return c;

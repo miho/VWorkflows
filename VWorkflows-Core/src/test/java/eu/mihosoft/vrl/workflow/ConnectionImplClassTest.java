@@ -24,10 +24,10 @@ public class ConnectionImplClassTest {
     public void testImplClassWithNonConformingConstructor() {
         VFlow flow = FlowFactory.newFlow();
         
-         boolean exceptionThrown = false;
+        boolean exceptionThrown = false;
         
         try{
-        flow.getConnections("mytype").setConnectionClass(
+            flow.getConnections("mytype").setConnectionClass(
                 ConnectionBaseWithoutConformingConstructor.class);
         } catch(IllegalArgumentException ex) {
             exceptionThrown = true;

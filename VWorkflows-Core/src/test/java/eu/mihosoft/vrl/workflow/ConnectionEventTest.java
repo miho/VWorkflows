@@ -4,13 +4,9 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.ConnectionEvent;
-import eu.mihosoft.vrl.workflow.ConnectionResult;
-import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VNode;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -49,7 +45,7 @@ public class ConnectionEventTest {
         VFlow flow = FlowFactory.newFlow();
 
         VNode n1 = flow.newNode();
-        n1.setMainOutput(n1.addOutput("control"));
+        Connector sender1 = n1.setMainOutput(n1.addOutput("control"));
         VNode n2 = flow.newNode();
         Connector receiver2 = n2.addInput("control");
         n2.setMainInput(receiver2);
@@ -58,14 +54,17 @@ public class ConnectionEventTest {
         VNode n3 = flow.newNode();
         Connector receiver3 = n3.addInput("control");
         n3.setMainInput(receiver3);
-        
-        class CountingListener implements EventHandler<ConnectionEvent>{
-            
+
+        class CountingListener implements EventHandler<ConnectionEvent> {
+
             private int counter = 0;
+            
+            private EventType<? extends Event> lastEventType;
 
             @Override
             public void handle(ConnectionEvent t) {
                 counter++;
+                lastEventType = t.getEventType();
             }
 
             /**
@@ -74,26 +73,39 @@ public class ConnectionEventTest {
             public int getCounter() {
                 return counter;
             }
+
+            private void reset() {
+                counter = 0;
+            }
         }
-        
-        CountingListener countingListener = new CountingListener();
-        
-        receiver2.addConnectionEventListener(countingListener);
-        
-//        System.out.println("-> " + n1.getMainOutput("control") + ", " + n2.getMainInput("control"));
-        
-        ConnectionResult result = flow.connect(n1, n2, "control");
-        
-//        System.out.println(" --> count" + countingListener.getCounter());
-        
-        assertTrue("Connection must be valid", result.getStatus().isCompatible());
+
+        // create test for input
+        CountingListener countingListenerInput = new CountingListener();
+        receiver2.addConnectionEventListener(countingListenerInput);
+        ConnectionResult resultInput = flow.connect(n1, n2, "control");
+        assertTrue("Connection must be valid", resultInput.getStatus().isCompatible());
         // add event has been fired once
-        assertTrue("Add-Event must be fired exactly once!", countingListener.getCounter() == 1);
-        
+        assertTrue("Add-Event must be fired exactly once!", 
+                countingListenerInput.getCounter() == 1 && countingListenerInput.lastEventType == ConnectionEvent.ADD);
         // remove the connection
-        result.getConnection().getConnections().remove(result.getConnection());
+        resultInput.getConnection().getConnections().remove(resultInput.getConnection());
         // remove event has been fired once
-        assertTrue("Remove-Event must be fired exactly once!", countingListener.getCounter() == 2);
+        assertTrue("Remove-Event must be fired exactly once!",
+                countingListenerInput.getCounter() == 2 && countingListenerInput.lastEventType == ConnectionEvent.REMOVE);
+        
+        // create test for output
+        CountingListener countingListenerOutput = new CountingListener();
+        sender1.addConnectionEventListener(countingListenerOutput);
+        ConnectionResult resultOutput = flow.connect(n1, n2, "control");
+        assertTrue("Connection must be valid", resultOutput.getStatus().isCompatible());
+        // add event has been fired once
+        assertTrue("Add-Event must be fired exactly once!", 
+                countingListenerOutput.getCounter() == 1 && countingListenerOutput.lastEventType == ConnectionEvent.ADD);
+        // remove the connection
+        resultOutput.getConnection().getConnections().remove(resultOutput.getConnection());
+        // remove event has been fired once
+        assertTrue("Remove-Event must be fired exactly once!",
+                countingListenerOutput.getCounter() == 2 && countingListenerOutput.lastEventType == ConnectionEvent.REMOVE);
     }
 
 }

@@ -125,8 +125,6 @@ public class DefaultConnectorValueObject implements ValueObject {
 
                     maxNumConnections = Math.min(c.getMaxNumberOfConnections(),
                             senderConnectorVObj.c.getMaxNumberOfConnections());
-                    
-                    System.out.println("max-num-conn: " + maxNumConnections);
 
                     lessThanMaxNumberOfConnections
                             = numConnectionsOfReceiver < maxNumConnections

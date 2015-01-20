@@ -56,9 +56,13 @@ class ConnectorImpl implements Connector {
     private ObjectProperty<VisualizationRequest> vReqProperty;
     private boolean input;
     private boolean output;
-    private final ObjectProperty<ValueObject> valueObjectProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<ValueObject> valueObjectProperty = 
+            new SimpleObjectProperty<>();
     private transient List<EventHandler<ConnectionEvent>> connectionEventHandlers;
     private transient List<EventHandler<ClickEvent>> clickEventHandlers;
+    
+    private final int maxNumberOfConnectionsDefault = Integer.MAX_VALUE;
+    private ObjectProperty<Integer> maxNumberOfConnectionsProperty;
 
     public ConnectorImpl(VNode node, String type, String localId, boolean input) {
         this.type = type;
@@ -233,5 +237,29 @@ class ConnectorImpl implements Connector {
     @Override
     public boolean isVisualizationRequestInitialized() {
         return vReqProperty != null;
+    }
+
+    @Override
+    public void setMaxNumberOfConnections(int numConnections) {
+        maxNumberOfConnectionsProperty().set(numConnections);
+    }
+
+    @Override
+    public int getMaxNumberOfConnections() {
+        if (maxNumberOfConnectionsProperty==null) {
+            return maxNumberOfConnectionsDefault;
+        } else {
+            return maxNumberOfConnectionsProperty().get();
+        }
+    }
+
+    @Override
+    public ObjectProperty<Integer> maxNumberOfConnectionsProperty() {
+        if (maxNumberOfConnectionsProperty == null) {
+            maxNumberOfConnectionsProperty = new SimpleObjectProperty<>(
+                    maxNumberOfConnectionsDefault);
+        }
+        
+        return maxNumberOfConnectionsProperty;
     }
 }

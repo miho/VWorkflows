@@ -152,4 +152,22 @@ public interface Connector extends Model {
      * @param event the event (e.g. javafx mouse-event)
      */
     public void click(MouseButton btn, Object event);
+    
+    /**
+     * Defines the maximum allowed number of connections.
+     * @param numConnections maximum allowed number of connections ({@code [0,MAX_INT]})
+     */
+    public void setMaxNumberOfConnections(int numConnections);
+    
+    /**
+     * Returns the maximum allowed number of connections. 
+     * @return maximum allowed number of connections ({@code [0,MAX_INT]})
+     */
+    public int getMaxNumberOfConnections();
+    
+    /**
+     * Returns the property of the maximum allowed number of connections. 
+     * @return maximum allowed number of connections ({@code [0,MAX_INT]})
+     */
+    public ObjectProperty<Integer> maxNumberOfConnectionsProperty();
 }

@@ -117,12 +117,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         init();
         initVReqListeners();
     }
-    
+
     private void styleInit() {
-         connectionPath.getStyleClass().setAll("vnode-connection", "vnode-connection-" + type);
+        connectionPath.getStyleClass().setAll("vnode-connection", "vnode-connection-" + type);
         receiverConnectorUI.getStyleClass().setAll("vnode-connection-receiver", "vnode-connection-receiver-" + type);
-        
-                getReceiverUI().setFill(new Color(0, 1.0, 0, 0.0));
+
+        getReceiverUI().setFill(new Color(0, 1.0, 0, 0.0));
         getReceiverUI().setStroke(new Color(0, 1.0, 0, 0.0));
         getReceiverUI().setStrokeWidth(3);
     }
@@ -138,8 +138,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        receiverConnector.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));
 //        receiverConnector.setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 //        receiverConnector.setStrokeWidth(3);
-
-
 //        if (type.equals("control")) {
 //            getReceiverUI().setFill(new Color(1.0, 1.0, 0.0, 0.75));
 //            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
@@ -150,8 +148,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //            getReceiverUI().setFill(new Color(255.0 / 255.0, 100.0 / 255.0, 1, 0.5));
 //            getReceiverUI().setStroke(new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
 //        }
-        
-
 //        connectionPath.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //        receiverConnector.setStyle("-fx-background-color: rgba(120,140,255,0.2);-fx-border-color: rgba(120,140,255,0.42);-fx-border-width: 2;");
 //        final FlowNode sender = getController().getSender(connection);
@@ -390,12 +386,14 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     n.toFront();
                     Connector receiver = selConnector.getConnector();
 
-//                    prevWindow = w;
                     ConnectionResult connResult
                             = getSender().getNode().getFlow().tryConnect(
                                     getSender(), receiver);
 
-                    if (connResult.getStatus().isCompatible()) {
+                    Connector receiverConnector = selConnector.getConnector();
+                    boolean isSameConnection = receiverConnector.equals(getReceiver());
+
+                    if (connResult.getStatus().isCompatible() || isSameConnection) {
 
 //                        DropShadow shadow = new DropShadow(20, Color.WHITE);
 //                        Glow effect = new Glow(0.5);
@@ -461,22 +459,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     lastNode = null;
                 }
 
-//                if (!valid) {
-//                    init();
-//                    return;
-//                }
                 getReceiverUI().toFront();
                 connectionPath.toBack();
 
                 getReceiverUI().layoutXProperty().bind(receiveXBinding);
                 getReceiverUI().layoutYProperty().bind(receiveYBinding);
 
-//                receiverConnector.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent t) {
-//                        makeDraggable(receiveXBinding, receiveYBinding);
-//                    }
-//                });
                 SelectedConnector selConnector
                         = FXConnectorUtil.getSelectedInputConnector(
                                 getSender().getNode(), getParent().getScene().getRoot(), type, t);
@@ -524,10 +512,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     remove();
                     connection.getConnections().remove(connection);
                 } else {
-                    
-                    
-//                    connectionListener.onConnectionCompatibleReleased(receiverConnectorUI);
-                    
+
                     if (getReceiverNode() instanceof ConnectorCircle) {
                         ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
 

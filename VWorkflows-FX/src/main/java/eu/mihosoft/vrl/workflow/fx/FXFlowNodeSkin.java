@@ -570,24 +570,30 @@ public class FXFlowNodeSkin
                     return;
                 }
 
-                if (newConnectionSkin == null) {
-                    newConnectionSkin
-                            = new FXNewConnectionSkin(getSkinFactory(),
-                                    getParent(), connector,
-                                    getController(), connector.getType());
+                int numOfExistingConnections = connector.getNode().getFlow().
+                        getConnections(connector.getType()).getAllWith(connector).size();
 
-                    newConnectionSkin.add();
+                if (numOfExistingConnections < connector.getMaxNumberOfConnections()) {
 
-                    MouseEvent.fireEvent(
-                            newConnectionSkin.getReceiverConnector(),
-                            newConnectionPressEvent);
+                    if (newConnectionSkin == null) {
+                        newConnectionSkin
+                                = new FXNewConnectionSkin(getSkinFactory(),
+                                        getParent(), connector,
+                                        getController(), connector.getType());
+
+                        newConnectionSkin.add();
+
+                        MouseEvent.fireEvent(
+                                newConnectionSkin.getReceiverConnector(),
+                                newConnectionPressEvent);
+                    }
+
+                    t.consume();
+                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+
+                    t.consume();
+                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
                 }
-
-                t.consume();
-                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
-
-                t.consume();
-                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
 
             }
         });

@@ -76,9 +76,12 @@ public class WorkflowUtilTest {
         createCommonAncestorTestCase(3, 3, "ROOT:2", "ROOT:1", "ROOT");
         createCommonAncestorTestCase(3, 3, "ROOT:2:0", "ROOT:2:1", "ROOT:2");
         createCommonAncestorTestCase(3, 3, "ROOT:1:0", "ROOT:1:2", "ROOT:1");
-        
+
         createCommonAncestorTestCase(5, 3, "ROOT:0:0:0", "ROOT:0:2", "ROOT:0");
         createCommonAncestorTestCase(5, 3, "ROOT:0:1", "ROOT:1:2:1", "ROOT");
+
+        createCommonAncestorTestCase(5, 3, "ROOT", "ROOT:1", null);
+        createCommonAncestorTestCase(5, 3, "ROOT:2:1", "ROOT", null);
     }
 
     public void createCommonAncestorTestCase(int depth, int width, String n1Id, String n2Id, String commonAncestorId) {
@@ -97,19 +100,19 @@ public class WorkflowUtilTest {
                     newFlows.add(nF);
                 }
             }
-            
+
             flows = newFlows;
         }
-        
+
         try {
-            WorkflowIO.saveToXML(Paths.get("testflow.xml"),flow.getModel());
+            WorkflowIO.saveToXML(Paths.get("testflow.xml"), flow.getModel());
         } catch (IOException ex) {
             Logger.getLogger(WorkflowUtilTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         VNode n1 = flow.getNodeLookup().getById(n1Id);
         VNode n2 = flow.getNodeLookup().getById(n2Id);
-        
+
         Assert.assertNotNull(n1);
         Assert.assertNotNull(n2);
 
@@ -119,16 +122,56 @@ public class WorkflowUtilTest {
             Assert.assertTrue("Ancestor must not exist.", !ancestorResult.isPresent());
         } else {
             Assert.assertTrue("Ancestor must exist.", ancestorResult.isPresent());
-        }
 
-        VFlowModel ancestor = WorkflowUtil.getCommonAncestor(n1, n2).get();
+            VFlowModel ancestor = WorkflowUtil.getCommonAncestor(n1, n2).get();
 
-        if (commonAncestorId != null) {
             Assert.assertTrue("Wrong common ancestor. "
                     + "Expected " + commonAncestorId + ", got " + ancestor.getId(),
                     commonAncestorId.equals(ancestor.getId())
             );
-        }
 
+        }
+    }
+    
+    @Test
+    public void pathInLayerTest() {
+        createPathInLayerTest(3, 6);
+        createPathInLayerTest(1, 1);
+        createPathInLayerTest(32, 32);
+        createPathInLayerTest(2, 100);
+        
+
+    }
+    
+    private void createPathInLayerTest(int pathLength, int numNodes) {
+        
+        if (numNodes == 0 || pathLength == 0) {
+            return;
+        }
+        
+        if (numNodes < pathLength) {
+            throw new IllegalArgumentException(
+                    "path length must be less than number of nodes!");
+        }
+        
+        VFlow flow = FlowFactory.newFlow();
+        
+        for(int i = 0; i < numNodes;i++) {
+            VNode n = flow.newNode();
+            n.setMainOutput(n.addOutput("mytype"));
+            n.setMainInput(n.addInput("mytype"));
+        }
+        
+        for(int i = 0; i < pathLength-1;i++) {
+            VNode sender = flow.getNodes().get(i);
+            VNode receiver = flow.getNodes().get(i+1);
+            flow.connect(sender, receiver, "mytype");
+        }
+        
+        List<VNode> path= WorkflowUtil.getPathInLayerFromRoot(
+                flow.getNodes().get(0), "mytype");
+        
+        Assert.assertTrue("Expected number of nodes in path = "+pathLength
+                +", got " + path.size(), path.size()==pathLength);
     }
 }

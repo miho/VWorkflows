@@ -53,6 +53,7 @@ public class PersistentConnector{
     private boolean output;
     private boolean passthru;
     private ValueObject valueObject;
+    private int maxNumConnections;
 
     public PersistentConnector(String type, String localId, boolean input, boolean output, boolean passthru) {
         this.type = type;
@@ -121,7 +122,7 @@ public class PersistentConnector{
      * @param valueObject the valueObject to set
      */
     public void setValueObject(ValueObject valueObject) {
-        this.valueObject = valueObject;
+         this.valueObject = valueObject;
     }
 
     /**
@@ -136,5 +137,19 @@ public class PersistentConnector{
      */
     public void setPassthru(boolean passthru) {
         this.passthru = passthru;
+    }
+
+    /**
+     * @return the maxNumConnections
+     */
+    public int getMaxNumConnections() {
+        return maxNumConnections;
+    }
+
+    /**
+     * @param maxNumConnections the maxNumConnections to set
+     */
+    public void setMaxNumConnections(int maxNumConnections) {
+        this.maxNumConnections = maxNumConnections;
     }
 }

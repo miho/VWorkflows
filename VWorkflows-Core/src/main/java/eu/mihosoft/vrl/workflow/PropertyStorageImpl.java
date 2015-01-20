@@ -33,6 +33,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.Collection;
 import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -123,5 +124,10 @@ class PropertyStorageImpl implements PropertyStorage {
     @Override
     public void removeListener(MapChangeListener<String, Object> l) {
         map.removeListener(l);
+    }
+
+    @Override
+    public Collection<String> getKeys() {
+        return map.keySet();
     }
 }

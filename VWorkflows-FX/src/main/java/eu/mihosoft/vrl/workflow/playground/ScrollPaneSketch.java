@@ -33,7 +33,7 @@ public class PassThruSketch extends Application {
         Scene scene = new Scene(canvas,800,600);
         
         VFlow flow = createFlow();
-        flow.addSkinFactories(new FXValueSkinFactory(canvas.getContent()));
+        flow.addSkinFactories(new FXValueSkinFactory(canvas.getContentPane()));
         flow.setVisible(true);
         
         primaryStage.setScene(scene);

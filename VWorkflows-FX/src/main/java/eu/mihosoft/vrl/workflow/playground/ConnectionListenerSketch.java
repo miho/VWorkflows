@@ -29,7 +29,7 @@ public class ConnectionListenerSketch extends Application {
         Scene scene = new Scene(canvas, 800, 600);
 
         VFlow flow = createFlow();
-        flow.addSkinFactories(new FXValueSkinFactory(canvas.getContentPane()));
+        flow.addSkinFactories(new FXValueSkinFactory(canvas.getContent()));
         flow.setVisible(true);
 
         primaryStage.setScene(scene);

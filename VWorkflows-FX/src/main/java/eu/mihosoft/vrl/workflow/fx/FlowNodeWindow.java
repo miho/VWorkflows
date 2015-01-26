@@ -213,7 +213,7 @@ public class FlowNodeWindow extends Window {
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
         // create skin factory for flow visualization
         FXSkinFactory fXSkinFactory
-                = nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
+                = nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContent(), null);
 
         // copy colors from prototype
 //        if (nodeSkinProperty.get().getSkinFactory() != null) {
@@ -245,7 +245,7 @@ public class FlowNodeWindow extends Window {
                                 if (c.wasAdded()) {
                                     for (VNode n : c.getAddedSubList()) {
                                         if (n.getId().equals(nodeId)) {
-                                            canvas.getContentPane().getChildren().clear();
+                                            canvas.getContent().getChildren().clear();
                                             VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
                                             flow.addSkinFactories(new FXValueSkinFactory(null));
                                         }
@@ -265,7 +265,7 @@ public class FlowNodeWindow extends Window {
     }
 
     public Pane getWorkflowContentPane() {
-        return content.getContentPane();
+        return content.getContent();
     }
 
     /**

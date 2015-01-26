@@ -98,7 +98,7 @@ public class Main extends Application {
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
 
         // create skin factory for flow visualization
-        FXValueSkinFactory fXSkinFactory = new FXValueSkinFactory(canvas.getContentPane());
+        FXValueSkinFactory fXSkinFactory = new FXValueSkinFactory(canvas.getContent());
 
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);

@@ -50,33 +50,32 @@ public class VCanvas extends ScalableContentPane {
     private InnerCanvas innerCanvas = new InnerCanvas();
 
     public VCanvas() {
-        setContentPane(innerCanvas);
+        setContent(innerCanvas);
         getStyleClass().add("vflow-background");
-
     }
 
     public BooleanProperty translateToMinNodePosProperty() {
 
-        if (!(getContentPane() instanceof InnerCanvas)) {
+        if (!(getContent() instanceof InnerCanvas)) {
             throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
         }
 
-        return ((InnerCanvas) getContentPane()).translateToMinNodePosProperty();
+        return ((InnerCanvas) getContent()).translateToMinNodePosProperty();
     }
 
     public void setTranslateToMinNodePos(boolean value) {
-        if (!(getContentPane() instanceof InnerCanvas)) {
+        if (!(getContent() instanceof InnerCanvas)) {
             throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
         }
 
-        ((InnerCanvas) getContentPane()).translateToMinNodePosProperty().set(value);
+        ((InnerCanvas) getContent()).translateToMinNodePosProperty().set(value);
     }
 
     public boolean getTranslateToMinNodePos() {
-        if (!(getContentPane() instanceof InnerCanvas)) {
+        if (!(getContent() instanceof InnerCanvas)) {
             throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
         }
 
-        return ((InnerCanvas) getContentPane()).translateToMinNodePosProperty().get();
+        return ((InnerCanvas) getContent()).translateToMinNodePosProperty().get();
     }
 }

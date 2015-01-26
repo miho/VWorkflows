@@ -65,10 +65,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-import jfxtras.labs.scene.control.window.CloseIcon;
-import jfxtras.labs.scene.control.window.MinimizeIcon;
-import jfxtras.labs.scene.control.window.Window;
-import jfxtras.labs.scene.control.window.WindowIcon;
+import jfxtras.scene.control.window.CloseIcon;
+import jfxtras.scene.control.window.MinimizeIcon;
+import jfxtras.scene.control.window.Window;
+import jfxtras.scene.control.window.WindowIcon;
+//import jfxtras.labs.scene.control.window.CloseIcon;
+//import jfxtras.labs.scene.control.window.MinimizeIcon;
+//import jfxtras.labs.scene.control.window.Window;
+//import jfxtras.labs.scene.control.window.WindowIcon;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**

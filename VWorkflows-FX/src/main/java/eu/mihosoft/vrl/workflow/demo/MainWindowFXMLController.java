@@ -50,7 +50,6 @@ import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,10 +59,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
-import jfxtras.labs.scene.control.window.Window;
+import jfxtras.scene.control.window.Window;
+//import jfxtras.labs.scene.control.window.Window;
 
 /**
  * FXML Controller class
@@ -83,10 +85,19 @@ public class MainWindowFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         canvas = new VCanvas();
+        canvas.setStyle("-fx-border-color: red;");
+        canvas.getContent().setStyle("-fx-border-color: red;");
+        canvas.setMinScaleX(0.2);
+        canvas.setMinScaleY(0.2);
 
         Pane root = canvas.getContent();
+        
+        ScrollPane scrollPane = new ScrollPane(canvas);
+        
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
-        contentPane.getChildren().add(canvas);
+        contentPane.getChildren().add(scrollPane);
 
         rootPane = root;
 
@@ -167,8 +178,8 @@ public class MainWindowFXMLController implements Initializable {
     /**
      * @return the rootPane
      */
-    public Pane getRootPane() {
-        return rootPane;
+    public VCanvas getCanvas() {
+        return canvas;
     }
 
     public void workflowTest(VFlow workflow, int depth, int width) {

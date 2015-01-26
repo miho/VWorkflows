@@ -48,6 +48,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import jfxtras.labs.util.event.MouseControlUtil;
+//import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
@@ -94,12 +95,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Rectangle rect = new Rectangle();
-        rect.setStroke(new Color(1, 1, 1, 1));
-        rect.setFill(new Color(0, 0, 0, 0.5));
         
-//        MouseControlUtil.
-//                addSelectionRectangleGesture(controller.getRootPane(), rect);
 
 //        Playground.search01();
 //        

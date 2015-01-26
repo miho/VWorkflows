@@ -103,11 +103,6 @@ public class InnerCanvas extends Pane {
 
         super.layoutChildren();
 
-//        if (getParent() instanceof ScalableContentPane) {
-//            ScalableContentPane pane = (ScalableContentPane) getParent();
-//            pane.requestLayout();
-//        }
-//
         setNeedsLayout(true);
 
         if (!translateToMinNodePosProperty.get()) {
@@ -118,7 +113,6 @@ public class InnerCanvas extends Pane {
 
         double minX = Double.MAX_VALUE;
         double minY = Double.MAX_VALUE;
-
 
         // search minX and minY of window nodes
         for (Node n : getChildrenUnmodifiable()) {

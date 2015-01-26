@@ -32,26 +32,47 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import jfxtras.labs.util.event.MouseControlUtil;
 
 /**
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class VCanvas extends ScalableContentPane {
-
-    private BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
-    private InnerCanvas innerCanvas = new InnerCanvas();
+    
+    private final InnerCanvas innerCanvas = new InnerCanvas();
 
     public VCanvas() {
+       
+
+        Rectangle rect = new Rectangle();
+        rect.setStroke(new Color(1, 1, 1, 1));
+        rect.setFill(new Color(0, 0, 0, 0.5));
+
+        contentProperty().addListener((ov, oldV, newV) -> {
+            
+//            if (oldV != null) {
+//                MouseControlUtil.
+//                        removeSelectionRectangleGesture(oldV);
+//            }
+
+            if (newV != null) {
+                MouseControlUtil.
+                        addSelectionRectangleGesture(newV, rect);
+            }
+
+        });
+        
         setContent(innerCanvas);
         getStyleClass().add("vflow-background");
+
     }
 
     public BooleanProperty translateToMinNodePosProperty() {
@@ -78,4 +99,5 @@ public class VCanvas extends ScalableContentPane {
 
         return ((InnerCanvas) getContent()).translateToMinNodePosProperty().get();
     }
+
 }

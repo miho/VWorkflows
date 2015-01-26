@@ -62,7 +62,8 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import jfxtras.labs.scene.control.window.Window;
+import jfxtras.scene.control.window.Window;
+//import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.event.MouseControlUtil;
 
 /**

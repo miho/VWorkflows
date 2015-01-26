@@ -36,9 +36,14 @@
 
 package eu.mihosoft.vrl.workflow.fx;
 
-import jfxtras.labs.scene.control.window.CloseIcon;
-import jfxtras.labs.scene.control.window.MinimizeIcon;
-import jfxtras.labs.scene.control.window.Window;
+//import jfxtras.labs.scene.control.window.CloseIcon;
+
+import jfxtras.scene.control.window.CloseIcon;
+import jfxtras.scene.control.window.MinimizeIcon;
+import jfxtras.scene.control.window.Window;
+
+//import jfxtras.labs.scene.control.window.MinimizeIcon;
+//import jfxtras.labs.scene.control.window.Window;
 
 
 

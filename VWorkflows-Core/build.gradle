@@ -2,7 +2,6 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
-apply from: 'jdkdetect.gradle'
 apply from: 'version-info.gradle'
 //apply from: 'maven-deployment.gradle'
 apply from: 'maven-deployment-local.gradle'

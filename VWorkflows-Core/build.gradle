@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
@@ -31,17 +30,10 @@ task wrapper(type: Wrapper) {
 dependencies {
 
     compile "com.thoughtworks.xstream:xstream:1.4.7"
-    
-    println("Gradle uses JDK "+project.jdk)
-
-    // compile project('..:VRLInstrumentation')    
-    // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
-    
+  
     testCompile 'junit:junit:4.11'
 }
 
-
-mainClassName =  "eu.mihosoft.vrl.workflow.playground.Playground"
 
 // -- coverage support (jacoco/coveralls) --
 

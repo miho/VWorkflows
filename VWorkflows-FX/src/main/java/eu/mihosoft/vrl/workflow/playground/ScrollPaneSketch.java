@@ -14,13 +14,14 @@ import eu.mihosoft.vrl.workflow.fx.FXValueSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
 /**
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class PassThruSketch extends Application {
+public class ScrollPaneSketch extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -30,14 +31,28 @@ public class PassThruSketch extends Application {
     public void start(Stage primaryStage) throws Exception {
         VCanvas canvas = new VCanvas();
         
-        Scene scene = new Scene(canvas,800,600);
+        canvas.setStyle("-fx-background-color: red;");
+        
+        canvas.setMinScaleX(0.5);
+        canvas.setMinScaleY(0.5);
+        
+        canvas.setMaxScaleX(1.0);
+        canvas.setMaxScaleY(1.0);
+        
+        ScrollPane scrollPane = new ScrollPane(canvas);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        
+//        scrollPane.setStyle("-fx-border-color: red;");
+        
+        Scene scene = new Scene(scrollPane,800,600);
         
         VFlow flow = createFlow();
-        flow.addSkinFactories(new FXValueSkinFactory(canvas.getContentPane()));
+        flow.addSkinFactories(new FXValueSkinFactory(canvas.getContent()));
         flow.setVisible(true);
         
         primaryStage.setScene(scene);
-        primaryStage.setTitle("ThruTest");
+        primaryStage.setTitle("ScrollPane Test");
         primaryStage.show();
     }
 

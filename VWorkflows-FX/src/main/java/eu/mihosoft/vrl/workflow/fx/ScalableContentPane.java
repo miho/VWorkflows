@@ -81,12 +81,13 @@ public class ScalableContentPane extends Region {
     public ScalableContentPane() {
         setContent(new Pane());
 
-        needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
-                if (t1) {
-                    computeScale();
-                }
+        needsLayoutProperty().addListener((ov, oldV, newV) -> {
+            if (newV
+                    && (getWidth() <= getPrefWidth()
+                    || getHeight() <= getPrefHeight())
+                    || getPrefWidth() == USE_COMPUTED_SIZE
+                    || getPrefHeight() == USE_COMPUTED_SIZE) {
+                computeScale();
             }
         });
     }
@@ -215,7 +216,7 @@ public class ScalableContentPane extends Region {
         double result = getInsets().getLeft() + getInsets().getRight();
 
         // apply content width (including scale)
-        result += getContent().prefWidth(d) * contentScaleWidth;
+        result += getContent().prefWidth(d) * getMinScaleX();
 
         return result;
     }
@@ -226,11 +227,32 @@ public class ScalableContentPane extends Region {
         double result = getInsets().getTop() + getInsets().getBottom();
 
         // apply content width (including scale)
-        result += getContent().prefHeight(d) * contentScaleHeight;
+        result += getContent().prefHeight(d) * getMinScaleY();
 
         return result;
     }
 
+    @Override
+    protected double computePrefWidth(double d) {
+
+        double result = getInsets().getLeft() + getInsets().getRight();
+
+        // apply content width (including scale)
+        result += getContent().prefWidth(d) * contentScaleWidth;
+
+        return result;
+    }
+
+    @Override
+    protected double computePrefHeight(double d) {
+
+        double result = getInsets().getTop() + getInsets().getBottom();
+
+        // apply content width (including scale)
+        result += getContent().prefHeight(d) * contentScaleHeight;
+
+        return result;
+    }
 
     private void initContentPaneListener() {
 

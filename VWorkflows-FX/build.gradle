@@ -13,7 +13,7 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = 'eu.mihosoft.vrl.workflow.demo.Main'
 }
 
-//applicationDefaultJvmArgs = ["-Xss515m"]
+applicationDefaultJvmArgs = ['-Dprism.forceGPU=true', '-Dprism.verbose=true'/*, '-Dprism.order=es2,d3d,sw'*/]
 mainClassName = mainClass
 
 repositories {

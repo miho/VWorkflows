@@ -132,8 +132,8 @@ public class ScalableContentPane extends Region {
         minScaleYProperty().addListener(changeListener);
         maxScaleXProperty().addListener(changeListener);
         maxScaleYProperty().addListener(changeListener);
-
-//        getContentPane().setStyle("-fx-border-color: red; -fx-border-width: 1;");
+//
+//        getContent().setStyle("-fx-border-color: red; -fx-border-width: 3;");
     }
 
     /**
@@ -212,11 +212,11 @@ public class ScalableContentPane extends Region {
         if (isFitToWidth()) {
             realContentWidth = contentWidth / resizeScaleW;
         } else {
-            realContentWidth = contentHeight / contentScaleWidth;
+            realContentWidth = contentWidth / contentScaleWidth;
         }
 
         if (isFitToHeight()) {
-            realContentHeight = contentWidth / resizeScaleH;
+            realContentHeight = contentHeight / resizeScaleH;
         } else {
             realContentHeight = contentHeight / contentScaleHeight;
         }

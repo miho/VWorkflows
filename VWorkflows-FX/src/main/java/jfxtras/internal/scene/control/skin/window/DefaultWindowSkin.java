@@ -57,8 +57,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import jfxtras.scene.control.window.SelectableNode;
 import jfxtras.scene.control.window.Window;
 import jfxtras.scene.control.window.WindowIcon;
+import jfxtras.scene.control.window.WindowUtil;
 
 /**
  *
@@ -302,6 +304,10 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             if (control.isMoveToFront()) {
                 control.toFront();
             }
+            
+            if (control.isSelected()) {
+                selectedWindowsToFront();
+            }
         });
 
         //Event Listener for MouseDragged
@@ -342,6 +348,11 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 n.setLayoutY(scaledY);
 
                 setDragging(true);
+                
+                // move all selected windows
+                if (control.isSelected()) {
+                    dragSelectedWindows(offsetForAllX, offsetForAllY);
+                }
 
 
             } else {
@@ -691,6 +702,55 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         return draggingProperty;
     }
 
+    
+    
+    // TODO move from skin to behavior class (a lot of other stuff here too)
+    private void dragSelectedWindows(double offsetForAllX, double offsetForAllY) {
+        for (SelectableNode sN : WindowUtil.
+                getDefaultClipboard().getSelectedItems()) {
+
+            if (sN == control
+                    || !(sN instanceof Window)) {
+                continue;
+            }
+
+            Window selectedWindow = (Window) sN;
+
+            if (control.getParent().
+                    equals(selectedWindow.getParent())) {
+
+                selectedWindow.setLayoutX(
+                        selectedWindow.getLayoutX()
+                        + offsetForAllX);
+                selectedWindow.setLayoutY(
+                        selectedWindow.getLayoutY()
+                        + offsetForAllY);
+            }
+        } // end for sN
+    }
+    
+    // TODO move from skin to behavior class (a lot of other stuff here too)
+    private void selectedWindowsToFront() {
+        for (SelectableNode sN : WindowUtil.
+                getDefaultClipboard().getSelectedItems()) {
+
+            if (sN == control
+                    || !(sN instanceof Window)) {
+                continue;
+            }
+
+            Window selectedWindow = (Window) sN;
+
+            if (control.getParent().
+                    equals(selectedWindow.getParent())
+                    && selectedWindow.isMoveToFront()) {
+                
+                selectedWindow.toFront();
+            }
+        } // end for sN
+    }
+
+    
     static class MinimizeHeightListener implements ChangeListener<Number> {
 
         private final Window control;

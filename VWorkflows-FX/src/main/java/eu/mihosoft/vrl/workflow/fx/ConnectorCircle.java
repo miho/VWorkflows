@@ -40,6 +40,7 @@ import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
+import javafx.scene.CacheHint;
 import javafx.scene.shape.Circle;
 
 /**
@@ -77,6 +78,9 @@ class ConnectorCircle extends Circle {
     private void init() {
         this.getStyleClass().add("vnode-connector");
         this.setManaged(false);
+        
+        this.setCache(true);
+        this.setCacheHint(CacheHint.SPEED);
     }
 
     /**

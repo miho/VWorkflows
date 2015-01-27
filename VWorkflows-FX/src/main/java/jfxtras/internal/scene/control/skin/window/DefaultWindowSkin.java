@@ -275,16 +275,9 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             }
         });
         
-        draggingProperty().addListener((ov,oldValue,newValue) -> {
-            
-            System.out.println("optimized: " + newValue);
-            
-            control.setCache(newValue);
-            
-            if (newValue) {
-                getSkinnable().setCacheHint(CacheHint.SPEED);
-            }
-        });
+        // we enable node caching for the whole window
+        getSkinnable().setCache(true);
+        getSkinnable().setCacheHint(CacheHint.SPEED);
         
     }
 

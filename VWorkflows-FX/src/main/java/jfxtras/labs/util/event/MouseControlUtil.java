@@ -383,21 +383,25 @@ class RectangleSelectionControllerImpl {
         rectangle.setHeight(height / parentScaleY);
 
         selectIntersectingNodes(root);
+
     }
 
     private void selectIntersectingNodes(Parent root) {
-        if (rectangle.getWidth() > 1 || rectangle.getHeight() > 1) {
-            List<Node> selectableNodes = root.getChildrenUnmodifiable().
-                    filtered(n -> n instanceof SelectableNode);
-            for (Node n : selectableNodes) {
-                boolean selectN = rectangle.intersects(
-                        rectangle.parentToLocal(
-                                n.localToParent(n.getBoundsInLocal())));
 
-                WindowUtil.getDefaultClipboard().select(
-                        (SelectableNode) n, selectN);
-            }
+        List<Node> selectableNodes = root.getChildrenUnmodifiable().
+                filtered(n -> n instanceof SelectableNode);
+
+        boolean rectBigEnough = rectangle.getWidth() > 1 || rectangle.getHeight() > 1;
+
+        for (Node n : selectableNodes) {
+            boolean selectN = rectangle.intersects(
+                    rectangle.parentToLocal(
+                            n.localToParent(n.getBoundsInLocal())));
+
+            WindowUtil.getDefaultClipboard().select(
+                    (SelectableNode) n, selectN && rectBigEnough);
         }
+
     }
 
     public void performDragBegin(
@@ -415,9 +419,6 @@ class RectangleSelectionControllerImpl {
 
         rectangle.setWidth(0);
         rectangle.setHeight(0);
-
-        rectangle.setX(firstX);
-        rectangle.setY(firstY);
 
         rectangle.toFront();
 

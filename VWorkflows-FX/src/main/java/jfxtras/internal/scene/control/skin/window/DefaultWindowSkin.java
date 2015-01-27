@@ -43,12 +43,21 @@ import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import jfxtras.scene.control.window.SelectableNode;
@@ -250,15 +259,22 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 }
             }
         });
+        
+        Border prevBorder = control.getBorder();
 
         control.selectedProperty().addListener(
-                (ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) -> {
+                (ov,oldValue,newValue) -> {
             if (newValue) {
-                DropShadow shadow = new DropShadow(20, Color.WHITE);
-                Glow effect = new Glow(0.5);
-//                    shadow.setInput(effect);
-                control.setEffect(effect);
+                control.setBorder(new Border(
+                        new BorderStroke(new Color(0.3,0.7,1.0,1.0),
+                                BorderStrokeStyle.SOLID,
+                                new CornerRadii(3), new BorderWidths(2))));
+                ColorAdjust effect = new ColorAdjust(-0.25, 0.2, 0.8, 0);
+                Glow glow = new Glow(0.5);
+                glow.setInput(effect);
+                control.setEffect(glow);
             } else {
+                control.setBorder(prevBorder);
                 control.setEffect(null);
             }
         });
@@ -267,7 +283,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 
     private void initMouseEventHandlers() {
         
-        getSkinnable().onMousePressedProperty().set((EventHandler<MouseEvent>) (MouseEvent event) -> {
+        getSkinnable().onMousePressedProperty().set((event) -> {
 
             
             final Node n = control;
@@ -289,7 +305,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         });
 
         //Event Listener for MouseDragged
-        getSkinnable().onMouseDraggedProperty().set((EventHandler<MouseEvent>) (MouseEvent event) -> {
+        getSkinnable().onMouseDraggedProperty().set((event) -> {
             final Node n = control;
 
             final double parentScaleX = n.getParent().
@@ -413,11 +429,11 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             mouseY = event.getSceneY();
         });
 
-        getSkinnable().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent event) -> {
+        getSkinnable().onMouseClickedProperty().set((MouseEvent event) -> {
             dragging = false;
         });
 
-        getSkinnable().onMouseMovedProperty().set((EventHandler<MouseEvent>) (MouseEvent t) -> {
+        getSkinnable().onMouseMovedProperty().set((MouseEvent t) -> {
             if (control.isMinimized() || !control.isResizableWindow()) {
 
                 RESIZE_TOP = false;

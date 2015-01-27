@@ -49,6 +49,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
@@ -129,6 +130,13 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     private void init() {
+        
+        // we enable node caching for the whole connection
+        connectionPath.setCache(true);
+        connectionPath.setCacheHint(CacheHint.SPEED);
+        
+        receiverConnectorUI.setCache(true);
+        receiverConnectorUI.setCacheHint(CacheHint.SPEED);
 
         styleInit();
 

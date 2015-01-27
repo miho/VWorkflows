@@ -280,7 +280,7 @@ public class ScalableContentPane extends Region {
             public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
                 if (isAutoRescale()) {
                     setNeedsLayout(false);
-//                    getContent().requestLayout();
+                    getContent().requestLayout();
                     requestLayout();
                 }
             }
@@ -291,7 +291,7 @@ public class ScalableContentPane extends Region {
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
                 if (isAutoRescale()) {
                     setNeedsLayout(false);
-//                    getContent().requestLayout();
+                    getContent().requestLayout();
                     requestLayout();
                 }
             }

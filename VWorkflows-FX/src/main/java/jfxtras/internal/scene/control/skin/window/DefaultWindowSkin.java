@@ -29,22 +29,22 @@
 
 package jfxtras.internal.scene.control.skin.window;
 
-import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
@@ -55,12 +55,8 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
-import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import jfxtras.scene.control.window.SelectableNode;
 import jfxtras.scene.control.window.Window;
 import jfxtras.scene.control.window.WindowIcon;
 
@@ -74,7 +70,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
     private double mouseY;
     private double nodeX = 0;
     private double nodeY = 0;
-    private boolean dragging = false;
+    private BooleanProperty draggingProperty = new SimpleBooleanProperty();
     private boolean zoomable = true;
     private double minScale = 0.1;
     private double maxScale = 10;
@@ -279,6 +275,17 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             }
         });
         
+        draggingProperty().addListener((ov,oldValue,newValue) -> {
+            
+            System.out.println("optimized: " + newValue);
+            
+            control.setCache(newValue);
+            
+            if (newValue) {
+                getSkinnable().setCacheHint(CacheHint.SPEED);
+            }
+        });
+        
     }
 
     private void initMouseEventHandlers() {
@@ -341,7 +348,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 n.setLayoutX(scaledX);
                 n.setLayoutY(scaledY);
 
-                dragging = true;
+                setDragging(true);
 
 
             } else {
@@ -430,7 +437,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         });
 
         getSkinnable().onMouseClickedProperty().set((MouseEvent event) -> {
-            dragging = false;
+             setDragging(false);
         });
 
         getSkinnable().onMouseMovedProperty().set((MouseEvent t) -> {
@@ -555,7 +562,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
      * @return the dragging
      */
     protected boolean isDragging() {
-        return dragging;
+        return draggingProperty().get();
     }
 
     public void removeNode(Node n) {
@@ -681,6 +688,14 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         result = Math.max(result, minHeight);
 
         return result;
+    }
+
+    private void setDragging(boolean b) {
+        draggingProperty().set(b);
+    }
+
+    private BooleanProperty draggingProperty() {
+        return draggingProperty;
     }
 
     static class MinimizeHeightListener implements ChangeListener<Number> {

@@ -49,16 +49,14 @@ import java.util.List;
 import java.util.Optional;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Skin;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -138,6 +136,7 @@ public class FlowNodeWindow extends Window {
         if (skin.getModel() instanceof VFlowModel) {
             parentContent = new OptimizableContentPane();
             content = new VCanvas();
+            content.setPadding(new Insets(5));
             parentContent.getChildren().add(content);
             super.setContentPane(parentContent);
         }
@@ -212,6 +211,10 @@ public class FlowNodeWindow extends Window {
 
         // create scalable root pane
         VCanvas canvas = new VCanvas();
+        canvas.setMinScaleX(0.2);
+        canvas.setMinScaleY(0.2);
+        canvas.setMaxScaleX(1);
+        canvas.setMaxScaleY(1);
 
         // define background style
 //        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
@@ -226,9 +229,13 @@ public class FlowNodeWindow extends Window {
 //        }
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);
+        
+        ScrollPane scrollPane = new ScrollPane(canvas);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
         // the usual application setup
-        Scene scene = new Scene(canvas, 800, 800);
+        Scene scene = new Scene(scrollPane, 800, 800);
 
         scene.getStylesheets().setAll(stylesheets);
 

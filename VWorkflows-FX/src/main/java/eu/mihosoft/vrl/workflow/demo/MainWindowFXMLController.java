@@ -85,8 +85,6 @@ public class MainWindowFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         canvas = new VCanvas();
-        canvas.setStyle("-fx-border-color: red;");
-        canvas.getContent().setStyle("-fx-border-color: red;");
         canvas.setMinScaleX(0.2);
         canvas.setMinScaleY(0.2);
 

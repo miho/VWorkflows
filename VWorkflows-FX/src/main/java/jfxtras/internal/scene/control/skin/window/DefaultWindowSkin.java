@@ -262,11 +262,14 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 control.setEffect(null);
             }
         });
+        
     }
 
     private void initMouseEventHandlers() {
-
+        
         getSkinnable().onMousePressedProperty().set((EventHandler<MouseEvent>) (MouseEvent event) -> {
+
+            
             final Node n = control;
 
             final double parentScaleX = n.getParent().

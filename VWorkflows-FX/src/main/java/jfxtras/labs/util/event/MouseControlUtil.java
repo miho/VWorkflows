@@ -319,7 +319,6 @@ class RectangleSelectionControllerImpl {
 //                WindowUtil.getDefaultClipboard().unselectAll();
 //            }
 //        });
-
         mouseDraggedEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -382,20 +381,22 @@ class RectangleSelectionControllerImpl {
         rectangle.setY(y / parentScaleY + translateY);
         rectangle.setWidth(width / parentScaleX);
         rectangle.setHeight(height / parentScaleY);
-        
+
         selectIntersectingNodes(root);
     }
 
     private void selectIntersectingNodes(Parent root) {
-        List<Node> selectableNodes = root.getChildrenUnmodifiable().
-                filtered(n -> n instanceof SelectableNode);
-        for (Node n : selectableNodes) {
-            boolean selectN = rectangle.intersects(
-                    rectangle.parentToLocal(
-                            n.localToParent(n.getBoundsInLocal())));
+        if (rectangle.getWidth() > 1 || rectangle.getHeight() > 1) {
+            List<Node> selectableNodes = root.getChildrenUnmodifiable().
+                    filtered(n -> n instanceof SelectableNode);
+            for (Node n : selectableNodes) {
+                boolean selectN = rectangle.intersects(
+                        rectangle.parentToLocal(
+                                n.localToParent(n.getBoundsInLocal())));
 
-            WindowUtil.getDefaultClipboard().select(
-                    (SelectableNode) n, selectN);
+                WindowUtil.getDefaultClipboard().select(
+                        (SelectableNode) n, selectN);
+            }
         }
     }
 
@@ -425,7 +426,7 @@ class RectangleSelectionControllerImpl {
 
     public void performDragEnd(
             Parent root, MouseEvent event) {
-        
+
         selectIntersectingNodes(root);
 
         NodeUtil.removeFromParent(rectangle);

@@ -114,7 +114,6 @@ public class ScalableContentPane extends Region {
         contentPaneProperty.setValue(contentPane);
         contentPane.setManaged(false);
         initContentPaneListener();
-//        contentPane.setStyle("-fx-border-color: rgb(0,0,0);");
 
         contentScaleTransform = new Scale(1, 1);
         getContentScaleTransform().setPivotX(0);

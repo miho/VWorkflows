@@ -1,24 +1,22 @@
 /**
  * Window.java
  *
- * Copyright (c) 2011-2014, JFXtras
- * All rights reserved.
- * 
+ * Copyright (c) 2011-2014, JFXtras All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the organization nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * modification, are permitted provided that the following conditions are met: *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. * Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. * Neither the name of the organization nor the names
+ * of its contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -26,7 +24,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package jfxtras.scene.control.window;
 
 import javafx.animation.Animation;
@@ -67,8 +64,8 @@ public class Window extends Control implements SelectableNode {
     /**
      * Default css style.
      */
-    public static final String DEFAULT_STYLE =
-            "/jfxtras/scene/control/window/default.css";
+    public static final String DEFAULT_STYLE
+            = "/jfxtras/scene/control/window/default.css";
     /**
      * Default style class for css.
      */
@@ -104,8 +101,8 @@ public class Window extends Control implements SelectableNode {
      * List of icons shown on the left. TODO replace left/right with more
      * generic position property?
      */
-    private final ObservableList<WindowIcon> leftIcons =
-            FXCollections.observableArrayList();
+    private final ObservableList<WindowIcon> leftIcons
+            = FXCollections.observableArrayList();
     /**
      * List of icons shown on the right. TODO replace left/right with more
      * generic position property?
@@ -120,24 +117,24 @@ public class Window extends Control implements SelectableNode {
      * Defines the titlebar class name. This can be used to define css
      * properties specifically for the titlebar, e.g., background.
      */
-    private final StringProperty titleBarStyleClassProperty =
-            new SimpleStringProperty("window-titlebar");
+    private final StringProperty titleBarStyleClassProperty
+            = new SimpleStringProperty("window-titlebar");
     /**
      * defines the action that shall be performed before the window is closed.
      */
-    private final ObjectProperty<EventHandler<ActionEvent>> onCloseActionProperty =
-            new SimpleObjectProperty<>();
+    private final ObjectProperty<EventHandler<ActionEvent>> onCloseActionProperty
+            = new SimpleObjectProperty<>();
     /**
      * defines the action that shall be performed after the window has been
      * closed.
      */
-    private final ObjectProperty<EventHandler<ActionEvent>> onClosedActionProperty =
-            new SimpleObjectProperty<>();
+    private final ObjectProperty<EventHandler<ActionEvent>> onClosedActionProperty
+            = new SimpleObjectProperty<>();
     /**
      * defines the transition that shall be played when closing the window.
      */
-    private final ObjectProperty<Transition> closeTransitionProperty =
-            new SimpleObjectProperty<>();
+    private final ObjectProperty<Transition> closeTransitionProperty
+            = new SimpleObjectProperty<>();
     /**
      * Selected property (defines whether this window is selected.
      */
@@ -146,6 +143,11 @@ public class Window extends Control implements SelectableNode {
      * Selectable property (defines whether this window is selectable.
      */
     private final BooleanProperty selectableProperty = new SimpleBooleanProperty(true);
+
+    /* 
+     Closed property (defines whether window is closed
+     */
+    private final BooleanProperty closeRequested = new SimpleBooleanProperty();
 
     /**
      * Constructor.
@@ -193,6 +195,8 @@ public class Window extends Control implements SelectableNode {
                                 NodeUtil.removeFromParent(Window.this);
                             }
 
+                            closeRequested.set(true);
+
                             if (getOnClosedAction() != null) {
                                 getOnClosedAction().handle(new ActionEvent(this, Window.this));
                             }
@@ -211,7 +215,59 @@ public class Window extends Control implements SelectableNode {
         st.setDuration(Duration.seconds(0.2));
 
         setCloseTransition(st);
+        
+        minimizedProperty().addListener((ov,oldValue,newValue)-> {
+            minimizeSelectedWindows(newValue);
+        });
 
+    }
+
+    // TODO move from control to behavior class (a lot of other stuff here too)
+    private void closeSelectedWindows() {
+        for (SelectableNode sN : WindowUtil.
+                getDefaultClipboard().getSelectedItems()) {
+
+            if (sN == this
+                    || !(sN instanceof Window)) {
+                continue;
+            }
+
+            Window selectedWindow = (Window) sN;
+
+            if (selectedWindow.closeRequested.get()) {
+                continue;
+            }
+
+            if (this.getParent().
+                    equals(selectedWindow.getParent())) {
+
+                selectedWindow.close();
+            }
+        } // end for sN
+    }
+
+    // TODO move from control to behavior class (a lot of other stuff here too)
+    private void minimizeSelectedWindows(boolean state) {
+        for (SelectableNode sN : WindowUtil.
+                getDefaultClipboard().getSelectedItems()) {
+
+            if (sN == this
+                    || !(sN instanceof Window)) {
+                continue;
+            }
+
+            Window selectedWindow = (Window) sN;
+
+            if (selectedWindow.isMinimized() == state) {
+                continue;
+            }
+
+            if (this.getParent().
+                    equals(selectedWindow.getParent())) {
+
+                selectedWindow.setMinimized(state);
+            }
+        } // end for sN
     }
 
     @Override
@@ -470,11 +526,14 @@ public class Window extends Control implements SelectableNode {
      */
     public void close() {
 
-
         // if already closed, we do nothing 
         if (this.getParent() == null) {
             return;
         }
+
+        closeRequested.set(true);
+
+        closeSelectedWindows();
 
         if (getCloseTransition() != null) {
             getCloseTransition().play();
@@ -622,7 +681,7 @@ public class Window extends Control implements SelectableNode {
     }
 
     /**
-     * 
+     *
      * @return {@code true} if the window is selected; {@code false} otherwise
      */
     public boolean isSelected() {

@@ -1,24 +1,22 @@
 /**
  * DefaultWindowSkin.java
  *
- * Copyright (c) 2011-2014, JFXtras
- * All rights reserved.
- * 
+ * Copyright (c) 2011-2014, JFXtras All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the organization nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * modification, are permitted provided that the following conditions are met: *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. * Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. * Neither the name of the organization nor the names
+ * of its contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -26,7 +24,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package jfxtras.internal.scene.control.skin.window;
 
 import javafx.animation.Animation.Status;
@@ -109,96 +106,102 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         for (WindowIcon i : control.getRightIcons()) {
             titleBar.addRightIcon(i);
         }
-        
+
         control.getLeftIcons().addListener(
                 (ListChangeListener.Change<? extends WindowIcon> change) -> {
-            while (change.next()) {
-                if (change.wasPermutated()) {
-                    for (int i = change.getFrom(); i < change.getTo(); ++i) {
-                        //permutate
-                    }
-                } else if (change.wasUpdated()) {
-                    //update item
-                } else {
-                    if (change.wasRemoved()) {
-                        for (WindowIcon i : change.getRemoved()) {
-                            titleBar.removeLeftIcon(i);
+                    while (change.next()) {
+                        if (change.wasPermutated()) {
+                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                                //permutate
+                            }
+                        } else if (change.wasUpdated()) {
+                            //update item
+                        } else {
+                            if (change.wasRemoved()) {
+                                for (WindowIcon i : change.getRemoved()) {
+                                    titleBar.removeLeftIcon(i);
+                                }
+                            } else if (change.wasAdded()) {
+                                for (WindowIcon i : change.getAddedSubList()) {
+                                    titleBar.addLeftIcon(i);
+                                }
+                            }
                         }
-                    } else if (change.wasAdded()) {
-                        for (WindowIcon i : change.getAddedSubList()) {
-                            titleBar.addLeftIcon(i);
-                        }
                     }
-                }
-            }
-        });
+                });
 
         control.getRightIcons().addListener(
                 (ListChangeListener.Change<? extends WindowIcon> change) -> {
-            while (change.next()) {
-                if (change.wasPermutated()) {
-                    for (int i = change.getFrom(); i < change.getTo(); ++i) {
-                        //permutate
-                    }
-                } else if (change.wasUpdated()) {
-                    //update item
-                } else {
-                    if (change.wasRemoved()) {
-                        for (WindowIcon i : change.getRemoved()) {
-                            titleBar.removeRightIcon(i);
-                        }
-                    } else if (change.wasAdded()) {
-                        for (WindowIcon i : change.getAddedSubList()) {
-                            titleBar.addRightIcon(i);
-                        }
-                    }
-                }
-            }
-        });
-
-        control.minimizedProperty().addListener(
-                (ObservableValue<? extends Boolean> ov, final Boolean oldValue, final Boolean newValue) -> {
-            if (oldValue == newValue) {
-                return;
-            }
-
-            boolean storeOldHeight = minimizeTimeLine == null && newValue;
-
-            if (minimizeTimeLine != null) {
-                minimizeTimeLine.stop();
-                minimizeTimeLine = null;
-            }
-
-            double newHeight;
-
-            if (newValue) {
-                newHeight = titleBar.getHeight();
-            } else {
-                newHeight = oldHeight;
-            }
-
-            if (storeOldHeight) {
-                oldHeight = control.getPrefHeight();
-            }
-
-            minimizeTimeLine = new Timeline(
-                    new KeyFrame(Duration.ZERO,
-                    new KeyValue(control.prefHeightProperty(), control.getPrefHeight())),
-                    new KeyFrame(Duration.seconds(0.2),
-                    new KeyValue(control.prefHeightProperty(), newHeight)));
-
-            minimizeTimeLine.statusProperty().addListener(
-                    (ObservableValue<? extends Status> ov2, Status oldStatus, Status newStatus) -> {
-                        if (newStatus == Status.STOPPED) {
-                            minimizeTimeLine = null;
-                            if (newValue) {
-                                control.getContentPane().setVisible(false);
+                    while (change.next()) {
+                        if (change.wasPermutated()) {
+                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                                //permutate
+                            }
+                        } else if (change.wasUpdated()) {
+                            //update item
+                        } else {
+                            if (change.wasRemoved()) {
+                                for (WindowIcon i : change.getRemoved()) {
+                                    titleBar.removeRightIcon(i);
+                                }
+                            } else if (change.wasAdded()) {
+                                for (WindowIcon i : change.getAddedSubList()) {
+                                    titleBar.addRightIcon(i);
+                                }
                             }
                         }
-            });
+                    }
+                });
 
-            minimizeTimeLine.play();
-        });
+        control.minimizedProperty().addListener(
+                (ov, oldValue, newValue) -> {
+
+                    boolean storeOldHeight = minimizeTimeLine == null && newValue;
+
+                    if (minimizeTimeLine != null) {
+                        minimizeTimeLine.stop();
+                        minimizeTimeLine = null;
+                    }
+
+                    double newHeight;
+
+                    if (newValue) {
+                        newHeight = titleBar.getHeight();
+                    } else {
+                        newHeight = oldHeight;
+                    }
+
+                    if (storeOldHeight) {
+                        oldHeight = control.getPrefHeight();
+                    }
+
+                    minimizeTimeLine = new Timeline(
+                            new KeyFrame(Duration.ZERO,
+                                    new KeyValue(control.prefHeightProperty(), control.getPrefHeight())),
+                            new KeyFrame(Duration.seconds(0.1),
+                                    new KeyValue(control.prefHeightProperty(), newHeight)));
+
+                    minimizeTimeLine.statusProperty().addListener(
+                            (ObservableValue<? extends Status> ov2, Status oldStatus, Status newStatus) -> {
+                                if (newStatus == Status.STOPPED) {
+
+                                    // restore cache hint
+                                    getSkinnable().setCache(true);
+                                    getSkinnable().setCacheHint(CacheHint.SPEED);
+
+                                    minimizeTimeLine = null;
+                                    if (newValue) {
+                                        control.getContentPane().setVisible(false);
+                                    }
+                                }
+                            });
+
+                    // temporarily disable cache hint due to rendering bugs
+                    getSkinnable().setCache(false);
+                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+
+                    minimizeTimeLine.play();
+                });
 
         control.prefHeightProperty().addListener(new MinimizeHeightListener(control, titleBar));
 
@@ -257,37 +260,36 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 }
             }
         });
-        
+
         Border prevBorder = control.getBorder();
 
         control.selectedProperty().addListener(
-                (ov,oldValue,newValue) -> {
-            if (newValue) {
-                control.setBorder(new Border(
-                        new BorderStroke(new Color(0.3,0.7,1.0,1.0),
-                                BorderStrokeStyle.SOLID,
-                                new CornerRadii(3), new BorderWidths(2))));
-                ColorAdjust effect = new ColorAdjust(-0.25, 0.2, 0.8, 0);
-                Glow glow = new Glow(0.5);
-                glow.setInput(effect);
-                control.setEffect(glow);
-            } else {
-                control.setBorder(prevBorder);
-                control.setEffect(null);
-            }
-        });
-        
+                (ov, oldValue, newValue) -> {
+                    if (newValue) {
+                        control.setBorder(new Border(
+                                        new BorderStroke(new Color(0.3, 0.7, 1.0, 1.0),
+                                                BorderStrokeStyle.SOLID,
+                                                new CornerRadii(3), new BorderWidths(2))));
+                        ColorAdjust effect = new ColorAdjust(-0.25, 0.2, 0.8, 0);
+                        Glow glow = new Glow(0.5);
+                        glow.setInput(effect);
+                        control.setEffect(glow);
+                    } else {
+                        control.setBorder(prevBorder);
+                        control.setEffect(null);
+                    }
+                });
+
         // we enable node caching for the whole window
         getSkinnable().setCache(true);
         getSkinnable().setCacheHint(CacheHint.SPEED);
-        
+
     }
 
     private void initMouseEventHandlers() {
-        
+
         getSkinnable().onMousePressedProperty().set((event) -> {
 
-            
             final Node n = control;
 
             final double parentScaleX = n.getParent().
@@ -304,7 +306,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             if (control.isMoveToFront()) {
                 control.toFront();
             }
-            
+
             if (control.isSelected()) {
                 selectedWindowsToFront();
             }
@@ -324,8 +326,8 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             final double scaleY = n.localToSceneTransformProperty().
                     getValue().getMyy();
 
-            Bounds boundsInScene =
-                    control.localToScene(control.getBoundsInLocal());
+            Bounds boundsInScene
+                    = control.localToScene(control.getBoundsInLocal());
 
             double sceneX = boundsInScene.getMinX();
             double sceneY = boundsInScene.getMinY();
@@ -348,12 +350,11 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 n.setLayoutY(scaledY);
 
                 setDragging(true);
-                
+
                 // move all selected windows
                 if (control.isSelected()) {
                     dragSelectedWindows(offsetForAllX, offsetForAllY);
                 }
-
 
             } else {
 
@@ -367,8 +368,8 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 
                     double insetOffset = getSkinnable().getInsets().getTop() / 2;
 
-                    double yDiff =
-                            sceneY / parentScaleY
+                    double yDiff
+                            = sceneY / parentScaleY
                             + insetOffset
                             - event.getSceneY() / parentScaleY;
 
@@ -428,7 +429,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                     newWidth = Math.max(
                             newWidth,
                             Math.max(control.getContentPane().minWidth(0),
-                            control.minWidth(0)));
+                                    control.minWidth(0)));
 
                     if (newWidth < control.maxWidth(0)) {
                         control.setPrefWidth(newWidth);
@@ -441,7 +442,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         });
 
         getSkinnable().onMouseClickedProperty().set((MouseEvent event) -> {
-             setDragging(false);
+            setDragging(false);
         });
 
         getSkinnable().onMouseMovedProperty().set((MouseEvent t) -> {
@@ -633,11 +634,10 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 //        if (titleBarWidth > windowWidth) {
 //            titleBar.setPrefWidth(titleBarWidth);
 //        }
-
-        double newTitleBarWidth =
-                Math.max(
-                titleBarWidth,
-                windowWidth);
+        double newTitleBarWidth
+                = Math.max(
+                        titleBarWidth,
+                        windowWidth);
 
         titleBar.resize(newTitleBarWidth, titleBar.prefHeight(0));
 
@@ -648,7 +648,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 getSkinnable().getInsets().getLeft(),
                 titleBar.prefHeight(0));
 
-        double contentWidth = root.getWidth() - leftAndRight; 
+        double contentWidth = root.getWidth() - leftAndRight;
         double contentHeight = root.getHeight() - getSkinnable().getInsets().getBottom() - titleBar.prefHeight(0);
 
         control.getContentPane().resize(
@@ -662,11 +662,11 @@ public class DefaultWindowSkin extends SkinBase<Window> {
     protected double computeMinWidth(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 
         double result = root.minWidth(width);
-        
+
         double minWidth = Math.max(titleBar.prefWidth(width),
-                control.getContentPane().minWidth(width)+ getSkinnable().getInsets().getRight()); 
-        
-        result = Math.max(result,minWidth);
+                control.getContentPane().minWidth(width) + getSkinnable().getInsets().getRight());
+
+        result = Math.max(result, minWidth);
 
         return result;
     }
@@ -702,8 +702,6 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         return draggingProperty;
     }
 
-    
-    
     // TODO move from skin to behavior class (a lot of other stuff here too)
     private void dragSelectedWindows(double offsetForAllX, double offsetForAllY) {
         for (SelectableNode sN : WindowUtil.
@@ -728,7 +726,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             }
         } // end for sN
     }
-    
+
     // TODO move from skin to behavior class (a lot of other stuff here too)
     private void selectedWindowsToFront() {
         for (SelectableNode sN : WindowUtil.
@@ -744,13 +742,12 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             if (control.getParent().
                     equals(selectedWindow.getParent())
                     && selectedWindow.isMoveToFront()) {
-                
+
                 selectedWindow.toFront();
             }
         } // end for sN
     }
 
-    
     static class MinimizeHeightListener implements ChangeListener<Number> {
 
         private final Window control;
@@ -804,7 +801,6 @@ class TitleBar extends HBox {
 
 //        label.setTextAlignment(TextAlignment.CENTER);
 //        label.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
-
         leftIconPane = new IconPane();
         rightIconPane = new IconPane();
 
@@ -814,30 +810,29 @@ class TitleBar extends HBox {
 //        getChildren().add(VFXLayoutUtil.createHBoxFiller());
         getChildren().add(rightIconPane);
 
-
         control.boundsInParentProperty().addListener(
                 (ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) -> {
-            if (control.getTitle() == null
+                    if (control.getTitle() == null
                     || getLabel().getText() == null
                     || getLabel().getText().isEmpty()) {
-                return;
-            }
+                        return;
+                    }
 
-            double maxIconWidth = Math.max(
-                    leftIconPane.getWidth(), rightIconPane.getWidth());
+                    double maxIconWidth = Math.max(
+                            leftIconPane.getWidth(), rightIconPane.getWidth());
 
-            if (!control.getTitle().equals(getLabel().getText())) {
-                if (originalTitleWidth
+                    if (!control.getTitle().equals(getLabel().getText())) {
+                        if (originalTitleWidth
                         + maxIconWidth * 2 + offset < getWidth()) {
-                    getLabel().setText(control.getTitle());
-                }
-            } else if (!"...".equals(getLabel().getText())) {
-                if (originalTitleWidth
+                            getLabel().setText(control.getTitle());
+                        }
+                    } else if (!"...".equals(getLabel().getText())) {
+                        if (originalTitleWidth
                         + maxIconWidth * 2 + offset >= getWidth()) {
-                    getLabel().setText("...");
-                }
-            }
-        });
+                            getLabel().setText("...");
+                        }
+                    }
+                });
 
     }
 
@@ -879,10 +874,10 @@ class TitleBar extends HBox {
     protected double computeMinWidth(double h) {
         double result = super.computeMinWidth(h);
 
-        double iconWidth =
-                Math.max(
-                leftIconPane.prefWidth(h),
-                rightIconPane.prefWidth(h)) * 2;
+        double iconWidth
+                = Math.max(
+                        leftIconPane.prefWidth(h),
+                        rightIconPane.prefWidth(h)) * 2;
 
         result = Math.max(result,
                 iconWidth

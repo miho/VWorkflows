@@ -765,15 +765,26 @@ public class Window extends Control implements SelectableNode {
         return selectableProperty;
     }
 
+    /**
+     * Defines whether this window is selectable.
+     * @param selectable state to set
+     */
     public void setSelectable(Boolean selectable) {
         selectableProperty.set(selectable);
     }
 
+    /**
+     * Indicates whether this window is selectable.
+     * @return {@code true} if this window is selectable; {@code false}
+     *         otherwise
+     */
     public boolean isSelectable() {
         return selectableProperty.get();
     }
 
     /**
+     * Indicates whether this window is selectable.
+     * 
      * @return the selectedProperty
      */
     @Override

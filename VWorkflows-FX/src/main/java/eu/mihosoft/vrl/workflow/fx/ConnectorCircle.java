@@ -79,8 +79,8 @@ class ConnectorCircle extends Circle {
         this.getStyleClass().add("vnode-connector");
         this.setManaged(false);
         
-        this.setCache(true);
-        this.setCacheHint(CacheHint.SPEED);
+//        this.setCache(true);
+//        this.setCacheHint(CacheHint.SPEED);
     }
 
     /**

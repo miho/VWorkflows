@@ -72,6 +72,7 @@ import jfxtras.scene.control.window.WindowIcon;
 //import jfxtras.labs.scene.control.window.Window;
 //import jfxtras.labs.scene.control.window.WindowIcon;
 import jfxtras.labs.util.event.MouseControlUtil;
+import jfxtras.scene.control.window.WindowUtil;
 
 /**
  *
@@ -155,7 +156,7 @@ public class FlowNodeWindow extends Window {
         requestSelection(skin.getModel().isSelected());
         skin.getModel().selectedProperty().addListener(
                 (ov, oldValue, newValue) -> {
-            FlowNodeWindow.this.requestSelection(newValue);
+                    WindowUtil.getDefaultClipboard().select(FlowNodeWindow.this, newValue);
         });
 
         FlowNodeWindow.this.selectedProperty().addListener((ov, oldValue, newValue) -> {

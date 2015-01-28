@@ -27,6 +27,7 @@
 package jfxtras.labs.util.event;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -291,6 +292,8 @@ class RectangleSelectionControllerImpl {
     private EventHandler<MouseEvent> mouseDraggedEventHandler;
     private EventHandler<MouseEvent> mousePressedHandler;
     private EventHandler<MouseEvent> mouseReleasedHandler;
+    
+    private final List<SelectableNode> selectedNodes = new ArrayList<>();
 
     public RectangleSelectionControllerImpl() {
         //
@@ -382,11 +385,11 @@ class RectangleSelectionControllerImpl {
         rectangle.setWidth(width / parentScaleX);
         rectangle.setHeight(height / parentScaleY);
 
-        selectIntersectingNodes(root);
+        selectIntersectingNodes(root, !event.isControlDown());
 
     }
 
-    private void selectIntersectingNodes(Parent root) {
+    private void selectIntersectingNodes(Parent root, boolean deselect) {
 
         List<Node> selectableNodes = root.getChildrenUnmodifiable().
                 filtered(n -> n instanceof SelectableNode);
@@ -398,14 +401,21 @@ class RectangleSelectionControllerImpl {
                     rectangle.parentToLocal(
                             n.localToParent(n.getBoundsInLocal())));
 
-            WindowUtil.getDefaultClipboard().select(
-                    (SelectableNode) n, selectN && rectBigEnough);
+            SelectableNode sn = (SelectableNode) n;
+
+            if ((deselect || potentiallySelected(sn)) || (selectN && rectBigEnough)) {
+                WindowUtil.getDefaultClipboard().select(
+                        sn, (selectN && rectBigEnough));
+            }
         }
 
     }
 
     public void performDragBegin(
             Parent root, MouseEvent event) {
+        
+        selectedNodes.addAll(
+                WindowUtil.getDefaultClipboard().getSelectedItems());
 
         if (rectangle.getParent() != null) {
             return;
@@ -428,9 +438,17 @@ class RectangleSelectionControllerImpl {
     public void performDragEnd(
             Parent root, MouseEvent event) {
 
-        selectIntersectingNodes(root);
+        selectIntersectingNodes(root, !event.isControlDown());
 
         NodeUtil.removeFromParent(rectangle);
+        
+        selectedNodes.clear();
 
+    }
+
+    private boolean potentiallySelected(SelectableNode sn) {
+        return !selectedNodes.contains(sn)
+                && WindowUtil.getDefaultClipboard().
+                        getSelectedItems().contains(sn);
     }
 }

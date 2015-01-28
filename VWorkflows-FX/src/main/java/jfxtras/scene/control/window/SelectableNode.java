@@ -29,6 +29,8 @@
 
 package jfxtras.scene.control.window;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
+
 /**
  * A node must implement this interface to be selectable. Usually, nodes/windows
  * are selected via selection rectangle gesture.
@@ -46,4 +48,6 @@ public interface SelectableNode {
      * otherwise
      */
     public boolean requestSelection(boolean select);
+    public boolean isSelected();
+    public ReadOnlyBooleanProperty selectedProperty();
 }

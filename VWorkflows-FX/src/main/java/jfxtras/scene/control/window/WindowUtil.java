@@ -97,7 +97,7 @@ class ClipboardImpl implements Clipboard {
     }
     
     @Override
-    public void unselectAll() {
+    public void deselectAll() {
         
         List<SelectableNode> unselectList = new ArrayList<>();
         unselectList.addAll(items);

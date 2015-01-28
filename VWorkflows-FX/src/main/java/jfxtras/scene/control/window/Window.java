@@ -676,6 +676,7 @@ public class Window extends Control implements SelectableNode {
     /**
      * @return the selectedProperty
      */
+    @Override
     public ReadOnlyBooleanProperty selectedProperty() {
         return selectedProperty;
     }
@@ -684,8 +685,10 @@ public class Window extends Control implements SelectableNode {
      *
      * @return {@code true} if the window is selected; {@code false} otherwise
      */
+    @Override
     public boolean isSelected() {
-        return selectedProperty.get();
+        return selectedProperty().get();
     }
+
 
 }

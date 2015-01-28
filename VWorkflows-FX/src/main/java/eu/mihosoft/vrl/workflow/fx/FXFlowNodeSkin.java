@@ -145,13 +145,9 @@ public class FXFlowNodeSkin
 
         registerListeners(getModel());
 
-        modelProperty.addListener(new ChangeListener<VNode>() {
-            @Override
-            public void changed(ObservableValue<? extends VNode> ov, VNode oldVal, VNode newVal) {
-
-                removeListeners(oldVal);
-                registerListeners(newVal);
-            }
+        modelProperty.addListener((ov,oldVal,newVal) -> {
+            removeListeners(oldVal);
+            registerListeners(newVal);
         });
 
         for (Connector connector : getModel().getConnectors()) {
@@ -210,16 +206,17 @@ public class FXFlowNodeSkin
 
         configureEditCapability();
 
-        vReqLister = (MapChangeListener.Change<? extends String, ? extends Object> change) -> {
+        vReqLister = (change) -> {
 
             configureEditCapability();
         };
-
+        
         getModel().getVisualizationRequest().addListener(vReqLister);
+        getModel().getFlow().getVisualizationRequest().addListener(vReqLister);
     }
 
     private void configureEditCapability() {
-
+        
         Optional<Boolean> disableEditing
                 = getModel().getVisualizationRequest().
                 get(VisualizationRequest.KEY_DISABLE_EDITING);
@@ -257,6 +254,7 @@ public class FXFlowNodeSkin
     private void updateEditabilityConfig(boolean notEditable) {
         node.setMovable(!notEditable);
         node.setResizableWindow(!notEditable);
+        node.setEditableState(!notEditable);
 
         for (Shape connectorShape : connectors.values()) {
             connectorShape.setMouseTransparent(notEditable);
@@ -284,6 +282,17 @@ public class FXFlowNodeSkin
                     n.configureEditCapability();
                 }
             }
+        } else if (getModel().getFlow()!=null) {
+             VFlowModel parent = getModel().getFlow();
+             
+             parent.getAllConnections().values().stream().flatMap(
+                    conns -> conns.getConnections().stream()).
+                    map(conn -> controller.
+                            getNodeSkinLookup().getById(skinFactory,
+                                    conn)).
+                    filter(cSkin -> cSkin instanceof FXConnectionSkin).
+                    map(cSkin -> (FXConnectionSkin) cSkin).
+                    forEach(cSkin -> cSkin.configureEditCapability(notEditable));
         }
     }
 

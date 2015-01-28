@@ -380,8 +380,8 @@ class RectangleSelectionControllerImpl {
         double width = Math.abs(secondX - firstX);
         double height = Math.abs(secondY - firstY);
 
-        rectangle.setX(x / parentScaleX + translateX);
-        rectangle.setY(y / parentScaleY + translateY);
+        rectangle.setX(x / parentScaleX + translateX / parentScaleX);
+        rectangle.setY(y / parentScaleY + translateY / parentScaleY);
         rectangle.setWidth(width / parentScaleX);
         rectangle.setHeight(height / parentScaleY);
 

@@ -26,6 +26,9 @@
  */
 package jfxtras.scene.control.window;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
@@ -43,12 +46,21 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.SimpleStyleableObjectProperty;
+import javafx.css.StyleConverter;
+import javafx.css.Styleable;
+import javafx.css.StyleableBooleanProperty;
+import javafx.css.StyleableObjectProperty;
+import javafx.css.StyleableProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.control.Control;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 /**
@@ -145,10 +157,89 @@ public class Window extends Control implements SelectableNode {
     private final BooleanProperty selectableProperty = new SimpleBooleanProperty(true);
 
     /* 
-     Closed property (defines whether window is closed
+     * Closed property (defines whether window is closed).
      */
     private final BooleanProperty closeRequested = new SimpleBooleanProperty();
-
+    
+    private StyleableObjectProperty<Paint> selectionBorderColor;
+    public Paint getSelectionBorderColor() {
+        return selectionBorderColor == null ? new Color(0.3, 0.7, 1.0, 1.0) : selectionBorderColor.get();
+    }
+    public void setSelectionBorderColor(Paint color) {
+        this.selectionBorderColorProperty().set(color);
+    }
+    public StyleableObjectProperty<Paint> selectionBorderColorProperty() {
+        if (selectionBorderColor == null) {
+            selectionBorderColor = new SimpleStyleableObjectProperty<>(
+                    StyleableProperties.SELECTION_BORDER_COLOR,
+                    Window.this, "selectionBorderColor",
+                    new Color(0.3, 0.7, 1.0, 1.0));
+        }
+        return selectionBorderColor;
+    }
+    
+    private StyleableBooleanProperty selectionEffectEnabled;
+    public boolean isSelectionEffectEnabled() {
+        return selectionEffectEnabled == null ? true : selectionEffectEnabled.get();
+    }
+    public void setSelectionEffectEnabled(boolean enabled) {
+        this.selectionEffectEnabledProperty().set(enabled);
+    }
+    public StyleableBooleanProperty selectionEffectEnabledProperty() {
+        if (selectionBorderColor == null) {
+            selectionEffectEnabled = new SimpleStyleableBooleanProperty(
+                    StyleableProperties.SELECTION_EFFECT_ENABLED,
+                    Window.this, "selectionEffectEnabled",
+                    true);
+        }
+        return selectionEffectEnabled;
+    }
+    
+    private static class StyleableProperties {
+        private static final CssMetaData< Window, Paint> SELECTION_BORDER_COLOR =
+                new CssMetaData< Window, Paint>("-fx-selection-border-color",
+                        StyleConverter.getPaintConverter(), Color.GRAY) {
+                    @Override
+                    public boolean isSettable(Window control) {
+                        return control.selectionBorderColor == null
+                                || !control.selectionBorderColor.isBound();
+                    }
+                    @Override
+                    public StyleableProperty<Paint> getStyleableProperty(Window control) {
+                        return control.selectionBorderColorProperty();
+                    }
+                };
+         private static final CssMetaData< Window, Boolean> SELECTION_EFFECT_ENABLED =
+                new CssMetaData< Window, Boolean>("-fx-selection-effect-enabled",
+                         StyleConverter.getBooleanConverter(), true) {
+                    @Override
+                    public boolean isSettable(Window control) {
+                        return control.selectionBorderColor == null
+                                || !control.selectionBorderColor.isBound();
+                    }
+                    @Override
+                    public StyleableProperty<Boolean> getStyleableProperty(Window control) {
+                        return control.selectionEffectEnabledProperty();
+                    }
+                };
+        private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+        static {
+            final List<CssMetaData<? extends Styleable, ?>> styleables =
+                    new ArrayList<>(Control.getClassCssMetaData());
+            Collections.addAll(styleables,
+                    SELECTION_BORDER_COLOR, SELECTION_EFFECT_ENABLED
+            );
+            STYLEABLES = Collections.unmodifiableList(styleables);
+        }
+    }
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+        return getClassCssMetaData();
+    }
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.STYLEABLES;
+    }
+    
     /**
      * Constructor.
      */

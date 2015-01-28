@@ -267,13 +267,16 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 (ov, oldValue, newValue) -> {
                     if (newValue) {
                         control.setBorder(new Border(
-                                        new BorderStroke(new Color(0.3, 0.7, 1.0, 1.0),
+                                        new BorderStroke(control.getSelectionBorderColor(),
                                                 BorderStrokeStyle.SOLID,
                                                 new CornerRadii(3), new BorderWidths(2))));
-                        ColorAdjust effect = new ColorAdjust(-0.25, 0.2, 0.8, 0);
-                        Glow glow = new Glow(0.5);
-                        glow.setInput(effect);
-                        control.setEffect(glow);
+                        if (control.isSelectionEffectEnabled()) {
+                            ColorAdjust effect
+                            = new ColorAdjust(-0.25, 0.2, 0.8, 0);
+                            Glow glow = new Glow(0.5);
+                            glow.setInput(effect);
+                            control.setEffect(glow);
+                        }
                     } else {
                         control.setBorder(prevBorder);
                         control.setEffect(null);

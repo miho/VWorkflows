@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.VNode;
@@ -55,8 +54,7 @@ public class InnerCanvas extends Pane {
     private BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
 
     public InnerCanvas() {
-       
-        
+
         translateToMinNodePosProperty.addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -64,9 +62,7 @@ public class InnerCanvas extends Pane {
                 requestLayout();
             }
         });
-        
-        
-        
+
 //        needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
 //            @Override
 //            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -106,6 +102,18 @@ public class InnerCanvas extends Pane {
         setNeedsLayout(true);
 
         if (!translateToMinNodePosProperty.get()) {
+
+            // search minX and minY of window nodes
+            for (Node n : getChildrenUnmodifiable()) {
+                if (n instanceof FlowNodeWindow) {
+                    FlowNodeWindow w = (FlowNodeWindow) n;
+
+                    VNode node = w.nodeSkinProperty().get().getModel();
+                    node.setX(Math.max(0, node.getX()));
+                    node.setY(Math.max(0, node.getY()));
+                }
+            }
+
             return;
         }
 

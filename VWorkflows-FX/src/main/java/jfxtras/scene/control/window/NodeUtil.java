@@ -64,7 +64,8 @@ public class NodeUtil {
      * @return The X screen coordinate of the node.
      */
     static public double screenX(Node node) {
-        return node.localToScene(node.getBoundsInLocal()).getMinX() + node.getScene().getX() + node.getScene().getWindow().getX();
+        return node.localToScene(node.getBoundsInLocal()).getMinX()
+                + node.getScene().getX() + node.getScene().getWindow().getX();
     }
 
     /**
@@ -73,7 +74,8 @@ public class NodeUtil {
      * @return The Y screen coordinate of the node.
      */
     static public double screenY(Node node) {
-        return node.localToScene(node.getBoundsInLocal()).getMinY() + node.getScene().getY() + node.getScene().getWindow().getY();
+        return node.localToScene(node.getBoundsInLocal()).getMinY()
+                + node.getScene().getY() + node.getScene().getWindow().getY();
     }
 
     /**

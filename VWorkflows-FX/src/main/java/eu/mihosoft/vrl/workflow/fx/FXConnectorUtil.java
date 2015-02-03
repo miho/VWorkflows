@@ -65,7 +65,7 @@ class FXConnectorUtil {
     }
 
     public static SelectedConnector getSelectedOutputConnector(VNode receiverNode, Parent fxParent, String type, MouseEvent t) {
-        Node myNode = NodeUtil.getDeepestNode(
+        Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
                 FlowNodeWindow.class, ConnectorCircle.class);

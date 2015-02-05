@@ -9,7 +9,7 @@ package eu.mihosoft.vrl.workflow.fx;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public enum ScaleBehavior {
+public enum TranslateBehavior {
     ALWAYS,
     IF_NECESSARY
 }

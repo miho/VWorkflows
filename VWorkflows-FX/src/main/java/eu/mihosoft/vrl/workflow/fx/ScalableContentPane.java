@@ -76,7 +76,8 @@ public class ScalableContentPane extends Region {
     private final BooleanProperty fitToHeightProperty = new SimpleBooleanProperty(true);
 
     private final ObjectProperty<ScaleBehavior> scaleBehavior
-            = new SimpleObjectProperty<>(ScaleBehavior.ALWAYS_FIT);
+            = new SimpleObjectProperty<>(ScaleBehavior.ALWAYS);
+    private boolean manualReset;
 
     /**
      * Constructor.
@@ -197,12 +198,12 @@ public class ScalableContentPane extends Region {
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);
 
-            if (getScaleBehavior() == ScaleBehavior.ALWAYS_FIT) {
+            if (getScaleBehavior() == ScaleBehavior.ALWAYS || manualReset) {
 
                 getContentScaleTransform().setX(scale);
                 getContentScaleTransform().setY(scale);
 
-            } else if (getScaleBehavior() == ScaleBehavior.SHRINK_IF_NECESSARY) {
+            } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
                 if (scale < getContentScaleTransform().getX() && getLayoutBounds().getWidth() != 0) {
                     getContentScaleTransform().setX(scale);
                     getContentScaleTransform().setY(scale);
@@ -214,12 +215,12 @@ public class ScalableContentPane extends Region {
 
         } else {
 
-            if (getScaleBehavior() == ScaleBehavior.ALWAYS_FIT) {
+            if (getScaleBehavior() == ScaleBehavior.ALWAYS || manualReset) {
 
                 getContentScaleTransform().setX(contentScaleWidth);
                 getContentScaleTransform().setY(contentScaleHeight);
 
-            } else if (getScaleBehavior() == ScaleBehavior.SHRINK_IF_NECESSARY) {
+            } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
                 if (contentScaleWidth < getContentScaleTransform().getX() && getLayoutBounds().getWidth() != 0) {
                     getContentScaleTransform().setX(contentScaleWidth);
                 }
@@ -256,6 +257,21 @@ public class ScalableContentPane extends Region {
 
     public void requestScale() {
         computeScale();
+    }
+    
+    public void resetScale() {
+        
+        if(manualReset) {
+            return;
+        }
+        
+        manualReset = true;
+        
+        try {
+            computeScale();
+        } finally {
+            manualReset = false;
+        }
     }
 
     @Override

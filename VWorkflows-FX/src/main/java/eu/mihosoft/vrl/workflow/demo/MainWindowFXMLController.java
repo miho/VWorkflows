@@ -47,6 +47,7 @@ import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScaleBehavior;
+import eu.mihosoft.vrl.workflow.fx.TranslateBehavior;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import java.io.File;
 import java.io.IOException;
@@ -86,7 +87,8 @@ public class MainWindowFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         canvas = new VCanvas();
-        canvas.setScaleBehavior(ScaleBehavior.SHRINK_IF_NECESSARY);
+        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
+        canvas.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
                 
         canvas.setMinScaleX(0.2);
         canvas.setMinScaleY(0.2);

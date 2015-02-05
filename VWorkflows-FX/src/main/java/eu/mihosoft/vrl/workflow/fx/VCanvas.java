@@ -36,7 +36,7 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import jfxtras.labs.util.event.MouseControlUtil;
@@ -46,30 +46,28 @@ import jfxtras.labs.util.event.MouseControlUtil;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class VCanvas extends ScalableContentPane {
-    
+
     private final InnerCanvas innerCanvas = new InnerCanvas();
 
     public VCanvas() {
-       
 
         Rectangle rect = new Rectangle();
         rect.setStroke(new Color(1, 1, 1, 1));
         rect.setFill(new Color(0, 0, 0, 0.5));
 
         contentProperty().addListener((ov, oldV, newV) -> {
-            
+
 //            if (oldV != null) {
 //                MouseControlUtil.
 //                        removeSelectionRectangleGesture(oldV);
 //            }
-
             if (newV != null) {
                 MouseControlUtil.
                         addSelectionRectangleGesture(newV, rect);
             }
 
         });
-        
+
         setContent(innerCanvas);
         getStyleClass().add("vflow-background");
     }
@@ -97,6 +95,39 @@ public class VCanvas extends ScalableContentPane {
         }
 
         return ((InnerCanvas) getContent()).translateToMinNodePosProperty().get();
+    }
+
+    public TranslateBehavior getTranslateBehavior() {
+        if (!(getContent() instanceof InnerCanvas)) {
+            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+        }
+
+        return ((InnerCanvas) getContent()).translateBehaviorProperty().get();
+    }
+
+    public ObjectProperty<TranslateBehavior> translateBehaviorProperty() {
+
+        if (!(getContent() instanceof InnerCanvas)) {
+            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+        }
+
+        return ((InnerCanvas) getContent()).translateBehaviorProperty();
+    }
+
+    public void setTranslateBehavior(TranslateBehavior behavior) {
+        if (!(getContent() instanceof InnerCanvas)) {
+            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+        }
+
+        ((InnerCanvas) getContent()).translateBehaviorProperty().set(behavior);
+    }
+    
+    public void resetTranslation() {
+        if (!(getContent() instanceof InnerCanvas)) {
+            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+        }
+
+        ((InnerCanvas) getContent()).resetTranslation();
     }
 
 }

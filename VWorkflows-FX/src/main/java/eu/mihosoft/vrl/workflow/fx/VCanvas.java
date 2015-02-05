@@ -72,7 +72,6 @@ public class VCanvas extends ScalableContentPane {
         
         setContent(innerCanvas);
         getStyleClass().add("vflow-background");
-
     }
 
     public BooleanProperty translateToMinNodePosProperty() {

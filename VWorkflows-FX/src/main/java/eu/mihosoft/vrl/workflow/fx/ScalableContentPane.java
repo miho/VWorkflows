@@ -37,6 +37,7 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -49,6 +50,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
+import javafx.stage.Window;
 
 /**
  * Scales content to always fit in the bounds of this pane. Useful for workflows
@@ -70,8 +72,11 @@ public class ScalableContentPane extends Region {
     private final DoubleProperty minScaleYProperty = new SimpleDoubleProperty(Double.MIN_VALUE);
     private final DoubleProperty maxScaleYProperty = new SimpleDoubleProperty(Double.MAX_VALUE);
 
-    private BooleanProperty fitToWidthProperty = new SimpleBooleanProperty(true);
-    private BooleanProperty fitToHeightProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty fitToWidthProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty fitToHeightProperty = new SimpleBooleanProperty(true);
+
+    private final ObjectProperty<ScaleBehavior> scaleBehavior
+            = new SimpleObjectProperty<>(ScaleBehavior.ALWAYS_FIT);
 
     /**
      * Constructor.
@@ -94,6 +99,10 @@ public class ScalableContentPane extends Region {
         });
 
         fitToHeightProperty().addListener((ov, oldValue, newValue) -> {
+            requestLayout();
+        });
+
+        scaleBehaviorProperty().addListener((ov, oldV, newV) -> {
             requestLayout();
         });
     }
@@ -188,15 +197,36 @@ public class ScalableContentPane extends Region {
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);
 
-            getContentScaleTransform().setX(scale);
-            getContentScaleTransform().setY(scale);
+            if (getScaleBehavior() == ScaleBehavior.ALWAYS_FIT) {
+
+                getContentScaleTransform().setX(scale);
+                getContentScaleTransform().setY(scale);
+
+            } else if (getScaleBehavior() == ScaleBehavior.SHRINK_IF_NECESSARY) {
+                if (scale < getContentScaleTransform().getX() && getLayoutBounds().getWidth() != 0) {
+                    getContentScaleTransform().setX(scale);
+                    getContentScaleTransform().setY(scale);
+                }
+            }
 
             resizeScaleW = scale;
             resizeScaleH = scale;
 
         } else {
-            getContentScaleTransform().setX(contentScaleWidth);
-            getContentScaleTransform().setY(contentScaleHeight);
+
+            if (getScaleBehavior() == ScaleBehavior.ALWAYS_FIT) {
+
+                getContentScaleTransform().setX(contentScaleWidth);
+                getContentScaleTransform().setY(contentScaleHeight);
+
+            } else if (getScaleBehavior() == ScaleBehavior.SHRINK_IF_NECESSARY) {
+                if (contentScaleWidth < getContentScaleTransform().getX() && getLayoutBounds().getWidth() != 0) {
+                    getContentScaleTransform().setX(contentScaleWidth);
+                }
+                if (contentScaleHeight < getContentScaleTransform().getY() && getLayoutBounds().getHeight() != 0) {
+                    getContentScaleTransform().setY(contentScaleHeight);
+                }
+            }
 
             resizeScaleW = contentScaleWidth;
             resizeScaleH = contentScaleHeight;
@@ -435,5 +465,17 @@ public class ScalableContentPane extends Region {
 
     public boolean isFitToHeight() {
         return fitToHeightProperty().get();
+    }
+
+    public final ObjectProperty<ScaleBehavior> scaleBehaviorProperty() {
+        return scaleBehavior;
+    }
+
+    public void setScaleBehavior(ScaleBehavior behavior) {
+        scaleBehaviorProperty().set(behavior);
+    }
+
+    public ScaleBehavior getScaleBehavior() {
+        return scaleBehaviorProperty().get();
     }
 }

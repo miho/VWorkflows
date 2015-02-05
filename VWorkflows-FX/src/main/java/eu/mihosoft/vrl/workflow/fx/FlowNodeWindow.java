@@ -317,20 +317,6 @@ public class FlowNodeWindow extends Window {
         return sb.toString();
     }
 
-    private void addSelectionRectangle(FXFlowNodeSkin skin, Pane root) {
-        if (skin == null) {
-            return;
-        }
-        if (!(skin.getModel() instanceof VFlowModel)) {
-            return;
-        }
-        Rectangle rect = new Rectangle();
-        rect.setStroke(new Color(1, 1, 1, 1));
-        rect.setFill(new Color(0, 0, 0, 0.5));
-        MouseControlUtil.
-                addSelectionRectangleGesture(root, rect);
-    }
-
     @Override
     public void toFront() {
         super.toFront();

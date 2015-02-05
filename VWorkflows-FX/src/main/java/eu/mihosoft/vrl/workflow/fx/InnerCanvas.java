@@ -51,7 +51,7 @@ import javafx.scene.layout.Pane;
  */
 public class InnerCanvas extends Pane {
 
-    private BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
 
     public InnerCanvas() {
 
@@ -63,35 +63,6 @@ public class InnerCanvas extends Pane {
             }
         });
 
-//        needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                if (newValue) 
-//                {
-//                    List<VNode> nodeList = new ArrayList<>();
-//
-//                    double minX = Double.MAX_VALUE;
-//                    double minY = Double.MAX_VALUE;
-//
-//                    // search minX and minY of window nodes
-//                    for (Node n : getChildrenUnmodifiable()) {
-//                        if (n instanceof FlowNodeWindow) {
-//                            FlowNodeWindow w = (FlowNodeWindow) n;
-//                            nodeList.add(w.nodeSkinProperty().get().getModel());
-//
-//                            minX = Math.min(n.getLayoutX(), minX);
-//                            minY = Math.min(n.getLayoutY(), minY);
-//                        }
-//                    }
-//
-//                    // move windows
-//                    for (VNode n : nodeList) {
-//                        n.setX(n.getX() - minX);
-//                        n.setY(n.getY() - minY);
-//                    }
-//                }
-//            }
-//        });
     }
 
     @Override

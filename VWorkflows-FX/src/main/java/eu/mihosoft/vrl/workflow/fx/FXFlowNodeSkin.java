@@ -850,6 +850,8 @@ public class FXFlowNodeSkin
         removeListeners(getModel());
 
         getModel().getVisualizationRequest().removeListener(vReqLister);
+
+        node.onRemovedFromSceneGraph();
     }
 
     @Override

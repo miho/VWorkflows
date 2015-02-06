@@ -195,6 +195,16 @@ public class ScalableContentPane extends Region {
         double resizeScaleW;
         double resizeScaleH;
 
+        boolean partOfSceneGraph = false;
+
+        try {
+            Window w = getScene().getWindow();
+
+            partOfSceneGraph = w != null;
+        } catch (Exception ex) {
+            //
+        }
+
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);
 
@@ -204,10 +214,11 @@ public class ScalableContentPane extends Region {
                 getContentScaleTransform().setY(scale);
 
             } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
-                if (scale < getContentScaleTransform().getX() && getLayoutBounds().getWidth() != 0) {
-                    getContentScaleTransform().setX(scale);
-                    getContentScaleTransform().setY(scale);
-                }
+//                if (scale < getContentScaleTransform().getX()
+//                        && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
+//                    getContentScaleTransform().setX(scale);
+//                    getContentScaleTransform().setY(scale);
+//                }
             }
 
             resizeScaleW = scale;
@@ -221,10 +232,12 @@ public class ScalableContentPane extends Region {
                 getContentScaleTransform().setY(contentScaleHeight);
 
             } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
-                if (contentScaleWidth < getContentScaleTransform().getX() && getLayoutBounds().getWidth() != 0) {
+                if (contentScaleWidth < getContentScaleTransform().getX()
+                        && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
                     getContentScaleTransform().setX(contentScaleWidth);
                 }
-                if (contentScaleHeight < getContentScaleTransform().getY() && getLayoutBounds().getHeight() != 0) {
+                if (contentScaleHeight < getContentScaleTransform().getY()
+                        && getLayoutBounds().getHeight() > 0 && partOfSceneGraph) {
                     getContentScaleTransform().setY(contentScaleHeight);
                 }
             }
@@ -258,15 +271,15 @@ public class ScalableContentPane extends Region {
     public void requestScale() {
         computeScale();
     }
-    
+
     public void resetScale() {
-        
-        if(manualReset) {
+
+        if (manualReset) {
             return;
         }
-        
+
         manualReset = true;
-        
+
         try {
             computeScale();
         } finally {
@@ -320,14 +333,11 @@ public class ScalableContentPane extends Region {
 
     private void initContentPaneListener() {
 
-        final ChangeListener<Bounds> boundsListener = new ChangeListener<Bounds>() {
-            @Override
-            public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
-                if (isAutoRescale()) {
-                    setNeedsLayout(false);
-                    getContent().requestLayout();
-                    requestLayout();
-                }
+        final ChangeListener<Bounds> boundsListener = (ov, oldValue, newValue) -> {
+            if (isAutoRescale()) {
+                setNeedsLayout(false);
+                getContent().requestLayout();
+                requestLayout();
             }
         };
 

@@ -46,6 +46,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.stage.Window;
 
 /**
  *
@@ -110,16 +111,26 @@ public class InnerCanvas extends Pane {
                 minY = Math.min(node.getY(), minY);
             }
         }
+        
+         boolean partOfSceneGraph = false;
+
+        try {
+            Window w = getScene().getWindow();
+
+            partOfSceneGraph = w != null;
+        } catch (Exception ex) {
+            //
+        }
 
         if (translateBehaviorProperty().get() == TranslateBehavior.ALWAYS 
                 || manualReset) {
             translateAllWindowsXY(minX, minY, nodeList);
         } else if (translateBehaviorProperty().get()
                 == TranslateBehavior.IF_NECESSARY) {
-            if (minX < 0 && getLayoutBounds().getWidth() > 0) {
+            if (minX < 0 && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
                 translateAllWindowsX(minX, nodeList);
             }
-            if (minY < 0 && getLayoutBounds().getHeight() > 0) {
+            if (minY < 0 && getLayoutBounds().getHeight() > 0 && partOfSceneGraph) {
                 translateAllWindowsY(minY, nodeList);
             }
         }

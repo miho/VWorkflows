@@ -87,11 +87,13 @@ public class MainWindowFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         canvas = new VCanvas();
-        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
+//        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
         canvas.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
-                
+
         canvas.setMinScaleX(0.2);
         canvas.setMinScaleY(0.2);
+
+        addResetViewMenu();
 
         Pane root = canvas.getContent();
 
@@ -106,6 +108,20 @@ public class MainWindowFXMLController implements Initializable {
 
         onGenerateAction(null);
 
+    }
+
+    private void addResetViewMenu() {
+        final ContextMenu cm = new ContextMenu();
+        MenuItem resetViewItem = new MenuItem("Reset View");
+        resetViewItem.setOnAction((ActionEvent e) -> {
+            canvas.resetScale();
+            canvas.resetTranslation();
+        });
+        cm.getItems().add(resetViewItem);
+        canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {
+            if (e.getButton()==javafx.scene.input.MouseButton.SECONDARY)
+                cm.show(canvas, e.getScreenX(), e.getScreenY());
+        });
     }
     private Pane rootPane;
     private VCanvas canvas;

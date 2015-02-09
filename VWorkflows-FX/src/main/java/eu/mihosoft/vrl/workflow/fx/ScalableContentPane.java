@@ -204,6 +204,8 @@ public class ScalableContentPane extends Region {
 //        } catch (Exception ex) {
 //            //
 //        }
+        boolean applyScaleX = false;
+        boolean applyScaleY = false;
 
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);
@@ -213,16 +215,18 @@ public class ScalableContentPane extends Region {
                 getContentScaleTransform().setX(scale);
                 getContentScaleTransform().setY(scale);
 
+                applyScaleX = true;
+                applyScaleY = true;
+
             } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
                 if (scale < getContentScaleTransform().getX()
                         && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
+                    applyScaleX = true;
+                    applyScaleY = true;
                     getContentScaleTransform().setX(scale);
                     getContentScaleTransform().setY(scale);
                 }
             }
-
-            resizeScaleW = scale;
-            resizeScaleH = scale;
 
         } else {
 
@@ -230,21 +234,28 @@ public class ScalableContentPane extends Region {
 
                 getContentScaleTransform().setX(contentScaleWidth);
                 getContentScaleTransform().setY(contentScaleHeight);
+                applyScaleX = true;
+                applyScaleY = true;
 
             } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
                 if (contentScaleWidth < getContentScaleTransform().getX()
                         && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
                     getContentScaleTransform().setX(contentScaleWidth);
+
+                    applyScaleX = true;
+
                 }
                 if (contentScaleHeight < getContentScaleTransform().getY()
                         && getLayoutBounds().getHeight() > 0 && partOfSceneGraph) {
                     getContentScaleTransform().setY(contentScaleHeight);
+
+                    applyScaleY = true;
                 }
             }
-
-            resizeScaleW = contentScaleWidth;
-            resizeScaleH = contentScaleHeight;
         }
+
+        resizeScaleW = getContentScaleTransform().getX();
+        resizeScaleH = getContentScaleTransform().getY();
 
         getContent().relocate(
                 getInsets().getLeft(), getInsets().getTop());

@@ -87,7 +87,7 @@ public class MainWindowFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         canvas = new VCanvas();
-//        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
+        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
         canvas.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
 
         canvas.setMinScaleX(0.2);

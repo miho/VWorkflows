@@ -46,6 +46,8 @@ import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -94,15 +96,37 @@ public final class FlowNodeWindow extends Window {
         setEditableState(true);
 
         if (skin.getModel() instanceof VFlowModel) {
+
+            VFlowModel flowNodeModel = (VFlowModel) skin.getModel();
+
             parentContent = new OptimizableContentPane();
             content = new VCanvas();
             content.setPadding(new Insets(5));
+            content.setMinScaleX(0.01);
+            content.setMinScaleY(0.01);
+            content.setMaxScaleX(1);
+            content.setMaxScaleY(1);
             content.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
             content.setTranslateToMinNodePos(true);
             content.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
-            
-            parentContent.getChildren().add(content);
+
+            addResetViewMenu(content);
+
+            ScrollPane scrollPane = new ScrollPane(content);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setFitToHeight(true);
+
+            parentContent.getChildren().add(scrollPane);
             super.setContentPane(parentContent);
+
+            InvalidationListener refreshViewListener = (o) -> {
+                content.resetScale();
+                content.resetTranslation();
+            };
+
+            widthProperty().addListener(refreshViewListener);
+            heightProperty().addListener(refreshViewListener);
+            flowNodeModel.visibleProperty().addListener(refreshViewListener);
         }
 
         addCollapseIcon(skin);
@@ -283,7 +307,6 @@ public final class FlowNodeWindow extends Window {
 //                }
 //            }
 //        });
-
     }
 
     public Pane getWorkflowContentPane() {

@@ -195,15 +195,15 @@ public class ScalableContentPane extends Region {
         double resizeScaleW;
         double resizeScaleH;
 
-        boolean partOfSceneGraph = false;
+        boolean partOfSceneGraph = true;
 
-        try {
-            Window w = getScene().getWindow();
-
-            partOfSceneGraph = w != null;
-        } catch (Exception ex) {
-            //
-        }
+//        try {
+//            Window w = getScene().getWindow();
+//
+//            partOfSceneGraph = w != null;
+//        } catch (Exception ex) {
+//            //
+//        }
 
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);

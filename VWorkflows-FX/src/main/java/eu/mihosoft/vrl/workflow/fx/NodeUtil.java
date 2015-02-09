@@ -372,15 +372,6 @@ public class NodeUtil {
 
                 Node result = null;
 
-                for (Class<?> nodeClass : nodeClasses) {
-
-                    if (nodeClass.isAssignableFrom(result.getClass())) {
-
-                        return result;
-
-                    }
-                }
-
                 if (n instanceof Parent) {
                     result = getDeepestNode((Parent) n, sceneX, sceneY, nodeClasses);
                 }

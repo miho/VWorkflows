@@ -63,7 +63,9 @@ import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 
 /**
- * An implementation of the {@code VFlow} interface. This class manages the workflow
+ * An implementation of the {@code VFlow} interface. This class manages the
+ * workflow
+ *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class VFlowImpl implements VFlow {
@@ -97,27 +99,27 @@ class VFlowImpl implements VFlow {
         setSkinFactories(skinFactories);
 
     }
-    
+
     @Override
     public ReadOnlyObjectProperty<VFlow> parentProperty() {
         return parentProperty;
     }
-    
+
     @Override
     public VFlow getParent() {
         return parentProperty().get();
     }
-    
+
     @Override
     public VFlow getRootFlow() {
         VFlow root = this;
         VFlow parent = this.getParent();
-        
-        while(parent!=null) {
+
+        while (parent != null) {
             root = parent;
             parent = parent.getParent();
         }
-        
+
         return root;
     }
 
@@ -740,7 +742,7 @@ class VFlowImpl implements VFlow {
     }
 
     /**
-     * @param skinFactories  the nodeskin factories to set
+     * @param skinFactories the nodeskin factories to set
      */
     @Override
     public final void addSkinFactories(SkinFactory... skinFactories) {
@@ -871,7 +873,6 @@ class VFlowImpl implements VFlow {
                 VNodeSkin<VNode> skin = getNodeSkin(skinFactory, flowNode.getId());//nodeSkins.get(flowNode.getId());
 
 //                System.out.println("skin: " + skin + ", node: " + flowNode.getId());
-
                 SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> childFactory = null;
 
                 if (skinFactory != null) {
@@ -881,7 +882,7 @@ class VFlowImpl implements VFlow {
             }
         }
 
-        VFlow controller = new VFlowImpl(this,flowNode, childFactories);
+        VFlow controller = new VFlowImpl(this, flowNode, childFactories);
 
         controller.setIdGenerator(getIdGenerator());
         controller.setNodeLookup(getNodeLookup());
@@ -945,7 +946,7 @@ class VFlowImpl implements VFlow {
 
     @Override
     public List<VNodeSkin> getNodeSkinsById(String id) {
-        
+
         List<VNodeSkin> result = new ArrayList<>();
 
         for (SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> sF : this.getSkinFactories()) {

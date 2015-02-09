@@ -214,11 +214,11 @@ public class ScalableContentPane extends Region {
                 getContentScaleTransform().setY(scale);
 
             } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
-//                if (scale < getContentScaleTransform().getX()
-//                        && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
-//                    getContentScaleTransform().setX(scale);
-//                    getContentScaleTransform().setY(scale);
-//                }
+                if (scale < getContentScaleTransform().getX()
+                        && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
+                    getContentScaleTransform().setX(scale);
+                    getContentScaleTransform().setY(scale);
+                }
             }
 
             resizeScaleW = scale;

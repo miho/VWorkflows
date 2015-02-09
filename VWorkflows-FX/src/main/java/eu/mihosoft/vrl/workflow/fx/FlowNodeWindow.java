@@ -97,6 +97,10 @@ public final class FlowNodeWindow extends Window {
             parentContent = new OptimizableContentPane();
             content = new VCanvas();
             content.setPadding(new Insets(5));
+            content.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
+            content.setTranslateToMinNodePos(true);
+            content.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
+            
             parentContent.getChildren().add(content);
             super.setContentPane(parentContent);
         }
@@ -199,12 +203,16 @@ public final class FlowNodeWindow extends Window {
         canvas.setMaxScaleX(1);
         canvas.setMaxScaleY(1);
 
-        canvas.setTranslateToMinNodePos(false);
+        canvas.setTranslateToMinNodePos(true);
 
-//        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
-//        canvas.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
+        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
+        canvas.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
 //        canvas.setStyle("-fx-border-color: red");
         canvas.getContent().setStyle("-fx-border-color: green");
+
+        canvas.translateBehaviorProperty().addListener((ov, oldV, newV) -> {
+            System.out.println("-new-val: " + newV);
+        });
 
         // create skin factory for flow visualization
         FXSkinFactory fXSkinFactory
@@ -226,31 +234,39 @@ public final class FlowNodeWindow extends Window {
         VFlow rootFlow = flow.getRootFlow();
 
         Stage stage = new Stage() {
-
-            private String nodeId;
-
             {
+//
+//                String nodeId = FlowNodeWindow.this.
+//                        nodeSkinProperty().get().getModel().getId();
 
-                nodeId = FlowNodeWindow.this.
-                        nodeSkinProperty().get().getModel().getId();
-
-                rootFlow.getNodes().addListener(
-                        (ListChangeListener.Change<? extends VNode> c) -> {
-                            while (c.next()) {
-                                if (c.wasAdded()) {
-                                    for (VNode n : c.getAddedSubList()) {
-                                        if (n.getId().equals(nodeId)) {
-                                            canvas.getContent().getChildren().clear();
-                                            VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
-                                            flow.addSkinFactories(new FXValueSkinFactory(null));
-                                        }
-                                    }
-                                }
-                            }
-                        });
+//                Stage stage = this;
+//                rootFlow.getNodes().addListener(
+//                        (ListChangeListener.Change<? extends VNode> c) -> {
+//                            while (c.next()) {
+//                                if (c.wasAdded()) {
+//                                    for (VNode n : c.getAddedSubList()) {
+//                                        if (n.getId().equals(nodeId)) {
+//                                            canvas.getContent().getChildren().clear();
+//                                            VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
+//                                            flow.addSkinFactories(new FXValueSkinFactory(null));
+//                                        }
+//                                    }
+//                                }
+//                                
+//                                 if (c.wasRemoved()) {
+//                                    for (VNode n : c.getRemoved()) {
+//                                        if (n.getId().equals(nodeId)) {
+//                                            System.out.println("close");
+//                                           stage.close();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        });
             }
+
         };
-        
+
         stage.setWidth(800);
         stage.setHeight(600);
 
@@ -258,13 +274,15 @@ public final class FlowNodeWindow extends Window {
         stage.setScene(scene);
         stage.show();
 
-        stage.setOnCloseRequest((e) -> {
-            System.out.println("closing");
-            for (VNode n : rootFlow.getNodes()) {
-                VNodeSkin<?> skin = rootFlow.getNodeSkinLookup().getById(fXSkinFactory, n.getId());
-                skin.remove();
-            }
-        });
+//        stage.setOnCloseRequest((e) -> {
+//            for (VNode n : rootFlow.getNodes()) {
+//                VNodeSkin<?> skin = rootFlow.getNodeSkinLookup().
+//                        getById(fXSkinFactory, n.getId());
+//                if (skin != null) {
+//                    skin.remove();
+//                }
+//            }
+//        });
 
     }
 

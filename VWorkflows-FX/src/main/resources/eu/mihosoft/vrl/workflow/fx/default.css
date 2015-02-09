@@ -74,3 +74,11 @@
     /*-fx-stroke: rgba(255,255,255,50);*/
     -fx-fill: rgba(255,255,255,50);
 }
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.scroll-pane {
+   -fx-background-color: transparent;
+}

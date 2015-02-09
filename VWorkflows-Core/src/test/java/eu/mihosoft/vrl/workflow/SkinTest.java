@@ -76,11 +76,8 @@ public class SkinTest {
 
         Assert.assertTrue("Skin must be skin of n1.",
                 lookupN1.getModel() == n1);
-
-
-
     }
-    
+
     @Test
     public void nodeSkinLookupRemovalTest() {
         VFlow flow = FlowFactory.newFlow();
@@ -117,6 +114,50 @@ public class SkinTest {
         Assert.assertTrue("Skin for n2 must be removed after node removal.",
                 lookupN2AfterRemoval == null);
 
+    }
+
+    @Test
+    public void nodeSkinRemoveSubFlowTest() {
+        VFlow flow = FlowFactory.newFlow();
+        VNodeSkinFactoryStub skinFactory = new VNodeSkinFactoryStub();
+        flow.setSkinFactories(skinFactory);
+
+        flow.setVisible(true);
+        VFlow sf = flow.newSubFlow();
+        sf.setVisible(true);
+
+        VNodeSkin lookupN1 = flow.getNodeSkinLookup().
+                getById(skinFactory, sf.getModel().getId());
+
+        Assert.assertTrue("Skin for sf must be present.",
+                lookupN1 != null);
+
+        Assert.assertTrue("Skin must be skin of n1.",
+                lookupN1.getModel() == sf.getModel());
+
+        VNode n1 = sf.newNode();
+        VFlow sf1 = sf.newSubFlow();
+
+        boolean n1IsChildNode = sf.getNodes().stream().filter(n -> n == n1).
+                findFirst().isPresent();
+
+        boolean sf1IsChildNode = sf.getNodes().stream().filter(n -> sf1.getModel() == n).
+                findFirst().isPresent();
+
+        Assert.assertTrue("n1 must be child of sf",
+                n1IsChildNode);
+
+        Assert.assertTrue("sf1 must be child of sf",
+                sf1IsChildNode);
+        
+//        flow.remove(sf.getModel());
+//
+//        VNodeSkinFactoryStub skinFactoryOfSF = (VNodeSkinFactoryStub)
+//                sf.getSkinFactories().iterator().next();
+//        
+//        skinFactoryOfSF.getNodeSkins().values().forEach(ns -> {
+//            System.out.println("ns: " + ns.getModel().getId());
+//        });
     }
 
     @Test

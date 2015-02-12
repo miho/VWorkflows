@@ -123,23 +123,35 @@ public class FXFlowNodeSkin
         init();
     }
 
+    protected FlowNodeWindow createNodeWindow() {
+        FlowNodeWindow flowNodeWindow = new FlowNodeWindow(this);
+
+        flowNodeWindow.setTitle(getModel().getTitle());
+        flowNodeWindow.setLayoutX(getModel().getX());
+        flowNodeWindow.setLayoutY(getModel().getY());
+        flowNodeWindow.setPrefWidth(getModel().getWidth());
+        flowNodeWindow.setPrefHeight(getModel().getHeight());
+
+        node.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
+            for (Connector c : connectorList) {
+                layoutConnector(c, true);
+            }
+        });
+
+        return flowNodeWindow;
+    }
+
     private void init() {
 
         for (int i = 0; i < 4; i++) {
             shapeLists.add(new ArrayList<>());
         }
 
-        node = new FlowNodeWindow(this);
-
-        node.setTitle(getModel().getTitle());
-        node.setLayoutX(getModel().getX());
-        node.setLayoutY(getModel().getY());
-        node.setPrefWidth(getModel().getWidth());
-        node.setPrefHeight(getModel().getHeight());
+        createNodeWindow();
 
         registerListeners(getModel());
 
-        modelProperty.addListener((ov,oldVal,newVal) -> {
+        modelProperty.addListener((ov, oldVal, newVal) -> {
             removeListeners(oldVal);
             registerListeners(newVal);
         });
@@ -189,11 +201,6 @@ public class FXFlowNodeSkin
             }
         });
 
-        node.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
-            for (Connector c : connectorList) {
-                layoutConnector(c, true);
-            }
-        });
     }
 
     private void initVReqListeners() {
@@ -204,13 +211,13 @@ public class FXFlowNodeSkin
 
             configureEditCapability();
         };
-        
+
         getModel().getVisualizationRequest().addListener(vReqLister);
         getModel().getFlow().getVisualizationRequest().addListener(vReqLister);
     }
 
     private void configureEditCapability() {
-        
+
         Optional<Boolean> disableEditing
                 = getModel().getVisualizationRequest().
                 get(VisualizationRequest.KEY_DISABLE_EDITING);
@@ -276,10 +283,10 @@ public class FXFlowNodeSkin
                     n.configureEditCapability();
                 }
             }
-        } else if (getModel().getFlow()!=null) {
-             VFlowModel parent = getModel().getFlow();
-             
-             parent.getAllConnections().values().stream().flatMap(
+        } else if (getModel().getFlow() != null) {
+            VFlowModel parent = getModel().getFlow();
+
+            parent.getAllConnections().values().stream().flatMap(
                     conns -> conns.getConnections().stream()).
                     map(conn -> controller.
                             getNodeSkinLookup().getById(skinFactory,

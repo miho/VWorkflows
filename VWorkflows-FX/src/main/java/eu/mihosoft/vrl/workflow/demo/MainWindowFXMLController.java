@@ -113,9 +113,9 @@ public class MainWindowFXMLController implements Initializable {
     private void addResetViewMenu() {
         final ContextMenu cm = new ContextMenu();
         MenuItem resetViewItem = new MenuItem("Reset View");
-        resetViewItem.setOnAction((ActionEvent e) -> {
-            canvas.resetScale();
+        resetViewItem.setOnAction((ActionEvent e) -> {          
             canvas.resetTranslation();
+            canvas.resetScale();
         });
         cm.getItems().add(resetViewItem);
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {

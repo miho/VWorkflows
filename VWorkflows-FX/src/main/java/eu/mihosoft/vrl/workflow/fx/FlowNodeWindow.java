@@ -202,12 +202,12 @@ public final class FlowNodeWindow extends Window {
         return super.getChildren();
     }
 
-    private void addResetViewMenu(VCanvas canvas) {
+    public static void addResetViewMenu(VCanvas canvas) {
         final ContextMenu cm = new ContextMenu();
         MenuItem resetViewItem = new MenuItem("Reset View");
         resetViewItem.setOnAction((ActionEvent e) -> {
-            canvas.resetScale();
             canvas.resetTranslation();
+            canvas.resetScale();
         });
         cm.getItems().add(resetViewItem);
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {

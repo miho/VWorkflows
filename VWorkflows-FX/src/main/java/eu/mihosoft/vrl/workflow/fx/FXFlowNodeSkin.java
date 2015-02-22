@@ -132,7 +132,7 @@ public class FXFlowNodeSkin
         flowNodeWindow.setPrefWidth(getModel().getWidth());
         flowNodeWindow.setPrefHeight(getModel().getHeight());
 
-        node.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
+        flowNodeWindow.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
             for (Connector c : connectorList) {
                 layoutConnector(c, true);
             }
@@ -147,7 +147,7 @@ public class FXFlowNodeSkin
             shapeLists.add(new ArrayList<>());
         }
 
-        createNodeWindow();
+        node = createNodeWindow();
 
         registerListeners(getModel());
 

@@ -106,17 +106,20 @@ public final class FlowNodeWindow extends Window {
             content.setMinScaleY(0.01);
             content.setMaxScaleX(1);
             content.setMaxScaleY(1);
-            content.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
-            content.setTranslateToMinNodePos(true);
-            content.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
+//            content.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
+//            content.setTranslateToMinNodePos(true);
+//            content.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
 
             addResetViewMenu(content);
 
-            ScrollPane scrollPane = new ScrollPane(content);
-            scrollPane.setFitToWidth(true);
-            scrollPane.setFitToHeight(true);
+//            ScrollPane scrollPane = new ScrollPane(content);
+//            scrollPane.setFitToWidth(true);
+//            scrollPane.setFitToHeight(true);
+//            
+//            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+//            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-            parentContent.getChildren().add(scrollPane);
+            parentContent.getChildren().add(content);
             super.setContentPane(parentContent);
 
             InvalidationListener refreshViewListener = (o) -> {
@@ -124,9 +127,9 @@ public final class FlowNodeWindow extends Window {
                 content.resetTranslation();
             };
 
-            widthProperty().addListener(refreshViewListener);
-            heightProperty().addListener(refreshViewListener);
-            flowNodeModel.visibleProperty().addListener(refreshViewListener);
+//            widthProperty().addListener(refreshViewListener);
+//            heightProperty().addListener(refreshViewListener);
+//            flowNodeModel.visibleProperty().addListener(refreshViewListener);
         }
 
         addCollapseIcon(skin);
@@ -142,7 +145,6 @@ public final class FlowNodeWindow extends Window {
         WindowUtil.getDefaultClipboard().select(FlowNodeWindow.this, skin.getModel().isSelected());
 
         selectionListener = (ov, oldValue, newValue) -> {
-            System.out.println("SEL: " + newValue);
             WindowUtil.getDefaultClipboard().select(FlowNodeWindow.this, newValue);
         };
 
@@ -229,8 +231,8 @@ public final class FlowNodeWindow extends Window {
 
         canvas.setTranslateToMinNodePos(true);
 
-        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
-        canvas.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
+//        canvas.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
+//        canvas.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
 //        canvas.setStyle("-fx-border-color: red");
         canvas.getContent().setStyle("-fx-border-color: green");
 
@@ -246,12 +248,12 @@ public final class FlowNodeWindow extends Window {
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);
 
-        ScrollPane scrollPane = new ScrollPane(canvas);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
+//        ScrollPane scrollPane = new ScrollPane(canvas);
+//        scrollPane.setFitToWidth(true);
+//        scrollPane.setFitToHeight(true);
 
         // the usual application setup
-        Scene scene = new Scene(scrollPane, 800, 800);
+        Scene scene = new Scene(canvas, 800, 800);
 
         scene.getStylesheets().setAll(stylesheets);
 

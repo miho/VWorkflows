@@ -438,6 +438,14 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                         control.setPrefWidth(newWidth);
                     }
                 }
+
+                if (RESIZE_BOTTOM || RESIZE_TOP || RESIZE_LEFT || RESIZE_RIGHT) {
+                    getSkinnable().setCache(false);
+
+                } else {
+                    getSkinnable().setCache(true);
+                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+                }
             }
 
             mouseX = event.getSceneX();

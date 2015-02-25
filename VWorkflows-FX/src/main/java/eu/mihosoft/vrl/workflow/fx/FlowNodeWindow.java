@@ -41,17 +41,13 @@ import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
-import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -59,9 +55,11 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import jfxtras.scene.control.window.CloseIcon;
@@ -83,6 +81,7 @@ public final class FlowNodeWindow extends Window {
     private final ObjectProperty<FXFlowNodeSkin> nodeSkinProperty
             = new SimpleObjectProperty<>();
     private VCanvas content;
+    private Pane paramContainer;
     private OptimizableContentPane parentContent;
     private final CloseIcon closeIcon = new CloseIcon(this);
     private final MinimizeIcon minimizeIcon = new MinimizeIcon(this);
@@ -106,6 +105,9 @@ public final class FlowNodeWindow extends Window {
             content.setMinScaleY(0.01);
             content.setMaxScaleX(1);
             content.setMaxScaleY(1);
+            
+            HBox.setHgrow(content, Priority.SOMETIMES);
+            
 //            content.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
 //            content.setTranslateToMinNodePos(true);
 //            content.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
@@ -118,8 +120,10 @@ public final class FlowNodeWindow extends Window {
 //            
 //            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 //            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            paramContainer = new VBox();
+            HBox paramBox = new HBox(paramContainer, content);
 
-            parentContent.getChildren().add(content);
+            parentContent.getChildren().add(paramBox);
             super.setContentPane(parentContent);
 
             InvalidationListener refreshViewListener = (o) -> {
@@ -251,7 +255,6 @@ public final class FlowNodeWindow extends Window {
 //        ScrollPane scrollPane = new ScrollPane(canvas);
 //        scrollPane.setFitToWidth(true);
 //        scrollPane.setFitToHeight(true);
-
         // the usual application setup
         Scene scene = new Scene(canvas, 800, 800);
 
@@ -478,5 +481,12 @@ public final class FlowNodeWindow extends Window {
         setCloseableState(b);
         setMinimizableState(b);
         setSelectable(b);
+    }
+
+    /**
+     * @return the paramContainer
+     */
+    public Pane getParamContainer() {
+        return paramContainer;
     }
 }

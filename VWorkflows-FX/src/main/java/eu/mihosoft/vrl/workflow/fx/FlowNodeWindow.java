@@ -81,7 +81,8 @@ public final class FlowNodeWindow extends Window {
     private final ObjectProperty<FXFlowNodeSkin> nodeSkinProperty
             = new SimpleObjectProperty<>();
     private VCanvas content;
-    private Pane paramContainer;
+    private Pane inputContainer;
+    private Pane outputContainer;
     private OptimizableContentPane parentContent;
     private final CloseIcon closeIcon = new CloseIcon(this);
     private final MinimizeIcon minimizeIcon = new MinimizeIcon(this);
@@ -120,8 +121,9 @@ public final class FlowNodeWindow extends Window {
 //            
 //            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 //            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            paramContainer = new VBox();
-            HBox paramBox = new HBox(paramContainer, content);
+            inputContainer = new VBox();
+            outputContainer = new VBox();
+            HBox paramBox = new HBox(inputContainer, content, getOutputContainer());
 
             parentContent.getChildren().add(paramBox);
             super.setContentPane(parentContent);
@@ -486,7 +488,14 @@ public final class FlowNodeWindow extends Window {
     /**
      * @return the paramContainer
      */
-    public Pane getParamContainer() {
-        return paramContainer;
+    public Pane getInputContainer() {
+        return inputContainer;
+    }
+
+    /**
+     * @return the outputContainer
+     */
+    public Pane getOutputContainer() {
+        return outputContainer;
     }
 }

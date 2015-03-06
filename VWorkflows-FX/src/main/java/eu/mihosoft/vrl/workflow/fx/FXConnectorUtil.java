@@ -99,7 +99,7 @@ class FXConnectorUtil {
     }
 
     public static SelectedConnector getSelectedInputConnector(VNode senderNode, Parent fxParent, String type, MouseEvent t) {
-        Node myNode = NodeUtil.getDeepestNode(
+        Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
                 ConnectorCircle.class,

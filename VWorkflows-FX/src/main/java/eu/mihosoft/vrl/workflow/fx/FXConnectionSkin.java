@@ -370,7 +370,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 SelectedConnector selConnector
                         = FXConnectorUtil.getSelectedInputConnector(
                                 getSender().getNode(),
-                                getParent().getScene().getRoot(), type, t);
+                                getParent(), type, t);
 
                 valid = true;
 
@@ -476,7 +476,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                 SelectedConnector selConnector
                         = FXConnectorUtil.getSelectedInputConnector(
-                                getSender().getNode(), getParent().getScene().getRoot(), type, t);
+                                getSender().getNode(), getParent(), type, t);
 
                 boolean isSameConnection = false;
 

@@ -292,7 +292,7 @@ class RectangleSelectionControllerImpl {
     private EventHandler<MouseEvent> mouseDraggedEventHandler;
     private EventHandler<MouseEvent> mousePressedHandler;
     private EventHandler<MouseEvent> mouseReleasedHandler;
-    
+
     private final List<SelectableNode> selectedNodes = new ArrayList<>();
 
     public RectangleSelectionControllerImpl() {
@@ -413,7 +413,7 @@ class RectangleSelectionControllerImpl {
 
     public void performDragBegin(
             Parent root, MouseEvent event) {
-        
+
         selectedNodes.addAll(
                 WindowUtil.getDefaultClipboard().getSelectedItems());
 
@@ -438,10 +438,14 @@ class RectangleSelectionControllerImpl {
     public void performDragEnd(
             Parent root, MouseEvent event) {
 
-        selectIntersectingNodes(root, !event.isControlDown());
+        if (rectangle.getParent() != null) {
 
-        NodeUtil.removeFromParent(rectangle);
-        
+            selectIntersectingNodes(root, !event.isControlDown());
+
+            NodeUtil.removeFromParent(rectangle);
+
+        }
+
         selectedNodes.clear();
 
     }
@@ -449,6 +453,6 @@ class RectangleSelectionControllerImpl {
     private boolean potentiallySelected(SelectableNode sn) {
         return !selectedNodes.contains(sn)
                 && WindowUtil.getDefaultClipboard().
-                        getSelectedItems().contains(sn);
+                getSelectedItems().contains(sn);
     }
 }

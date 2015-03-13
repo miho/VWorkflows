@@ -531,31 +531,31 @@ public final class FlowNodeWindow extends Window {
     }
 
 
-    public void setShowCloseIcon(Callback<FlowNodeWindow, CloseIcon> showCloseIcon) {
-        this.showCloseIcon = showCloseIcon;
+    public void setShowCloseIconCallback(Callback<FlowNodeWindow, CloseIcon> callback) {
+        this.showCloseIcon = callback;
     }
 
     public Callback<FlowNodeWindow, CloseIcon> getHideCloseIconCallback() {
         return hideCloseIcon;
     }
 
-    public void setHideCloseIconCallback(Callback<FlowNodeWindow, CloseIcon> hideCloseIcon) {
-        this.hideCloseIcon = hideCloseIcon;
+    public void setHideCloseIconCallback(Callback<FlowNodeWindow, CloseIcon> callback) {
+        this.hideCloseIcon = callback;
     }
 
     public Callback<FlowNodeWindow, MinimizeIcon> getShowMinimizeIconCallback() {
         return showMinimizeIcon;
     }
 
-    public void setShowMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> showMinimizeIcon) {
-        this.showMinimizeIcon = showMinimizeIcon;
+    public void setShowMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> callback) {
+        this.showMinimizeIcon = callback;
     }
 
     public Callback<FlowNodeWindow, MinimizeIcon> getHideMinimizeIconCallback() {
         return hideMinimizeIcon;
     }
 
-    public void setHideMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> hideMinimizeIcon) {
-        this.hideMinimizeIcon = hideMinimizeIcon;
+    public void setHideMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> callback) {
+        this.hideMinimizeIcon = callback;
     }
 }

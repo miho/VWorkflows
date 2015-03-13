@@ -62,6 +62,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import jfxtras.scene.control.window.CloseIcon;
 import jfxtras.scene.control.window.MinimizeIcon;
 import jfxtras.scene.control.window.Window;
@@ -89,6 +90,36 @@ public final class FlowNodeWindow extends Window {
 
     private final ChangeListener<Boolean> selectionListener;
 
+    private Callback<FlowNodeWindow, CloseIcon> showCloseIcon = (FlowNodeWindow w) -> {
+        if (!getLeftIcons().contains(closeIcon)) {
+            getLeftIcons().add(closeIcon);
+        }
+
+        return closeIcon;
+    };
+
+    private Callback<FlowNodeWindow, CloseIcon> hideCloseIcon = (FlowNodeWindow w) -> {
+
+        getLeftIcons().remove(closeIcon);
+
+        return closeIcon;
+    };
+
+    private Callback<FlowNodeWindow, MinimizeIcon> showMinimizeIcon = (FlowNodeWindow w) -> {
+        if (!getLeftIcons().contains(minimizeIcon)) {
+            getLeftIcons().add(minimizeIcon);
+        }
+
+        return minimizeIcon;
+    };
+
+    private Callback<FlowNodeWindow, MinimizeIcon> hideMinimizeIcon = (FlowNodeWindow w) -> {
+
+        getLeftIcons().remove(minimizeIcon);
+
+        return minimizeIcon;
+    };
+
     public FlowNodeWindow(final FXFlowNodeSkin skin) {
 
         nodeSkinProperty().set(skin);
@@ -106,13 +137,12 @@ public final class FlowNodeWindow extends Window {
             content.setMinScaleY(0.01);
             content.setMaxScaleX(1);
             content.setMaxScaleY(1);
-            
+
             HBox.setHgrow(content, Priority.SOMETIMES);
-            
+
 //            content.setScaleBehavior(ScaleBehavior.IF_NECESSARY);
 //            content.setTranslateToMinNodePos(true);
 //            content.setTranslateBehavior(TranslateBehavior.IF_NECESSARY);
-
             addResetViewMenu(content);
 
 //            ScrollPane scrollPane = new ScrollPane(content);
@@ -461,21 +491,17 @@ public final class FlowNodeWindow extends Window {
 
     private void setCloseableState(boolean b) {
         if (b) {
-            if (!getLeftIcons().contains(closeIcon)) {
-                getLeftIcons().add(closeIcon);
-            }
+            getShowCloseIconCallback().call(this);
         } else {
-            getLeftIcons().remove(closeIcon);
+            getHideCloseIconCallback().call(this);
         }
     }
 
     private void setMinimizableState(boolean b) {
         if (b) {
-            if (!getLeftIcons().contains(minimizeIcon)) {
-                getLeftIcons().add(minimizeIcon);
-            }
+            getShowMinimizeIconCallback().call(this);
         } else {
-            getLeftIcons().remove(minimizeIcon);
+            getHideMinimizeIconCallback().call(this);
         }
     }
 
@@ -497,5 +523,39 @@ public final class FlowNodeWindow extends Window {
      */
     public Pane getOutputContainer() {
         return outputContainer;
+    }
+
+
+    public Callback<FlowNodeWindow, CloseIcon> getShowCloseIconCallback() {
+        return showCloseIcon;
+    }
+
+
+    public void setShowCloseIcon(Callback<FlowNodeWindow, CloseIcon> showCloseIcon) {
+        this.showCloseIcon = showCloseIcon;
+    }
+
+    public Callback<FlowNodeWindow, CloseIcon> getHideCloseIconCallback() {
+        return hideCloseIcon;
+    }
+
+    public void setHideCloseIconCallback(Callback<FlowNodeWindow, CloseIcon> hideCloseIcon) {
+        this.hideCloseIcon = hideCloseIcon;
+    }
+
+    public Callback<FlowNodeWindow, MinimizeIcon> getShowMinimizeIconCallback() {
+        return showMinimizeIcon;
+    }
+
+    public void setShowMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> showMinimizeIcon) {
+        this.showMinimizeIcon = showMinimizeIcon;
+    }
+
+    public Callback<FlowNodeWindow, MinimizeIcon> getHideMinimizeIconCallback() {
+        return hideMinimizeIcon;
+    }
+
+    public void setHideMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> hideMinimizeIcon) {
+        this.hideMinimizeIcon = hideMinimizeIcon;
     }
 }

@@ -32,6 +32,8 @@ import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -56,12 +58,14 @@ import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
+import jfxtras.internal.scene.control.skin.window.DefaultWindowSkinSimplified;
 
 /**
  * Window control. A window control is a window node as known from Swing, e.g
@@ -348,6 +352,22 @@ public class Window extends Control implements SelectableNode {
             }
         } // end for sN
     }
+    
+    public double minWidthWithTitle() {
+        if (getSkin() instanceof DefaultWindowSkinSimplified) {
+            DefaultWindowSkinSimplified skin = (DefaultWindowSkinSimplified) getSkin();
+//            return skin.computeMinWidth();
+        }
+        
+        return minWidth(0);
+    }
+
+    @Override
+    protected double computeMinWidth(double height) {
+        double result = super.computeMinWidth(height);
+        return result;
+    }
+
 
     // TODO move from control to behavior class (a lot of other stuff here too)
     private void minimizeSelectedWindows(boolean state) {

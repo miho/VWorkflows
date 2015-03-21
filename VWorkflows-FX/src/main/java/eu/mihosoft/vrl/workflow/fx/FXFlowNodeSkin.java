@@ -909,75 +909,45 @@ public class FXFlowNodeSkin
     }
 
     private void initListeners() {
-        modelTitleListener = new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> ov, String oldVal, String newVal) {
-                node.setTitle(newVal);
-            }
+        modelTitleListener = (ObservableValue<? extends String> ov, String oldVal, String newVal) -> {
+            node.setTitle(newVal);
         };
 
-        modelXListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setLayoutX((double) newVal);
-            }
+        modelXListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            node.setLayoutX(newVal.doubleValue());
         };
 
-        modelYListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setLayoutY((double) newVal);
-            }
+        modelYListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            node.setLayoutY(newVal.doubleValue());
         };
 
-        modelWidthListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setPrefWidth((double) newVal);
-            }
+        modelWidthListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            node.setPrefWidth(newVal.doubleValue());    
         };
 
-        modelHeightListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setPrefHeight((double) newVal);
-            }
+        modelHeightListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            node.setPrefHeight(newVal.doubleValue());
         };
 
-        nodeXListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setX((double) newVal);
-            }
+        nodeXListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            getModel().setX(newVal.doubleValue());
         };
 
-        nodeYListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setY((double) newVal);
-            }
+        nodeYListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            getModel().setY((double) newVal);
         };
 
-        nodeWidthListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setWidth((double) newVal);
-            }
+        nodeWidthListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            getModel().setWidth((double) newVal);
         };
 
-        nodeHeightListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setHeight((double) newVal);
-            }
+        nodeHeightListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
+            getModel().setHeight((double) newVal);
         };
 
-        node.onCloseActionProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                if (!removeSkinOnly) {
-                    modelProperty().get().getFlow().remove(modelProperty().get());
-                }
+        node.onCloseActionProperty().set((EventHandler<ActionEvent>) (ActionEvent t) -> {
+            if (!removeSkinOnly) {
+                modelProperty().get().getFlow().remove(modelProperty().get());
             }
         });
     }

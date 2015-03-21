@@ -42,11 +42,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Window;
+import jfxtras.scene.control.window.Window;
 
 /**
  *
@@ -76,13 +76,13 @@ public class InnerCanvas extends Pane {
 
         super.layoutChildren();
 
-        setNeedsLayout(true);
-
+//        setNeedsLayout(true);
         if (!translateToMinNodePosProperty.get()) {
 
             // window coordinates < 0 are not allowed
             for (Node n : getChildrenUnmodifiable()) {
-                if (n instanceof FlowNodeWindow) {
+                if (n instanceof FlowNodeWindow && n.isManaged()) {
+
                     FlowNodeWindow w = (FlowNodeWindow) n;
 
                     VNode node = w.nodeSkinProperty().get().getModel();
@@ -101,7 +101,7 @@ public class InnerCanvas extends Pane {
 
         // search minX and minY of window nodes
         for (Node n : getChildrenUnmodifiable()) {
-            if (n instanceof FlowNodeWindow) {
+            if (n instanceof FlowNodeWindow && n.isManaged()) {
                 FlowNodeWindow w = (FlowNodeWindow) n;
 
                 VNode node = w.nodeSkinProperty().get().getModel();
@@ -111,18 +111,18 @@ public class InnerCanvas extends Pane {
                 minY = Math.min(node.getY(), minY);
             }
         }
-        
-         boolean partOfSceneGraph = false;
+
+        boolean partOfSceneGraph = false;
 
         try {
-            Window w = getScene().getWindow();
+            javafx.stage.Window w = getScene().getWindow();
 
             partOfSceneGraph = w != null;
         } catch (Exception ex) {
             //
         }
 
-        if (translateBehaviorProperty().get() == TranslateBehavior.ALWAYS 
+        if (translateBehaviorProperty().get() == TranslateBehavior.ALWAYS
                 || manualReset) {
             translateAllWindowsXY(minX, minY, nodeList);
         } else if (translateBehaviorProperty().get()
@@ -174,7 +174,7 @@ public class InnerCanvas extends Pane {
         }
 
         manualReset = true;
-        
+
         try {
             layoutChildren();
         } finally {

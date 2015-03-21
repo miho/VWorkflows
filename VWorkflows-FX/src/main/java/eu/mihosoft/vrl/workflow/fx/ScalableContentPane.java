@@ -45,12 +45,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
-import javafx.stage.Window;
+import javafx.scene.transform.TransformChangedEvent;
 
 /**
  * Scales content to always fit in the bounds of this pane. Useful for workflows
@@ -136,6 +137,10 @@ public class ScalableContentPane extends Region {
         ChangeListener<Number> changeListener = (ov, oldValue, newValue) -> {
             requestScale();
         };
+        
+        getContentScaleTransform().setOnTransformChanged((event) -> {
+            requestLayout();
+        });
 
         minScaleXProperty().addListener(changeListener);
         minScaleYProperty().addListener(changeListener);

@@ -94,8 +94,8 @@ public class DefaultWindowSkin extends SkinBase<Window> {
     }
 
     private void init() {
-        
-        titleBar.widthProperty().addListener((ov)->{
+
+        titleBar.widthProperty().addListener((ov) -> {
             titleBar.setPrefWidth(titleBar.minWidth(-1));
             this.layoutChildren(0, 0, control.getWidth(), control.getHeight());
         });
@@ -653,13 +653,13 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             control.setPrefWidth(titleBarWidth
                     + getSkinnable().getInsets().getLeft()
                     + getSkinnable().getInsets().getRight());
-            
+
             control.autosize();
             control.layout();
-            
+
             root.autosize();
             root.layout();
-            
+
             titleBar.autosize();
             titleBar.layout();
         }
@@ -873,7 +873,7 @@ class TitleBar extends HBox {
 //                    if (!control.getTitle().equals(getLabel().getText())) {
 //                        if (originalTitleWidth
 //                        + maxIconWidth * 2 + offset < getWidth()) {
-                            getLabel().setText(control.getTitle());
+                    getLabel().setText(control.getTitle());
 //                        }
 //                    } else if (!"...".equals(getLabel().getText())) {
 //                        if (originalTitleWidth
@@ -911,18 +911,26 @@ class TitleBar extends HBox {
 
     public void addLeftIcon(Node n) {
         leftIconPane.getChildren().add(n);
+        requestLayout();
+        requestParentLayout();
     }
 
     public void addRightIcon(Node n) {
         rightIconPane.getChildren().add(n);
+        requestLayout();
+        requestParentLayout();
     }
 
     public void removeLeftIcon(Node n) {
         leftIconPane.getChildren().remove(n);
+        requestLayout();
+        requestParentLayout();
     }
 
     public void removeRightIcon(Node n) {
         rightIconPane.getChildren().remove(n);
+        requestLayout();
+        requestParentLayout();
     }
 
     @Override

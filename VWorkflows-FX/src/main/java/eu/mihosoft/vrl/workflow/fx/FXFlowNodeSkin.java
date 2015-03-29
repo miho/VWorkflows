@@ -934,15 +934,15 @@ public class FXFlowNodeSkin
         };
 
         nodeYListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
-            getModel().setY((double) newVal);
+            getModel().setY(newVal.doubleValue());
         };
 
         nodeWidthListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
-            getModel().setWidth((double) newVal);
+            getModel().setWidth(newVal.doubleValue());
         };
 
         nodeHeightListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
-            getModel().setHeight((double) newVal);
+            getModel().setHeight(newVal.doubleValue());
         };
 
         node.onCloseActionProperty().set((EventHandler<ActionEvent>) (ActionEvent t) -> {

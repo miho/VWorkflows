@@ -870,17 +870,17 @@ class TitleBar extends HBox {
                     double maxIconWidth = Math.max(
                             leftIconPane.getWidth(), rightIconPane.getWidth());
 
-                    if (!control.getTitle().equals(getLabel().getText())) {
-                        if (originalTitleWidth
-                        + maxIconWidth * 2 + offset < getWidth()) {
+//                    if (!control.getTitle().equals(getLabel().getText())) {
+//                        if (originalTitleWidth
+//                        + maxIconWidth * 2 + offset < getWidth()) {
                             getLabel().setText(control.getTitle());
-                        }
-                    } else if (!"...".equals(getLabel().getText())) {
-                        if (originalTitleWidth
-                        + maxIconWidth * 2 + offset >= getWidth()) {
-                            getLabel().setText("...");
-                        }
-                    }
+//                        }
+//                    } else if (!"...".equals(getLabel().getText())) {
+//                        if (originalTitleWidth
+//                        + maxIconWidth * 2 + offset >= getWidth()) {
+//                            getLabel().setText("...");
+//                        }
+//                    }
                 });
 
     }

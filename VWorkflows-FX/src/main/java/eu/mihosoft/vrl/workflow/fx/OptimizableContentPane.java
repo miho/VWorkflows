@@ -44,7 +44,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Transform;
 
@@ -59,32 +58,23 @@ public class OptimizableContentPane extends StackPane {
     private boolean optimizing = false;
     private boolean visibility = true;
     private boolean attached = true;
-    private Collection<Node> detatched = new ArrayList<>();
+    private final Collection<Node> detatched = new ArrayList<>();
 
     public OptimizableContentPane() {
         this.optimizationRule = new DefaultOptimizationRuleImpl();
 
-        localToSceneTransformProperty().addListener(new ChangeListener<Transform>() {
-            @Override
-            public void changed(ObservableValue<? extends Transform> ov, Transform oldVal, Transform newVal) {
-                transform = newVal;
-                updateOptimizationRule();
-            }
+        localToSceneTransformProperty().addListener((ov, oldValue, newValue) -> {
+            transform = newValue;
+            updateOptimizationRule();
         });
 
-        boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
-            @Override
-            public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
-                updateOptimizationRule();
-            }
+        boundsInLocalProperty().addListener((ov, oldValue, newValue) -> {
+            updateOptimizationRule();
         });
 
-        visibleProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
-                if (!optimizing) {
-                    visibility = newValue;
-                }
+        visibleProperty().addListener((ov, oldValue, newValue) -> {
+            if (!optimizing) {
+                visibility = newValue;
             }
         });
     }
@@ -107,7 +97,8 @@ public class OptimizableContentPane extends StackPane {
         optimizing = true;
 
 //        if (transform == null) {
-        transform = OptimizableContentPane.this.localToSceneTransformProperty().get();
+        transform = OptimizableContentPane.this.
+                localToSceneTransformProperty().get();
 //        }
 
         boolean visible = optimizationRule.visible(this, transform);

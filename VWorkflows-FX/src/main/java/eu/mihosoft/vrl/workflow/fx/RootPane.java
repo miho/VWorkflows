@@ -57,8 +57,6 @@ public class RootPane extends Pane {
     @Override
     protected void layoutChildren() {
 
-//        System.out.println("root: layout " + System.currentTimeMillis());
-
         getParent().requestLayout();
 
         super.layoutChildren();
@@ -81,7 +79,6 @@ public class RootPane extends Pane {
 
     @Override
     protected double computeMinWidth(double h) {
-//        double w = getInsets().getLeft() + getInsets().getRight();
 
         double minX = Double.MAX_VALUE;
         double maxX = Double.MIN_VALUE;
@@ -96,7 +93,6 @@ public class RootPane extends Pane {
 
     @Override
     protected double computeMinHeight(double w) {
-//        double h = getInsets().getLeft() + getInsets().getRight();
 
         double minY = Double.MAX_VALUE;
         double maxY = Double.MIN_VALUE;

@@ -30,7 +30,6 @@
 package jfxtras.scene.control.window;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
 /**
  *

@@ -44,7 +44,8 @@ import javafx.scene.CacheHint;
 import javafx.scene.shape.Circle;
 
 /**
- *
+ * Circle node that represents a connector.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class ConnectorCircle extends Circle {
@@ -78,9 +79,6 @@ class ConnectorCircle extends Circle {
     private void init() {
         this.getStyleClass().add("vnode-connector");
         this.setManaged(false);
-        
-//        this.setCache(true);
-//        this.setCacheHint(CacheHint.SPEED);
     }
 
     /**

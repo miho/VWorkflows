@@ -38,18 +38,29 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Model;
 import eu.mihosoft.vrl.workflow.skin.Skin;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
 /**
- *
+ * JavaFX skin.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @param <T> model
+ * @param <V> node
  */
 public interface FXSkin<T extends Model, V extends Node> extends Skin<T>{
+    /**
+     * Returns the JavaFX node.
+     * @return node
+     */
     public V getNode();
+    
+    /**
+     * Returns the JavaFX content node.
+     * @return content node
+     */
     public Parent getContentNode();
+    
     @Override
     public FXSkinFactory getSkinFactory();
 }

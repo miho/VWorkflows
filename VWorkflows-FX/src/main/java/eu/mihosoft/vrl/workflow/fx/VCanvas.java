@@ -56,16 +56,10 @@ public class VCanvas extends ScalableContentPane {
         rect.setFill(new Color(0, 0, 0, 0.5));
 
         contentProperty().addListener((ov, oldV, newV) -> {
-
-//            if (oldV != null) {
-//                MouseControlUtil.
-//                        removeSelectionRectangleGesture(oldV);
-//            }
             if (newV != null) {
                 MouseControlUtil.
                         addSelectionRectangleGesture(newV, rect);
             }
-
         });
 
         setContent(innerCanvas);
@@ -75,7 +69,8 @@ public class VCanvas extends ScalableContentPane {
     public BooleanProperty translateToMinNodePosProperty() {
 
         if (!(getContent() instanceof InnerCanvas)) {
-            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+            throw new UnsupportedOperationException(
+                    "Only supported for content panes of type InnerCanvas");
         }
 
         return ((InnerCanvas) getContent()).translateToMinNodePosProperty();
@@ -83,7 +78,8 @@ public class VCanvas extends ScalableContentPane {
 
     public void setTranslateToMinNodePos(boolean value) {
         if (!(getContent() instanceof InnerCanvas)) {
-            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+            throw new UnsupportedOperationException(
+                    "Only supported for content panes of type InnerCanvas");
         }
 
         ((InnerCanvas) getContent()).translateToMinNodePosProperty().set(value);
@@ -91,15 +87,18 @@ public class VCanvas extends ScalableContentPane {
 
     public boolean getTranslateToMinNodePos() {
         if (!(getContent() instanceof InnerCanvas)) {
-            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+            throw new UnsupportedOperationException(
+                    "Only supported for content panes of type InnerCanvas");
         }
 
-        return ((InnerCanvas) getContent()).translateToMinNodePosProperty().get();
+        return ((InnerCanvas) getContent()).
+                translateToMinNodePosProperty().get();
     }
 
     public TranslateBehavior getTranslateBehavior() {
         if (!(getContent() instanceof InnerCanvas)) {
-            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+            throw new UnsupportedOperationException(
+                    "Only supported for content panes of type InnerCanvas");
         }
 
         return ((InnerCanvas) getContent()).translateBehaviorProperty().get();
@@ -108,7 +107,8 @@ public class VCanvas extends ScalableContentPane {
     public ObjectProperty<TranslateBehavior> translateBehaviorProperty() {
 
         if (!(getContent() instanceof InnerCanvas)) {
-            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+            throw new UnsupportedOperationException(
+                    "Only supported for content panes of type InnerCanvas");
         }
 
         return ((InnerCanvas) getContent()).translateBehaviorProperty();
@@ -116,7 +116,8 @@ public class VCanvas extends ScalableContentPane {
 
     public void setTranslateBehavior(TranslateBehavior behavior) {
         if (!(getContent() instanceof InnerCanvas)) {
-            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+            throw new UnsupportedOperationException(
+                    "Only supported for content panes of type InnerCanvas");
         }
 
         ((InnerCanvas) getContent()).translateBehaviorProperty().set(behavior);
@@ -124,7 +125,8 @@ public class VCanvas extends ScalableContentPane {
     
     public void resetTranslation() {
         if (!(getContent() instanceof InnerCanvas)) {
-            throw new UnsupportedOperationException("Only supported for content panes of type InnerCanvas");
+            throw new UnsupportedOperationException(
+                    "Only supported for content panes of type InnerCanvas");
         }
 
         ((InnerCanvas) getContent()).resetTranslation();

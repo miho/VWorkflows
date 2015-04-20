@@ -47,18 +47,14 @@ public class RotateIcon extends WindowIcon {
 
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 
-        setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-
-                RotateTransition rotationY = new RotateTransition();
-                rotationY.setAxis(Rotate.Z_AXIS);
-                rotationY.setDuration(Duration.seconds(1));
-                rotationY.setByAngle(-360);
-                rotationY.setNode(w);
-                rotationY.setCycleCount(1);
-                rotationY.play();
-            }
+        setOnAction((ActionEvent t) -> {
+            RotateTransition rotationY = new RotateTransition();
+            rotationY.setAxis(Rotate.Z_AXIS);
+            rotationY.setDuration(Duration.seconds(1));
+            rotationY.setByAngle(-360);
+            rotationY.setNode(w);
+            rotationY.setCycleCount(1);
+            rotationY.play();
         });
     }
 }

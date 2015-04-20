@@ -41,7 +41,6 @@ import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
 import com.sun.javafx.collections.ImmutableObservableList;
-import eu.mihosoft.vrl.workflow.fx.VCanvas;
 
 /**
  * Utility class that provides methods to simplify node handling. Possible use
@@ -92,7 +91,8 @@ public class NodeUtil {
         } else if (n.getParent() instanceof Pane) {
             ((Pane) n.getParent()).getChildren().remove(n);
         } else {
-            throw new IllegalArgumentException("Unsupported parent: " + n.getParent());
+            throw new IllegalArgumentException(
+                    "Unsupported parent: " + n.getParent());
         }
     }
 
@@ -125,10 +125,10 @@ public class NodeUtil {
      * @param sceneY y coordinate
      * @param nodeClass node class to search for
      * @return a node that contains the specified screen coordinates and is an
-     * instance of the specified class or {@code null} if no such node
-     * exist
+     * instance of the specified class or {@code null} if no such node exist
      */
-    public static Node getNode(Parent p, double sceneX, double sceneY, Class<?> nodeClass) {
+    public static Node getNode(Parent p, double sceneX,
+            double sceneY, Class<?> nodeClass) {
 
         // dammit! javafx uses "wrong" children order.
         List<Node> rightOrder = new ArrayList<>();
@@ -154,23 +154,25 @@ public class NodeUtil {
     }
 
     /**
-     * This method prevents blurry horizontal or vertical lines, use snapXY(x) instead of x. 
+     * This method prevents blurry horizontal or vertical lines, use snapXY(x)
+     * instead of x.
+     *
      * @param position (x or y)
      * @return
      */
-	public static double snapXY(double position) {
-		return ((int) position) + .5;
-	}
-	
-	/**
-	 * This is the snapXY method for using in a binding, for example:
-	 * p1.bind( snapXY( p2.multiply(0.1) ));
-	 * 
+    public static double snapXY(double position) {
+        return ((int) position) + .5;
+    }
+
+    /**
+     * This is the snapXY method for using in a binding, for example: p1.bind(
+     * snapXY( p2.multiply(0.1) ));
+     *
      * @param position (x or y)
-	 * @return
-	 */
-	public static DoubleBinding snapXY(final ObservableNumberValue position) {
-		return new DoubleBinding() {
+     * @return
+     */
+    public static DoubleBinding snapXY(final ObservableNumberValue position) {
+        return new DoubleBinding() {
             {
                 super.bind(position);
             }
@@ -192,27 +194,30 @@ public class NodeUtil {
         };
     }
 
-
     /**
-     * This method prevents blurry horizontal or vertical lines, use snapWH(x, w) instead of w. 
+     * This method prevents blurry horizontal or vertical lines, use snapWH(x,
+     * w) instead of w.
+     *
      * @param position (x or y)
      * @param offset (width or height)
      * @return
      */
-	public static double snapWH(double position, double offset) {
-		return snapXY(position + offset) - snapXY(position);
-	}
-	
-	/**
-	 * This is the snapXY method for using in a binding, for example:
-	 * p1.bind( snapXY( p2.multiply(0.1) ));
-	 * 
+    public static double snapWH(double position, double offset) {
+        return snapXY(position + offset) - snapXY(position);
+    }
+
+    /**
+     * This is the snapXY method for using in a binding, for example: p1.bind(
+     * snapXY( p2.multiply(0.1) ));
+     *
      * @param position (x or y)
      * @param offset (width or height)
-	 * @param dependencies
-	 * @return
-	 */
-	public static DoubleBinding snapWH(final ObservableNumberValue position, final ObservableNumberValue offset, final Observable... dependencies) {
+     * @param dependencies
+     * @return
+     */
+    public static DoubleBinding snapWH(final ObservableNumberValue position,
+            final ObservableNumberValue offset,
+            final Observable... dependencies) {
         return new DoubleBinding() {
             {
                 super.bind(dependencies);
@@ -225,14 +230,15 @@ public class NodeUtil {
 
             @Override
             protected double computeValue() {
-                return NodeUtil.snapWH(position.doubleValue(), offset.doubleValue());
+                return NodeUtil.snapWH(position.doubleValue(),
+                        offset.doubleValue());
             }
 
             @Override
             public ObservableList<?> getDependencies() {
-                return (dependencies.length == 1)? 
-                        FXCollections.singletonObservableList(dependencies[0]) 
-                        : new ImmutableObservableList<Observable>(dependencies);
+                return (dependencies.length == 1)
+                        ? FXCollections.singletonObservableList(dependencies[0])
+                        : new ImmutableObservableList<>(dependencies);
             }
         };
     }

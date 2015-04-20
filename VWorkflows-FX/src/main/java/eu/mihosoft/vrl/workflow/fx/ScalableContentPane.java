@@ -45,13 +45,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.TransformChangedEvent;
 
 /**
  * Scales content to always fit in the bounds of this pane. Useful for workflows
@@ -146,8 +144,7 @@ public class ScalableContentPane extends Region {
         minScaleYProperty().addListener(changeListener);
         maxScaleXProperty().addListener(changeListener);
         maxScaleYProperty().addListener(changeListener);
-//
-//        getContent().setStyle("-fx-border-color: red; -fx-border-width: 3;");
+
     }
 
     /**
@@ -202,16 +199,6 @@ public class ScalableContentPane extends Region {
 
         boolean partOfSceneGraph = true;
 
-//        try {
-//            Window w = getScene().getWindow();
-//
-//            partOfSceneGraph = w != null;
-//        } catch (Exception ex) {
-//            //
-//        }
-        boolean applyScaleX = false;
-        boolean applyScaleY = false;
-
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);
 
@@ -220,14 +207,10 @@ public class ScalableContentPane extends Region {
                 getContentScaleTransform().setX(scale);
                 getContentScaleTransform().setY(scale);
 
-                applyScaleX = true;
-                applyScaleY = true;
-
             } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
                 if (scale < getContentScaleTransform().getX()
                         && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
-                    applyScaleX = true;
-                    applyScaleY = true;
+
                     getContentScaleTransform().setX(scale);
                     getContentScaleTransform().setY(scale);
                 }
@@ -239,22 +222,18 @@ public class ScalableContentPane extends Region {
 
                 getContentScaleTransform().setX(contentScaleWidth);
                 getContentScaleTransform().setY(contentScaleHeight);
-                applyScaleX = true;
-                applyScaleY = true;
 
             } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
                 if (contentScaleWidth < getContentScaleTransform().getX()
                         && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
                     getContentScaleTransform().setX(contentScaleWidth);
 
-                    applyScaleX = true;
 
                 }
                 if (contentScaleHeight < getContentScaleTransform().getY()
                         && getLayoutBounds().getHeight() > 0 && partOfSceneGraph) {
                     getContentScaleTransform().setY(contentScaleHeight);
 
-                    applyScaleY = true;
                 }
             }
         }
@@ -357,41 +336,35 @@ public class ScalableContentPane extends Region {
             }
         };
 
-        final ChangeListener<Number> numberListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-                if (isAutoRescale()) {
-                    setNeedsLayout(false);
-                    getContent().requestLayout();
-                    requestLayout();
-                }
+        final ChangeListener<Number> numberListener = (ov, oldValue, newValue) -> {
+            if (isAutoRescale()) {
+                setNeedsLayout(false);
+                getContent().requestLayout();
+                requestLayout();
             }
         };
 
-        getContent().getChildren().addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends Node> c) {
-
-                while (c.next()) {
-                    if (c.wasPermutated()) {
-                        for (int i = c.getFrom(); i < c.getTo(); ++i) {
-                            //permutate
+        getContent().getChildren().addListener(
+                (ListChangeListener.Change<? extends Node> c) -> {
+            while (c.next()) {
+                if (c.wasPermutated()) {
+                    for (int i = c.getFrom(); i < c.getTo(); ++i) {
+                        //permutate
+                    }
+                } else if (c.wasUpdated()) {
+                    //update item
+                } else {
+                    if (c.wasRemoved()) {
+                        for (Node n : c.getRemoved()) {
+                            n.boundsInLocalProperty().removeListener(boundsListener);
+                            n.layoutXProperty().removeListener(numberListener);
+                            n.layoutYProperty().removeListener(numberListener);
                         }
-                    } else if (c.wasUpdated()) {
-                        //update item
-                    } else {
-                        if (c.wasRemoved()) {
-                            for (Node n : c.getRemoved()) {
-                                n.boundsInLocalProperty().removeListener(boundsListener);
-                                n.layoutXProperty().removeListener(numberListener);
-                                n.layoutYProperty().removeListener(numberListener);
-                            }
-                        } else if (c.wasAdded()) {
-                            for (Node n : c.getAddedSubList()) {
-                                n.boundsInLocalProperty().addListener(boundsListener);
-                                n.layoutXProperty().addListener(numberListener);
-                                n.layoutYProperty().addListener(numberListener);
-                            }
+                    } else if (c.wasAdded()) {
+                        for (Node n : c.getAddedSubList()) {
+                            n.boundsInLocalProperty().addListener(boundsListener);
+                            n.layoutXProperty().addListener(numberListener);
+                            n.layoutYProperty().addListener(numberListener);
                         }
                     }
                 }

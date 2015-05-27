@@ -508,7 +508,7 @@ public final class FlowNodeWindow extends Window {
     final void setEditableState(boolean b) {
         setCloseableState(b);
         setMinimizableState(b);
-        setSelectable(b);
+//        setSelectable(b);
     }
 
     /**

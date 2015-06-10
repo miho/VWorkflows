@@ -158,6 +158,13 @@ public class FXFlowNodeSkin
 
         for (Connector connector : getModel().getConnectors()) {
             addConnector(connector);
+//
+//            if (connector.isInput()) {
+//                connectorToIndexMap.put(connector, TOP);
+//            } else {
+//                connectorToIndexMap.put(connector, BOTTOM);
+//            }
+
         }
 
         getModel().getConnectors().addListener(new ListChangeListener<Connector>() {
@@ -922,7 +929,7 @@ public class FXFlowNodeSkin
         };
 
         modelWidthListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {
-            node.setPrefWidth(newVal.doubleValue());    
+            node.setPrefWidth(newVal.doubleValue());
         };
 
         modelHeightListener = (ObservableValue<? extends Number> ov, Number oldVal, Number newVal) -> {

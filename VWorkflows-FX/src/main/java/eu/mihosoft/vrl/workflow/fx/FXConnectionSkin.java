@@ -35,6 +35,13 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import com.sun.javafx.Utils;
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.Path2D;
+import com.sun.javafx.geom.Rectangle;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.sg.prism.NGShape;
+import com.sun.javafx.tk.Toolkit;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
@@ -49,7 +56,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
@@ -63,6 +69,9 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.shape.StrokeType;
 import jfxtras.scene.control.window.Window;
 //import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.event.MouseControlUtil;
@@ -114,7 +123,78 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         moveTo = new MoveTo();
         lineTo = new LineTo();
         curveTo = new CubicCurveTo();
-        connectionPath = new Path(moveTo, curveTo);
+        
+        // TODO improve connection mouse events without internal api
+        connectionPath = new Path(moveTo, curveTo) {
+
+            private final float mouseEventShapeWidth = 10;
+
+            @Override
+            protected boolean impl_computeContains(double localX, double localY) {
+
+                if (impl_mode == NGShape.Mode.EMPTY) {
+                    return false;
+                }
+
+                boolean includeShape = (impl_mode != NGShape.Mode.STROKE);
+                boolean includeStroke = (impl_mode != NGShape.Mode.FILL);
+                if (includeStroke && includeShape
+                        && (getStrokeType() == StrokeType.INSIDE)) {
+                    includeStroke = false;
+                }
+
+                Path2D s = impl_configShape();
+
+                if (includeShape) {
+                    if (s.contains((float) localX, (float) localY)) {
+                        return true;
+                    }
+                }
+
+                if (includeStroke) {
+                    StrokeType type = getStrokeType();
+                    double sw = Utils.clampMin(getStrokeWidth(),
+                            Math.max(mouseEventShapeWidth, getStrokeWidth()));
+                    StrokeLineCap cap = getStrokeLineCap();
+                    StrokeLineJoin join = getStrokeLineJoin();
+                    float miterlimit
+                            = (float) Utils.clampMin(getStrokeMiterLimit(), 1.0f);
+                    // Note that we ignore dashing for computing bounds and testing
+                    // point containment, both to save time in bounds calculations
+                    // and so that animated dashing does not keep perturbing the bounds...
+                    return Toolkit.getToolkit().strokeContains(s, localX, localY,
+                            type, sw, cap,
+                            join, miterlimit);
+                }
+
+                return false;
+            }
+
+            @Override
+            public BaseBounds impl_computeGeomBounds(BaseBounds bounds, BaseTransform tx) {
+                BaseBounds result = super.impl_computeGeomBounds(bounds, tx);
+
+                if (result.getWidth() < mouseEventShapeWidth) {
+                    result = result.deriveWithNewBounds(new Rectangle(
+                            (int) (bounds.getMinX() - mouseEventShapeWidth * 0.5),
+                            (int) bounds.getMinY(),
+                            (int) (mouseEventShapeWidth),
+                            (int) bounds.getHeight())
+                    );
+                }
+
+                if (result.getHeight() < mouseEventShapeWidth) {
+                    result = result.deriveWithNewBounds(new Rectangle(
+                            (int) bounds.getMinX(),
+                            (int) (bounds.getMinY() - mouseEventShapeWidth * 0.5),
+                            (int) bounds.getWidth(),
+                            (int) (mouseEventShapeWidth))
+                    );
+                }
+
+                return result;
+            }
+        };
 
         init();
         initVReqListeners();
@@ -130,14 +210,13 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     private void init() {
-        
+
         // we enable node caching for the whole connection
 //        connectionPath.setCache(true);
 //        connectionPath.setCacheHint(CacheHint.SPEED);
 //        
 //        receiverConnectorUI.setCache(true);
 //        receiverConnectorUI.setCacheHint(CacheHint.SPEED);
-
         styleInit();
 
 //        connectionPath.setFill(new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.2));

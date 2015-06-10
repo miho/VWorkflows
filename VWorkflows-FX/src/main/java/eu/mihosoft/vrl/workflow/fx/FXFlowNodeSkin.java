@@ -309,11 +309,7 @@ public class FXFlowNodeSkin
                 = c.getVisualizationRequest().
                 get(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT);
 
-        boolean switchEdges = false;
-
-        if (autoLayout.isPresent()) {
-            switchEdges = autoLayout.get();
-        }
+        boolean switchEdges = autoLayout.orElse(false);
 
         Circle connectorShape = (Circle) connectors.get(c);
 

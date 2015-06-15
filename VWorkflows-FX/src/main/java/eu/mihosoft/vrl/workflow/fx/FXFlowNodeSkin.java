@@ -36,6 +36,7 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
@@ -50,6 +51,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -305,6 +308,7 @@ public class FXFlowNodeSkin
     }
 
     void layoutConnectors() {
+        
         for (Connector c : connectorList) {
 
             layoutConnector(c, false);
@@ -975,6 +979,11 @@ public class FXFlowNodeSkin
         node.prefHeightProperty().addListener(nodeHeightListener);
 
         initVReqListeners();
+        
+        if (flowNode instanceof VFlowModel) {
+            // 15.06.2015 TODO: #issue 26, maybe we need to register an 
+            // additional listener that updates the connector layout
+        }
 
     }
 

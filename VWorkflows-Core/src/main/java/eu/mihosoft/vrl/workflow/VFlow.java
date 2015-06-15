@@ -340,7 +340,7 @@ public interface VFlow {
      */
     public IdGenerator getIdGenerator();
 
-
+    
     public List<VNodeSkin> getNodeSkinsById(String id);
 
     public FlowNodeSkinLookup getNodeSkinLookup();

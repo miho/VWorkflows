@@ -694,6 +694,18 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        startConnector.toBack();
         getReceiverUI().toFront();
         connectionPath.toBack();
+        
+        final FXFlowNodeSkin senderSkin = 
+                (FXFlowNodeSkin) getController().getNodeSkinLookup().
+                        getById(skinFactory, connection.getSender().getId());
+        
+        FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().
+                getNodeSkinLookup().getById(skinFactory,
+                        connection.getReceiver().getId());
+        
+        senderSkin.layoutConnectors();
+        receiverSkin.layoutConnectors();
+        
     }
 
     @Override

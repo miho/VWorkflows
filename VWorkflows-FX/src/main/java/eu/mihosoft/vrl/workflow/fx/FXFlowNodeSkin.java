@@ -308,7 +308,7 @@ public class FXFlowNodeSkin
     }
 
     void layoutConnectors() {
-        
+
         for (Connector c : connectorList) {
 
             layoutConnector(c, false);
@@ -321,11 +321,7 @@ public class FXFlowNodeSkin
                 = c.getVisualizationRequest().
                 get(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT);
 
-        boolean switchEdges = false;
-
-        if (autoLayout.isPresent()) {
-            switchEdges = autoLayout.get();
-        }
+        boolean switchEdges = autoLayout.orElse(false);
 
         Circle connectorShape = (Circle) connectors.get(c);
 
@@ -335,11 +331,34 @@ public class FXFlowNodeSkin
         Collection<Connection> conns = getModel().getFlow().
                 getConnections(c.getType()).getAllWith(c);
 
+        Pair<Integer, Integer> edges = new Pair<>(LEFT, RIGHT);
+
+        Optional<Boolean> preferTD = c.getVisualizationRequest().
+                get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
+        boolean preferTopDown = preferTD.orElse(false);
+
+        if (preferTopDown && conns.isEmpty()) {
+            int oldEdgeIndex = connectorToIndexMap.get(c);
+
+            int newEdgeIndex = c.isInput() ? TOP : BOTTOM;
+
+            connectorShape.setLayoutX(computeConnectorXValue(c));
+            connectorShape.setLayoutY(computeConnectorYValue(c));
+
+            if (newEdgeIndex != oldEdgeIndex) {
+
+                shapeLists.get(oldEdgeIndex).remove(connectorShape);
+                shapeLists.get(newEdgeIndex).add(connectorShape);
+                connectorToIndexMap.put(c, newEdgeIndex);
+
+                // update all other connectors
+                layoutConnectors();
+            }
+        }
+
         if (conns.isEmpty()) {
             return;
         }
-
-        Pair<Integer, Integer> edges = new Pair<>(LEFT, RIGHT);
 
         if (switchEdges) {
             List<Pair<Integer, Integer>> edgesList
@@ -381,7 +400,6 @@ public class FXFlowNodeSkin
                 } else if (newEdgeIndex == BOTTOM) {
                     newEdgeIndex = LEFT;
                 }
-
             } else {
                 newEdgeIndex = edges.getFirst();
 
@@ -402,12 +420,11 @@ public class FXFlowNodeSkin
                 // update all other connectors
                 layoutConnectors();
             }
-        } // end if switchEdges
+        } // end if switchEdges 
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
         connectorShape.setLayoutY(computeConnectorYValue(c));
 
-//        System.out.println("c: " + c);
         if (updateOthers) {
             for (Connection connection : conns) {
 
@@ -462,6 +479,8 @@ public class FXFlowNodeSkin
         double numConnectors = shapeLists.get(edgeIndex).size();
 
         int connectorIndex = shapeLists.get(edgeIndex).indexOf(connectorNode);
+
+        System.out.println("INDEX: " + connectorIndex + ", " + connector.isInput());
 
         double totalWidth = numConnectors * connectorWidth
                 + (numConnectors - 1) * gap;
@@ -532,14 +551,20 @@ public class FXFlowNodeSkin
 
         connectors.put(connector, connectorNode);
 
+        Optional<Boolean> preferTD = connector.getVisualizationRequest().
+                get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
+        boolean preferTopDown = preferTD.orElse(false);
+        int inputDefault = preferTopDown ? TOP : LEFT;
+        int outputDefault = preferTopDown ? BOTTOM : RIGHT;
+
         if (connector.isInput()) {
 //            inputList.add(connectorNode);
-            shapeLists.get(LEFT).add(connectorNode);
-            connectorToIndexMap.put(connector, LEFT);
+            shapeLists.get(inputDefault).add(connectorNode);
+            connectorToIndexMap.put(connector, inputDefault);
         } else if (connector.isOutput()) {
 //            outputList.add(connectorNode);
-            shapeLists.get(RIGHT).add(connectorNode);
-            connectorToIndexMap.put(connector, RIGHT);
+            shapeLists.get(outputDefault).add(connectorNode);
+            connectorToIndexMap.put(connector, outputDefault);
         }
 
         node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
@@ -979,7 +1004,7 @@ public class FXFlowNodeSkin
         node.prefHeightProperty().addListener(nodeHeightListener);
 
         initVReqListeners();
-        
+
         if (flowNode instanceof VFlowModel) {
             // 15.06.2015 TODO: #issue 26, maybe we need to register an 
             // additional listener that updates the connector layout

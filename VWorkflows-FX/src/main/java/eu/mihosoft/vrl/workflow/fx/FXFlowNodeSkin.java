@@ -480,8 +480,6 @@ public class FXFlowNodeSkin
 
         int connectorIndex = shapeLists.get(edgeIndex).indexOf(connectorNode);
 
-        System.out.println("INDEX: " + connectorIndex + ", " + connector.isInput());
-
         double totalWidth = numConnectors * connectorWidth
                 + (numConnectors - 1) * gap;
 

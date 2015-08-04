@@ -6,17 +6,6 @@
         Purpose of the stylesheet follows.
 */
 
-/*.connector {
-        -fx-fill : radial-gradient(center 50% 25%,
-                                   radius 75%,
-                                   rgb(122,255,77) 0%,
-                                   rgb(0,102,0) 100%);
-
-        -fx-effect: dropshadow(gaussian,
-                               rgba(0, 0, 0, 0.65),
-                               10, 0.0, 5, 5);
-}*/
-
 .vflow-background {
     -fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));
 }
@@ -70,12 +59,10 @@
     -fx-background-insets: 2 2 -2 2;
 
     -fx-alignment: center;
-
-    /*-fx-stroke: rgba(255,255,255,50);*/
     -fx-fill: rgba(255,255,255,50);
 }
 
-.scroll-pane > .viewport {
+.scroll-pane .viewport {
    -fx-background-color: transparent;
 }
 

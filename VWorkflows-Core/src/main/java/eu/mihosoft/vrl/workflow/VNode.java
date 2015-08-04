@@ -125,6 +125,8 @@ public interface VNode extends Model, Selectable {
     public Connector addOutput(String type);
 
     public Connector addConnector(Connector c);
+    
+    public boolean removeConnector(Connector c);
 
 //    ObservableList<String> getInputTypes();
 //

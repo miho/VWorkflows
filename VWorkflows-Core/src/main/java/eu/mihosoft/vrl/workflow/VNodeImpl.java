@@ -565,4 +565,9 @@ class VNodeImpl implements VNode {
         return vReqProperty != null;
     }
 
+    @Override
+    public boolean removeConnector(Connector c) {
+        return this.connectors.remove(c);
+    }
+
 }

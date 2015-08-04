@@ -575,4 +575,9 @@ class VFlowModelImpl implements VFlowModel {
     public ObservableList<ThruConnector> getThruOutputs() {
         return this.unmodifiableThruOutputs;
     }
+
+    @Override
+    public boolean removeConnector(Connector c) {
+        return this.node.removeConnector(c);
+    }
 }

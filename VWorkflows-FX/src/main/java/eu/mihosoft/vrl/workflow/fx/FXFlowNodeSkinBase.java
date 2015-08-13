@@ -32,8 +32,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.VFlow;
@@ -43,11 +42,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+
 /**
  * Custom flownode skin. In addition to the basic node visualization from
  * VWorkflows this skin adds custom visualization of value objects.
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
 
@@ -73,22 +73,27 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
     private void init() {
 
         // update the view (uses value object of the model)
-        updateView();
-
+//        updateView();
         valueChangeListener = (
                 ObservableValue<? extends Object> ov, Object t, Object t1) -> {
-            updateView();
-        };
+                    updateView();
+                };
 
         // registers listener to update view if new value object has been defined
         getModel().getValueObject().valueProperty().
                 addListener(valueChangeListener);
     }
 
+    @Override
+    public void add() {
+        super.add();
+        updateView();
+    }
+
     public void updateView() {
         // no default implementation
     }
-    
+
     protected void updateViewSample() {
         // we don't create custom view for flows
         if (getModel() instanceof VFlowModel) {
@@ -110,15 +115,15 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
 
     @Override
     public void remove() {
-        
+
         // we remove the listener since we are going to be removed from the scene graph
         getModel().getValueObject().valueProperty().removeListener(valueChangeListener);
-        
+
         if (getNode() instanceof FlowNodeWindow) {
             FlowNodeWindow window = (FlowNodeWindow) getNode();
             window.onRemovedFromSceneGraph();
         }
-        
+
         super.remove();
     }
 }

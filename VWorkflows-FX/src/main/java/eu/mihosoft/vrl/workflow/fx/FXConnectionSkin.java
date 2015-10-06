@@ -84,8 +84,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Node lastNode;
 
     private final FXSkinFactory skinFactory;
-    private Shape senderNode;
-    private Shape receiverNode;
+    private ConnectorCircle senderNode;
+    private ConnectorCircle receiverNode;
     private ConnectionListener connectionListener;
 
     private boolean receiverDraggingStarted = false;
@@ -133,7 +133,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         connection.getSender().getId());
 
         // retrieve the sender node from its skin
-        senderNode = (Shape) senderSkin.getConnectorNodeByReference(
+        senderNode = (ConnectorCircle) senderSkin.getConnectorNodeByReference(
                 connection.getSender());
 
         // find the receiver skin via lookup
@@ -143,7 +143,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         connection.getReceiver().getId());
 
         // retrieve the receiver node from its skin
-        receiverNode = (Shape) receiverSkin.
+        receiverNode = (ConnectorCircle) receiverSkin.
                 getConnectorNodeByReference(connection.getReceiver());
 
         // if we establish a connection between different flows
@@ -625,18 +625,18 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     /**
      * @return the senderNode
      */
-    public Shape getSenderNode() {
+    public ConnectorCircle getSenderNode() {
         return senderNode;
     }
 
     /**
      * @return the receiverNode
      */
-    public Shape getReceiverNode() {
+    public Node getReceiverNode() {
         return receiverNode;
     }
 
-    private void createIntermediateConnection(Shape senderNode, Shape receiverNode, Connection connection) {
+    private void createIntermediateConnection(ConnectorCircle senderNode, ConnectorCircle receiverNode, Connection connection) {
         VNode sender = connection.getSender().getNode();
         VNode receiver = connection.getReceiver().getNode();
 

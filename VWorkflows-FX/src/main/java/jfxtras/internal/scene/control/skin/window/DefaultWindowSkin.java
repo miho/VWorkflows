@@ -30,6 +30,8 @@ import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -225,15 +227,26 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 });
 
         root.getChildren().add(control.getContentPane());
+
         control.getContentPane().setManaged(false);
 
-        control.contentPaneProperty().addListener(
-                (ObservableValue<? extends Pane> ov,
-                        Pane oldValue, Pane newValue) -> {
-                    root.getChildren().remove(oldValue);
-                    root.getChildren().add(newValue);
-                    newValue.setManaged(false);
-                });
+//        InvalidationListener contentLayoutListener = (ov) -> {
+//            
+//            control.autosize();
+//            root.autosize();
+//        };
+//
+//        control.getContentPane().needsLayoutProperty().addListener(contentLayoutListener);
+//
+//        control.contentPaneProperty().addListener(
+//                (ObservableValue<? extends Pane> ov,
+//                        Pane oldValue, Pane newValue) -> {
+//                    root.getChildren().remove(oldValue);
+//                    root.getChildren().add(newValue);
+//                    newValue.setManaged(false);
+//                    newValue.needsLayoutProperty().
+//                    addListener(contentLayoutListener);
+//                });
 
         titleBar.setStyle(control.getStyle());
 
@@ -474,6 +487,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         });
 
         getSkinnable().onMouseMovedProperty().set((MouseEvent t) -> {
+
             if (control.isMinimized() || !control.isResizableWindow()) {
 
                 RESIZE_TOP = false;
@@ -674,14 +688,18 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 getSkinnable().getInsets().getLeft(),
                 titleBar.prefHeight(-1));
 
-        double contentWidth = root.getWidth() - leftAndRight;
-        double contentHeight = root.getHeight() - getSkinnable().getInsets().
+        double rootW = root.getWidth(); //Math.max(root.getWidth(), root.getMinWidth());
+        double rootH = root.getHeight();//Math.max(root.getHeight(), root.getMinHeight());
+
+        double contentWidth = rootW - leftAndRight;
+        double contentHeight = rootH - getSkinnable().getInsets().
                 getBottom() - titleBar.prefHeight(-1);
 
         control.getContentPane().resize(
                 contentWidth,
                 contentHeight);
-
+        
+        
     }
 
     @Override
@@ -898,6 +916,7 @@ class TitleBar extends HBox {
             getLabel().setText("...");
         }
 
+        // TODO replace with official API
         labelWidth = com.sun.javafx.tk.Toolkit.getToolkit().getFontLoader().
                 computeStringWidth(title, label.getFont());
 

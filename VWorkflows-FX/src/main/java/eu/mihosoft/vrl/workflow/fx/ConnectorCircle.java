@@ -32,53 +32,59 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
-import javafx.scene.CacheHint;
-import javafx.scene.shape.Circle;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.layout.Region;
 
 /**
  * Circle node that represents a connector.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class ConnectorCircle extends Circle {
-
+class ConnectorCircle extends Region {
+    
     private Connector connector;
     private final VFlow flow;
     private final FXSkinFactory skinFactory;
     private FXConnectionSkin connectionSkin;
-
+    private DoubleProperty radiusProperty = new SimpleDoubleProperty();
+    
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector) {
         setConnector(connector);
         this.flow = flow;
         this.skinFactory = skinFactory;
     }
-
+    
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector, double radius) {
-        super(radius);
+        radiusProperty.set(radius);
         setConnector(connector);
         this.flow = flow;
         this.skinFactory = skinFactory;
-
+        
         init();
     }
-
+    
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory) {
         this.flow = flow;
         this.skinFactory = skinFactory;
         init();
     }
-
+    
     private void init() {
         this.getStyleClass().add("vnode-connector");
         this.setManaged(false);
+        this.prefWidthProperty().bind(radiusProperty());
+        
+        prefWidthProperty().addListener((ov,oldV,newV)-> {
+            resize(newV.doubleValue(), newV.doubleValue());
+        });
     }
 
     /**
@@ -93,25 +99,25 @@ class ConnectorCircle extends Circle {
      */
     public final void setConnector(Connector connector) {
         
-        if (getConnector()!=null) {
-            getStyleClass().remove("vnode-connector-"+getConnector().getType());
+        if (getConnector() != null) {
+            getStyleClass().remove("vnode-connector-" + getConnector().getType());
         }
         
         this.connector = connector;
         
-        if (getConnector()!=null) {
-            getStyleClass().add("vnode-connector-"+getConnector().getType());
+        if (getConnector() != null) {
+            getStyleClass().add("vnode-connector-" + getConnector().getType());
         }
         
     }
-
+    
     private void moveConnectionReceiverToFront() {
         connectionSkin = null;
-
+        
         if (connector.isInput() && flow.getConnections(connector.getType()).isInputConnected(connector)) {
             for (Connection conn : flow.getConnections(connector.getType()).getConnections()) {
                 ConnectionSkin skinI = flow.getNodeSkinLookup().getById(skinFactory, conn);
-
+                
                 if (skinI instanceof FXConnectionSkin) {
                     FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
                     connectionSkin = fxSkin;
@@ -120,10 +126,25 @@ class ConnectorCircle extends Circle {
             }
         }
     }
-
+    
     @Override
     public void toFront() {
         super.toFront();
         moveConnectionReceiverToFront();
+    }
+
+    /**
+     * @return the radiusProperty
+     */
+    public DoubleProperty radiusProperty() {
+        return radiusProperty;
+    }
+    
+    public void setRadius(double radius) {
+        radiusProperty().set(radius);
+    }
+    
+    public double getRadius() {
+        return radiusProperty().get();
     }
 }

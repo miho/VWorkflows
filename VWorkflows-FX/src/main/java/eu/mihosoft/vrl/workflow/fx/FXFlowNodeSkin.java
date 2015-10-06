@@ -96,8 +96,8 @@ public class FXFlowNodeSkin
     private MouseEvent newConnectionPressEvent;
     private boolean removeSkinOnly = false;
     VFlow controller;
-    Map<Connector, Shape> connectors = new HashMap<>();
-    List<List<Shape>> shapeLists = new ArrayList<>();
+    Map<Connector, ConnectorCircle> connectors = new HashMap<>();
+    List<List<ConnectorCircle>> shapeLists = new ArrayList<>();
     private final Map<Connector, Integer> connectorToIndexMap = new HashMap<>();
     private final FXSkinFactory skinFactory;
     private final List<Double> connectorSizes = new ArrayList<>();
@@ -256,7 +256,7 @@ public class FXFlowNodeSkin
         node.setResizableWindow(!notEditable);
         node.setEditableState(!notEditable);
 
-        for (Shape connectorShape : connectors.values()) {
+        for (ConnectorCircle connectorShape : connectors.values()) {
             connectorShape.setMouseTransparent(notEditable);
         }
 
@@ -311,7 +311,7 @@ public class FXFlowNodeSkin
 
         boolean switchEdges = autoLayout.orElse(false);
 
-        Circle connectorShape = (Circle) connectors.get(c);
+        ConnectorCircle connectorShape = connectors.get(c);
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
         connectorShape.setLayoutY(computeConnectorYValue(c));
@@ -390,6 +390,7 @@ public class FXFlowNodeSkin
 
         connectorShape.setLayoutX(computeConnectorXValue(c));
         connectorShape.setLayoutY(computeConnectorYValue(c));
+        
 
 //        System.out.println("c: " + c);
         if (updateOthers) {
@@ -420,7 +421,7 @@ public class FXFlowNodeSkin
 
     private double computeConnectorXValue(Connector connector) {
 
-        Shape connectorNode = connectors.get(connector);
+        ConnectorCircle connectorNode = connectors.get(connector);
 
         double posX = node.getLayoutX();
 
@@ -462,7 +463,7 @@ public class FXFlowNodeSkin
 
     private double computeConnectorYValue(Connector connector) {
 
-        Shape connectorNode = connectors.get(connector);
+        ConnectorCircle connectorNode = connectors.get(connector);
 
         double posY = node.getLayoutY();
 
@@ -511,7 +512,7 @@ public class FXFlowNodeSkin
         ConnectorCircle circle = new ConnectorCircle(controller,
                 getSkinFactory(), connector, 20);
 
-        final Circle connectorNode = circle;
+        final ConnectorCircle connectorNode = circle;
         connectorNode.setManaged(false);
 
         connectors.put(connector, connectorNode);
@@ -630,7 +631,7 @@ public class FXFlowNodeSkin
         connectorSizes.clear();
 
         for (int i = 0; i < shapeLists.size(); i++) {
-            List<Shape> shapeList = shapeLists.get(i);
+            List<ConnectorCircle> shapeList = shapeLists.get(i);
 
             double connectorHeight = 
                     computeConnectorSize(inset, shapeList.size());
@@ -773,12 +774,12 @@ public class FXFlowNodeSkin
         }
 
         for (int i = 0; i < connectorSizes.size(); i++) {
-            for (Shape connector : shapeLists.get(i)) {
+            for (ConnectorCircle connector : shapeLists.get(i)) {
                 double size = connectorSizes.get(i);
 
-                if (connector instanceof Circle) {
+                if (connector instanceof ConnectorCircle) {
 
-                    ((Circle) connector).setRadius(
+                    ((ConnectorCircle) connector).setRadius(
                             Math.min(size * 0.5, maxConnectorSize * 0.5));
                 }
             }

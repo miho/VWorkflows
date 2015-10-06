@@ -130,7 +130,7 @@ class FXConnectorUtil {
         return new SelectedConnector(myNode, connector);
     }
 
-    public static void connnectionEstablishedAnim(Shape receiverUI) {
+    public static void connnectionEstablishedAnim(Node receiverUI) {
         Timeline timeline = new Timeline();
 //        timeline.setAutoReverse(true);
 //        timeline.setCycleCount(Timeline.INDEFINITE);

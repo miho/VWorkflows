@@ -70,7 +70,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private CubicCurveTo curveTo = new CubicCurveTo();
 //    private Shape startConnector;
     private Circle receiverConnectorUI;
-    private Circle senderConnectorUI;
+    private ConnectorCircle senderConnectorUI;
     private VFlowModel flow;
     private VFlow flowController;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
@@ -118,7 +118,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         final Node senderNode = senderSkin.
                 getConnectorNodeByReference(getSender());
 
-        senderConnectorUI = (Circle) senderNode;
+        senderConnectorUI = (ConnectorCircle) senderNode;
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {

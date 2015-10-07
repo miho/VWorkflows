@@ -17,27 +17,32 @@
 }
 
 .vnode-connector {
-    -fx-fill: rgba(0,0,0,0.75);
+    -fx-background-color: rgba(0,0,0,0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
     -fx-stroke-width: 3px; 
+    -fx-border-color: rgba(120, 140, 255, 0.72);
+    -fx-shape: "m 187.92089,378.88528 a 12.94066,12.94066 0 0 1 -12.94067,12.94066 12.94066,12.94066 0 0 1 -12.94066,-12.94066 12.94066,12.94066 0 0 1 12.94066,-12.94066 12.94066,12.94066 0 0 1 12.94067,12.94066 z"
 }
 
 .vnode-connector-control {
-    -fx-fill: rgba(255,255,0,0.75);
+    -fx-background-color: rgba(255,255,0,0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
     -fx-stroke-width: 3px; 
+    -fx-border-color: rgba(255,255,0,0.75);
 }
 
 .vnode-connector-event {
-    -fx-fill: rgba(255,100,255,0.75);
+    -fx-background-color: rgba(255,100,255,0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
     -fx-stroke-width: 3px; 
+    -fx-border-color: rgba(255,100,255,0.75);
 }
 
 .vnode-connector-data {
-    -fx-fill: rgba(10,10,10,0.75);
+    -fx-background-color: rgba(10,10,10,0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
     -fx-stroke-width: 3px; 
+    -fx-border-color: rgba(10,10,10,0.75);
 }
 
 .vnode-connection {

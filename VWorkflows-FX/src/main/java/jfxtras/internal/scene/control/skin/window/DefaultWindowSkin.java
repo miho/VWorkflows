@@ -194,9 +194,9 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                                     Status oldStatus, Status newStatus) -> {
                                 if (newStatus == Status.STOPPED) {
 
-                                    // restore cache hint
-                                    getSkinnable().setCache(true);
-                                    getSkinnable().setCacheHint(CacheHint.SPEED);
+//                                    // restore cache hint
+//                                    getSkinnable().setCache(true);
+//                                    getSkinnable().setCacheHint(CacheHint.SPEED);
 
                                     minimizeTimeLine = null;
                                     if (newValue) {
@@ -206,8 +206,8 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                             });
 
                     // temporarily disable cache hint due to rendering bugs
-                    getSkinnable().setCache(false);
-                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+//                    getSkinnable().setCache(false);
+//                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
 
                     minimizeTimeLine.play();
                 });
@@ -313,9 +313,12 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                     }
                 });
 
-        // we enable node caching for the whole window
-        getSkinnable().setCache(true);
         getSkinnable().setCacheHint(CacheHint.SPEED);
+
+        // counter intuitive caching (see http://bit.ly/1MemgLz why)
+        control.resizingProperty().addListener((ov)-> {
+            control.setCache(!control.isResizing());
+        });
 
     }
 
@@ -469,13 +472,13 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                     }
                 }
 
-                if (RESIZE_BOTTOM || RESIZE_TOP || RESIZE_LEFT || RESIZE_RIGHT) {
-                    getSkinnable().setCache(false);
-
-                } else {
-                    getSkinnable().setCache(true);
-                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
-                }
+//                if (RESIZE_BOTTOM || RESIZE_TOP || RESIZE_LEFT || RESIZE_RIGHT) {
+//                    getSkinnable().setCache(false);
+//
+//                } else {
+//                    getSkinnable().setCache(true);
+//                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+//                }
             }
 
             mouseX = event.getSceneX();

@@ -140,16 +140,16 @@ public class FXFlowNodeSkin
                 });
 
         flowNodeWindow.resizingProperty().addListener((ov) -> {
-            System.out.println("resizing: " + flowNodeWindow.isResizing());
+//            System.out.println("resizing: " + flowNodeWindow.isResizing());
             connectors.values().forEach(cShape -> {
                 
                 cShape.setCache(!flowNodeWindow.isResizing());
             });
         });
         
-        flowNodeWindow.cacheProperty().addListener((ov)->{
-            System.out.println("w-cached: " + flowNodeWindow.isCache());
-        });
+//        flowNodeWindow.cacheProperty().addListener((ov)->{
+//            System.out.println("w-cached: " + flowNodeWindow.isCache());
+//        });
 
         return flowNodeWindow;
     }

@@ -115,36 +115,39 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().
                 getNodeSkinLookup().getById(skinFactory, sender.getId());
         
-        final Node senderNode = senderSkin.
+        final ConnectorCircle senderNode = (ConnectorCircle)senderSkin.
                 getConnectorNodeByReference(getSender());
 
         senderConnectorUI = (ConnectorCircle) senderNode;
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutXProperty());
+                super.bind(senderNode.layoutXProperty(),
+                        senderNode.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return senderNode.getLayoutX();
+                return senderNode.getLayoutX()
+                        + senderNode.getRadius() * 0.5;
 
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutYProperty());
+                super.bind(senderNode.layoutYProperty(),
+                        senderNode.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
-                return senderNode.getLayoutY();
+                return senderNode.getLayoutY()
+                        + senderNode.getRadius() * 0.5;
             }
         };
+
 
         DoubleBinding controlX1Binding = new DoubleBinding() {
             {
@@ -215,7 +218,8 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         curveTo.controlY1Property().bind(controlY1Binding);
         curveTo.controlX2Property().bind(controlX2Binding);
         curveTo.controlY2Property().bind(controlY2Binding);
-        curveTo.xProperty().bind(receiverConnectorUI.layoutXProperty());
+        curveTo.xProperty().bind(
+                receiverConnectorUI.layoutXProperty());
         curveTo.yProperty().bind(receiverConnectorUI.layoutYProperty());
 
         makeDraggable();

@@ -41,6 +41,7 @@ import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.CacheHint;
 import javafx.scene.layout.Region;
 
 /**
@@ -79,10 +80,13 @@ class ConnectorCircle extends Region {
     
     private void init() {
         this.getStyleClass().add("vnode-connector");
-        this.setManaged(false);
+        this.setManaged(true);
+        setCacheShape(true);
+        setCache(true);
+        setCacheHint(CacheHint.SPEED);
         this.prefWidthProperty().bind(radiusProperty());
         
-        prefWidthProperty().addListener((ov,oldV,newV)-> {
+        radiusProperty().addListener((ov,oldV,newV)-> {
             resize(newV.doubleValue(), newV.doubleValue());
         });
     }

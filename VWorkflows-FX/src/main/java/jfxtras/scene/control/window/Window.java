@@ -29,9 +29,12 @@ package jfxtras.scene.control.window;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.animation.Animation;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -167,6 +170,9 @@ public class Window extends Control implements SelectableNode {
 
     private StyleableObjectProperty<Paint> selectionBorderColor;
 
+    private final BooleanProperty movingProperty = new SimpleBooleanProperty();
+    private final BooleanProperty resizingProperty = new SimpleBooleanProperty();
+
     public Paint getSelectionBorderColor() {
         return selectionBorderColor == null ? new Color(0.3, 0.7, 1.0, 1.0) : selectionBorderColor.get();
     }
@@ -210,31 +216,31 @@ public class Window extends Control implements SelectableNode {
         private static final CssMetaData< Window, Paint> SELECTION_BORDER_COLOR
                 = new CssMetaData< Window, Paint>("-fx-selection-border-color",
                         StyleConverter.getPaintConverter(), Color.GRAY) {
-                    @Override
-                    public boolean isSettable(Window control) {
-                        return control.selectionBorderColor == null
+            @Override
+            public boolean isSettable(Window control) {
+                return control.selectionBorderColor == null
                         || !control.selectionBorderColor.isBound();
-                    }
+            }
 
-                    @Override
-                    public StyleableProperty<Paint> getStyleableProperty(Window control) {
-                        return control.selectionBorderColorProperty();
-                    }
-                };
+            @Override
+            public StyleableProperty<Paint> getStyleableProperty(Window control) {
+                return control.selectionBorderColorProperty();
+            }
+        };
         private static final CssMetaData< Window, Boolean> SELECTION_EFFECT_ENABLED
                 = new CssMetaData< Window, Boolean>("-fx-selection-effect-enabled",
                         StyleConverter.getBooleanConverter(), true) {
-                    @Override
-                    public boolean isSettable(Window control) {
-                        return control.selectionBorderColor == null
+            @Override
+            public boolean isSettable(Window control) {
+                return control.selectionBorderColor == null
                         || !control.selectionBorderColor.isBound();
-                    }
+            }
 
-                    @Override
-                    public StyleableProperty<Boolean> getStyleableProperty(Window control) {
-                        return control.selectionEffectEnabledProperty();
-                    }
-                };
+            @Override
+            public StyleableProperty<Boolean> getStyleableProperty(Window control) {
+                return control.selectionEffectEnabledProperty();
+            }
+        };
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
         static {
@@ -327,6 +333,99 @@ public class Window extends Control implements SelectableNode {
             minimizeSelectedWindows(newValue);
         });
 
+        initializeMovingPropertyMonitor();
+        initializeResizingPropertyMonitor();
+
+    }
+
+    private void initializeResizingPropertyMonitor() {
+        // detects whether the window is currently moving
+        Timer[] timer = {new Timer(true)};
+        double[] wh = {0, 0};
+        boolean[] running = {false};
+        int[] cancelledTasks = {0};
+        InvalidationListener resizingListener = (ov) -> {
+
+            // purge cancelled tasks regularily to prevent memory leaks
+            if (cancelledTasks[0] > 1000) {
+                timer[0].purge();
+                cancelledTasks[0] = 0;
+            }
+
+            if (!running[0]) {
+                timer[0].scheduleAtFixedRate(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        running[0] = true;
+                        double w = getWidth();
+                        double h = getHeight();
+                        Platform.runLater(
+                                () -> {
+                                    resizingProperty.set(
+                                            w != wh[0] || h != wh[1]);
+
+                                    wh[0] = w;
+                                    wh[1] = h;
+                                    if (!isResizing()) {
+                                        cancel();
+                                        cancelledTasks[0]++;
+                                        running[0] = false;
+                                    }
+                                }
+                        );
+                    }
+                }, 0, 250);
+            }
+        };
+
+        widthProperty().addListener(resizingListener);
+        heightProperty().addListener(resizingListener);
+    }
+
+    private void initializeMovingPropertyMonitor() {
+        // detects whether the window is currently moving
+        Timer[] timer = {new Timer(true)};
+        double[] xy = {0, 0};
+        boolean[] running = {false};
+        int[] cancelledTasks = {0};
+        InvalidationListener movingListener = (ov) -> {
+
+            // purge cancelled tasks regularily to prevent memory leaks
+            if (cancelledTasks[0] > 1000) {
+                timer[0].purge();
+                cancelledTasks[0] = 0;
+            }
+
+            if (!running[0]) {
+                timer[0].scheduleAtFixedRate(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        running[0] = true;
+                        double x = getLayoutX();
+                        double y = getLayoutY();
+                        Platform.runLater(
+                                () -> {
+                                    movingProperty.set(
+                                            x != xy[0] || y != xy[1]);
+
+                                    xy[0] = x;
+                                    xy[1] = y;
+                                    if (!isMoving()) {
+                                        cancel();
+                                        cancelledTasks[0]++;
+                                        running[0] = false;
+                                    }
+                                }
+                        );
+                    }
+                }, 0, 250);
+            }
+        };
+
+        layoutXProperty().addListener(movingListener);
+        layoutYProperty().addListener(movingListener);
     }
 
     // TODO move from control to behavior class (a lot of other stuff here too)
@@ -352,13 +451,13 @@ public class Window extends Control implements SelectableNode {
             }
         } // end for sN
     }
-    
+
     public double minWidthWithTitle() {
         if (getSkin() instanceof DefaultWindowSkinSimplified) {
             DefaultWindowSkinSimplified skin = (DefaultWindowSkinSimplified) getSkin();
 //            return skin.computeMinWidth();
         }
-        
+
         return minWidth(0);
     }
 
@@ -367,7 +466,6 @@ public class Window extends Control implements SelectableNode {
         double result = super.computeMinWidth(height);
         return result;
     }
-
 
     // TODO move from control to behavior class (a lot of other stuff here too)
     private void minimizeSelectedWindows(boolean state) {
@@ -787,6 +885,7 @@ public class Window extends Control implements SelectableNode {
 
     /**
      * Defines whether this window is selectable.
+     *
      * @param selectable state to set
      */
     public void setSelectable(Boolean selectable) {
@@ -795,8 +894,9 @@ public class Window extends Control implements SelectableNode {
 
     /**
      * Indicates whether this window is selectable.
+     *
      * @return {@code true} if this window is selectable; {@code false}
-     *         otherwise
+     * otherwise
      */
     public boolean isSelectable() {
         return selectableProperty.get();
@@ -804,7 +904,7 @@ public class Window extends Control implements SelectableNode {
 
     /**
      * Indicates whether this window is selectable.
-     * 
+     *
      * @return the selectedProperty
      */
     @Override
@@ -819,6 +919,44 @@ public class Window extends Control implements SelectableNode {
     @Override
     public boolean isSelected() {
         return selectedProperty().get();
+    }
+
+    /**
+     * Indicates whether this window is currently moving.
+     *
+     * @return the movingProperty
+     */
+    public ReadOnlyBooleanProperty movingProperty() {
+        return movingProperty;
+    }
+
+    /**
+     * Indicates whether this window is currently moving.
+     *
+     * @return {@code} if this window is currently moving; {@code false}
+     * otherwise
+     */
+    public boolean isMoving() {
+        return movingProperty().get();
+    }
+
+    /**
+     * Indicates whether this window is currently resizing.
+     *
+     * @return the resizingProperty
+     */
+    public ReadOnlyBooleanProperty resizingProperty() {
+        return resizingProperty;
+    }
+
+    /**
+     * Indicates whether this window is currently resizing.
+     *
+     * @return {@code} if this window is currently resizing; {@code false}
+     * otherwise
+     */
+    public boolean isResizing() {
+        return resizingProperty().get();
     }
 
 }

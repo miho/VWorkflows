@@ -105,28 +105,27 @@ class VFlowModelImpl implements VFlowModel {
 
         node = new VNodeImpl(pFlow);
         setTitle("Node");
-        
+
         node.getConnectors().addListener(
                 (ListChangeListener.Change<? extends Connector> c) -> {
-            while(c.next()) {
-                for (Connector connector : c.getRemoved()) {
-                    if (connector instanceof ThruConnector) {
-                        
-                        ThruConnector tC = (ThruConnector) connector;
-                        
-                        if (tC.isInput()) {
-                            thruInputs.remove(tC);
-                        } else if (tC.isOutput()) {
-                            thruOutputs.remove(tC);
+                    while (c.next()) {
+                        for (Connector connector : c.getRemoved()) {
+                            if (connector instanceof ThruConnector) {
+
+                                ThruConnector tC = (ThruConnector) connector;
+
+                                if (tC.isInput()) {
+                                    thruInputs.remove(tC);
+                                } else if (tC.isOutput()) {
+                                    thruOutputs.remove(tC);
+                                }
+
+                                flow.remove(tC.getInnerNode());
+                            }
                         }
-                        
-                        flow.remove(tC.getInnerNode());
+
                     }
-                }
-                
-                
-            }
-        });
+                });
 
     }
 
@@ -532,16 +531,16 @@ class VFlowModelImpl implements VFlowModel {
     public ThruConnector addThruInput(String type) {
 
         VNode innerNode = newNode();
-        
+
         innerNode.getVisualizationRequest().
                 set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
-        
+
         Connector innerConnector = innerNode.
                 setMainOutput(innerNode.addOutput(type));
 
         ThruConnector tC = node.addThruInput(
                 node, type, innerNode, innerConnector);
-        
+
         thruInputs.add(tC);
 
         return tC;
@@ -551,16 +550,16 @@ class VFlowModelImpl implements VFlowModel {
     public ThruConnector addThruOutput(String type) {
 
         VNode innerNode = newNode();
-        
+
         innerNode.getVisualizationRequest().
                 set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
-        
+
         Connector innerConnector = innerNode.
                 setMainInput(innerNode.addInput(type));
 
         ThruConnector tC = node.addThruOutput(
                 node, type, innerNode, innerConnector);
-        
+
         thruOutputs.add(tC);
 
         return tC;
@@ -579,5 +578,21 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public boolean removeConnector(Connector c) {
         return this.node.removeConnector(c);
+    }
+
+    @Override
+    public int getDepth() {
+        return this.node.getDepth();
+    }
+
+    @Override
+    public FlowModel getRoot() {
+        FlowModel root = this.node.getRoot();
+
+        if (root == null) {
+            root = this;
+        }
+
+        return root;
     }
 }

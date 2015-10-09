@@ -154,4 +154,16 @@ public interface VNode extends Model, Selectable {
     public BooleanProperty selectableProperty();
     public boolean isSelectable();
     
+        
+    /**
+     * Returns the distance to the root element.
+     */
+    public int getDepth();
+    
+    /**
+     * Returns the root element of this flow.
+     * @return root element
+     */
+    public FlowModel getRoot();
+    
 }

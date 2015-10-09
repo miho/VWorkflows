@@ -30,8 +30,6 @@ import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -53,6 +51,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import jfxtras.scene.control.window.SelectableNode;
@@ -122,15 +121,13 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                             }
                         } else if (change.wasUpdated()) {
                             //update item
-                        } else {
-                            if (change.wasRemoved()) {
-                                for (WindowIcon i : change.getRemoved()) {
-                                    titleBar.removeLeftIcon(i);
-                                }
-                            } else if (change.wasAdded()) {
-                                for (WindowIcon i : change.getAddedSubList()) {
-                                    titleBar.addLeftIcon(i);
-                                }
+                        } else if (change.wasRemoved()) {
+                            for (WindowIcon i : change.getRemoved()) {
+                                titleBar.removeLeftIcon(i);
+                            }
+                        } else if (change.wasAdded()) {
+                            for (WindowIcon i : change.getAddedSubList()) {
+                                titleBar.addLeftIcon(i);
                             }
                         }
                     }
@@ -145,15 +142,13 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                             }
                         } else if (change.wasUpdated()) {
                             //update item
-                        } else {
-                            if (change.wasRemoved()) {
-                                for (WindowIcon i : change.getRemoved()) {
-                                    titleBar.removeRightIcon(i);
-                                }
-                            } else if (change.wasAdded()) {
-                                for (WindowIcon i : change.getAddedSubList()) {
-                                    titleBar.addRightIcon(i);
-                                }
+                        } else if (change.wasRemoved()) {
+                            for (WindowIcon i : change.getRemoved()) {
+                                titleBar.removeRightIcon(i);
+                            }
+                        } else if (change.wasAdded()) {
+                            for (WindowIcon i : change.getAddedSubList()) {
+                                titleBar.addRightIcon(i);
                             }
                         }
                     }
@@ -197,7 +192,6 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 //                                    // restore cache hint
 //                                    getSkinnable().setCache(true);
 //                                    getSkinnable().setCacheHint(CacheHint.SPEED);
-
                                     minimizeTimeLine = null;
                                     if (newValue) {
                                         control.getContentPane().setVisible(false);
@@ -208,7 +202,6 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                     // temporarily disable cache hint due to rendering bugs
 //                    getSkinnable().setCache(false);
 //                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
-
                     minimizeTimeLine.play();
                 });
 
@@ -247,7 +240,6 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 //                    newValue.needsLayoutProperty().
 //                    addListener(contentLayoutListener);
 //                });
-
         titleBar.setStyle(control.getStyle());
 
         control.styleProperty().addListener(
@@ -275,15 +267,13 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                             }
                         } else if (change.wasUpdated()) {
                             //update item
-                        } else {
-                            if (change.wasRemoved()) {
-                                for (String i : change.getRemoved()) {
-                                    titleBar.getStylesheets().remove(i);
-                                }
-                            } else if (change.wasAdded()) {
-                                for (String i : change.getAddedSubList()) {
-                                    titleBar.getStylesheets().add(i);
-                                }
+                        } else if (change.wasRemoved()) {
+                            for (String i : change.getRemoved()) {
+                                titleBar.getStylesheets().remove(i);
+                            }
+                        } else if (change.wasAdded()) {
+                            for (String i : change.getAddedSubList()) {
+                                titleBar.getStylesheets().add(i);
                             }
                         }
                     }
@@ -295,17 +285,17 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 (ov, oldValue, newValue) -> {
                     if (newValue) {
                         control.setBorder(new Border(
-                                        new BorderStroke(
-                                                control.getSelectionBorderColor(),
-                                                BorderStrokeStyle.SOLID,
-                                                new CornerRadii(3),
-                                                new BorderWidths(2))));
+                                new BorderStroke(
+                                        control.getSelectionBorderColor(),
+                                        BorderStrokeStyle.SOLID,
+                                        new CornerRadii(3),
+                                        new BorderWidths(2))));
                         if (control.isSelectionEffectEnabled()) {
                             ColorAdjust effect
                             = new ColorAdjust(-0.25, 0.2, 0.8, 0);
-                            Glow glow = new Glow(0.5);
-                            glow.setInput(effect);
-                            control.setEffect(glow);
+//                            Glow glow = new Glow(0.5);
+//                            glow.setInput(effect);
+                            control.setEffect(effect);
                         }
                     } else {
                         control.setBorder(prevBorder);
@@ -315,9 +305,44 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 
         getSkinnable().setCacheHint(CacheHint.SPEED);
 
+//        control.resizingProperty().addListener((ov) -> {
+//            control.setCache(control.isResizing());
+//        });
         // counter intuitive caching (see http://bit.ly/1MemgLz why)
-        control.resizingProperty().addListener((ov)-> {
-            control.setCache(!control.isResizing());
+//        control.resizingProperty().addListener((ov) -> {
+//            control.setCache(!control.isResizing());
+//        });
+//
+//        InvalidationListener cacheListener = (ov) -> {
+//            if (!control.isResizing()) {
+//                control.setCache(
+//                        !control.isResizing()
+//                        && !control.getParent().isCache()
+//                );
+//            } else {
+//                control.setCache(false);
+//            }
+//        };
+//        Parent p = control.getParent();
+//        if (p != null) {
+//            p.cacheProperty().addListener(cacheListener);
+//        }
+//        control.parentProperty().addListener((ov, oldV, newV) -> {
+//            if (oldV != null) {
+//                oldV.cacheProperty().removeListener(cacheListener);
+//            }
+//            if (newV != null) {
+//                newV.cacheProperty().addListener(cacheListener);
+//            }
+//        });
+
+        Rectangle clipRectangle = new Rectangle();
+        control.getContentPane().setClip(clipRectangle);
+        control.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
+            clipRectangle.setX(2);
+            clipRectangle.setY(2);
+            clipRectangle.setWidth(newValue.getWidth()-1);
+            clipRectangle.setHeight(newValue.getHeight()-1);
         });
 
     }
@@ -701,8 +726,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         control.getContentPane().resize(
                 contentWidth,
                 contentHeight);
-        
-        
+
     }
 
     @Override

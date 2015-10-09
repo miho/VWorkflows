@@ -28,7 +28,6 @@ package jfxtras.scene.control.window;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -130,7 +129,7 @@ public class Window extends Control implements SelectableNode {
      * Defines the width of the border /area where the user can grab the window
      * and resize it.
      */
-    private final DoubleProperty resizableBorderWidthProperty = new SimpleDoubleProperty(5);
+    private final DoubleProperty resizableBorderWidthProperty = new SimpleDoubleProperty(10);
     /**
      * Defines the titlebar class name. This can be used to define css
      * properties specifically for the titlebar, e.g., background.
@@ -334,29 +333,29 @@ public class Window extends Control implements SelectableNode {
 
         initializeMovingPropertyMonitor();
         initializeResizingPropertyMonitor();
+        
+        
 
     }
 
     private void initializeResizingPropertyMonitor() {
         // detects whether the window is currently moving
-        Timer[] timer = {new Timer(true)};
+        Timer[] timer = {null};
         double[] wh = {0, 0};
-        boolean[] running = {false};
-        int[] cancelledTasks = {0};
+//        int[] cancelledTasks = {0};
         InvalidationListener resizingListener = (ov) -> {
 
-            // purge cancelled tasks regularily to prevent memory leaks
-            if (cancelledTasks[0] > 1000) {
-                timer[0].purge();
-                cancelledTasks[0] = 0;
-            }
-
-            if (!running[0]) {
+//            // purge cancelled tasks regularily to prevent memory leaks
+//            if (cancelledTasks[0] > 1000) {
+//                timer[0].purge();
+//                cancelledTasks[0] = 0;
+//            }
+            if (timer[0] == null) {
+                timer[0] = new Timer(true);
                 timer[0].scheduleAtFixedRate(new TimerTask() {
 
                     @Override
                     public void run() {
-                        running[0] = true;
                         double w = getWidth();
                         double h = getHeight();
                         Platform.runLater(
@@ -368,8 +367,8 @@ public class Window extends Control implements SelectableNode {
                                     wh[1] = h;
                                     if (!isResizing()) {
                                         cancel();
-                                        cancelledTasks[0]++;
-                                        running[0] = false;
+//                                        cancelledTasks[0]++;
+                                        timer[0] = null;
                                     }
                                 }
                         );
@@ -384,24 +383,24 @@ public class Window extends Control implements SelectableNode {
 
     private void initializeMovingPropertyMonitor() {
         // detects whether the window is currently moving
-        Timer[] timer = {new Timer(true)};
+        Timer[] timer = {null};
         double[] xy = {0, 0};
-        boolean[] running = {false};
-        int[] cancelledTasks = {0};
+//        boolean[] running = {false};
+//        int[] cancelledTasks = {0};
         InvalidationListener movingListener = (ov) -> {
 
-            // purge cancelled tasks regularily to prevent memory leaks
-            if (cancelledTasks[0] > 1000) {
-                timer[0].purge();
-                cancelledTasks[0] = 0;
-            }
-
-            if (!running[0]) {
+//            // purge cancelled tasks regularily to prevent memory leaks
+//            if (cancelledTasks[0] > 1000) {
+//                timer[0].purge();
+//                cancelledTasks[0] = 0;
+//            }
+            if (timer[0] == null && (getLayoutX() != 0 || getLayoutY() != 0)) {
+                timer[0] = new Timer(true);
                 timer[0].scheduleAtFixedRate(new TimerTask() {
 
                     @Override
                     public void run() {
-                        running[0] = true;
+
                         double x = getLayoutX();
                         double y = getLayoutY();
                         Platform.runLater(
@@ -413,8 +412,8 @@ public class Window extends Control implements SelectableNode {
                                     xy[1] = y;
                                     if (!isMoving()) {
                                         cancel();
-                                        cancelledTasks[0]++;
-                                        running[0] = false;
+//                                        cancelledTasks[0]++;
+                                        timer[0] = null;
                                     }
                                 }
                         );

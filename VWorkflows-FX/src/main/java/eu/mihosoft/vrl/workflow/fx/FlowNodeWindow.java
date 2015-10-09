@@ -52,6 +52,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -62,7 +63,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import jfxtras.scene.control.window.CloseIcon;
@@ -135,6 +135,7 @@ public final class FlowNodeWindow extends Window {
 
         initUI(skin);
         initListenersAndBindings(skin);
+        initCaching();
     }
 
     private void initUI(final FXFlowNodeSkin skin) {
@@ -502,6 +503,53 @@ public final class FlowNodeWindow extends Window {
 
     public void setHideMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> callback) {
         this.hideMinimizeIcon = callback;
+    }
+
+    private void initCaching() {
+        
+        localToSceneTransformProperty().addListener((ov)->{
+             Bounds bounds = this.localToScene(getBoundsInLocal());
+             if(bounds.getWidth()<10 || bounds.getHeight()<10) {
+                 setCache(false);
+             } else {
+                 setCache(true);
+             }
+        });
+
+//
+//        boolean[] wasMoving = {false};
+//
+//        InvalidationListener cacheListener = (ov) -> {
+//            
+//            if (isMoving()) {
+//                setCache(true);
+//                Parent parent = getParent();
+//                if (parent != null) {
+//                    parent.getChildrenUnmodifiable().stream().
+//                            filter(n -> n instanceof FlowNodeWindow
+//                                    || n instanceof ConnectorCircle).
+//                            forEach(n -> n.setCache(true));
+//                }
+//            } else {
+//                setCache(false);
+//                System.out.println("was: " + wasMoving[0]);
+//                if (wasMoving[0]) {
+//                    Parent parent = getParent();
+//                    if (parent != null) {
+//                        parent.getChildrenUnmodifiable().stream().
+//                                filter(n -> n instanceof FlowNodeWindow
+//                                        || n instanceof ConnectorCircle).
+//                                forEach(n -> n.setCache(false));
+//                    }
+//                }
+//            }
+//            
+//            wasMoving[0] = isMoving();
+//        };
+//
+//        movingProperty().addListener(cacheListener);
+//
+//        cacheProperty().addListener(state -> setTitle("cache: " + isCache()));
     }
 
     static class FlowStage extends Stage {

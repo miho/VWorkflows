@@ -55,17 +55,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 import jfxtras.scene.control.window.Window;
 import org.apache.commons.math3.geometry.euclidean.twod.Line;
 import org.apache.commons.math3.geometry.euclidean.twod.Segment;
@@ -142,15 +138,22 @@ public class FXFlowNodeSkin
         flowNodeWindow.resizingProperty().addListener((ov) -> {
 //            System.out.println("resizing: " + flowNodeWindow.isResizing());
             connectors.values().forEach(cShape -> {
-                
+
                 cShape.setCache(!flowNodeWindow.isResizing());
             });
         });
         
+        flowNodeWindow.resizingProperty().addListener((ov) -> {
+            if (flowNodeWindow.isResizing()) {
+                flowNodeWindow.setCache(false);
+            } else {
+                flowNodeWindow.setCache(true);
+            }
+        });
+
 //        flowNodeWindow.cacheProperty().addListener((ov)->{
 //            System.out.println("w-cached: " + flowNodeWindow.isCache());
 //        });
-
         return flowNodeWindow;
     }
 

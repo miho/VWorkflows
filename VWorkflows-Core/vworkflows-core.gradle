@@ -1,12 +1,3 @@
-apply from: rootProject.file('gradle/javafx.gradle')
-
 dependencies {
-    compileOnly project.files(project.jfxrtLocation)
-
     compile 'com.thoughtworks.xstream:xstream:1.4.8'
-
-    // compile project('..:VRLInstrumentation')    
-    // compile fileTree (dir: 'path-to-libdir', includes: ['*.jar'])
-
-    testCompile 'junit:junit:4.12'
 }

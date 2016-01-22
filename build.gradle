@@ -86,13 +86,6 @@ subprojects { subproj ->
         }
     }
 
-    task sourceJar(type: Jar) {
-        group 'Build'
-        description 'An archive of the source code'
-        classifier 'sources'
-        from sourceSets.main.allSource
-    }
-
     tasks.withType(AbstractCompile) {
         if (rootProject.hasProperty('lint') && rootProject.lint.toBoolean()) {
             options.compilerArgs = [
@@ -103,40 +96,55 @@ subprojects { subproj ->
 
     subproj.apply from: rootProject.file('gradle/jdkdetect.gradle')
     subproj.apply from: rootProject.file('gradle/version-info.gradle')
-    subproj.apply from: rootProject.file('gradle/code-coverage.gradle')
     subproj.apply from: rootProject.file('gradle/code-quality.gradle')
-    subproj.apply from: rootProject.file('gradle/publishing.gradle')
-
     subproj.apply plugin: 'org.kordamp.gradle.stats'
 
-    projectsWithCoverage << subproj
+    if (subproj.publishJars.toBoolean()) {
+        task sourceJar(type: Jar) {
+            group 'Build'
+            description 'An archive of the source code'
+            classifier 'sources'
+            from sourceSets.main.allSource
+        }
 
-    test {
-        testLogging {
-            afterSuite { desc, result ->
-                if (!desc.parent) {
-                    println "Test results ${project.name}: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+        subproj.apply from: rootProject.file('gradle/code-coverage.gradle')
+        subproj.apply from: rootProject.file('gradle/publishing.gradle')
+        subproj.apply from: rootProject.file('gradle/javafx.gradle')
+
+        projectsWithCoverage << subproj
+
+        dependencies {
+            compileOnly project.files(project.jfxrtLocation)
+            testCompile 'junit:junit:4.12'
+        }
+
+        test {
+            testLogging {
+                afterSuite { desc, result ->
+                    if (!desc.parent) {
+                        println "Test results ${project.name}: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                    }
                 }
             }
         }
-    }
 
-    javadoc {
-        excludes = ['**/*.html', 'META-INF/**']
+        javadoc {
+            excludes = ['**/*.html', 'META-INF/**']
 
-        options.addBooleanOption('javafx', true)
+            options.addBooleanOption('javafx', true)
 
-        options.use         = true
-        options.splitIndex  = true
-        options.encoding    = 'UTF-8'
-        options.author      = true
-        options.version     = true
-        options.windowTitle = "$subproj.name $version"
-        options.docTitle    = "$subproj.name $version"
-        options.footer      = rootProject.javadocFooter
-        options.links       = ['http://junit.org/javadoc/latest/',
-                               'http://docs.oracle.com/javase/8/docs/api/',
-                               'http://docs.oracle.com/javase/8/javafx/api/']
+            options.use         = true
+            options.splitIndex  = true
+            options.encoding    = 'UTF-8'
+            options.author      = true
+            options.version     = true
+            options.windowTitle = "$subproj.name $version"
+            options.docTitle    = "$subproj.name $version"
+            options.footer      = rootProject.javadocFooter
+            options.links       = ['http://junit.org/javadoc/latest/',
+                                   'http://docs.oracle.com/javase/8/docs/api/',
+                                   'http://docs.oracle.com/javase/8/javafx/api/']
+        }
     }
 }
 
@@ -153,4 +161,9 @@ task jacocoRootMergeReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
     executionData files(projectsWithCoverage.jacocoTestReport.executionData)
     sourceDirectories = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
     classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+    reports {
+        xml.enabled = true
+        csv.enabled = false
+        html.enabled = true
+    }
 }

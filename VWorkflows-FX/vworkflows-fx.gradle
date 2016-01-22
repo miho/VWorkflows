@@ -1,14 +1,8 @@
-apply from: rootProject.file('gradle/javafx.gradle')
-
-// mainClassName = 'eu.mihosoft.vrl.workflow.demo.Main'
-
 repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
-    compileOnly project.files(project.jfxrtLocation)
-
     compile project(':vworkflows-core') 
 
     if (project.jdk == 7) {

@@ -1,0 +1,11 @@
+include 'VWorkflows-Core'
+include 'VWorkflows-FX'
+include 'VWorkflows-Demo'
+
+rootProject.name = 'VWorkflows'
+rootProject.children.each { project ->
+    String projectDirName = project.name
+    project.name = project.name.toLowerCase()
+    project.buildFileName = "${project.name}.gradle"
+    assert project.buildFile.isFile()
+}

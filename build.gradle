@@ -1,0 +1,156 @@
+import java.text.SimpleDateFormat
+
+apply from: 'gradle/idea.gradle'
+apply from: 'gradle/jdkdetect.gradle'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.0'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.5'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'net.nemerosa:versioning:1.6.0'
+    }
+}
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    macosx = System.getProperty('os.name').contains('Mac OS')
+    jacocoMergeExecFile = "${buildDir}/reports/jacoco/test/jacocoTestReport.exec"
+    projectsWithCoverage = []
+}
+
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+jacoco {
+    toolVersion = jacocoVersion
+}
+
+println("Gradle uses JDK " + project.jdk)
+
+allprojects {
+    apply plugin: 'base'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'com.github.ben-manes.versions'
+
+    repositories {
+        jcenter()
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+subprojects { subproj ->
+    subproj.apply plugin: 'java'
+
+    configurations {
+        compileOnly
+        testCompileOnly
+    }
+
+    subproj.tasks.withType(JavaCompile) {
+        sourceCompatibility = subproj.sourceCompatibility
+        targetCompatibility = subproj.targetCompatibility
+        options*.encoding = 'UTF-8'
+    }
+
+    sourceSets {
+        main {
+            compileClasspath += [configurations.compileOnly]
+        }
+        test {
+            compileClasspath += [configurations.testCompileOnly]
+        }
+    }
+
+    javadoc {
+        classpath += [configurations.compileOnly]
+    }
+
+    idea {
+        module {
+            scopes.PROVIDED.plus += [configurations.compileOnly]
+            scopes.PROVIDED.plus += [configurations.testCompileOnly]
+        }
+    }
+
+    task sourceJar(type: Jar) {
+        group 'Build'
+        description 'An archive of the source code'
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
+
+    tasks.withType(AbstractCompile) {
+        if (rootProject.hasProperty('lint') && rootProject.lint.toBoolean()) {
+            options.compilerArgs = [
+                '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
+            ]
+        }
+    }
+
+    subproj.apply from: rootProject.file('gradle/jdkdetect.gradle')
+    subproj.apply from: rootProject.file('gradle/version-info.gradle')
+    subproj.apply from: rootProject.file('gradle/code-coverage.gradle')
+    subproj.apply from: rootProject.file('gradle/code-quality.gradle')
+    subproj.apply from: rootProject.file('gradle/publishing.gradle')
+
+    subproj.apply plugin: 'org.kordamp.gradle.stats'
+
+    projectsWithCoverage << subproj
+
+    test {
+        testLogging {
+            afterSuite { desc, result ->
+                if (!desc.parent) {
+                    println "Test results ${project.name}: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                }
+            }
+        }
+    }
+
+    javadoc {
+        excludes = ['**/*.html', 'META-INF/**']
+
+        options.addBooleanOption('javafx', true)
+
+        options.use         = true
+        options.splitIndex  = true
+        options.encoding    = 'UTF-8'
+        options.author      = true
+        options.version     = true
+        options.windowTitle = "$subproj.name $version"
+        options.docTitle    = "$subproj.name $version"
+        options.footer      = rootProject.javadocFooter
+        options.links       = ['http://junit.org/javadoc/latest/',
+                               'http://docs.oracle.com/javase/8/docs/api/',
+                               'http://docs.oracle.com/javase/8/javafx/api/']
+    }
+}
+
+evaluationDependsOnChildren()
+
+task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
+    dependsOn = projectsWithCoverage.test
+    dependsOn = projectsWithCoverage.jacocoTestReport
+    executionData = files(projectsWithCoverage.jacocoTestReport.executionData)
+    destinationFile = file(jacocoMergeExecFile)
+}
+
+task jacocoRootMergeReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
+    executionData files(projectsWithCoverage.jacocoTestReport.executionData)
+    sourceDirectories = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+}

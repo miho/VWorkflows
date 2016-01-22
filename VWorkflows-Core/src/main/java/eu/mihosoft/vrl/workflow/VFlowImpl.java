@@ -148,9 +148,11 @@ public class VFlowImpl implements VFlow {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else if (change.wasRemoved()) {
                         // removed
                         for (VNode n : change.getRemoved()) {
@@ -188,6 +190,7 @@ public class VFlowImpl implements VFlow {
                                 createNodeSkins(n, skinFactories);
 //                                System.out.println("add node: " + n.getId() + ", title: " + n.getTitle());
                             } else {
+                                String action = "handle error"; // TODO: implement
 //                                System.out.println("can't add node: " + n.getId() + ", title: " + n.getTitle());
                             }
                         }
@@ -205,9 +208,11 @@ public class VFlowImpl implements VFlow {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else if (change.wasRemoved()) {
                         // removed
                         for (Connection c : change.getRemoved()) {

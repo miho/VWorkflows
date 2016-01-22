@@ -369,6 +369,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
                     if (connResult.getStatus().isCompatible()) {
 //                        System.out.println("FX-CONNECT: " + connResult.getConnection());
+                        String action = "handle"; // TODO: implement
                     } else {
                         connectionListener.onConnectionIncompatibleReleased(n);
                     }

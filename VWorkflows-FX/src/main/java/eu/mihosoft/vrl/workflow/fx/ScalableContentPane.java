@@ -278,9 +278,11 @@ public class ScalableContentPane extends Pane {
                     if (c.wasPermutated()) {
                         for (int i = c.getFrom(); i < c.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (c.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else {
                         if (c.wasRemoved()) {
                             for (Node n : c.getRemoved()) {

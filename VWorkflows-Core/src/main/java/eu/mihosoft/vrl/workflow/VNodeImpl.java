@@ -115,9 +115,11 @@ class VNodeImpl implements VNode {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else {
                         if (change.wasRemoved()) {
                             for (Connector connector : change.getRemoved()) {

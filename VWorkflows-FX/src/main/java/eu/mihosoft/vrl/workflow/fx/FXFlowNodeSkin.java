@@ -106,10 +106,10 @@ public class FXFlowNodeSkin
 
     private MapChangeListener<String, Object> vReqLister;
 
-    private final int TOP = 0;
-    private final int RIGHT = 1;
-    private final int BOTTOM = 2;
-    private final int LEFT = 3;
+    private static final int TOP = 0;
+    private static final int RIGHT = 1;
+    private static final int BOTTOM = 2;
+    private static final int LEFT = 3;
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
         this.skinFactory = skinFactory;
@@ -158,9 +158,11 @@ public class FXFlowNodeSkin
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else if (change.wasRemoved()) {
                         numConnectorsHasChanged = true;
                         // removed
@@ -390,7 +392,7 @@ public class FXFlowNodeSkin
         double startX = midPointOfNode - totalWidth / 2;
 
         double offsetX = +(connectorWidth + gap) * connectorIndex
-                + (connectorWidth + gap) / 2;;
+                + (connectorWidth + gap) / 2;
 
         double x = startX + offsetX;
 
@@ -435,7 +437,7 @@ public class FXFlowNodeSkin
         double y = startY;
 
         double offsetY = +(connectorHeight + gap) * connectorIndex
-                + (connectorHeight + gap) / 2;;
+                + (connectorHeight + gap) / 2;
 
         y += offsetY;
 

@@ -506,13 +506,13 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     }
 
                     if (connResult.getStatus().isCompatible()) {
-                        //
+                        String action = "handle"; // TODO: implement
                     } else {
                         connectionListener.onConnectionIncompatibleReleased(n);
                     }
 
                 } else {
-                    //
+                    String action = "handle"; // TODO: implement
                 }
 
                 // remove error notification etc.

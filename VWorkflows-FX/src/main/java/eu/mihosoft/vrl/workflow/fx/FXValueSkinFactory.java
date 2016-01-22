@@ -97,11 +97,11 @@ public class FXValueSkinFactory extends FXSkinFactory {
         }
 
         if (skinClass == null) {
-            System.out.println("here");
+//            System.out.println("here");
             skinClass = getDefaultNodeSkin();
         }
 
-        System.out.println("here: " + skinClass);
+//        System.out.println("here: " + skinClass);
 
         return createSkinInstanceOfClass(skinClass, n, flow);
     }

@@ -14,6 +14,7 @@ buildscript {
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.5'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
         classpath 'net.nemerosa:versioning:1.6.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5'
     }
 }
 

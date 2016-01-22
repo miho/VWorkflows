@@ -1,4 +1,59 @@
+if (!publishJars.toBoolean()) return
+
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'net.nemerosa.versioning'
+
+def pomConfig = {
+    name project.name
+    description 'VWorkflows'
+    url 'https://github.com/miho/VWorkflows'
+    inceptionYear '2012'
+    licenses {
+        license([:]) {
+            name 'BSD 2-Clause'
+            url 'https://opensource.org/licenses/BSD-2-Clause'
+            distribution 'repo'
+        }
+    }
+    scm {
+        url 'https://github.com/miho/VWorkflows'
+    }
+    developers {
+        [
+            mihosoft: 'Michael Hoffer'
+        ].each { devId, devName ->
+            developer {
+                id devId
+                name devName
+                roles {
+                    role 'Developer'
+                }
+            }
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenCustom(MavenPublication) {
+            from components.java
+            artifact sourceJar
+
+            pom.withXml {
+                // all dependencies should use the default scope (compile) but
+                // Gradle insists in using runtime as default
+                asNode().dependencies.dependency.each { dep ->
+                    if (dep.scope.text() == 'runtime') {
+                        dep.remove(dep.scope)
+                    }
+                }
+                asNode().children().last() + pomConfig
+            }
+        }
+    }
+}
+
 
 jar {
     manifest {
@@ -14,6 +69,28 @@ jar {
             'Implementation-Version': project.version
         )
     }
+    metaInf {
+        from rootProject.file('LICENSE.txt')
+    }
 }
 
-// TODO: add bintray setup
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenCustom']
+    pkg {
+        repo = 'maven'
+        userOrg = 'mihosoft'
+        name = project.name
+        desc = project.name
+        licenses = ['BSD 2-Clause']
+        labels = ['javafx', 'workoflows']
+        websiteUrl = 'https://github.com/miho/VWorkflows'
+        issueTrackerUrl = 'https://github.com/miho/VWorkflows/issues'
+        vcsUrl = 'https://github.com/miho/VWorkflows.git'
+        publicDownloadNumbers = true
+    }
+}

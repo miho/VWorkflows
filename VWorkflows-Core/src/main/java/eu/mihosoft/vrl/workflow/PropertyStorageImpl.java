@@ -33,10 +33,11 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+
+import java.util.Optional;
 
 /**
  * A simple property storage.

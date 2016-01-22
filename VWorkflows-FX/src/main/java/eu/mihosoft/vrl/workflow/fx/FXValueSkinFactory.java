@@ -34,12 +34,14 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.Skin;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
+import javafx.scene.Parent;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -47,7 +49,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.Parent;
 
 /**
  * Value based skin factory.

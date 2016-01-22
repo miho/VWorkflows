@@ -33,17 +33,17 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Transform;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  *

@@ -33,12 +33,13 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class provides the default implementation of a {@code Connector} in

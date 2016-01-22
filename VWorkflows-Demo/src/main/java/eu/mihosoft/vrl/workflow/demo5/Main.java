@@ -34,17 +34,14 @@
 package eu.mihosoft.vrl.workflow.demo5;
 
 import eu.mihosoft.vrl.workflow.Connector;
-import javafx.application.Application;
-import javafx.stage.Stage;
-
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.FXValueSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
+import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.Random;
 

@@ -33,7 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 
 /**

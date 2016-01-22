@@ -35,13 +35,12 @@ package eu.mihosoft.vrl.workflow.playground;
 
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.DefaultConnectorValueObject;
 import eu.mihosoft.vrl.workflow.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.logging.Level;

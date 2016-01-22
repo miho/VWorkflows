@@ -39,8 +39,9 @@
 
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Optional;
 import javafx.collections.MapChangeListener;
+
+import java.util.Optional;
 
 /**
  *

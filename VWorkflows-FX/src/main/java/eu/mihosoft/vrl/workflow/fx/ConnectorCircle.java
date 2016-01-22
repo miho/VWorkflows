@@ -34,9 +34,9 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import javafx.scene.shape.Circle;
 
 /**

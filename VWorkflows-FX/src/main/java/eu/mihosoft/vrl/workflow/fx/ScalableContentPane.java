@@ -43,7 +43,6 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.transform.Scale;
 
 /**

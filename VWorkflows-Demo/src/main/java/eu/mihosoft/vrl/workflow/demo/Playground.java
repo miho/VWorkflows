@@ -33,12 +33,10 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.FlowFactory;
+import eu.mihosoft.vrl.workflow.NodeLookup;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.NodeLookup;
-import eu.mihosoft.vrl.workflow.VConnections;
 
 /**
  *

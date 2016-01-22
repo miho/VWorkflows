@@ -34,12 +34,8 @@
     or implied, of Michael Hoffer <info@michaelhoffer.de>.
 
 -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
+<?import javafx.scene.layout.AnchorPane?>
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="eu.mihosoft.vrl.workflow.demo.NodeControlFXMLController">
     
 </AnchorPane>

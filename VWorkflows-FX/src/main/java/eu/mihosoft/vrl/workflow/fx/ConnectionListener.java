@@ -38,8 +38,9 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
-import java.util.List;
 import javafx.scene.Node;
+
+import java.util.List;
 
 /**
  *

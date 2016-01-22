@@ -33,7 +33,13 @@
  */
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.*;
+import eu.mihosoft.vrl.workflow.ClickEvent;
+import eu.mihosoft.vrl.workflow.ConnectionEvent;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.MouseButton;
+import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.ValueObject;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.event.EventHandler;

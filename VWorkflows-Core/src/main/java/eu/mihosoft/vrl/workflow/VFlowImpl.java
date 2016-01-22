@@ -38,16 +38,6 @@ import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
 import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookupImpl;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -60,6 +50,17 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An implementation of the {@code VFlow} interface. This class manages the workflow

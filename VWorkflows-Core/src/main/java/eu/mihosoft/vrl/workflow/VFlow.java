@@ -33,17 +33,18 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.skin.SkinFactory;
-import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
-import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
-import java.util.Collection;
-import java.util.List;
+import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
+import eu.mihosoft.vrl.workflow.skin.SkinFactory;
+import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The {@code VFlow} interface describes a workflow. A workflow is a network of

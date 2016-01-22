@@ -39,10 +39,7 @@
 
 package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.CompatibilityResult;
-import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
-import javafx.beans.property.ObjectProperty;
 
 /**
  *

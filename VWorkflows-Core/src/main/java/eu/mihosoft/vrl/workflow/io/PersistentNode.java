@@ -35,6 +35,7 @@ package eu.mihosoft.vrl.workflow.io;
 
 import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

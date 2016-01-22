@@ -40,22 +40,11 @@ import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
-import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
-import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
+import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -64,8 +53,14 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 import jfxtras.labs.scene.control.window.Window;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class

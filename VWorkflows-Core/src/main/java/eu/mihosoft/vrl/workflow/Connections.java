@@ -33,8 +33,9 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Collection;
 import javafx.collections.ObservableList;
+
+import java.util.Collection;
 
 /**
  * This interface defines a collection of {@code Connection}

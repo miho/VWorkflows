@@ -35,6 +35,7 @@ package eu.mihosoft.vrl.workflow.skin;
 
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Lookup;
+
 import java.util.List;
 
 /**

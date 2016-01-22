@@ -33,10 +33,11 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Objects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleObjectProperty;
+
+import java.util.Objects;
 
 /**
  * This class provides a base implementation of connections.

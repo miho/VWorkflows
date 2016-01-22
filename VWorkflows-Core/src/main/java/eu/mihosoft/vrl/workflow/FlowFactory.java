@@ -33,9 +33,9 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
-import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 
 /**
  * A factory class to create {@code VFlow}s.

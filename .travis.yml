@@ -8,16 +8,15 @@ before_install:
   - "export DISPLAY=:99.0"
   - "export TERM=dumb"
   - "sh -e /etc/init.d/xvfb start"
-  - "cd VWorkflows-FX"
 
 install:
     - TERM=dumb ./gradlew --refresh-dependencies --stacktrace
 
-script:
-    - TERM=dumb ./gradlew build --stacktrace
+before_script:
+  - ./gradlew --version
 
-after_failure:
-  - "cat ./build/test-results/*.xml"
-  
+script:
+    - TERM=dumb ./gradlew build --stacktrace -x :sample-javafx-groovy:jfxJar
+
 after_success:
   - TERM=dumb ./gradlew clean test jacocoTestReport coveralls --stacktrace

@@ -19,4 +19,4 @@ script:
     - TERM=dumb ./gradlew build -S -x :vworkflows-demo:jfxJar
 
 after_success:
-  - TERM=dumb ./gradlew test jacocoTestReport jacocoRootMergeReport coveralls -S
+  - TERM=dumb ./gradlew test jacocoTestReport coveralls -S

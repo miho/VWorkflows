@@ -1,7 +1,5 @@
 /*
- * WorkflowIO.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -38,22 +36,20 @@ package eu.mihosoft.vrl.workflow.io;
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.DefaultValueObject;
-import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.VFlowModel;
-import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.NodeLookupImpl;
 import eu.mihosoft.vrl.workflow.VConnections;
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.ValueObject;
-import java.io.ByteArrayInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;

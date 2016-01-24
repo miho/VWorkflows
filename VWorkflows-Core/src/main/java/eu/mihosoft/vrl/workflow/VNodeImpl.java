@@ -1,7 +1,5 @@
 /*
- * VNodeImpl.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -35,9 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -53,6 +48,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -116,9 +115,11 @@ class VNodeImpl implements VNode {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else {
                         if (change.wasRemoved()) {
                             for (Connector connector : change.getRemoved()) {

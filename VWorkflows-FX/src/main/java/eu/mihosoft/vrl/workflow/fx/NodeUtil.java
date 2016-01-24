@@ -1,7 +1,5 @@
 /*
- * NodeUtil.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -36,9 +34,6 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.MouseButton;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -46,6 +41,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility class that provides methods to simplify node handling. Possible use

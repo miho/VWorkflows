@@ -1,7 +1,5 @@
 /*
- * FXConnectionSkin.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -37,10 +35,10 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
-import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -508,13 +506,13 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                     }
 
                     if (connResult.getStatus().isCompatible()) {
-                        //
+                        String action = "handle"; // TODO: implement
                     } else {
                         connectionListener.onConnectionIncompatibleReleased(n);
                     }
 
                 } else {
-                    //
+                    String action = "handle"; // TODO: implement
                 }
 
                 // remove error notification etc.

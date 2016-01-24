@@ -1,7 +1,5 @@
 /*
- * FXFlowNodeSkin.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -41,17 +39,6 @@ import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -73,6 +60,15 @@ import org.apache.commons.math3.geometry.euclidean.twod.Line;
 import org.apache.commons.math3.geometry.euclidean.twod.Segment;
 import org.apache.commons.math3.geometry.euclidean.twod.SubLine;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -110,10 +106,10 @@ public class FXFlowNodeSkin
 
     private MapChangeListener<String, Object> vReqLister;
 
-    private final int TOP = 0;
-    private final int RIGHT = 1;
-    private final int BOTTOM = 2;
-    private final int LEFT = 3;
+    private static final int TOP = 0;
+    private static final int RIGHT = 1;
+    private static final int BOTTOM = 2;
+    private static final int LEFT = 3;
 
     public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
         this.skinFactory = skinFactory;
@@ -162,9 +158,11 @@ public class FXFlowNodeSkin
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else if (change.wasRemoved()) {
                         numConnectorsHasChanged = true;
                         // removed
@@ -394,7 +392,7 @@ public class FXFlowNodeSkin
         double startX = midPointOfNode - totalWidth / 2;
 
         double offsetX = +(connectorWidth + gap) * connectorIndex
-                + (connectorWidth + gap) / 2;;
+                + (connectorWidth + gap) / 2;
 
         double x = startX + offsetX;
 
@@ -439,7 +437,7 @@ public class FXFlowNodeSkin
         double y = startY;
 
         double offsetY = +(connectorHeight + gap) * connectorIndex
-                + (connectorHeight + gap) / 2;;
+                + (connectorHeight + gap) / 2;
 
         y += offsetY;
 

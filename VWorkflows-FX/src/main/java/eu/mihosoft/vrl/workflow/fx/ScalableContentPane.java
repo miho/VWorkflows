@@ -1,7 +1,5 @@
 /*
- * ScalableContentPane.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -32,8 +30,7 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */ 
-
+ */
 package eu.mihosoft.vrl.workflow.fx;
 
 import javafx.beans.property.DoubleProperty;
@@ -46,7 +43,6 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.transform.Scale;
 
 /**
@@ -282,9 +278,11 @@ public class ScalableContentPane extends Pane {
                     if (c.wasPermutated()) {
                         for (int i = c.getFrom(); i < c.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (c.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else {
                         if (c.wasRemoved()) {
                             for (Node n : c.getRemoved()) {

@@ -1,17 +1,5 @@
-# Java
-
-*.class
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
 # Gradle
-
 build/
-dist/
 .gradle/
 
 # Netbeans
@@ -39,6 +27,7 @@ nb-configuration.xml
 # .idea/dataSources.xml
 # .idea/sqlDataSources.xml
 # .idea/dynamic.xml
+out/
 
 ## File-based project format
 *.ipr

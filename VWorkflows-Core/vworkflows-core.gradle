@@ -1,0 +1,3 @@
+dependencies {
+    compile 'com.thoughtworks.xstream:xstream:1.4.8'
+}

@@ -1,7 +1,5 @@
 /*
- * VFlowImpl.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -40,16 +38,6 @@ import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
 import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookupImpl;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -62,6 +50,17 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An implementation of the {@code VFlow} interface. This class manages the workflow
@@ -149,9 +148,11 @@ public class VFlowImpl implements VFlow {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else if (change.wasRemoved()) {
                         // removed
                         for (VNode n : change.getRemoved()) {
@@ -189,6 +190,7 @@ public class VFlowImpl implements VFlow {
                                 createNodeSkins(n, skinFactories);
 //                                System.out.println("add node: " + n.getId() + ", title: " + n.getTitle());
                             } else {
+                                String action = "handle error"; // TODO: implement
 //                                System.out.println("can't add node: " + n.getId() + ", title: " + n.getTitle());
                             }
                         }
@@ -206,9 +208,11 @@ public class VFlowImpl implements VFlow {
                     if (change.wasPermutated()) {
                         for (int i = change.getFrom(); i < change.getTo(); ++i) {
                             //permutate
+                            String action = "permutate"; // TODO: implement
                         }
                     } else if (change.wasUpdated()) {
                         //update item
+                        String action = "update"; // TODO: implement
                     } else if (change.wasRemoved()) {
                         // removed
                         for (Connection c : change.getRemoved()) {

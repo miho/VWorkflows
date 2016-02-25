@@ -1,4 +1,8 @@
-sudo: required
+sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 
 language: java
 install: true
@@ -11,8 +15,6 @@ env:
 before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  - sudo apt-get update -qq
-  - sudo apt-get install oracle-java8-installer
 
 before_script:
   - ./gradlew --version

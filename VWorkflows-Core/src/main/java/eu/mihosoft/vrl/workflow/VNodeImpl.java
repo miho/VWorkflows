@@ -119,33 +119,39 @@ class VNodeImpl implements VNode {
                         }
                     } else if (change.wasUpdated()) {
                         //update item
-                        String action = "update"; // TODO: implement
-                    } else {
-                        if (change.wasRemoved()) {
-                            for (Connector connector : change.getRemoved()) {
-                                if (connector.isInput()) {
-                                    inputs.remove(connector);
-                                }
 
-                                if (connector.isOutput()) {
-                                    outputs.remove(connector);
-                                }
-                                connectorIdGenerator.getIds().remove(connector.getId());
+                    } else if (change.wasRemoved()) {
+                        for (Connector connector : change.getRemoved()) {
+                            if (connector.isInput()) {
+                                inputs.remove(connector);
+
                             }
-                        } else if (change.wasAdded()) {
-                            for (Connector connector : change.getAddedSubList()) {
-                                if (connector.isInput()) {
-                                    inputs.add(connector);
+
+                            if (connector.isOutput()) {
+                                outputs.remove(connector);
+                            }
+
+                            Connections connections = getFlow().getConnections(connector.getType());
+                            connections.getConnections().removeAll(connections.getAllWith(connector));
+
+                            connectorIdGenerator.getIds().remove(connector.getId());
+                        }
+                    } else if (change.wasAdded()) {
+                        for (Connector connector : change.getAddedSubList()) {
+                            if (connector.isInput()) {
+                                inputs.add(connector);
 //                                    System.out.println("added input:" + unmodifiableInputs.size());
-                                }
+                            }
 
-                                if (connector.isOutput()) {
-                                    outputs.add(connector);
+                            if (connector.isOutput()) {
+                                outputs.add(connector);
 //                                    System.out.println("added output:" + unmodifiableOutputs.size());
-                                }
+                            }
 
+                            if (connector instanceof ThruConnector) {
+                                connector.setLocalId(connectorIdGenerator.newId("thru"));
+                            } else {
                                 connector.setLocalId(connectorIdGenerator.newId());
-
                             }
                         }
                     }
@@ -301,8 +307,8 @@ class VNodeImpl implements VNode {
             vReqProperty = new SimpleObjectProperty<>();
             vReqProperty.set(new VisualizationRequestImpl());
         }
-        
-        if (vReqProperty.get()==null) {
+
+        if (vReqProperty.get() == null) {
             vReqProperty.set(new VisualizationRequestImpl());
         }
 
@@ -378,6 +384,20 @@ class VNodeImpl implements VNode {
     Connector addOutput(VNode node, String type) {
         Connector c = new ConnectorImpl(
                 node, type, null, false);
+        connectors.add(c);
+        return c;
+    }
+
+    ThruConnector addThruInput(VNode node, String type, VNode innerNode, Connector innerConnector) {
+        ThruConnector c = new ThruConnectorImpl(
+                node, type, null, true, innerNode, innerConnector);
+        connectors.add(c);
+        return c;
+    }
+
+    ThruConnector addThruOutput(VNode node, String type, VNode innerNode, Connector innerConnector) {
+        ThruConnector c = new ThruConnectorImpl(
+                node, type, null, false, innerNode, innerConnector);
         connectors.add(c);
         return c;
     }
@@ -542,7 +562,41 @@ class VNodeImpl implements VNode {
 
     @Override
     public boolean isVisualizationRequestInitialized() {
-        return vReqProperty!=null;
+        return vReqProperty != null;
+    }
+
+    @Override
+    public boolean removeConnector(Connector c) {
+        return this.connectors.remove(c);
+    }
+
+    @Override
+    public int getDepth() {
+        VFlowModel parent = this.getFlow();
+
+        int depth = 0;
+
+        while (parent != null) {
+            parent = parent.getFlow();
+            depth++;
+        }
+
+        return depth;
+    }
+
+    @Override
+    public FlowModel getRoot() {
+
+        VFlowModel root = null;
+        VFlowModel parent = this.getFlow();
+
+        while (parent != null) {
+            root = parent;
+            parent = parent.getFlow();
+        }
+
+        return root;
+
     }
 
 }

@@ -35,11 +35,14 @@ package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.VNode;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
+import jfxtras.scene.control.window.Window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,50 +53,21 @@ import java.util.List;
  */
 public class InnerCanvas extends Pane {
 
-    private BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty translateToMinNodePosProperty = new SimpleBooleanProperty(true);
+    private final ObjectProperty<TranslateBehavior> translateBehavior = new SimpleObjectProperty<>(TranslateBehavior.ALWAYS);
+
+    private double minX;
+    private double minY;
+    private boolean manualReset;
 
     public InnerCanvas() {
-       
-        
-        translateToMinNodePosProperty.addListener(new ChangeListener<Boolean>() {
 
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
-                requestLayout();
-            }
+        translateToMinNodePosProperty.addListener((ov, oldV, newV) -> {
+            requestLayout();
         });
-        
-        
-        
-//        needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                if (newValue) 
-//                {
-//                    List<VNode> nodeList = new ArrayList<>();
-//
-//                    double minX = Double.MAX_VALUE;
-//                    double minY = Double.MAX_VALUE;
-//
-//                    // search minX and minY of window nodes
-//                    for (Node n : getChildrenUnmodifiable()) {
-//                        if (n instanceof FlowNodeWindow) {
-//                            FlowNodeWindow w = (FlowNodeWindow) n;
-//                            nodeList.add(w.nodeSkinProperty().get().getModel());
-//
-//                            minX = Math.min(n.getLayoutX(), minX);
-//                            minY = Math.min(n.getLayoutY(), minY);
-//                        }
-//                    }
-//
-//                    // move windows
-//                    for (VNode n : nodeList) {
-//                        n.setX(n.getX() - minX);
-//                        n.setY(n.getY() - minY);
-//                    }
-//                }
-//            }
-//        });
+
+        translateBehaviorProperty().addListener((ov, oldV, newV) -> requestLayout());
+
     }
 
     @Override
@@ -101,26 +75,32 @@ public class InnerCanvas extends Pane {
 
         super.layoutChildren();
 
-//        if (getParent() instanceof ScalableContentPane) {
-//            ScalableContentPane pane = (ScalableContentPane) getParent();
-//            pane.requestLayout();
-//        }
-//
-        setNeedsLayout(true);
-
+//        setNeedsLayout(true);
         if (!translateToMinNodePosProperty.get()) {
+
+            // window coordinates < 0 are not allowed
+            for (Node n : getChildrenUnmodifiable()) {
+                if (n instanceof FlowNodeWindow && n.isManaged()) {
+
+                    FlowNodeWindow w = (FlowNodeWindow) n;
+
+                    VNode node = w.nodeSkinProperty().get().getModel();
+                    node.setX(Math.max(0, node.getX()));
+                    node.setY(Math.max(0, node.getY()));
+                }
+            }
+
             return;
         }
 
         List<VNode> nodeList = new ArrayList<>();
 
-        double minX = Double.MAX_VALUE;
-        double minY = Double.MAX_VALUE;
-
+        minX = Double.MAX_VALUE;
+        minY = Double.MAX_VALUE;
 
         // search minX and minY of window nodes
         for (Node n : getChildrenUnmodifiable()) {
-            if (n instanceof FlowNodeWindow) {
+            if (n instanceof FlowNodeWindow && n.isManaged()) {
                 FlowNodeWindow w = (FlowNodeWindow) n;
 
                 VNode node = w.nodeSkinProperty().get().getModel();
@@ -131,14 +111,73 @@ public class InnerCanvas extends Pane {
             }
         }
 
+        boolean partOfSceneGraph = false;
+
+        try {
+            javafx.stage.Window w = getScene().getWindow();
+
+            partOfSceneGraph = w != null;
+        } catch (Exception ex) {
+            //
+        }
+
+        if (translateBehaviorProperty().get() == TranslateBehavior.ALWAYS
+                || manualReset) {
+            translateAllWindowsXY(minX, minY, nodeList);
+        } else if (translateBehaviorProperty().get()
+                == TranslateBehavior.IF_NECESSARY) {
+            if (minX < 0 && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
+                translateAllWindowsX(minX, nodeList);
+            }
+            if (minY < 0 && getLayoutBounds().getHeight() > 0 && partOfSceneGraph) {
+                translateAllWindowsY(minY, nodeList);
+            }
+        }
+
+    }
+
+    private void translateAllWindowsXY(double xOffset, double yOffset, List<VNode> nodeList) {
         // move windows
         for (VNode n : nodeList) {
-            n.setX(n.getX() - minX);
-            n.setY(n.getY() - minY);
+            n.setX(n.getX() - xOffset);
+            n.setY(n.getY() - yOffset);
+        }
+    }
+
+    private void translateAllWindowsX(double xOffset, List<VNode> nodeList) {
+        // move windows
+        for (VNode n : nodeList) {
+            n.setX(n.getX() - xOffset);
+        }
+    }
+
+    private void translateAllWindowsY(double yOffset, List<VNode> nodeList) {
+        // move windows
+        for (VNode n : nodeList) {
+            n.setY(n.getY() - yOffset);
         }
     }
 
     public BooleanProperty translateToMinNodePosProperty() {
         return translateToMinNodePosProperty;
+    }
+
+    public final ObjectProperty<TranslateBehavior> translateBehaviorProperty() {
+        return translateBehavior;
+    }
+
+    void resetTranslation() {
+
+        if (manualReset) {
+            return;
+        }
+
+        manualReset = true;
+
+        try {
+            layoutChildren();
+        } finally {
+            manualReset = false;
+        }
     }
 }

@@ -38,16 +38,50 @@ import eu.mihosoft.vrl.workflow.VFlow;
 import javafx.beans.property.ObjectProperty;
 
 /**
- *
+ * A skin is a toolkit independent visual representation of a model.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @param <T> model type that shall be skinned
  */
 public interface Skin<T extends Model> {
+    /**
+     * Adds this skin to its view parent.
+     */
     public void add();
+    /**
+     * Removes this skin from its view parent.
+     */
     public void remove();
+    /**
+     * Defines the model that shall be represented by this skin.
+     * @param model model to set
+     */
     public void setModel(T model);
+    /**
+     * Returns the model represented by this skin.
+     * @return model represented by this skin
+     */
     public T getModel();
+    /**
+     * Returns the property the model represented by this skin.
+     * @return model represented by this skin
+     */
     public ObjectProperty<T> modelProperty();
+    /**
+     * Returns the flow controller that is used to manipulate the model.
+     * @return the flow controller that is used to manipulate the model
+     */
     public VFlow getController();
+    
+    /**
+     * Defines the flow controller that shall be used to manipulate the model.
+     * @param flow flow controller to set
+     */
     public void setController(VFlow flow);
+    
+    /**
+     * Returns the skin factory that created this skin.
+     * @return the skin factory that created this skin
+     */
     public SkinFactory getSkinFactory();
 }

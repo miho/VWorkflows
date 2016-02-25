@@ -47,6 +47,7 @@ allprojects {
         jcenter()
     }
 
+    // JDK 8 is way too strict about Javadoc style
     if (JavaVersion.current().isJava8Compatible()) {
         tasks.withType(Javadoc) {
             options.addStringOption('Xdoclint:none', '-quiet')
@@ -117,7 +118,7 @@ subprojects { subproj ->
 
         dependencies {
             compileOnly project.files(project.jfxrtLocation)
-            testCompile 'junit:junit:4.12'
+            testCompile 'junit:junit:4.+'
         }
 
         test {

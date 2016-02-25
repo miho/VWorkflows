@@ -33,16 +33,21 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+
+import javafx.scene.layout.Region;
+
 import javafx.scene.transform.Scale;
 
 /**
@@ -51,49 +56,60 @@ import javafx.scene.transform.Scale;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class ScalableContentPane extends Pane {
+public class ScalableContentPane extends Region {
 
     private Scale contentScaleTransform;
-    private Property<Pane> contentPaneProperty =
-            new SimpleObjectProperty<>();
+    private final Property<Pane> contentPaneProperty
+            = new SimpleObjectProperty<>();
     private double contentScaleWidth = 1.0;
     private double contentScaleHeight = 1.0;
     private boolean aspectScale = true;
     private boolean autoRescale = true;
-    private static boolean applyJDK7Fix = false;
     private final DoubleProperty minScaleXProperty = new SimpleDoubleProperty(Double.MIN_VALUE);
     private final DoubleProperty maxScaleXProperty = new SimpleDoubleProperty(Double.MAX_VALUE);
     private final DoubleProperty minScaleYProperty = new SimpleDoubleProperty(Double.MIN_VALUE);
     private final DoubleProperty maxScaleYProperty = new SimpleDoubleProperty(Double.MAX_VALUE);
 
-    static {
-        // JDK7 fix:
-        applyJDK7Fix = System.getProperty("java.version").startsWith("1.7");
-    }
+    private final BooleanProperty fitToWidthProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty fitToHeightProperty = new SimpleBooleanProperty(true);
+
+    private final ObjectProperty<ScaleBehavior> scaleBehavior
+            = new SimpleObjectProperty<>(ScaleBehavior.ALWAYS);
+    private boolean manualReset;
 
     /**
      * Constructor.
      */
     public ScalableContentPane() {
-        setContentPane(new Pane());
+        setContent(new Pane());
 
-        setPrefWidth(USE_PREF_SIZE);
-        setPrefHeight(USE_PREF_SIZE);
-
-        needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
-                if (t1) {
-                    computeScale();
-                }
+        needsLayoutProperty().addListener((ov, oldV, newV) -> {
+            if (newV
+                    && (getWidth() <= getPrefWidth()
+                    || getHeight() <= getPrefHeight())
+                    || getPrefWidth() == USE_COMPUTED_SIZE
+                    || getPrefHeight() == USE_COMPUTED_SIZE) {
+                computeScale();
             }
+        });
+
+        fitToWidthProperty().addListener((ov, oldValue, newValue) -> {
+            requestLayout();
+        });
+
+        fitToHeightProperty().addListener((ov, oldValue, newValue) -> {
+            requestLayout();
+        });
+
+        scaleBehaviorProperty().addListener((ov, oldV, newV) -> {
+            requestLayout();
         });
     }
 
     /**
      * @return the content pane
      */
-    public Pane getContentPane() {
+    public Pane getContent() {
         return contentPaneProperty.getValue();
     }
 
@@ -102,35 +118,32 @@ public class ScalableContentPane extends Pane {
      *
      * @param contentPane pane to define
      */
-    public final void setContentPane(Pane contentPane) {
+    public final void setContent(Pane contentPane) {
         contentPaneProperty.setValue(contentPane);
         contentPane.setManaged(false);
         initContentPaneListener();
-//        contentPane.setStyle("-fx-border-color: rgb(0,0,0);");
 
         contentScaleTransform = new Scale(1, 1);
         getContentScaleTransform().setPivotX(0);
         getContentScaleTransform().setPivotY(0);
         getContentScaleTransform().setPivotZ(0);
-        getContentPane().getTransforms().add(getContentScaleTransform());
+        getContent().getTransforms().add(getContentScaleTransform());
 
         getChildren().add(contentPane);
-        
-        ChangeListener<Number> changeListener = new ChangeListener<Number>() {
 
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                requestScale();
-            }
+        ChangeListener<Number> changeListener = (ov, oldValue, newValue) -> {
+            requestScale();
         };
         
+        getContentScaleTransform().setOnTransformChanged((event) -> {
+            requestLayout();
+        });
+
         minScaleXProperty().addListener(changeListener);
         minScaleYProperty().addListener(changeListener);
         maxScaleXProperty().addListener(changeListener);
         maxScaleYProperty().addListener(changeListener);
-                
 
-//        getContentPane().setStyle("-fx-border-color: red; -fx-border-width: 1;");
     }
 
     /**
@@ -138,7 +151,7 @@ public class ScalableContentPane extends Pane {
      *
      * @return the content pane property
      */
-    public Property<Pane> contentPaneProperty() {
+    public Property<Pane> contentProperty() {
         return contentPaneProperty;
     }
 
@@ -153,34 +166,26 @@ public class ScalableContentPane extends Pane {
 
     @Override
     protected void layoutChildren() {
-
         super.layoutChildren();
-
-
     }
 
     private void computeScale() {
-        double realWidth =
-                getContentPane().prefWidth(getHeight());
+        double realWidth
+                = getContent().prefWidth(getLayoutBounds().getHeight());
 
-        double realHeigh =
-                getContentPane().prefHeight(getWidth());
-
-        if (applyJDK7Fix) {
-//            realWidth += 0.01;
-            realHeigh += 0.01; // does not paint without it
-        }
+        double realHeight
+                = getContent().prefHeight(getLayoutBounds().getWidth());
 
         double leftAndRight = getInsets().getLeft() + getInsets().getRight();
         double topAndBottom = getInsets().getTop() + getInsets().getBottom();
 
-        double contentWidth =
-                getWidth() - leftAndRight;
-        double contentHeight =
-                getHeight() - topAndBottom;
+        double contentWidth
+                = getLayoutBounds().getWidth() - leftAndRight;
+        double contentHeight
+                = getLayoutBounds().getHeight() - topAndBottom;
 
         contentScaleWidth = contentWidth / realWidth;
-        contentScaleHeight = contentHeight / realHeigh;
+        contentScaleHeight = contentHeight / realHeight;
 
         contentScaleWidth = Math.max(contentScaleWidth, getMinScaleX());
         contentScaleWidth = Math.min(contentScaleWidth, getMaxScaleX());
@@ -188,34 +193,101 @@ public class ScalableContentPane extends Pane {
         contentScaleHeight = Math.max(contentScaleHeight, getMinScaleY());
         contentScaleHeight = Math.min(contentScaleHeight, getMaxScaleY());
 
+        double resizeScaleW;
+        double resizeScaleH;
+
+        boolean partOfSceneGraph = true;
+
         if (isAspectScale()) {
             double scale = Math.min(contentScaleWidth, contentScaleHeight);
 
-            getContentScaleTransform().setX(scale);
-            getContentScaleTransform().setY(scale);
+            if (getScaleBehavior() == ScaleBehavior.ALWAYS || manualReset) {
 
-//            System.out.println("scale: " + scale);
+                getContentScaleTransform().setX(scale);
+                getContentScaleTransform().setY(scale);
+
+            } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
+                if (scale < getContentScaleTransform().getX()
+                        && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
+
+                    getContentScaleTransform().setX(scale);
+                    getContentScaleTransform().setY(scale);
+                }
+            }
+
         } else {
-            getContentScaleTransform().setX(contentScaleWidth);
-            getContentScaleTransform().setY(contentScaleHeight);
+
+            if (getScaleBehavior() == ScaleBehavior.ALWAYS || manualReset) {
+
+                getContentScaleTransform().setX(contentScaleWidth);
+                getContentScaleTransform().setY(contentScaleHeight);
+
+            } else if (getScaleBehavior() == ScaleBehavior.IF_NECESSARY) {
+                if (contentScaleWidth < getContentScaleTransform().getX()
+                        && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
+                    getContentScaleTransform().setX(contentScaleWidth);
+
+
+                }
+                if (contentScaleHeight < getContentScaleTransform().getY()
+                        && getLayoutBounds().getHeight() > 0 && partOfSceneGraph) {
+                    getContentScaleTransform().setY(contentScaleHeight);
+
+                }
+            }
         }
 
-        getContentPane().relocate(
+        resizeScaleW = getContentScaleTransform().getX();
+        resizeScaleH = getContentScaleTransform().getY();
+
+        getContent().relocate(
                 getInsets().getLeft(), getInsets().getTop());
 
-        getContentPane().resize(
-                (contentWidth) / contentScaleWidth,
-                (contentHeight) / contentScaleHeight);
+        double realContentWidth;
+        double realContentHeight;
+
+        if (isFitToWidth()) {
+            realContentWidth = contentWidth / resizeScaleW;
+        } else {
+            realContentWidth = contentWidth / contentScaleWidth;
+        }
+
+        if (isFitToHeight()) {
+            realContentHeight = contentHeight / resizeScaleH;
+        } else {
+            realContentHeight = contentHeight / contentScaleHeight;
+        }
+
+        getContent().resize(realContentWidth, realContentHeight);
+
     }
 
     public void requestScale() {
         computeScale();
     }
 
+    public void resetScale() {
+
+        if (manualReset) {
+            return;
+        }
+
+        manualReset = true;
+
+        try {
+            computeScale();
+        } finally {
+            manualReset = false;
+        }
+    }
+
     @Override
     protected double computeMinWidth(double d) {
 
-        double result = getInsets().getLeft() + getInsets().getRight() + 1;
+        double result = getInsets().getLeft() + getInsets().getRight();
+
+        // apply content width (including scale)
+        result += getContent().prefWidth(d) * getMinScaleX();
 
         return result;
     }
@@ -223,7 +295,10 @@ public class ScalableContentPane extends Pane {
     @Override
     protected double computeMinHeight(double d) {
 
-        double result = getInsets().getTop() + getInsets().getBottom() + 1;
+        double result = getInsets().getTop() + getInsets().getBottom();
+
+        // apply content width (including scale)
+        result += getContent().prefHeight(d) * getMinScaleY();
 
         return result;
     }
@@ -231,7 +306,10 @@ public class ScalableContentPane extends Pane {
     @Override
     protected double computePrefWidth(double d) {
 
-        double result = 1;
+        double result = getInsets().getLeft() + getInsets().getRight();
+
+        // apply content width (including scale)
+        result += getContent().prefWidth(d) * contentScaleWidth;
 
         return result;
     }
@@ -239,63 +317,54 @@ public class ScalableContentPane extends Pane {
     @Override
     protected double computePrefHeight(double d) {
 
-        double result = 1;
+        double result = getInsets().getTop() + getInsets().getBottom();
+
+        // apply content width (including scale)
+        result += getContent().prefHeight(d) * contentScaleHeight;
 
         return result;
     }
 
     private void initContentPaneListener() {
 
-        final ChangeListener<Bounds> boundsListener = new ChangeListener<Bounds>() {
-            @Override
-            public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
-                if (isAutoRescale()) {
-                    setNeedsLayout(false);
-                    getContentPane().requestLayout();
-                    requestLayout();
-
-                }
+        final ChangeListener<Bounds> boundsListener = (ov, oldValue, newValue) -> {
+            if (isAutoRescale()) {
+                setNeedsLayout(false);
+                getContent().requestLayout();
+                requestLayout();
             }
         };
 
-        final ChangeListener<Number> numberListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-                if (isAutoRescale()) {
-                    setNeedsLayout(false);
-                    getContentPane().requestLayout();
-                    requestLayout();
-
-                }
+        final ChangeListener<Number> numberListener = (ov, oldValue, newValue) -> {
+            if (isAutoRescale()) {
+                setNeedsLayout(false);
+                getContent().requestLayout();
+                requestLayout();
             }
         };
 
-        getContentPane().getChildren().addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends Node> c) {
 
-                while (c.next()) {
-                    if (c.wasPermutated()) {
-                        for (int i = c.getFrom(); i < c.getTo(); ++i) {
-                            //permutate
-                            String action = "permutate"; // TODO: implement
+        getContent().getChildren().addListener(
+                (ListChangeListener.Change<? extends Node> c) -> {
+            while (c.next()) {
+                if (c.wasPermutated()) {
+                    for (int i = c.getFrom(); i < c.getTo(); ++i) {
+                        //permutate
+                    }
+                } else if (c.wasUpdated()) {
+                    //update item
+                } else {
+                    if (c.wasRemoved()) {
+                        for (Node n : c.getRemoved()) {
+                            n.boundsInLocalProperty().removeListener(boundsListener);
+                            n.layoutXProperty().removeListener(numberListener);
+                            n.layoutYProperty().removeListener(numberListener);
                         }
-                    } else if (c.wasUpdated()) {
-                        //update item
-                        String action = "update"; // TODO: implement
-                    } else {
-                        if (c.wasRemoved()) {
-                            for (Node n : c.getRemoved()) {
-                                n.boundsInLocalProperty().removeListener(boundsListener);
-                                n.layoutXProperty().removeListener(numberListener);
-                                n.layoutYProperty().removeListener(numberListener);
-                            }
-                        } else if (c.wasAdded()) {
-                            for (Node n : c.getAddedSubList()) {
-                                n.boundsInLocalProperty().addListener(boundsListener);
-                                n.layoutXProperty().addListener(numberListener);
-                                n.layoutYProperty().addListener(numberListener);
-                            }
+                    } else if (c.wasAdded()) {
+                        for (Node n : c.getAddedSubList()) {
+                            n.boundsInLocalProperty().addListener(boundsListener);
+                            n.layoutXProperty().addListener(numberListener);
+                            n.layoutYProperty().addListener(numberListener);
                         }
                     }
                 }
@@ -387,5 +456,41 @@ public class ScalableContentPane extends Pane {
 
     public void setMaxScaleY(double s) {
         maxScaleYProperty().set(s);
+    }
+
+    public void setFitToWidth(boolean value) {
+        fitToWidthProperty().set(value);
+    }
+
+    public boolean isFitToWidth() {
+        return fitToWidthProperty().get();
+    }
+
+    public final BooleanProperty fitToWidthProperty() {
+        return fitToWidthProperty;
+    }
+
+    public void setFitToHeight(boolean value) {
+        fitToHeightProperty().set(value);
+    }
+
+    public final BooleanProperty fitToHeightProperty() {
+        return fitToHeightProperty;
+    }
+
+    public boolean isFitToHeight() {
+        return fitToHeightProperty().get();
+    }
+
+    public final ObjectProperty<ScaleBehavior> scaleBehaviorProperty() {
+        return scaleBehavior;
+    }
+
+    public void setScaleBehavior(ScaleBehavior behavior) {
+        scaleBehaviorProperty().set(behavior);
+    }
+
+    public ScaleBehavior getScaleBehavior() {
+        return scaleBehaviorProperty().get();
     }
 }

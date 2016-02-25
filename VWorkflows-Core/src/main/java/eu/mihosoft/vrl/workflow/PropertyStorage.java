@@ -39,6 +39,8 @@
 
 package eu.mihosoft.vrl.workflow;
 
+import java.util.Collection;
+import java.util.Optional;
 import javafx.collections.MapChangeListener;
 
 import java.util.Optional;
@@ -94,5 +96,11 @@ public interface PropertyStorage {
      * @param l change listener
      */
     public void removeListener(MapChangeListener<String, Object> l);
+    
+    /**
+     * Returns the keys that are currently used by the property storage.
+     * @return keys used by the property storage
+     */
+    public Collection<String> getKeys();
     
 }

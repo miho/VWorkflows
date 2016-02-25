@@ -36,26 +36,25 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
+
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
-import jfxtras.labs.scene.control.window.Window;
+import jfxtras.scene.control.window.Window;
 import org.apache.commons.math3.geometry.euclidean.twod.Line;
 import org.apache.commons.math3.geometry.euclidean.twod.Segment;
 import org.apache.commons.math3.geometry.euclidean.twod.SubLine;
@@ -89,18 +88,17 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> nodeYListener;
     private ChangeListener<Number> nodeWidthListener;
     private ChangeListener<Number> nodeHeightListener;
-//    private Node output;
+
     private FXNewConnectionSkin newConnectionSkin;
     private MouseEvent newConnectionPressEvent;
     private boolean removeSkinOnly = false;
     VFlow controller;
-    Map<Connector, Shape> connectors = new HashMap<>();
-    List<List<Shape>> shapeLists = new ArrayList<>();
+    Map<Connector, ConnectorCircle> connectors = new HashMap<>();
+    List<List<ConnectorCircle>> shapeLists = new ArrayList<>();
     private final Map<Connector, Integer> connectorToIndexMap = new HashMap<>();
     private final FXSkinFactory skinFactory;
     private final List<Double> connectorSizes = new ArrayList<>();
-//    private double inputConnectorSize;
-//    private double outputConnectorSize;
+
     private final List<Connector> connectorList = new ArrayList<>();
     private final IntegerProperty numConnectorsProperty = new SimpleIntegerProperty();
 
@@ -111,7 +109,8 @@ public class FXFlowNodeSkin
     private static final int BOTTOM = 2;
     private static final int LEFT = 3;
 
-    public FXFlowNodeSkin(FXSkinFactory skinFactory, Parent parent, VNode model, VFlow controller) {
+    public FXFlowNodeSkin(FXSkinFactory skinFactory,
+            Parent parent, VNode model, VFlow controller) {
         this.skinFactory = skinFactory;
         setParent(parent);
         setModel(model);
@@ -121,98 +120,119 @@ public class FXFlowNodeSkin
         init();
     }
 
+    protected FlowNodeWindow createNodeWindow() {
+        FlowNodeWindow flowNodeWindow = new FlowNodeWindow(this);
+
+        flowNodeWindow.setTitle(getModel().getTitle());
+        flowNodeWindow.setLayoutX(getModel().getX());
+        flowNodeWindow.setLayoutY(getModel().getY());
+        flowNodeWindow.setPrefWidth(getModel().getWidth());
+        flowNodeWindow.setPrefHeight(getModel().getHeight());
+
+        flowNodeWindow.boundsInParentProperty().addListener(
+                (ov, oldValue, newValue) -> {
+                    for (Connector c : connectorList) {
+                        layoutConnector(c, true);
+                    }
+                });
+
+        flowNodeWindow.resizingProperty().addListener((ov) -> {
+//            System.out.println("resizing: " + flowNodeWindow.isResizing());
+            connectors.values().forEach(cShape -> {
+
+                cShape.setCache(!flowNodeWindow.isResizing());
+            });
+        });
+        
+        flowNodeWindow.resizingProperty().addListener((ov) -> {
+            if (flowNodeWindow.isResizing()) {
+                flowNodeWindow.setCache(false);
+            } else {
+                flowNodeWindow.setCache(true);
+            }
+        });
+
+//        flowNodeWindow.cacheProperty().addListener((ov)->{
+//            System.out.println("w-cached: " + flowNodeWindow.isCache());
+//        });
+        return flowNodeWindow;
+    }
+
     private void init() {
 
         for (int i = 0; i < 4; i++) {
             shapeLists.add(new ArrayList<>());
         }
 
-        node = new FlowNodeWindow(this);
-
-        node.setTitle(getModel().getTitle());
-        node.setLayoutX(getModel().getX());
-        node.setLayoutY(getModel().getY());
-        node.setPrefWidth(getModel().getWidth());
-        node.setPrefHeight(getModel().getHeight());
+        node = createNodeWindow();
 
         registerListeners(getModel());
 
-        modelProperty.addListener(new ChangeListener<VNode>() {
-            @Override
-            public void changed(ObservableValue<? extends VNode> ov, VNode oldVal, VNode newVal) {
-
-                removeListeners(oldVal);
-                registerListeners(newVal);
-            }
+        modelProperty.addListener((ov, oldVal, newVal) -> {
+            removeListeners(oldVal);
+            registerListeners(newVal);
         });
 
         for (Connector connector : getModel().getConnectors()) {
             addConnector(connector);
         }
 
-        getModel().getConnectors().addListener(new ListChangeListener<Connector>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends Connector> change) {
-                boolean numConnectorsHasChanged = false;
-                while (change.next()) {
-                    if (change.wasPermutated()) {
-                        for (int i = change.getFrom(); i < change.getTo(); ++i) {
-                            //permutate
-                            String action = "permutate"; // TODO: implement
-                        }
-                    } else if (change.wasUpdated()) {
-                        //update item
-                        String action = "update"; // TODO: implement
-                    } else if (change.wasRemoved()) {
-                        numConnectorsHasChanged = true;
-                        // removed
-                        for (Connector connector : change.getRemoved()) {
-                            removeConnector(connector);
-                        }
-                    } else if (change.wasAdded()) {
-                        numConnectorsHasChanged = true;
-                        // added
-                        for (Connector connector : change.getAddedSubList()) {
-                            addConnector(connector);
-                        }
-                    }
 
-                } // end while change.next()
+        getModel().getConnectors().addListener(
+                (ListChangeListener.Change<? extends Connector> change) -> {
+                    boolean numConnectorsHasChanged = false;
+                    while (change.next()) {
+                        if (change.wasPermutated()) {
+                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                                //permutate
+                            }
+                        } else if (change.wasUpdated()) {
+                            //update item
+                        } else if (change.wasRemoved()) {
+                            numConnectorsHasChanged = true;
+                            // removed
+                            for (Connector connector : change.getRemoved()) {
+                                removeConnector(connector);
+                            }
+                        } else if (change.wasAdded()) {
+                            numConnectorsHasChanged = true;
+                            // added
+                            for (Connector connector : change.getAddedSubList()) {
+                                addConnector(connector);
+                            }
+                        }
 
-                if (numConnectorsHasChanged) {
+                    } // end while change.next()
 
-                    computeConnectorSizes();
+                    if (numConnectorsHasChanged) {
+
+                        computeConnectorSizes();
 //                    computeInputConnectorSize();
 //                    computeOutputConnectorSize();
-                    adjustConnectorSize();
+                        adjustConnectorSize();
 
-                    numConnectorsProperty.set(getModel().getConnectors().size());
-                }
-                
-                configureEditCapability();
-            }
-        });
+                        numConnectorsProperty.set(getModel().getConnectors().size());
+                    }
 
-        node.boundsInParentProperty().addListener((ov, oldValue, newValue) -> {
-            for (Connector c : connectorList) {
-                layoutConnector(c, true);
-            }
-        });
+                    configureEditCapability();
+                });
     }
 
     private void initVReqListeners() {
 
         configureEditCapability();
 
-        vReqLister = (MapChangeListener.Change<? extends String, ? extends Object> change) -> {
-            
+        vReqLister = (change) -> {
+
             configureEditCapability();
         };
 
         getModel().getVisualizationRequest().addListener(vReqLister);
+        getModel().getFlow().getVisualizationRequest().addListener(vReqLister);
     }
 
     private void configureEditCapability() {
+
         Optional<Boolean> disableEditing
                 = getModel().getVisualizationRequest().
                 get(VisualizationRequest.KEY_DISABLE_EDITING);
@@ -221,19 +241,81 @@ public class FXFlowNodeSkin
 
             boolean disableEditingV = disableEditing.get();
 
-            node.setMovable(!disableEditingV);
-            node.setResizableWindow(!disableEditingV);
+            updateEditabilityConfig(disableEditingV);
+        } else {
 
-            for (Shape connectorShape : connectors.values()) {
-                connectorShape.setMouseTransparent(disableEditingV);
+            VFlowModel parent = getModel().getFlow();
+
+            while (parent != null) {
+                Optional<Boolean> disableEditingParent
+                        = parent.getVisualizationRequest().
+                        get(VisualizationRequest.KEY_DISABLE_EDITING);
+
+                if (disableEditingParent.isPresent()) {
+                    updateEditabilityConfig(disableEditingParent.get());
+                    break;
+                }
+
+                parent = parent.getFlow();
+            }
+
+            // if we din't find a parent with the requested value then we
+            // make it editable
+            if (parent == null) {
+                updateEditabilityConfig(false);
             }
         }
+    }
 
+    private void updateEditabilityConfig(boolean notEditable) {
+        node.setMovable(!notEditable);
+        node.setResizableWindow(!notEditable);
+        node.setEditableState(!notEditable);
+
+        for (ConnectorCircle connectorShape : connectors.values()) {
+            connectorShape.setMouseTransparent(notEditable);
+        }
+
+        if (this.getModel() instanceof VFlowModel) {
+
+            VFlowModel flowModel = (VFlowModel) this.getModel();
+
+            flowModel.getAllConnections().values().stream().flatMap(
+                    conns -> conns.getConnections().stream()).
+                    map(conn -> controller.
+                            getNodeSkinLookup().getById(skinFactory,
+                                    conn)).
+                    filter(cSkin -> cSkin instanceof FXConnectionSkin).
+                    map(cSkin -> (FXConnectionSkin) cSkin).
+                    forEach(cSkin -> cSkin.configureEditCapability(notEditable));
+
+            for (VNode vn : flowModel.getNodes()) {
+
+                FXFlowNodeSkin n = (FXFlowNodeSkin) controller.
+                        getNodeSkinLookup().getById(skinFactory, vn.getId());
+
+                if (n != null) {
+                    n.configureEditCapability();
+                }
+            }
+        } else if (getModel().getFlow() != null) {
+            VFlowModel parent = getModel().getFlow();
+
+            parent.getAllConnections().values().stream().flatMap(
+                    conns -> conns.getConnections().stream()).
+                    map(conn -> controller.
+                            getNodeSkinLookup().getById(skinFactory,
+                                    conn)).
+                    filter(cSkin -> cSkin instanceof FXConnectionSkin).
+                    map(cSkin -> (FXConnectionSkin) cSkin).
+                    forEach(cSkin -> cSkin.configureEditCapability(notEditable));
+        }
     }
 
     void layoutConnectors() {
+
         for (Connector c : connectorList) {
-            
+
             layoutConnector(c, false);
         }
     }
@@ -244,16 +326,12 @@ public class FXFlowNodeSkin
                 = c.getVisualizationRequest().
                 get(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT);
 
-        boolean switchEdges = false;
+        boolean switchEdges = autoLayout.orElse(false);
 
-        if (autoLayout.isPresent()) {
-            switchEdges = autoLayout.get();
-        }
+        ConnectorCircle connectorShape = connectors.get(c);
 
-        Circle connectorShape = (Circle) connectors.get(c);
-
-        connectorShape.setLayoutX(computeConnectorXValue(c));
-        connectorShape.setLayoutY(computeConnectorYValue(c));
+        connectorShape.setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius() );
+        connectorShape.setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius() );
 
         Collection<Connection> conns = getModel().getFlow().
                 getConnections(c.getType()).getAllWith(c);
@@ -327,11 +405,10 @@ public class FXFlowNodeSkin
             }
         } // end if switchEdges
 
-        connectorShape.setLayoutX(computeConnectorXValue(c));
-        connectorShape.setLayoutY(computeConnectorYValue(c));
-        
-//        System.out.println("c: " + c);
+        connectorShape.setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
+        connectorShape.setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
 
+//        System.out.println("c: " + c);
         if (updateOthers) {
             for (Connection connection : conns) {
 
@@ -346,6 +423,7 @@ public class FXFlowNodeSkin
                     cTmp = connection.getReceiver();
                 }
 
+                // TODO analyze potential performance issue with lookup
                 List<VNodeSkin> skins = controller.getNodeSkinLookup().
                         getById(nId);
 
@@ -359,7 +437,7 @@ public class FXFlowNodeSkin
 
     private double computeConnectorXValue(Connector connector) {
 
-        Shape connectorNode = connectors.get(connector);
+        ConnectorCircle connectorNode = connectors.get(connector);
 
         double posX = node.getLayoutX();
 
@@ -401,7 +479,7 @@ public class FXFlowNodeSkin
 
     private double computeConnectorYValue(Connector connector) {
 
-        Shape connectorNode = connectors.get(connector);
+        ConnectorCircle connectorNode = connectors.get(connector);
 
         double posY = node.getLayoutY();
 
@@ -450,7 +528,7 @@ public class FXFlowNodeSkin
         ConnectorCircle circle = new ConnectorCircle(controller,
                 getSkinFactory(), connector, 20);
 
-        final Circle connectorNode = circle;
+        final ConnectorCircle connectorNode = circle;
         connectorNode.setManaged(false);
 
         connectors.put(connector, connectorNode);
@@ -465,105 +543,99 @@ public class FXFlowNodeSkin
             connectorToIndexMap.put(connector, RIGHT);
         }
 
-        node.boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
-            @Override
-            public void changed(ObservableValue<? extends Bounds> observable,
-                    Bounds oldValue, Bounds newValue) {
-
-                computeConnectorSizes();
-                adjustConnectorSize();
-            }
+        node.boundsInLocalProperty().addListener((ov, oldValue, newValue) -> {
+            computeConnectorSizes();
+            adjustConnectorSize();
         });
 
         NodeUtil.addToParent(getParent(), connectorNode);
 
-        connectorNode.onMouseEnteredProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                connectorNode.toFront();
-            }
-        });
+        connectorNode.onMouseEnteredProperty().set(
+                (EventHandler<MouseEvent>) (MouseEvent t) -> {
+                    connectorNode.toFront();
+                });
 
-        connectorNode.onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
+        connectorNode.onMousePressedProperty().set(
+                (EventHandler<MouseEvent>) (MouseEvent t) -> {
+                    // we are already connected and manipulate the existing connection
+                    // rather than creating a new one
+                    if (controller.getConnections(connector.getType()).
+                    isInputConnected(connector)) {
+                        return;
+                    }
 
-                // we are already connected and manipulate the existing connection
-                // rather than creating a new one
-                if (controller.getConnections(connector.getType()).
-                        isInputConnected(connector)) {
-                    return;
-                }
+                    t.consume();
+                    newConnectionPressEvent = t;
+                });
 
-                t.consume();
-                newConnectionPressEvent = t;
-            }
-        });
+        connectorNode.onMouseDraggedProperty().set(
+                (EventHandler<MouseEvent>) (MouseEvent t) -> {
+                    if (connectorNode.isMouseTransparent()) {
+                        return;
+                    }
 
-        connectorNode.onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                
-                if (connectorNode.isMouseTransparent()) {
-                    return;
-                }
+                    // we are already connected and manipulate the existing connection
+                    // rather than creating a new one
+                    if (controller.getConnections(connector.getType()).
+                    isInputConnected(connector)) {
+                        return;
+                    }
 
-                // we are already connected and manipulate the existing connection
-                // rather than creating a new one
-                if (controller.getConnections(connector.getType()).
-                        isInputConnected(connector)) {
-                    return;
-                }
+                    int numOfExistingConnections = connector.getNode().getFlow().
+                    getConnections(connector.getType()).
+                    getAllWith(connector).size();
 
-                if (newConnectionSkin == null) {
-                    newConnectionSkin
+                    if (numOfExistingConnections < connector.
+                    getMaxNumberOfConnections()) {
+
+                        if (newConnectionSkin == null) {
+                            newConnectionSkin
                             = new FXNewConnectionSkin(getSkinFactory(),
                                     getParent(), connector,
                                     getController(), connector.getType());
 
-                    newConnectionSkin.add();
+                            newConnectionSkin.add();
 
-                    MouseEvent.fireEvent(
-                            newConnectionSkin.getReceiverConnector(),
-                            newConnectionPressEvent);
-                }
+                            MouseEvent.fireEvent(
+                                    newConnectionSkin.getReceiverConnector(),
+                                    newConnectionPressEvent);
+                        }
 
-                t.consume();
-                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                        t.consume();
+                        MouseEvent.fireEvent(
+                                newConnectionSkin.getReceiverConnector(), t);
 
-                t.consume();
-                MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
+                        t.consume();
+                        MouseEvent.fireEvent(
+                                newConnectionSkin.getReceiverConnector(), t);
+                    }
+                });
 
-            }
-        });
+        connectorNode.onMouseReleasedProperty().set(
+                (EventHandler<MouseEvent>) (MouseEvent t) -> {
+                    if (connectorNode.isMouseTransparent()) {
+                        return;
+                    }
 
-        connectorNode.onMouseReleasedProperty().set(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                
-                if (connectorNode.isMouseTransparent()) {
-                    return;
-                }
+                    connector.click(NodeUtil.mouseBtnFromEvent(t), t);
 
-                connector.click(NodeUtil.mouseBtnFromEvent(t), t);
+                    // we are already connected and manipulate the existing connection
+                    // rather than creating a new one
+                    if (controller.getConnections(connector.getType()).
+                    isInputConnected(connector)) {
+                        return;
+                    }
 
-                // we are already connected and manipulate the existing connection
-                // rather than creating a new one
-                if (controller.getConnections(connector.getType()).
-                        isInputConnected(connector)) {
-                    return;
-                }
+                    t.consume();
+                    try {
+                        MouseEvent.fireEvent(
+                                newConnectionSkin.getReceiverConnector(), t);
+                    } catch (Exception ex) {
+                        // TODO exception is not critical here (node already removed)
+                    }
 
-                t.consume();
-                try {
-                    MouseEvent.fireEvent(newConnectionSkin.getReceiverConnector(), t);
-                } catch (Exception ex) {
-                    // TODO exception is not critical here (node already removed)
-                }
-
-                newConnectionSkin = null;
-            }
-        });
+                    newConnectionSkin = null;
+                });
     }
 
     private void computeConnectorSizes() {
@@ -575,9 +647,10 @@ public class FXFlowNodeSkin
         connectorSizes.clear();
 
         for (int i = 0; i < shapeLists.size(); i++) {
-            List<Shape> shapeList = shapeLists.get(i);
+            List<ConnectorCircle> shapeList = shapeLists.get(i);
 
-            double connectorHeight = computeConnectorSize(inset, shapeList.size());
+            double connectorHeight
+                    = computeConnectorSize(inset, shapeList.size());
 
             if (connectorHeight < minSize) {
                 double diff = minSize - connectorHeight;
@@ -589,28 +662,13 @@ public class FXFlowNodeSkin
         }
     }
 
-//    private void computeOutputConnectorSize() {
-//        double inset = 120;
-//        double minInset = 60;
-//        double minSize = 8;
-//
-//        double connectorHeight = computeConnectorSize(inset, outputList.size());
-//
-//        if (connectorHeight < minSize) {
-//            double diff = minSize - connectorHeight;
-//            inset = Math.max(inset - diff * outputList.size(), minInset);
-//            connectorHeight = computeConnectorSize(inset, outputList.size());
-//        }
-//
-//        outputConnectorSize = connectorHeight;
-//    }
     private double computeConnectorSize(double inset, int numConnectors) {
 
         if (numConnectors == 0) {
             return 0;
         }
 
-        double maxSize = 10;
+        double maxSize = 15;
 
         double connectorHeight = maxSize * 2;
         double originalConnectorHeight = connectorHeight;
@@ -710,7 +768,8 @@ public class FXFlowNodeSkin
         Optional<Integer> receiverIntersection
                 = getIntersectionIndex(segment, n2Edges);
 
-        if (!senderIntersection.isPresent() || !receiverIntersection.isPresent()) {
+        if (!senderIntersection.isPresent()
+                || !receiverIntersection.isPresent()) {
             // rectangles overlap. therefore we use default layout
             return new Pair<>(RIGHT, LEFT);
         }
@@ -731,12 +790,12 @@ public class FXFlowNodeSkin
         }
 
         for (int i = 0; i < connectorSizes.size(); i++) {
-            for (Shape connector : shapeLists.get(i)) {
+            for (ConnectorCircle connector : shapeLists.get(i)) {
                 double size = connectorSizes.get(i);
 
-                if (connector instanceof Circle) {
+                if (connector instanceof ConnectorCircle) {
 
-                    ((Circle) connector).setRadius(
+                    ((ConnectorCircle) connector).setRadius(
                             Math.min(size * 0.5, maxConnectorSize * 0.5));
                 }
             }
@@ -781,10 +840,12 @@ public class FXFlowNodeSkin
         if (node != null && node.getParent() != null) {
             NodeUtil.removeFromParent(node);
         }
-        
+
         removeListeners(getModel());
 
         getModel().getVisualizationRequest().removeListener(vReqLister);
+
+        node.onRemovedFromSceneGraph();
     }
 
     @Override
@@ -830,82 +891,53 @@ public class FXFlowNodeSkin
         node.layoutYProperty().removeListener(nodeXListener);
         node.prefWidthProperty().removeListener(nodeWidthListener);
         node.prefHeightProperty().removeListener(nodeHeightListener);
-        
+
         flowNode.getVisualizationRequest().addListener(vReqLister);
     }
 
     private void initListeners() {
-        modelTitleListener = new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> ov, String oldVal, String newVal) {
-                node.setTitle(newVal);
-            }
+        modelTitleListener = (ov, oldValue, newValue) -> {
+            node.setTitle(newValue);
         };
 
-        modelXListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setLayoutX((double) newVal);
-            }
+        modelXListener = (ov, oldValue, newValue) -> {
+            node.setLayoutX(newValue.doubleValue());
         };
 
-        modelYListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setLayoutY((double) newVal);
-            }
+        modelYListener = (ov, oldValue, newValue) -> {
+            node.setLayoutY(newValue.doubleValue());
         };
 
-        modelWidthListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setPrefWidth((double) newVal);
-            }
+        modelWidthListener = (ov, oldValue, newValue) -> {
+            node.setPrefWidth(newValue.doubleValue());
         };
 
-        modelHeightListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                node.setPrefHeight((double) newVal);
-            }
+        modelHeightListener = (ov, oldValue, newValue) -> {
+            node.setPrefHeight(newValue.doubleValue());
         };
 
-        nodeXListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setX((double) newVal);
-            }
+        nodeXListener = (ov, oldValue, newValue) -> {
+            getModel().setX(newValue.doubleValue());
         };
 
-        nodeYListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setY((double) newVal);
-            }
+        nodeYListener = (ov, oldValue, newValue) -> {
+            getModel().setY(newValue.doubleValue());
         };
 
-        nodeWidthListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setWidth((double) newVal);
-            }
+        nodeWidthListener = (ov, oldValue, newValue) -> {
+            getModel().setWidth(newValue.doubleValue());
         };
 
-        nodeHeightListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal, Number newVal) {
-                getModel().setHeight((double) newVal);
-            }
+        nodeHeightListener = (ov, oldValue, newValue) -> {
+            getModel().setHeight(newValue.doubleValue());
         };
 
-        node.onCloseActionProperty().set(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                if (!removeSkinOnly) {
-                    modelProperty().get().getFlow().remove(modelProperty().get());
-                }
-            }
-        });
+        node.onCloseActionProperty().set(
+                (EventHandler<ActionEvent>) (ActionEvent t) -> {
+                    if (!removeSkinOnly) {
+                        modelProperty().get().getFlow().remove(modelProperty().get());
+                    }
+                });
     }
 
     private void registerListeners(VNode flowNode) {
@@ -922,7 +954,7 @@ public class FXFlowNodeSkin
         node.layoutYProperty().addListener(nodeYListener);
         node.prefWidthProperty().addListener(nodeWidthListener);
         node.prefHeightProperty().addListener(nodeHeightListener);
-        
+
         initVReqListeners();
 
     }

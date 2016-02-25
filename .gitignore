@@ -33,3 +33,4 @@ out/
 *.ipr
 *.iml
 *.iws
+/.nb-gradle/

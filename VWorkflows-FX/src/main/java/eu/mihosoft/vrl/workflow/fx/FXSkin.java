@@ -39,12 +39,25 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 
 /**
- *
+ * JavaFX skin.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @param <T> model
+ * @param <V> node
  */
 public interface FXSkin<T extends Model, V extends Node> extends Skin<T>{
+    /**
+     * Returns the JavaFX node.
+     * @return node
+     */
     public V getNode();
+    
+    /**
+     * Returns the JavaFX content node.
+     * @return content node
+     */
     public Parent getContentNode();
+    
     @Override
     public FXSkinFactory getSkinFactory();
 }

@@ -43,25 +43,23 @@ import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 import javafx.scene.Parent;
 
 /**
- *
+ * JavaFX skin factory.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSkin> {
-
+    
     private final Parent fxParent;
     private final FXSkinFactory parentFactory;
-//    private Window clipboard;
     
 
     public FXSkinFactory(Parent parent) {
         this.fxParent = parent;
-//        this.clipboard = clipboard;
         this.parentFactory = null;
     }
 
     protected FXSkinFactory(Parent parent, FXSkinFactory parentFactory) {
         this.fxParent = parent;
-//        this.clipboard = clipboard;
         this.parentFactory = parentFactory;
     }
 
@@ -77,8 +75,6 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
     @Override
     public SkinFactory<FXConnectionSkin, FXFlowNodeSkin> createChild(Skin parent) {
-        
-//        System.out.println("parent: " + parent);
 
         FXSkinFactory result = new FXSkinFactory(((FXSkin) parent).getContentNode(), this);
 

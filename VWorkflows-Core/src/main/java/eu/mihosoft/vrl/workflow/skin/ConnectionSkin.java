@@ -38,21 +38,52 @@ import eu.mihosoft.vrl.workflow.Connector;
 import javafx.beans.property.ObjectProperty;
 
 /**
+ * Connection skin.
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
- * @param <T>
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
+ * @param <T> Connection model type
  */
 public interface ConnectionSkin<T extends Connection> extends Skin<Connection> {
 
+    /**
+     * Returns the sender connector.
+     *
+     * @return sender connector
+     */
     public Connector getSender();
 
-    public void setSender(Connector n);
+    /**
+     * Defines the sender connector.
+     *
+     * @param c sender connector to set
+     */
+    public void setSender(Connector c);
 
+    /**
+     * Returns the sender property.
+     *
+     * @return sender property
+     */
     public ObjectProperty<Connector> senderProperty();
 
+    /**
+     * Returns the receiver connector.
+     *
+     * @return receiver connector
+     */
     public Connector getReceiver();
 
-    public void setReceiver(Connector n);
+    /**
+     * Defines the receiver connector.
+     *
+     * @param c receiver connector to set
+     */
+    public void setReceiver(Connector c);
 
+    /**
+     * Returns the receiver property.
+     *
+     * @return receiver property
+     */
     public ObjectProperty<Connector> receiverProperty();
 }

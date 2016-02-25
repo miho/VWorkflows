@@ -1,5 +1,7 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * FXConnectorUtil.java
+ * 
+ * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -10,7 +12,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- *
+ * 
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -51,7 +53,7 @@ import javafx.util.Duration;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class FXConnectorUtil {
 
@@ -61,8 +63,9 @@ class FXConnectorUtil {
         throw new AssertionError();
     }
 
-    public static SelectedConnector getSelectedOutputConnector(VNode receiverNode, Parent fxParent, String type, MouseEvent t) {
-        Node myNode = NodeUtil.getDeepestNode(
+    public static SelectedConnector getSelectedOutputConnector(
+            VNode receiverNode, Parent fxParent, String type, MouseEvent t) {
+        Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
                 FlowNodeWindow.class, ConnectorCircle.class);
@@ -90,13 +93,12 @@ class FXConnectorUtil {
             }
         }
 
-
-
         return new SelectedConnector(myNode, connector);
     }
 
-    public static SelectedConnector getSelectedInputConnector(VNode senderNode, Parent fxParent, String type, MouseEvent t) {
-        Node myNode = NodeUtil.getDeepestNode(
+    public static SelectedConnector getSelectedInputConnector(
+            VNode senderNode, Parent fxParent, String type, MouseEvent t) {
+        Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
                 ConnectorCircle.class,
@@ -128,7 +130,7 @@ class FXConnectorUtil {
         return new SelectedConnector(myNode, connector);
     }
 
-    public static void connnectionEstablishedAnim(Shape receiverUI) {
+    public static void connnectionEstablishedAnim(Node receiverUI) {
         Timeline timeline = new Timeline();
 //        timeline.setAutoReverse(true);
 //        timeline.setCycleCount(Timeline.INDEFINITE);
@@ -149,18 +151,17 @@ class FXConnectorUtil {
         final KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
         timeline.getKeyFrames().add(kf1);
 
-        final KeyValue kv2 = new KeyValue(connectedShape.strokeProperty(), new Color(0, 1, 0, 1.0));
+        final KeyValue kv2 = new KeyValue(connectedShape.strokeProperty(),
+                new Color(0, 1, 0, 1.0));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(0), kv2);
         timeline.getKeyFrames().add(kf2);
-        final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(), new Color(0, 1, 0, 0.0));
+        final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(),
+                new Color(0, 1, 0, 0.0));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(400), kv3);
         timeline.getKeyFrames().add(kf3);
 
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                NodeUtil.removeFromParent(connectedShape);
-            }
+        timeline.setOnFinished((ActionEvent t) -> {
+            NodeUtil.removeFromParent(connectedShape);
         });
 
         timeline.play();
@@ -247,42 +248,24 @@ class FXConnectorUtil {
         Shape shape = (Shape) n;
 
         timeline = new Timeline();
-//        timeline.setAutoReverse(true);
-//        timeline.setCycleCount(Timeline.INDEFINITE);
 
         if (n instanceof Circle && target instanceof Circle) {
             Circle nCircle = (Circle) shape;
             Circle tCircle = (Circle) target;
-            final KeyValue kv1 = new KeyValue(nCircle.radiusProperty(), tCircle.getRadius());
+            final KeyValue kv1 = new KeyValue(nCircle.radiusProperty(),
+                    tCircle.getRadius());
             final KeyFrame kf1 = new KeyFrame(Duration.millis(250), kv1);
             timeline.getKeyFrames().add(kf1);
         }
 
-        final KeyValue kv2 = new KeyValue(shape.fillProperty(), new Color(0, 1, 0, 0.80));
+        final KeyValue kv2 = new KeyValue(shape.fillProperty(),
+                new Color(0, 1, 0, 0.80));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(300), kv2);
         timeline.getKeyFrames().add(kf2);
-        final KeyValue kv3 = new KeyValue(shape.strokeProperty(), new Color(0, 1, 0, 0.90));
+        final KeyValue kv3 = new KeyValue(shape.strokeProperty(),
+                new Color(0, 1, 0, 0.90));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(300), kv3);
         timeline.getKeyFrames().add(kf3);
-
-//        Paint fill = receiverConnector.getFill();
-//        Paint stroke = receiverConnector.getStroke();
-//
-//        final KeyValue kv4 = new KeyValue(receiverConnector.fillProperty(), fill);
-//        final KeyFrame kf4 = new KeyFrame(Duration.millis(kf2.getTime().toMillis() + 500), kv4);
-//        timeline.getKeyFrames().add(kf4);
-//        final KeyValue kv5 = new KeyValue(receiverConnector.strokeProperty(), stroke);
-//        final KeyFrame kf5 = new KeyFrame(Duration.millis(kf3.getTime().toMillis() + 500), kv5);
-//        timeline.getKeyFrames().add(kf5);
-
-
-//        final KeyValue kv2 = new KeyValue(receiverConnector.layoutXProperty(), circle.getLayoutX());
-//        final KeyFrame kf2 = new KeyFrame(Duration.millis(300), kv2);
-//        timeline.getKeyFrames().add(kf2);
-//        final KeyValue kv3 = new KeyValue(receiverConnector.layoutYProperty(), circle.getLayoutY());
-//        final KeyFrame kf3 = new KeyFrame(Duration.millis(300), kv3);
-//        timeline.getKeyFrames().add(kf3);
-
 
         timeline.play();
     }
@@ -302,16 +285,17 @@ class FXConnectorUtil {
         }
 
         timeline = new Timeline();
-//        timeline.setAutoReverse(true);
-//        timeline.setCycleCount(Timeline.INDEFINITE);
 
-        final KeyValue kv2 = new KeyValue(circleConnector.fillProperty(), new Color(1, 0, 0, 0.80));
+        final KeyValue kv2 = new KeyValue(circleConnector.fillProperty(),
+                new Color(1, 0, 0, 0.80));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
         timeline.getKeyFrames().add(kf2);
-        final KeyValue kv3 = new KeyValue(circleConnector.strokeProperty(), new Color(1, 0, 0, 0.90));
+        final KeyValue kv3 = new KeyValue(circleConnector.strokeProperty(),
+                new Color(1, 0, 0, 0.90));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(500), kv3);
         timeline.getKeyFrames().add(kf3);
         timeline.play();
 
     }
 }
+

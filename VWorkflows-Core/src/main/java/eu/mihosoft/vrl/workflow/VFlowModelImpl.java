@@ -39,6 +39,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
@@ -56,6 +58,15 @@ class VFlowModelImpl implements VFlowModel {
 
     private final VNodeImpl node;
     private final FlowModelImpl flow;
+
+    private ObservableList<ThruConnector> thruInputs
+            = FXCollections.observableArrayList();
+    private ObservableList<ThruConnector> thruOutputs
+            = FXCollections.observableArrayList();
+    private final ObservableList<ThruConnector> unmodifiableThruInputs
+            = FXCollections.unmodifiableObservableList(thruInputs);
+    private final ObservableList<ThruConnector> unmodifiableThruOutputs
+            = FXCollections.unmodifiableObservableList(thruOutputs);
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -93,6 +104,27 @@ class VFlowModelImpl implements VFlowModel {
 
         node = new VNodeImpl(pFlow);
         setTitle("Node");
+
+        node.getConnectors().addListener(
+                (ListChangeListener.Change<? extends Connector> c) -> {
+                    while (c.next()) {
+                        for (Connector connector : c.getRemoved()) {
+                            if (connector instanceof ThruConnector) {
+
+                                ThruConnector tC = (ThruConnector) connector;
+
+                                if (tC.isInput()) {
+                                    thruInputs.remove(tC);
+                                } else if (tC.isOutput()) {
+                                    thruOutputs.remove(tC);
+                                }
+
+                                flow.remove(tC.getInnerNode());
+                            }
+                        }
+
+                    }
+                });
 
     }
 
@@ -304,18 +336,18 @@ class VFlowModelImpl implements VFlowModel {
     public VFlowModel newFlowNode(ValueObject obj) {
         VFlowModel flowNode = new VFlowModelImpl(this);
 
-        return (VFlowModel) flow.newNode(flowNode, obj);
+        return (VFlowModel) flow.newNode(flowNode, obj, getId());
     }
 
     @Override
     public VFlowModel newFlowNode() {
         VFlowModel flowNode = new VFlowModelImpl(this);
-        
+
         flowNode.setNodeLookup(getNodeLookup());
 
         DefaultValueObject valObj = new DefaultValueObject();
 
-        VFlowModel result = (VFlowModel) flow.newNode(flowNode, valObj); // end newNode()
+        VFlowModel result = (VFlowModel) flow.newNode(flowNode, valObj, getId()); // end newNode()
 
         valObj.setParent(result);
 
@@ -334,7 +366,7 @@ class VFlowModelImpl implements VFlowModel {
                 result = (VNode) constructor.newInstance(this);
                 result.setValueObject(obj);
 
-                result = flow.newNode(result, obj);
+                result = flow.newNode(result, obj, getId());
 
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -492,5 +524,74 @@ class VFlowModelImpl implements VFlowModel {
     @Override
     public boolean isVisualizationRequestInitialized() {
         return node.isVisualizationRequestInitialized();
+    }
+
+    @Override
+    public ThruConnector addThruInput(String type) {
+
+        VNode innerNode = newNode();
+
+        innerNode.getVisualizationRequest().
+                set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
+
+        Connector innerConnector = innerNode.
+                setMainOutput(innerNode.addOutput(type));
+
+        ThruConnector tC = node.addThruInput(
+                node, type, innerNode, innerConnector);
+
+        thruInputs.add(tC);
+
+        return tC;
+    }
+
+    @Override
+    public ThruConnector addThruOutput(String type) {
+
+        VNode innerNode = newNode();
+
+        innerNode.getVisualizationRequest().
+                set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
+
+        Connector innerConnector = innerNode.
+                setMainInput(innerNode.addInput(type));
+
+        ThruConnector tC = node.addThruOutput(
+                node, type, innerNode, innerConnector);
+
+        thruOutputs.add(tC);
+
+        return tC;
+    }
+
+    @Override
+    public ObservableList<ThruConnector> getThruInputs() {
+        return this.unmodifiableThruInputs;
+    }
+
+    @Override
+    public ObservableList<ThruConnector> getThruOutputs() {
+        return this.unmodifiableThruOutputs;
+    }
+
+    @Override
+    public boolean removeConnector(Connector c) {
+        return this.node.removeConnector(c);
+    }
+
+    @Override
+    public int getDepth() {
+        return this.node.getDepth();
+    }
+
+    @Override
+    public FlowModel getRoot() {
+        FlowModel root = this.node.getRoot();
+
+        if (root == null) {
+            root = this;
+        }
+
+        return root;
     }
 }

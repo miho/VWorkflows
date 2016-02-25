@@ -38,12 +38,13 @@ import java.util.Set;
 
 /**
  * This class generates ids for nodes and connectors
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class IdGeneratorImpl implements IdGenerator{
-    
+class IdGeneratorImpl implements IdGenerator {
+
     private Set<String> ids = new HashSet<>();
-    private int lastId = 0;
+//    private int lastId = 0;
 
     public IdGeneratorImpl() {
         //
@@ -60,24 +61,34 @@ class IdGeneratorImpl implements IdGenerator{
     }
 
     @Override
-    public String newId() {
-        
+    public String newId(String prefix) {
+
         // TODO improve id generation
         // Question: do we really want strings as id?
-        int counter = lastId+1;
+        int counter = 0;//lastId + 1;
+       
         
-        String id = "" + counter; // verified that java / & 8 uses stringbuilder
-        
-        while(ids.contains(id)) {
-            counter++;
-            id = "" + counter;
+        if (prefix != null && !prefix.isEmpty() && !prefix.endsWith(":")) {
+            prefix = prefix + "-";
         }
-        
+
+        String id = prefix + counter;
+
+        while (ids.contains(id)) {
+            id = prefix + counter;
+            counter++;
+        }
+
         ids.add(id);
-        
-        lastId = counter;
-        
+
+//        lastId = counter;
+
         return id;
+    }
+
+    @Override
+    public String newId() {
+        return newId("");
     }
 
     @Override
@@ -90,5 +101,5 @@ class IdGeneratorImpl implements IdGenerator{
     public IdGenerator newChild() {
         return this;
     }
-    
+
 }

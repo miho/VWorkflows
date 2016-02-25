@@ -1,5 +1,7 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * RootPane.java
+ * 
+ * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -10,7 +12,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- *
+ * 
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -30,7 +32,8 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */
+ */ 
+
 package eu.mihosoft.vrl.workflow.fx;
 
 import javafx.scene.Node;
@@ -54,8 +57,6 @@ public class RootPane extends Pane {
     @Override
     protected void layoutChildren() {
 
-//        System.out.println("root: layout " + System.currentTimeMillis());
-
         getParent().requestLayout();
 
         super.layoutChildren();
@@ -78,7 +79,6 @@ public class RootPane extends Pane {
 
     @Override
     protected double computeMinWidth(double h) {
-//        double w = getInsets().getLeft() + getInsets().getRight();
 
         double minX = Double.MAX_VALUE;
         double maxX = Double.MIN_VALUE;
@@ -93,7 +93,6 @@ public class RootPane extends Pane {
 
     @Override
     protected double computeMinHeight(double w) {
-//        double h = getInsets().getLeft() + getInsets().getRight();
 
         double minY = Double.MAX_VALUE;
         double maxY = Double.MIN_VALUE;

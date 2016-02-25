@@ -138,6 +138,8 @@ public class FlowModelImpl implements FlowModel {
 
 //        System.out.println("ADD: " + sender + ", " + receiver);
         Connection connection = getConnections(type).add(sender, receiver);
+        
+        
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -247,7 +249,7 @@ public class FlowModelImpl implements FlowModel {
         return flowNodeClass;
     }
 
-    VNode newNode(VNode result, ValueObject obj) {
+    VNode newNode(VNode result, ValueObject obj, String parentId) {
 
         result.setValueObject(obj);
 
@@ -255,7 +257,7 @@ public class FlowModelImpl implements FlowModel {
             throw new IllegalStateException("Please define an idgenerator before creating nodes!");
         }
 
-        String id = getIdGenerator().newId();
+        String id = getIdGenerator().newId(parentId+":");
 
         result.setId(id);
 

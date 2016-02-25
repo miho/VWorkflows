@@ -37,18 +37,20 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
- * This class defines a default connector value object. ValueObjects are used
- * to store data in connectors. It is a placeholder for a value object as it's 
+ * This class defines a default connector value object. ValueObjects are used to
+ * store data in connectors. It is a placeholder for a value object as it's
  * get/setValue methods are not implemented.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultConnectorValueObject implements ValueObject {
 
     private transient VNode parent;
     private transient Connector c;
     private VisualizationRequest vReq;
-    private ObjectProperty<Object> valueProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Object> valueProperty = new SimpleObjectProperty<>();
+
+    private String errorMessage;
 
     public DefaultConnectorValueObject() {
     }
@@ -84,49 +86,93 @@ public class DefaultConnectorValueObject implements ValueObject {
 
     @Override
     public CompatibilityResult compatible(final ValueObject sender, final String flowType) {
+
         return new CompatibilityResult() {
-            @Override
-            public boolean isCompatible() {
-//                System.out.println(" -> isCompatible: ");
+            
+            private boolean compatible;
+
+            {
+                compatible = computeCompatibility();
+            }
+            
+            private boolean computeCompatibility() {
+                //                System.out.println(" -> isCompatible: ");
                 boolean differentObjects = sender != DefaultConnectorValueObject.this;
 
                 boolean compatibleType = false;
 
+                int numConnectionsOfReceiver = getParent().getFlow().
+                        getConnections(flowType).getAllWith(c).size();
+
+                boolean lessThanMaxNumberOfConnections = true;
+
+                int maxNumConnections = c.getMaxNumberOfConnections();
+
                 if (sender instanceof DefaultConnectorValueObject) {
-                    DefaultConnectorValueObject senderConnectorVObj = (DefaultConnectorValueObject) sender;
-                    compatibleType = getConnector().getType().equals(senderConnectorVObj.getConnector().getType())
-                            && getConnector().isInput() && senderConnectorVObj.getConnector().isOutput();
+
+                    DefaultConnectorValueObject senderConnectorVObj = 
+                            (DefaultConnectorValueObject) sender;
+                    compatibleType = getConnector().getType().
+                            equals(senderConnectorVObj.getConnector().getType())
+                            && getConnector().isInput() && senderConnectorVObj.
+                                    getConnector().isOutput();
+
+                    int numConnectionsOfSender = senderConnectorVObj.parent.
+                            getFlow().getConnections(flowType).
+                            getAllWith(senderConnectorVObj.c).size();
+
+                    maxNumConnections = Math.min(c.getMaxNumberOfConnections(),
+                            senderConnectorVObj.c.getMaxNumberOfConnections());
+
+                    lessThanMaxNumberOfConnections
+                            = numConnectionsOfReceiver < maxNumConnections
+                            && numConnectionsOfSender < maxNumConnections;
+
                 }
 
-//                System.out.println("differentObj: " + differentObjects + ", compatibleTypes " + compatibleType);
-                
-                return differentObjects && compatibleType;
+                if (!differentObjects) {
+                    errorMessage = "Connections can only established between different nodes."
+                            + " Sender node cannot be equal to receiver node.";
+                } else if (!compatibleType) {
+                    errorMessage = "Connections can only established between"
+                            + " connectors of the same connection/flow type.";
+                } else if (!lessThanMaxNumberOfConnections) {
+                    errorMessage = "Trying to creating more than " + maxNumConnections
+                            + " number of connections is not allowed.";
+                }
+
+                return differentObjects && compatibleType && lessThanMaxNumberOfConnections;
+            }
+
+            @Override
+            public boolean isCompatible() {
+                return compatible;
             }
 
             @Override
             public String getMessage() {
-                
+
                 String senderId = sender.getParent() + ":undefined";
-                
+
                 if (sender instanceof DefaultConnectorValueObject) {
-                    senderId = ((DefaultConnectorValueObject)sender).getConnector().getId();
+                    senderId = ((DefaultConnectorValueObject) sender).getConnector().getId();
                 }
-                
-                return "incompatible: " + senderId + " -> " + getConnector().getId();
+
+                return "incompatible: " + senderId + " -> " + getConnector().getId() + ", reason: " + errorMessage;
             }
 
             @Override
             public String getStatus() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
-        };
+        }; // end CompatibilityResult
     }
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
         return vReq;
     }
-    
+
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
         this.vReq = vReq;

@@ -40,113 +40,185 @@ import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javafx.beans.InvalidationListener;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Skin;
+
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import jfxtras.labs.scene.control.window.CloseIcon;
-import jfxtras.labs.scene.control.window.MinimizeIcon;
-import jfxtras.labs.scene.control.window.Window;
-import jfxtras.labs.scene.control.window.WindowIcon;
-import jfxtras.labs.util.event.MouseControlUtil;
+import javafx.util.Callback;
+import jfxtras.scene.control.window.CloseIcon;
+import jfxtras.scene.control.window.MinimizeIcon;
+import jfxtras.scene.control.window.Window;
+import jfxtras.scene.control.window.WindowIcon;
+//import jfxtras.labs.scene.control.window.CloseIcon;
+//import jfxtras.labs.scene.control.window.MinimizeIcon;
+//import jfxtras.labs.scene.control.window.Window;
+//import jfxtras.labs.scene.control.window.WindowIcon;
+import jfxtras.scene.control.window.WindowUtil;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * A window that represents a flow node.
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class FlowNodeWindow extends Window {
+public final class FlowNodeWindow extends Window {
 
-    private ObjectProperty<FXFlowNodeSkin> nodeSkinProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<FXFlowNodeSkin> nodeSkinProperty
+            = new SimpleObjectProperty<>();
     private VCanvas content;
+    private Pane inputContainer;
+    private Pane outputContainer;
     private OptimizableContentPane parentContent;
+    private final CloseIcon closeIcon = new CloseIcon(this);
+    private final MinimizeIcon minimizeIcon = new MinimizeIcon(this);
 
+    private ChangeListener<Boolean> selectionListener;
+
+    private Callback<FlowNodeWindow, CloseIcon> showCloseIcon = (FlowNodeWindow w) -> {
+        if (!getLeftIcons().contains(closeIcon)) {
+            getLeftIcons().add(closeIcon);
+        }
+
+        return closeIcon;
+    };
+
+    private Callback<FlowNodeWindow, CloseIcon> hideCloseIcon = (FlowNodeWindow w) -> {
+
+        getLeftIcons().remove(closeIcon);
+
+        return closeIcon;
+    };
+
+    private Callback<FlowNodeWindow, MinimizeIcon> showMinimizeIcon = (FlowNodeWindow w) -> {
+        if (!getLeftIcons().contains(minimizeIcon)) {
+            getLeftIcons().add(minimizeIcon);
+        }
+
+        return minimizeIcon;
+    };
+
+    private Callback<FlowNodeWindow, MinimizeIcon> hideMinimizeIcon = (FlowNodeWindow w) -> {
+
+        getLeftIcons().remove(minimizeIcon);
+
+        return minimizeIcon;
+    };
+
+    /**
+     * Construxtor.
+     *
+     * @param skin the skin of the node that shall be visualized by this window.
+     */
     public FlowNodeWindow(final FXFlowNodeSkin skin) {
 
         nodeSkinProperty().set(skin);
+        setEditableState(true);
 
-        getLeftIcons().add(new CloseIcon(this));
-        getLeftIcons().add(new MinimizeIcon(this));
+        initUI(skin);
+        initListenersAndBindings(skin);
+        initCaching();
+    }
 
-//        setTitleBarStyleClass("my-titlebar");
-//        setStyle("    -fx-background-color: rgba(120,140,255,0.2);\n"
-//                + "    -fx-border-color: rgba(120,140,255,0.42);\n"
-//                + "    -fx-border-width: 2;");
+    private void initUI(final FXFlowNodeSkin skin) {
+        // only register content if this window visualizes a flow
         if (skin.getModel() instanceof VFlowModel) {
+
+            VFlowModel flowNodeModel = (VFlowModel) skin.getModel();
+
             parentContent = new OptimizableContentPane();
             content = new VCanvas();
-            parentContent.getChildren().add(content);
+            content.setPadding(new Insets(5));
+            content.setMinScaleX(0.01);
+            content.setMinScaleY(0.01);
+            content.setMaxScaleX(1);
+            content.setMaxScaleY(1);
+
+            HBox.setHgrow(content, Priority.SOMETIMES);
+
+            addResetViewMenu(content);
+
+            inputContainer = new VBox();
+            outputContainer = new VBox();
+            HBox paramBox = new HBox(inputContainer, content, getOutputContainer());
+
+            parentContent.getChildren().add(paramBox);
             super.setContentPane(parentContent);
+
+            InvalidationListener refreshViewListener = (o) -> {
+                content.resetScale();
+                content.resetTranslation();
+            };
         }
 
+        // 
         addCollapseIcon(skin);
         configureCanvas(skin);
+    }
 
-//        addSelectionRectangle(skin, root);
-        addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                connectorsToFront();
-            }
+    private void initListenersAndBindings(final FXFlowNodeSkin skin) {
+        addEventHandler(MouseEvent.MOUSE_ENTERED, (MouseEvent t) -> {
+            connectorsToFront();
         });
 
         setSelectable(skin.getModel().isSelectable());
         skin.getModel().selectableProperty().bindBidirectional(this.selectableProperty());
 
-        requestSelection(skin.getModel().isSelected());
-        skin.getModel().selectedProperty().addListener(new ChangeListener<Boolean>() {
+        WindowUtil.getDefaultClipboard().select(FlowNodeWindow.this, skin.getModel().isSelected());
 
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                FlowNodeWindow.this.requestSelection(newValue);
+        selectionListener = (ov, oldValue, newValue) -> {
+            WindowUtil.getDefaultClipboard().select(FlowNodeWindow.this, newValue);
+        };
+
+        skin.getModel().selectedProperty().addListener(selectionListener);
+
+        skin.getModel().requestSelection(FlowNodeWindow.this.isSelected());
+        FlowNodeWindow.this.selectedProperty().addListener((ov, oldValue, newValue) -> {
+            skin.getModel().requestSelection(newValue);
+        });
+
+        skinProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue != null) {
+                Node titlebar = newValue.getNode().lookup("." + getTitleBarStyleClass());
+
+                titlebar.addEventHandler(MouseEvent.ANY, (MouseEvent evt) -> {
+                    if (evt.getClickCount() == 1
+                            && evt.getEventType() == MouseEvent.MOUSE_RELEASED
+                            && evt.isDragDetect()) {
+                        skin.getModel().requestSelection(!skin.getModel().isSelected());
+                    }
+                });
             }
         });
 
-        FlowNodeWindow.this.selectedProperty().addListener(new ChangeListener<Boolean>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                skin.getModel().requestSelection(newValue);
-            }
-        });
-
-        skinProperty().addListener(new ChangeListener<Skin<?>>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Skin<?>> observable, Skin<?> oldValue, Skin<?> newValue) {
-
-                if (newValue != null) {
-                    Node titlebar = newValue.getNode().lookup("." + getTitleBarStyleClass());
-
-                    titlebar.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
-
-                        public void handle(MouseEvent evt) {
-                            if (evt.getClickCount() == 1
-                                    && evt.getEventType() == MouseEvent.MOUSE_RELEASED
-                                    && evt.isDragDetect()) {
-                                skin.getModel().requestSelection(!skin.getModel().isSelected());
-                            }
-                        }
-                    });
-                }
-
-            }
+        onClosedActionProperty().addListener((ov, oldValue, newValue) -> {
+            onRemovedFromSceneGraph();
         });
 
 //        // TODO shouldn't leaf nodes also have a visibility property?
@@ -180,69 +252,58 @@ public class FlowNodeWindow extends Window {
         return super.getChildren();
     }
 
+    public static void addResetViewMenu(VCanvas canvas) {
+        final ContextMenu cm = new ContextMenu();
+        MenuItem resetViewItem = new MenuItem("Reset View");
+        resetViewItem.setOnAction((ActionEvent e) -> {
+            canvas.resetTranslation();
+            canvas.resetScale();
+        });
+        cm.getItems().add(resetViewItem);
+        canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {
+            if (e.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
+                cm.show(canvas, e.getScreenX(), e.getScreenY());
+            }
+        });
+    }
+
     private void showFlowInWindow(VFlow flow, List<String> stylesheets, String title) {
 
         // create scalable root pane
         VCanvas canvas = new VCanvas();
+        addResetViewMenu(canvas);
+        canvas.setMinScaleX(0.2);
+        canvas.setMinScaleY(0.2);
+        canvas.setMaxScaleX(1);
+        canvas.setMaxScaleY(1);
 
-        // define background style
-//        canvas.setStyle("-fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));");
+        canvas.setTranslateToMinNodePos(true);
+
         // create skin factory for flow visualization
         FXSkinFactory fXSkinFactory
-                = nodeSkinProperty.get().getSkinFactory().newInstance(canvas.getContentPane(), null);
+                = nodeSkinProperty.get().getSkinFactory().
+                newInstance(canvas.getContent(), null);
 
-        // copy colors from prototype
-//        if (nodeSkinProperty.get().getSkinFactory() != null) {
-//            fXSkinFactory.connectionFillColors = nodeSkinProperty.get().getSkinFactory().connectionFillColorTypes();
-//            fXSkinFactory.connectionStrokeColors = nodeSkinProperty.get().getSkinFactory().connectionStrokeColorTypes();
-//        }
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);
 
-        // the usual application setup
+        // the usual stage/scene setup
         Scene scene = new Scene(canvas, 800, 800);
-
         scene.getStylesheets().setAll(stylesheets);
 
-        Stage stage = new Stage() {
-//            private VFlow flow;
-            private String nodeId;
+        VFlow rootFlow = flow.getRootFlow();
+        Stage stage = new FlowStage(rootFlow, this, canvas);
 
-            {
-
-                nodeId = FlowNodeWindow.this.
-                        nodeSkinProperty().get().getModel().getId();
-
-               
-                VFlow rootFlow = flow.getRootFlow();
-
-                rootFlow.getNodes().addListener(
-                        (ListChangeListener.Change<? extends VNode> c) -> {
-                            while (c.next()) {
-                                if (c.wasAdded()) {
-                                    for (VNode n : c.getAddedSubList()) {
-                                       if (n.getId().equals(nodeId)) {
-                                           canvas.getContentPane().getChildren().clear();
-                                           VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
-                                           flow.addSkinFactories(new FXValueSkinFactory(null));
-                                       }
-                                    }
-                                }
-                            }
-                        });
-            }
-        };
         stage.setWidth(800);
         stage.setHeight(600);
 
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
-
     }
 
     public Pane getWorkflowContentPane() {
-        return content.getContentPane();
+        return content.getContent();
     }
 
     /**
@@ -264,30 +325,22 @@ public class FlowNodeWindow extends Window {
 
         final WindowIcon collapseIcon = new WindowIcon();
 
-        collapseIcon.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                FXFlowNodeSkin skin = nodeSkinProperty.get();
-
-                if (skin != null) {
-                    VFlowModel model = (VFlowModel) skin.getModel();
-                    model.setVisible(!model.isVisible());
-                }
+        collapseIcon.setOnAction((ActionEvent t) -> {
+            FXFlowNodeSkin skin1 = nodeSkinProperty.get();
+            if (skin1 != null) {
+                VFlowModel model = (VFlowModel) skin1.getModel();
+                model.setVisible(!model.isVisible());
             }
         });
 
         getRightIcons().add(collapseIcon);
 
         if (skin.modelProperty() != null) {
-            skin.modelProperty().addListener(new ChangeListener<VNode>() {
-                @Override
-                public void changed(ObservableValue<? extends VNode> ov,
-                        VNode t, VNode t1) {
-                    if (t1 instanceof VFlowModel) {
-                        getRightIcons().add(collapseIcon);
-                    } else {
-                        getRightIcons().remove(collapseIcon);
-                    }
+            skin.modelProperty().addListener((ov, oldValue, newValue) -> {
+                if (newValue instanceof VFlowModel) {
+                    getRightIcons().add(collapseIcon);
+                } else {
+                    getRightIcons().remove(collapseIcon);
                 }
             });
         }
@@ -295,23 +348,17 @@ public class FlowNodeWindow extends Window {
         // adds an icon that opens a new view in a separate window
         final WindowIcon newViewIcon = new WindowIcon();
 
-        newViewIcon.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                FXFlowNodeSkin skin = nodeSkinProperty.get();
-
-                if (skin != null) {
-
-                    String nodeId = skin.getModel().getId();
-
-                    for (VFlow vf : skin.getController().getSubControllers()) {
-                        if (vf.getModel().getId().equals(nodeId)) {
-                            showFlowInWindow(vf,
-                                    NodeUtil.getStylesheetsOfAncestors(
-                                            FlowNodeWindow.this),
-                                    getLocation(vf));
-                            break;
-                        }
+        newViewIcon.setOnAction((ActionEvent t) -> {
+            FXFlowNodeSkin skin1 = nodeSkinProperty.get();
+            if (skin1 != null) {
+                String nodeId = skin1.getModel().getId();
+                for (VFlow vf : skin1.getController().getSubControllers()) {
+                    if (vf.getModel().getId().equals(nodeId)) {
+                        showFlowInWindow(vf,
+                                NodeUtil.getStylesheetsOfAncestors(
+                                        FlowNodeWindow.this),
+                                getLocation(vf));
+                        break;
                     }
                 }
             }
@@ -343,20 +390,6 @@ public class FlowNodeWindow extends Window {
         return sb.toString();
     }
 
-    private void addSelectionRectangle(FXFlowNodeSkin skin, Pane root) {
-        if (skin == null) {
-            return;
-        }
-        if (!(skin.getModel() instanceof VFlowModel)) {
-            return;
-        }
-        Rectangle rect = new Rectangle();
-        rect.setStroke(new Color(1, 1, 1, 1));
-        rect.setFill(new Color(0, 0, 0, 0.5));
-        MouseControlUtil.
-                addSelectionRectangleGesture(root, rect);
-    }
-
     @Override
     public void toFront() {
         super.toFront();
@@ -367,7 +400,7 @@ public class FlowNodeWindow extends Window {
         // move connectors to front
         FXFlowNodeSkin skin = nodeSkinProperty().get();
 
-        for (List<Shape> shapeList : skin.shapeLists) {
+        for (List<ConnectorCircle> shapeList : skin.shapeLists) {
             for (Node n : shapeList) {
                 n.toFront();
             }
@@ -382,7 +415,8 @@ public class FlowNodeWindow extends Window {
         }
 
         for (Connection conn : connections) {
-            ConnectionSkin skinI = skin.controller.getNodeSkinLookup().getById(skin.getSkinFactory(), conn);
+            ConnectionSkin skinI = skin.controller.getNodeSkinLookup().
+                    getById(skin.getSkinFactory(), conn);
 
             if (skinI instanceof FXConnectionSkin) {
                 FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
@@ -404,5 +438,158 @@ public class FlowNodeWindow extends Window {
             content.getStyleClass().setAll("vnode-content");
             skin.configureCanvas(content);
         }
+    }
+
+    void onRemovedFromSceneGraph() {
+        nodeSkinProperty().get().getModel().selectedProperty().
+                removeListener(selectionListener);
+    }
+
+    private void setCloseableState(boolean b) {
+        if (b) {
+            getShowCloseIconCallback().call(this);
+        } else {
+            getHideCloseIconCallback().call(this);
+        }
+    }
+
+    private void setMinimizableState(boolean b) {
+        if (b) {
+            getShowMinimizeIconCallback().call(this);
+        } else {
+            getHideMinimizeIconCallback().call(this);
+        }
+    }
+
+    final void setEditableState(boolean b) {
+        setCloseableState(b);
+        setMinimizableState(b);
+//        setSelectable(b);
+    }
+
+    /**
+     * @return the paramContainer
+     */
+    public Pane getInputContainer() {
+        return inputContainer;
+    }
+
+    /**
+     * @return the outputContainer
+     */
+    public Pane getOutputContainer() {
+        return outputContainer;
+    }
+
+    private Callback<FlowNodeWindow, CloseIcon> getShowCloseIconCallback() {
+        return showCloseIcon;
+    }
+
+    public void setShowCloseIconCallback(Callback<FlowNodeWindow, CloseIcon> callback) {
+        this.showCloseIcon = callback;
+    }
+
+    private Callback<FlowNodeWindow, CloseIcon> getHideCloseIconCallback() {
+        return hideCloseIcon;
+    }
+
+    public void setHideCloseIconCallback(Callback<FlowNodeWindow, CloseIcon> callback) {
+        this.hideCloseIcon = callback;
+    }
+
+    private Callback<FlowNodeWindow, MinimizeIcon> getShowMinimizeIconCallback() {
+        return showMinimizeIcon;
+    }
+
+    public void setShowMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> callback) {
+        this.showMinimizeIcon = callback;
+    }
+
+    private Callback<FlowNodeWindow, MinimizeIcon> getHideMinimizeIconCallback() {
+        return hideMinimizeIcon;
+    }
+
+    public void setHideMinimizeIconCallback(Callback<FlowNodeWindow, MinimizeIcon> callback) {
+        this.hideMinimizeIcon = callback;
+    }
+
+    private void initCaching() {
+        
+        localToSceneTransformProperty().addListener((ov)->{
+             Bounds bounds = this.localToScene(getBoundsInLocal());
+             if(bounds.getWidth()<10 || bounds.getHeight()<10) {
+                 setCache(false);
+             } else {
+                 setCache(true);
+             }
+        });
+
+//
+//        boolean[] wasMoving = {false};
+//
+//        InvalidationListener cacheListener = (ov) -> {
+//            
+//            if (isMoving()) {
+//                setCache(true);
+//                Parent parent = getParent();
+//                if (parent != null) {
+//                    parent.getChildrenUnmodifiable().stream().
+//                            filter(n -> n instanceof FlowNodeWindow
+//                                    || n instanceof ConnectorCircle).
+//                            forEach(n -> n.setCache(true));
+//                }
+//            } else {
+//                setCache(false);
+//                System.out.println("was: " + wasMoving[0]);
+//                if (wasMoving[0]) {
+//                    Parent parent = getParent();
+//                    if (parent != null) {
+//                        parent.getChildrenUnmodifiable().stream().
+//                                filter(n -> n instanceof FlowNodeWindow
+//                                        || n instanceof ConnectorCircle).
+//                                forEach(n -> n.setCache(false));
+//                    }
+//                }
+//            }
+//            
+//            wasMoving[0] = isMoving();
+//        };
+//
+//        movingProperty().addListener(cacheListener);
+//
+//        cacheProperty().addListener(state -> setTitle("cache: " + isCache()));
+    }
+
+    static class FlowStage extends Stage {
+
+        public FlowStage(VFlow rootFlow, FlowNodeWindow flowNodeWindow, VCanvas canvas) {
+            String nodeId = flowNodeWindow.
+                    nodeSkinProperty().get().getModel().getId();
+
+            Stage stage = this;
+            rootFlow.getNodes().addListener(
+                    (ListChangeListener.Change<? extends VNode> c) -> {
+                        while (c.next()) {
+                            if (c.wasAdded()) {
+                                for (VNode n : c.getAddedSubList()) {
+                                    if (n.getId().equals(nodeId)) {
+                                        canvas.getContent().getChildren().clear();
+                                        VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
+                                        flow.addSkinFactories(new FXValueSkinFactory(null));
+                                    }
+                                }
+                            }
+
+                            if (c.wasRemoved()) {
+                                for (VNode n : c.getRemoved()) {
+                                    if (n.getId().equals(nodeId)) {
+                                        stage.close();
+                                    }
+                                }
+                            }
+                        }
+                    });
+        }
+
     }
 }

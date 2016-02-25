@@ -1,5 +1,7 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * OptimizableContentPane.java
+ * 
+ * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -10,7 +12,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- *
+ * 
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -30,9 +32,12 @@
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
- */
+ */ 
+
 package eu.mihosoft.vrl.workflow.fx;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -41,9 +46,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Transform;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  *
@@ -56,32 +58,23 @@ public class OptimizableContentPane extends StackPane {
     private boolean optimizing = false;
     private boolean visibility = true;
     private boolean attached = true;
-    private Collection<Node> detatched = new ArrayList<>();
+    private final Collection<Node> detatched = new ArrayList<>();
 
     public OptimizableContentPane() {
         this.optimizationRule = new DefaultOptimizationRuleImpl();
 
-        localToSceneTransformProperty().addListener(new ChangeListener<Transform>() {
-            @Override
-            public void changed(ObservableValue<? extends Transform> ov, Transform oldVal, Transform newVal) {
-                transform = newVal;
-                updateOptimizationRule();
-            }
+        localToSceneTransformProperty().addListener((ov, oldValue, newValue) -> {
+            transform = newValue;
+            updateOptimizationRule();
         });
 
-        boundsInLocalProperty().addListener(new ChangeListener<Bounds>() {
-            @Override
-            public void changed(ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) {
-                updateOptimizationRule();
-            }
+        boundsInLocalProperty().addListener((ov, oldValue, newValue) -> {
+            updateOptimizationRule();
         });
 
-        visibleProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
-                if (!optimizing) {
-                    visibility = newValue;
-                }
+        visibleProperty().addListener((ov, oldValue, newValue) -> {
+            if (!optimizing) {
+                visibility = newValue;
             }
         });
     }
@@ -104,7 +97,8 @@ public class OptimizableContentPane extends StackPane {
         optimizing = true;
 
 //        if (transform == null) {
-        transform = OptimizableContentPane.this.localToSceneTransformProperty().get();
+        transform = OptimizableContentPane.this.
+                localToSceneTransformProperty().get();
 //        }
 
         boolean visible = optimizationRule.visible(this, transform);

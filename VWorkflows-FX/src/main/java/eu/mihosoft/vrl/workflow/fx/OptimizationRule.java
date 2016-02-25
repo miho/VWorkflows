@@ -1,5 +1,7 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * OptimizationRule.java
+ * 
+ * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -10,7 +12,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- *
+ * 
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -37,9 +39,33 @@ import javafx.scene.transform.Transform;
 
 /**
  *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface OptimizationRule {
+
+    /**
+     * Determines whether the content pane shall be visible or not.
+     *
+     * @param p pane
+     * @param t transform
+     * @return {@code true} if the content shall be visible; {@code false}
+     * otherwise
+     */
     public boolean visible(OptimizableContentPane p, Transform t);
+
+    /**
+     * Determines whether the content pane shall be attached or not.
+     *
+     * <p>
+     * <b>NOTE:</b> attaching/detaching nodes from the scene graph is an
+     * expensive operation.
+     * </p>
+     *
+     * @param p pane
+     * @param t transform
+     * @return {@code true} if the content shall be attached; {@code false}
+     * otherwise
+     */
     public boolean attached(OptimizableContentPane p, Transform t);
 }
+

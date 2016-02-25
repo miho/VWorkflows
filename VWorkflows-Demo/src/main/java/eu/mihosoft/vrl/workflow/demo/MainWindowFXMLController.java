@@ -81,7 +81,7 @@ public class MainWindowFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        canvas = new VCanvas();
 
-        Pane root = canvas.getContentPane();
+        Pane root = canvas.getContent();
 
         contentPane.getChildren().add(canvas);
 

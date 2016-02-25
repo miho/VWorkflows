@@ -36,11 +36,11 @@ package eu.mihosoft.vrl.workflow.skin;
 import eu.mihosoft.vrl.workflow.VNode;
 
 /**
- *
+ * Node skin.
+ * 
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @param <T> node model type
  */
 public interface VNodeSkin<T extends VNode> extends Skin<T> {
-//    public void setFlow(V flow);
-//    public V getFlow();
-//    public ObjectProperty<V> flowProperty();
+
 }

@@ -123,6 +123,8 @@ public interface VNode extends Model, Selectable {
     public Connector addOutput(String type);
 
     public Connector addConnector(Connector c);
+    
+    public boolean removeConnector(Connector c);
 
 //    ObservableList<String> getInputTypes();
 //
@@ -149,5 +151,17 @@ public interface VNode extends Model, Selectable {
     
     public BooleanProperty selectableProperty();
     public boolean isSelectable();
+    
+        
+    /**
+     * Returns the distance to the root element.
+     */
+    public int getDepth();
+    
+    /**
+     * Returns the root element of this flow.
+     * @return root element
+     */
+    public FlowModel getRoot();
     
 }

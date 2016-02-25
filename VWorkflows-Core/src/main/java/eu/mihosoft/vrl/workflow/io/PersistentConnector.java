@@ -48,14 +48,17 @@ public class PersistentConnector{
     private VisualizationRequest vRequest;
     private boolean input;
     private boolean output;
+    private boolean passthru;
     private ValueObject valueObject;
+    private int maxNumConnections;
 
-    public PersistentConnector(String type, String localId, boolean input, boolean output) {
+    public PersistentConnector(String type, String localId, boolean input, boolean output, boolean passthru) {
         this.type = type;
         this.localId = localId;
 //        this.node = node;
         this.input = input;
         this.output = output;
+        this.passthru = passthru;
     }
 
     public String getType() {
@@ -116,6 +119,34 @@ public class PersistentConnector{
      * @param valueObject the valueObject to set
      */
     public void setValueObject(ValueObject valueObject) {
-        this.valueObject = valueObject;
+         this.valueObject = valueObject;
+    }
+
+    /**
+     * @return the passthru
+     */
+    public boolean isPassthru() {
+        return passthru;
+    }
+
+    /**
+     * @param passthru the passthru to set
+     */
+    public void setPassthru(boolean passthru) {
+        this.passthru = passthru;
+    }
+
+    /**
+     * @return the maxNumConnections
+     */
+    public int getMaxNumConnections() {
+        return maxNumConnections;
+    }
+
+    /**
+     * @param maxNumConnections the maxNumConnections to set
+     */
+    public void setMaxNumConnections(int maxNumConnections) {
+        this.maxNumConnections = maxNumConnections;
     }
 }

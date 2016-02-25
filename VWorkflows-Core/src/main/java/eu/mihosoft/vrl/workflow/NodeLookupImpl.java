@@ -33,8 +33,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * This class allows nodes to be looked up by id.
@@ -47,7 +46,7 @@ import java.util.Map;
 public class NodeLookupImpl implements NodeLookup {
 
     private final VFlowModel root;
-    private final Map<String, VNode> cache = new HashMap<>();
+//    private final Map<String, VNode> cache = new HashMap<>();
 
     public NodeLookupImpl(VFlowModel root) {
         this.root = root;
@@ -55,12 +54,11 @@ public class NodeLookupImpl implements NodeLookup {
 
     @Override
     public Connector getConnectorById(String globalId) {
-        String[] ids = globalId.split(":");
+        String[] ids = globalId.split(":c:");
 
         if (ids.length < 2) {
             throw new IllegalArgumentException("wrong connector id format: "
-                    + globalId + ", correct format: node-id:connector-id");
-//            return null;
+                    + globalId + ", correct format: node-id:c:connector-id");
         }
 
         String nodeId = ids[0];
@@ -78,18 +76,22 @@ public class NodeLookupImpl implements NodeLookup {
     @Override
     public VNode getById(String globalId) {
         
-        VNode result = cache.get(globalId);
+//        VNode result = cache.get(globalId);
         
-        if (result!=null)return result;
+//        if (result!=null)return result;
 
-        /*VNode*/ result = getNodeByGlobalId(root, globalId);
+        VNode result = getNodeByGlobalId(root, globalId);
         
-        cache.put(globalId, result);
+//        cache.put(globalId, result);
 
         return result;
     }
 
-    private VNode getNodeByGlobalId(FlowModel parent, String id) {
+    private VNode getNodeByGlobalId(VFlowModel parent, String id) {
+        
+        if (Objects.equals(parent.getId(),id)) {
+            return parent;
+        }
 
         for (VNode n : parent.getNodes()) {
             if (n.getId().equals(id)) {
@@ -97,7 +99,7 @@ public class NodeLookupImpl implements NodeLookup {
             }
 
             if (n instanceof FlowModel) {
-                VNode result = getNodeByGlobalId((FlowModel) n, id);
+                VNode result = getNodeByGlobalId((VFlowModel) n, id);
                 if (result != null) {
                     return result;
                 }

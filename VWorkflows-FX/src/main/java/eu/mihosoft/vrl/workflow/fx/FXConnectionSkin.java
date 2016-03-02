@@ -35,14 +35,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import com.sun.javafx.geom.BaseBounds;
-import com.sun.javafx.geom.Path2D;
-import com.sun.javafx.geom.Rectangle;
-import com.sun.javafx.geom.transform.BaseTransform;
-import com.sun.javafx.sg.prism.NGShape;
-import com.sun.javafx.tk.Toolkit;
-//import com.sun.javafx.Utils;
-import com.sun.javafx.util.Utils;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
@@ -70,9 +62,6 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
-import javafx.scene.shape.StrokeType;
 import jfxtras.scene.control.window.Window;
 //import jfxtras.labs.scene.control.window.Window;
 import jfxtras.labs.util.event.MouseControlUtil;

@@ -35,13 +35,14 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import com.sun.javafx.Utils;
 import com.sun.javafx.geom.BaseBounds;
 import com.sun.javafx.geom.Path2D;
 import com.sun.javafx.geom.Rectangle;
 import com.sun.javafx.geom.transform.BaseTransform;
 import com.sun.javafx.sg.prism.NGShape;
 import com.sun.javafx.tk.Toolkit;
+//import com.sun.javafx.Utils;
+import com.sun.javafx.util.Utils;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.ConnectionResult;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
@@ -123,78 +124,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         moveTo = new MoveTo();
         lineTo = new LineTo();
         curveTo = new CubicCurveTo();
-        
-        // TODO improve connection mouse events without internal api
-        connectionPath = new Path(moveTo, curveTo) {
 
-            private final float mouseEventShapeWidth = 10;
-
-            @Override
-            protected boolean impl_computeContains(double localX, double localY) {
-
-                if (impl_mode == NGShape.Mode.EMPTY) {
-                    return false;
-                }
-
-                boolean includeShape = (impl_mode != NGShape.Mode.STROKE);
-                boolean includeStroke = (impl_mode != NGShape.Mode.FILL);
-                if (includeStroke && includeShape
-                        && (getStrokeType() == StrokeType.INSIDE)) {
-                    includeStroke = false;
-                }
-
-                Path2D s = impl_configShape();
-
-                if (includeShape) {
-                    if (s.contains((float) localX, (float) localY)) {
-                        return true;
-                    }
-                }
-
-                if (includeStroke) {
-                    StrokeType type = getStrokeType();
-                    double sw = Utils.clampMin(getStrokeWidth(),
-                            Math.max(mouseEventShapeWidth, getStrokeWidth()));
-                    StrokeLineCap cap = getStrokeLineCap();
-                    StrokeLineJoin join = getStrokeLineJoin();
-                    float miterlimit
-                            = (float) Utils.clampMin(getStrokeMiterLimit(), 1.0f);
-                    // Note that we ignore dashing for computing bounds and testing
-                    // point containment, both to save time in bounds calculations
-                    // and so that animated dashing does not keep perturbing the bounds...
-                    return Toolkit.getToolkit().strokeContains(s, localX, localY,
-                            type, sw, cap,
-                            join, miterlimit);
-                }
-
-                return false;
-            }
-
-            @Override
-            public BaseBounds impl_computeGeomBounds(BaseBounds bounds, BaseTransform tx) {
-                BaseBounds result = super.impl_computeGeomBounds(bounds, tx);
-
-                if (result.getWidth() < mouseEventShapeWidth) {
-                    result = result.deriveWithNewBounds(new Rectangle(
-                            (int) (bounds.getMinX() - mouseEventShapeWidth * 0.5),
-                            (int) bounds.getMinY(),
-                            (int) (mouseEventShapeWidth),
-                            (int) bounds.getHeight())
-                    );
-                }
-
-                if (result.getHeight() < mouseEventShapeWidth) {
-                    result = result.deriveWithNewBounds(new Rectangle(
-                            (int) bounds.getMinX(),
-                            (int) (bounds.getMinY() - mouseEventShapeWidth * 0.5),
-                            (int) bounds.getWidth(),
-                            (int) (mouseEventShapeWidth))
-                    );
-                }
-
-                return result;
-            }
-        };
+        connectionPath = new Path(moveTo, curveTo);
 
         init();
         initVReqListeners();
@@ -509,13 +440,9 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     lastNode = n;
 
-                } else {
-
-                    if (lastNode == null) {
-                        receiverConnectorUI.radiusProperty().unbind();
-                        connectionListener.onNoConnection(receiverConnectorUI);
-                    }
-
+                } else if (lastNode == null) {
+                    receiverConnectorUI.radiusProperty().unbind();
+                    connectionListener.onNoConnection(receiverConnectorUI);
                 }
             }
         }, new EventHandler<MouseEvent>() {
@@ -599,17 +526,14 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                     remove();
                     connection.getConnections().remove(connection);
-                } else {
+                } else if (getReceiverNode() instanceof ConnectorCircle) {
+                    ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
 
-                    if (getReceiverNode() instanceof ConnectorCircle) {
-                        ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
-
-                        if (getReceiverUI() instanceof Circle) {
-                            ((Circle) getReceiverUI()).radiusProperty().unbind();
-                            ((Circle) getReceiverUI()).radiusProperty().
-                                    bind(recConnNode.radiusProperty());
-                            styleInit();
-                        }
+                    if (getReceiverUI() instanceof Circle) {
+                        ((Circle) getReceiverUI()).radiusProperty().unbind();
+                        ((Circle) getReceiverUI()).radiusProperty().
+                                bind(recConnNode.radiusProperty());
+                        styleInit();
                     }
                 }
 
@@ -694,18 +618,18 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 //        startConnector.toBack();
         getReceiverUI().toFront();
         connectionPath.toBack();
-        
-        final FXFlowNodeSkin senderSkin = 
-                (FXFlowNodeSkin) getController().getNodeSkinLookup().
-                        getById(skinFactory, connection.getSender().getId());
-        
+
+        final FXFlowNodeSkin senderSkin
+                = (FXFlowNodeSkin) getController().getNodeSkinLookup().
+                getById(skinFactory, connection.getSender().getId());
+
         FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().
                 getNodeSkinLookup().getById(skinFactory,
                         connection.getReceiver().getId());
-        
+
         senderSkin.layoutConnectors();
         receiverSkin.layoutConnectors();
-        
+
     }
 
     @Override

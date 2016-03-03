@@ -248,12 +248,22 @@ class FXConnectorUtil {
         Shape shape = (Shape) n;
 
         timeline = new Timeline();
+        
+        double targetRadius;
+        
+        if (target instanceof Circle) {
+            targetRadius = ((Circle) target).getRadius();
+        } else if (target instanceof ConnectorCircle) {
+            targetRadius = ((ConnectorCircle)target).getRadius();
+        } else {
+            return;
+        }
 
-        if (n instanceof Circle && target instanceof Circle) {
+        if (n instanceof Circle) {
             Circle nCircle = (Circle) shape;
-            Circle tCircle = (Circle) target;
+           
             final KeyValue kv1 = new KeyValue(nCircle.radiusProperty(),
-                    tCircle.getRadius());
+                    targetRadius);
             final KeyFrame kf1 = new KeyFrame(Duration.millis(250), kv1);
             timeline.getKeyFrames().add(kf1);
         }

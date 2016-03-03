@@ -223,8 +223,10 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
 
         makeDraggable();
 
-        receiverConnectorUI.setLayoutX(senderNode.getLayoutX());
-        receiverConnectorUI.setLayoutY(senderNode.getLayoutY());
+        receiverConnectorUI.setLayoutX(senderNode.getLayoutX()
+                +receiverConnectorUI.getRadius());
+        receiverConnectorUI.setLayoutY(senderNode.getLayoutY()
+                +receiverConnectorUI.getRadius());
 
         connectionListener
                 = new ConnectionListenerImpl(
@@ -238,6 +240,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         receiverConnectorUI.toFront();
 
         MouseControlUtil.makeDraggable(receiverConnectorUI, (MouseEvent t) -> {
+            
             if (lastNode != null) {
 //                    lastNode.setEffect(null);
                 lastNode = null;

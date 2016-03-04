@@ -59,6 +59,12 @@ class FXConnectorUtil {
 
     private static Timeline timeline;
 
+    static void stopTimeLine() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+    }
+
     private FXConnectorUtil() {
         throw new AssertionError();
     }
@@ -131,6 +137,13 @@ class FXConnectorUtil {
     }
 
     public static void connnectionEstablishedAnim(Node receiverUI) {
+
+        System.out.println("established");
+
+        if (timeline != null) {
+            timeline.stop();
+        }
+
         Timeline timeline = new Timeline();
 //        timeline.setAutoReverse(true);
 //        timeline.setCycleCount(Timeline.INDEFINITE);
@@ -207,6 +220,8 @@ class FXConnectorUtil {
 
     public static void unconnectAnim(Node n) {
 
+        System.out.println("unconnect");
+
         if (timeline != null) {
             timeline.stop();
         }
@@ -216,6 +231,7 @@ class FXConnectorUtil {
         }
 
         Circle circle = (Circle) n;
+        circle.radiusProperty().unbind();
 
         timeline = new Timeline();
         timeline.setCycleCount(1);
@@ -237,6 +253,8 @@ class FXConnectorUtil {
 
     public static void connectAnim(Node n, Node target) {
 
+        System.out.println("connect");
+
         if (timeline != null) {
             timeline.stop();
         }
@@ -248,22 +266,23 @@ class FXConnectorUtil {
         Shape shape = (Shape) n;
 
         timeline = new Timeline();
-        
+
         double targetRadius = n.getBoundsInLocal().getWidth();
-        
+
         if (shape instanceof Circle) {
-            
+            Circle c = (Circle) shape;
+            c.radiusProperty().unbind();
         }
-        
+
         if (target instanceof Circle) {
             targetRadius = ((Circle) target).getRadius();
         } else if (target instanceof ConnectorCircle) {
-            targetRadius = ((ConnectorCircle)target).getRadius();
-        }        
+            targetRadius = ((ConnectorCircle) target).getRadius();
+        }
 
         if (n instanceof Circle) {
             Circle nCircle = (Circle) shape;
-           
+
             final KeyValue kv1 = new KeyValue(nCircle.radiusProperty(),
                     targetRadius);
             final KeyFrame kf1 = new KeyFrame(Duration.millis(250), kv1);
@@ -280,6 +299,7 @@ class FXConnectorUtil {
         timeline.getKeyFrames().add(kf3);
 
         timeline.play();
+
     }
 
     static void incompatibleAnim(Node receiverConnector) {
@@ -310,4 +330,3 @@ class FXConnectorUtil {
 
     }
 }
-

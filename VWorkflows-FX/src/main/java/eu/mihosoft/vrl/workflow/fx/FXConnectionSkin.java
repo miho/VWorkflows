@@ -161,10 +161,10 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         if (getReceiverNode() instanceof ConnectorCircle) {
             ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
 
-            if (getReceiverUI() instanceof Circle) {
-                ((Circle) getReceiverUI()).radiusProperty().
-                        bind(recConnNode.radiusProperty());
-            }
+//            if (getReceiverUI() instanceof Circle) {
+//                ((Circle) getReceiverUI()).radiusProperty().
+//                        bind(recConnNode.radiusProperty());
+//            }
         }
 
         DoubleBinding startXBinding = new DoubleBinding() {
@@ -426,7 +426,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         lastNode = null;
                     }
 
-
                     getReceiverUI().toFront();
                     connectionPath.toBack();
 
@@ -470,7 +469,6 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         //
                     }
 
-
                     if (!isSameConnection) {
 
                         // remove error notification etc.
@@ -486,6 +484,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                         if (getReceiverUI() instanceof Circle) {
                             ((Circle) getReceiverUI()).radiusProperty().unbind();
+                            FXConnectorUtil.stopTimeLine();
                             ((Circle) getReceiverUI()).radiusProperty().
                             bind(recConnNode.radiusProperty());
                             styleInit();

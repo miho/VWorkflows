@@ -303,8 +303,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                         connectionListener.onConnectionCompatible(n);
                     }
                     
-                } else {
-                    
+                } else {    
 //                        DropShadow shadow = new DropShadow(20, Color.RED);
 //                        Glow effect = new Glow(0.8);
 //                        effect.setInput(shadow);
@@ -323,7 +322,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         }, (MouseEvent event) -> {
             receiverConnectorUI.layoutXProperty().unbind();
             receiverConnectorUI.layoutYProperty().unbind();
-        });
+        }, true);
 
         receiverConnectorUI.onMouseReleasedProperty().set(
                 (EventHandler<MouseEvent>) (MouseEvent t) -> {
@@ -370,9 +369,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     //
                 } else {
                     connectionListener.onConnectionIncompatibleReleased(n);
-
                 }
-
             }
             
             remove();

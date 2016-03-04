@@ -249,15 +249,17 @@ class FXConnectorUtil {
 
         timeline = new Timeline();
         
-        double targetRadius;
+        double targetRadius = n.getBoundsInLocal().getWidth();
+        
+        if (shape instanceof Circle) {
+            
+        }
         
         if (target instanceof Circle) {
             targetRadius = ((Circle) target).getRadius();
         } else if (target instanceof ConnectorCircle) {
             targetRadius = ((ConnectorCircle)target).getRadius();
-        } else {
-            return;
-        }
+        }        
 
         if (n instanceof Circle) {
             Circle nCircle = (Circle) shape;

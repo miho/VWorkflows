@@ -26,10 +26,10 @@
  */
 package jfxtras.labs.util.event;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
@@ -60,6 +60,19 @@ public class MouseControlUtil {
      * @param n the node that shall be made draggable
      */
     public static void makeDraggable(final Node n) {
+
+        makeDraggable(n, null, null, false);
+    }
+
+    /**
+     * Makes a node draggable via mouse gesture.
+     *
+     * <p>
+     * <b>Note:</b> Existing handlers will be replaced!</p>
+     *
+     * @param n the node that shall be made draggable
+     */
+    public static void makeDraggable(final Node n, boolean centerNode) {
 
         makeDraggable(n, null, null);
     }
@@ -158,6 +171,22 @@ public class MouseControlUtil {
     public static void makeDraggable(final Node n,
             EventHandler<MouseEvent> dragHandler,
             EventHandler<MouseEvent> pressHandler) {
+        makeDraggable(n, dragHandler, pressHandler, false);
+    }
+
+    /**
+     * Makes a node draggable via mouse gesture.
+     *
+     * <p>
+     * <b>Note:</b> Existing handlers will be replaced!</p>
+     *
+     * @param n the node that shall be made draggable
+     * @param dragHandler additional drag handler
+     * @param pressHandler additional press handler
+     */
+    public static void makeDraggable(final Node n,
+            EventHandler<MouseEvent> dragHandler,
+            EventHandler<MouseEvent> pressHandler, boolean centerNode) {
 
         EventHandlerGroup<MouseEvent> dragHandlerGroup = new EventHandlerGroup<>();
         EventHandlerGroup<MouseEvent> pressHandlerGroup = new EventHandlerGroup<>();
@@ -176,7 +205,7 @@ public class MouseControlUtil {
         n.layoutXProperty().unbind();
         n.layoutYProperty().unbind();
 
-        _makeDraggable(n, dragHandlerGroup, pressHandlerGroup);
+        _makeDraggable(n, dragHandlerGroup, pressHandlerGroup, centerNode);
     }
 
 //    public static void makeResizable(Node n) {
@@ -185,11 +214,11 @@ public class MouseControlUtil {
     private static void _makeDraggable(
             final Node n,
             EventHandlerGroup<MouseEvent> dragHandler,
-            EventHandlerGroup<MouseEvent> pressHandler) {
+            EventHandlerGroup<MouseEvent> pressHandler, boolean centerNode) {
 
         DraggingControllerImpl draggingController
                 = new DraggingControllerImpl();
-        draggingController.apply(n, dragHandler, pressHandler);
+        draggingController.apply(n, dragHandler, pressHandler, centerNode);
     }
 }
 
@@ -201,6 +230,7 @@ class DraggingControllerImpl {
     private double mouseY;
     private EventHandler<MouseEvent> mouseDraggedEventHandler;
     private EventHandler<MouseEvent> mousePressedEventHandler;
+    private boolean centerNode = false;
 
     public DraggingControllerImpl() {
         //
@@ -208,10 +238,12 @@ class DraggingControllerImpl {
 
     public void apply(Node n,
             EventHandlerGroup<MouseEvent> draggedEvtHandler,
-            EventHandlerGroup<MouseEvent> pressedEvtHandler) {
+            EventHandlerGroup<MouseEvent> pressedEvtHandler,
+            boolean centerNode) {
         init(n);
         draggedEvtHandler.addHandler(mouseDraggedEventHandler);
         pressedEvtHandler.addHandler(mousePressedEventHandler);
+        this.centerNode = centerNode;
     }
 
     private void init(final Node n) {
@@ -249,8 +281,17 @@ class DraggingControllerImpl {
         nodeX += offsetX;
         nodeY += offsetY;
 
-        double scaledX = nodeX * 1 / parentScaleX;
-        double scaledY = nodeY * 1 / parentScaleY;
+        double scaledX;
+        double scaledY;
+
+        if (centerNode) {
+            Point2D p2d = n.getParent().sceneToLocal(mouseX, mouseY);
+            scaledX = p2d.getX();
+            scaledY = p2d.getY();
+        } else {
+            scaledX = nodeX * 1 / (parentScaleX);
+            scaledY = nodeY * 1 / (parentScaleY);
+        }
 
         n.setLayoutX(scaledX);
         n.setLayoutY(scaledY);
@@ -258,6 +299,7 @@ class DraggingControllerImpl {
         // again set current Mouse x AND y position
         mouseX = event.getSceneX();
         mouseY = event.getSceneY();
+
     }
 
     public void performDragBegin(
@@ -272,8 +314,14 @@ class DraggingControllerImpl {
         mouseX = event.getSceneX();
         mouseY = event.getSceneY();
 
-        nodeX = n.getLayoutX() * parentScaleX;
-        nodeY = n.getLayoutY() * parentScaleY;
+        if (centerNode) {
+            Point2D p2d = n.getParent().sceneToLocal(mouseX, mouseY);
+            nodeX = p2d.getX();
+            nodeY = p2d.getY();
+        } else {
+            nodeX = n.getLayoutX() * parentScaleX;
+            nodeY = n.getLayoutY() * parentScaleY;
+        }
 
         n.toFront();
     }

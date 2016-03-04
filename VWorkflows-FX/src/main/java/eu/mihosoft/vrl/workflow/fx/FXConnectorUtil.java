@@ -235,7 +235,7 @@ class FXConnectorUtil {
 
         timeline = new Timeline();
         timeline.setCycleCount(1);
-        final KeyValue kv1 = new KeyValue(circle.radiusProperty(), 20);
+        final KeyValue kv1 = new KeyValue(circle.radiusProperty(), 15);
         final KeyFrame kf1 = new KeyFrame(Duration.millis(250), kv1);
         timeline.getKeyFrames().add(kf1);
         final KeyValue kv2 = new KeyValue(circle.fillProperty(),
@@ -267,7 +267,7 @@ class FXConnectorUtil {
 
         timeline = new Timeline();
 
-        double targetRadius = n.getBoundsInLocal().getWidth();
+        double targetRadius = 15;
 
         if (shape instanceof Circle) {
             Circle c = (Circle) shape;

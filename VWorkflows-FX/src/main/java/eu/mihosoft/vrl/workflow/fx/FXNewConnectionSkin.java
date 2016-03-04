@@ -90,7 +90,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         this.type = type;
 
 //        startConnector = new Circle(20);
-        receiverConnectorUI = new Circle(10);
+        receiverConnectorUI = new Circle(8);
 
         moveTo = new MoveTo();
         lineTo = new LineTo();

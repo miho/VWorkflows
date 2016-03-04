@@ -119,7 +119,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private void init() {
 
         // path init
-        receiverConnectorUI = new Circle(20);
+        receiverConnectorUI = new Circle(15);
         moveTo = new MoveTo();
         curveTo = new CubicCurveTo();
         connectionPath = new Path(moveTo, curveTo);

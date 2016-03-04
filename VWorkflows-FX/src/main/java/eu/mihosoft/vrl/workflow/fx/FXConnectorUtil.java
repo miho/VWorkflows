@@ -152,8 +152,13 @@ class FXConnectorUtil {
         connectedShape.setStrokeWidth(15);
         connectedShape.setFill(Color.TRANSPARENT);
 
-        connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
-        connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
+        if (receiverUI instanceof Circle) {
+            connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
+            connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
+        } else {
+            connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty().add(receiverUI.getBoundsInLocal().getWidth() * 0.5));
+            connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty().add(receiverUI.getBoundsInLocal().getHeight() * 0.5));
+        }
 
         NodeUtil.addToParent(receiverUI.getParent(), connectedShape);
 
@@ -189,8 +194,13 @@ class FXConnectorUtil {
         connectedShape.setStrokeWidth(15);
         connectedShape.setFill(Color.TRANSPARENT);
 
-        connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
-        connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
+        if (receiverUI instanceof Circle) {
+            connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty());
+            connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty());
+        } else {
+            connectedShape.layoutXProperty().bind(receiverUI.layoutXProperty().add(receiverUI.getBoundsInLocal().getWidth() * 0.5));
+            connectedShape.layoutYProperty().bind(receiverUI.layoutYProperty().add(receiverUI.getBoundsInLocal().getHeight() * 0.5));
+        }
 
         NodeUtil.addToParent(receiverUI.getParent(), connectedShape);
 

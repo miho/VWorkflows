@@ -36,6 +36,8 @@ package eu.mihosoft.vrl.workflow.demo;
 import eu.mihosoft.vrl.workflow.ClickEvent;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowFactory;
+import eu.mihosoft.vrl.workflow.LayoutGenerator;
+import eu.mihosoft.vrl.workflow.LayoutGeneratorNaive;
 import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -124,6 +126,14 @@ public class MainWindowFXMLController implements Initializable {
         }
 
         System.out.println(" [done]");
+    }
+    
+    @FXML
+    public void onLayoutAction(ActionEvent e) {
+        LayoutGenerator layouter;
+        layouter = new LayoutGeneratorNaive();
+        layouter.setUp(workflow);
+        layouter.generateLayout();
     }
 
     @FXML

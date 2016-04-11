@@ -47,6 +47,7 @@ import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -250,6 +251,19 @@ public class MainWindowFXMLController implements Initializable {
             n.setX((i % 5) * (n.getWidth() + 30));
             n.setY((i / 5) * (n.getHeight() + 30));
         }
+        
+        // Create example connections
+        ObservableList<VNode> nodes = workflow.getNodes();
+        workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+        workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+        workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+        workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+        workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+        workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+        
+        workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+        workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+        workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
     }
 
     private void updateUI() {

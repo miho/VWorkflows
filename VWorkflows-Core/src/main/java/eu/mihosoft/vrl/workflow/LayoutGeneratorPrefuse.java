@@ -9,22 +9,41 @@ import java.util.Objects;
 import javafx.collections.ObservableList;
 import javax.swing.JFrame;
 import prefuse.action.ActionList;
-import prefuse.action.assignment.ColorAction; // Testvis
-import prefuse.action.layout.RandomLayout;
 import prefuse.action.RepaintAction;
-import prefuse.controls.DragControl; // Testvis
-import prefuse.controls.PanControl; // Testvis
-import prefuse.controls.ZoomControl; // Testvis
 import prefuse.data.Graph;
 import prefuse.data.Node;
 import prefuse.data.Tuple;
 import prefuse.data.tuple.TupleSet;
-import prefuse.Display; // Testvis
-import prefuse.render.DefaultRendererFactory; // Testvis
-import prefuse.render.ShapeRenderer; // Testvis
+import prefuse.Display;
 import prefuse.visual.NodeItem;
 import prefuse.visual.VisualGraph;
 import prefuse.Visualization;
+
+// layouts
+import prefuse.action.layout.AxisLabelLayout;
+import prefuse.action.layout.AxisLayout;
+import prefuse.action.layout.CircleLayout;
+import prefuse.action.layout.CollapsedStackLayout;
+import prefuse.action.layout.CollapsedSubtreeLayout;
+import prefuse.action.layout.graph.BalloonTreeLayout;
+import prefuse.action.layout.graph.ForceDirectedLayout;
+import prefuse.action.layout.graph.FruchtermanReingoldLayout; // testvis makes a difference for some reason
+import prefuse.action.layout.graph.NodeLinkTreeLayout;
+import prefuse.action.layout.graph.RadialTreeLayout;
+import prefuse.action.layout.graph.SquarifiedTreeMapLayout;
+import prefuse.action.layout.graph.TreeLayout;
+import prefuse.action.layout.GridLayout;
+import prefuse.action.layout.RandomLayout;
+import prefuse.action.layout.SpecifiedLayout;
+import prefuse.action.layout.StackedAreaChart;
+
+// testvis
+import prefuse.action.assignment.ColorAction;
+import prefuse.controls.DragControl;
+import prefuse.controls.PanControl;
+import prefuse.controls.ZoomControl;
+import prefuse.render.DefaultRendererFactory;
+import prefuse.render.ShapeRenderer;
 import prefuse.util.ColorLib;
 import prefuse.visual.VisualItem;
 
@@ -34,6 +53,7 @@ import prefuse.visual.VisualItem;
  */
 public class LayoutGeneratorPrefuse implements LayoutGenerator {
     
+    private final boolean debug;
     private VFlow workflow;
     private GenTuple<VNode, Integer>[] nodes;
     private int nodecount;
@@ -41,7 +61,14 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
     private Graph pgraph;
     
     public LayoutGeneratorPrefuse() {
-        //System.out.println("Creating layout generator");
+        this.debug = false;
+    }
+    
+    public LayoutGeneratorPrefuse(boolean pdebug) {
+        this.debug = pdebug;
+        if(this.debug) {
+            System.out.println("Creating layout generator");
+        }
     }
     
     /**
@@ -50,7 +77,9 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
      */
     @Override
     public void setUp(VFlow pworkflow) {
-        //System.out.println("Setting up workflow for layout generation.");
+        if(this.debug) {
+            System.out.println("Setting up workflow for layout generation.");
+        }
         this.workflow = pworkflow;
         this.pgraph = new Graph();
         
@@ -83,7 +112,9 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
             int receiver = getPNode(currConn.getReceiver().getNode());
             pgraph.addEdge(sender, receiver);
         }
-        //System.out.println("Setup complete with " + this.pgraph.getNodeCount() + " nodes and " + this.pgraph.getEdgeCount() + " edges.");
+        if(this.debug) {
+            System.out.println("Setup complete with " + this.pgraph.getNodeCount() + " nodes and " + this.pgraph.getEdgeCount() + " edges.");
+        }
     }
     
     /**
@@ -92,24 +123,42 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
      */
     @Override
     public void generateLayout() {
-        //System.out.println("Generating layout.");
+        if(this.debug) {
+            System.out.println("Generating layout.");
+        }
+        int i;
         ActionList layout = new ActionList();
-        layout.add(new RandomLayout());
+        layout.add(new CircleLayout("pgraph"));
         layout.add(new RepaintAction());
         
         Visualization vis = new Visualization();
         vis.add("pgraph", pgraph);
         vis.putAction("layout", layout);
-        
+
         Display d = new Display(vis);
-        d.setSize(720, 500);
+        double maxheight = 0;
+        double maxwidth = 0;
+        for(i = 0; i < this.nodecount; i++) {
+            double currheight = this.nodes[i].x.getHeight();
+            double currwidth = this.nodes[i].x.getWidth();
+            if(currheight > maxheight) {
+                maxheight = currheight;
+            }
+            if(currwidth > maxwidth) {
+                maxwidth = currwidth;
+            }
+        }
+        d.setSize((int) Math.round(maxwidth * this.nodecount), (int) Math.round(maxheight * this.nodecount));
         
         vis.run("layout");
+        if(this.debug) {
+            testvis(vis, d);
+        }
         TupleSet temp = vis.getVisualGroup("pgraph");
         VisualGraph vgraph;
         if(temp instanceof VisualGraph) {
             vgraph = (VisualGraph) temp;
-            int i;
+
             for(i = 0; i < this.nodecount; i++) {
                 VNode pnode = this.nodes[i].x;
                 Node tempnode;
@@ -119,7 +168,9 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
                     vnode = (NodeItem) tempnode;
                     pnode.setX(vnode.getX());
                     pnode.setY(vnode.getY());
-                    //System.out.println("Node: " + i + " X: " + vnode.getX() + " Y: " + vnode.getY());
+                    if(this.debug) {
+                        System.out.println("Node: " + i + " X: " + vnode.getX() + " Y: " + vnode.getY());
+                    }
                 }
                 else {
                     // vnode is not of type NodeItem
@@ -132,6 +183,26 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
             // vgraph is not of type VisualGraph
             System.out.println("Type error! Layout could not be generated!");
         }
+    }
+    
+    private void testvis(Visualization vis, Display d) {
+        ColorAction fill = new ColorAction("pgraph.nodes", VisualItem.FILLCOLOR, ColorLib.rgb(0, 200, 0));
+        ColorAction edges = new ColorAction("pgraph.edges", VisualItem.STROKECOLOR, ColorLib.gray(200));
+        ActionList color = new ActionList();
+        color.add(fill);
+        color.add(edges);
+        vis.putAction("color", color);
+        ShapeRenderer r = new ShapeRenderer();
+        vis.setRendererFactory(new DefaultRendererFactory(r));
+        d.addControlListener(new DragControl());
+        d.addControlListener(new PanControl());
+        d.addControlListener(new ZoomControl());
+        JFrame frame = new JFrame("Prefuse Example");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.add(d);
+        frame.pack();
+        frame.setVisible(true);
+        vis.run("color");
     }
     
     /**

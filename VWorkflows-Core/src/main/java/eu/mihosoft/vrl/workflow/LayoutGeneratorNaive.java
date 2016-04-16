@@ -26,6 +26,7 @@ import java.util.Objects;
  */
 public class LayoutGeneratorNaive implements LayoutGenerator {
     
+    private final boolean debug;
     private VFlow workflow;
     private VNode[] nodes;
     private int nodecount;
@@ -33,7 +34,14 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     private LinkedList<Tuple<Integer,Integer>> connectionList;
     
     public LayoutGeneratorNaive() {
-        //System.out.println("Creating layout generator");
+        this.debug = false;
+    }
+    
+    public LayoutGeneratorNaive(boolean pdebug) {
+        this.debug = pdebug;
+        if(this.debug) {
+            System.out.println("Creating layout generator");
+        }
     }
     
     /**
@@ -42,7 +50,9 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      */
     @Override
     public void setUp(VFlow pworkflow) {
-        //System.out.println("Setting up workflow for layout generation.");
+        if(this.debug){
+            System.out.println("Setting up workflow for layout generation.");
+        }
         this.workflow = pworkflow;
         this.connectionList = new LinkedList<>();
         
@@ -71,7 +81,9 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
             Integer in = getNodeID(allConnections.get(i).getReceiver().getNode());
             this.connectionList.add(new Tuple<>(out, in));
         }
-        //System.out.println("Setup complete with " + this.nodecount + " nodes and " + this.conncount + " edges.");
+        if(this.debug) {
+            System.out.println("Setup complete with " + this.nodecount + " nodes and " + this.conncount + " edges.");
+        }
     }
     
     /**
@@ -80,7 +92,9 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      */
     @Override
     public void generateLayout() {
-        //System.out.println("Generating layout.");
+        if(this.debug) {
+            System.out.println("Generating layout.");
+        }
         int i, j, k;
         LinkedList<LinkedList<Integer>> layers = new LinkedList<>();
         

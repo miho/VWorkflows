@@ -54,6 +54,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
@@ -132,11 +133,29 @@ public class MainWindowFXMLController implements Initializable {
     }
     
     @FXML
-    public void onLayoutAction(ActionEvent e) {
-        LayoutGenerator layouter;
-        layouter = new LayoutGeneratorPrefuse();
-        layouter.setUp(workflow);
-        layouter.generateLayout();
+    private CheckMenuItem checkDebugLayout;
+    
+    @FXML
+    public void onNaiveAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorNaive(checkDebugLayout.isSelected());
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected());
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefuseAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected());
+        layoutAction(layouter);
+    }
+    
+    private void layoutAction(LayoutGenerator playouter) {
+        playouter.setUp(workflow);
+        playouter.generateLayout();
     }
 
     @FXML

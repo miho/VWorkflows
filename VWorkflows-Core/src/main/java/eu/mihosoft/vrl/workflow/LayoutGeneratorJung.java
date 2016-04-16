@@ -25,6 +25,7 @@ import org.apache.commons.collections4.Transformer;
  */
 public class LayoutGeneratorJung implements LayoutGenerator {
     
+    private final boolean debug;
     private VFlow workflow;
     private DirectedGraph<VNode, Connection> jgraph;
     private VNode[] nodes;
@@ -33,7 +34,15 @@ public class LayoutGeneratorJung implements LayoutGenerator {
     private Layout<VNode, Connection> layout;
     
     public LayoutGeneratorJung() {
-        //System.out.println("Creating layout generator");
+        this.debug = false;
+        
+    }
+    
+    public LayoutGeneratorJung(boolean pdebug) {
+        this.debug = pdebug;
+        if(this.debug) {
+            System.out.println("Creating layout generator");
+        }
     }
     
     /**
@@ -42,7 +51,9 @@ public class LayoutGeneratorJung implements LayoutGenerator {
      */
     @Override
     public void setUp(VFlow pworkflow) {
-        //System.out.println("Setting up workflow for layout generation.");
+        if(this.debug) {
+            System.out.println("Setting up workflow for layout generation.");
+        }
         this.workflow = pworkflow;
         this.jgraph = new DirectedSparseGraph<>();
         
@@ -74,7 +85,9 @@ public class LayoutGeneratorJung implements LayoutGenerator {
             Integer receiver = getNodeID(currConn.getReceiver().getNode());
             this.jgraph.addEdge(currConn, this.nodes[sender], this.nodes[receiver]);
         }
-        //System.out.println("Setup complete with " + this.jgraph.getVertexCount() + " nodes and " + this.jgraph.getEdgeCount() + " edges.");
+        if(this.debug) {
+            System.out.println("Setup complete with " + this.jgraph.getVertexCount() + " nodes and " + this.jgraph.getEdgeCount() + " edges.");
+        }
     }
     
     /**
@@ -83,26 +96,40 @@ public class LayoutGeneratorJung implements LayoutGenerator {
      */
     @Override
     public void generateLayout() {
-        //System.out.println("Generating layout.");
+        if(this.debug) {
+            System.out.println("Generating layout.");
+        }
         this.layout = new CircleLayout<>(this.jgraph);
+        int i;
+        double maxheight = 0;
+        double maxwidth = 0;
+        for(i = 0; i < this.nodecount; i++) {
+            double currheight = this.nodes[i].getHeight();
+            double currwidth = this.nodes[i].getWidth();
+            if(currheight > maxheight) {
+                maxheight = currheight;
+            }
+            if(currwidth > maxwidth) {
+                maxwidth = currwidth;
+            }
+        }
+        this.layout.setSize(new Dimension((int) Math.round(maxwidth * this.nodecount), (int) Math.round(maxheight * this.nodecount)));
+        if(this.debug) {
+            BasicVisualizationServer<VNode, Connection> vv = new BasicVisualizationServer<>(layout);
+            vv.setPreferredSize(new Dimension(350, 350));
+            vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+            vv.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
+            System.out.println("Server setup complete");
         
-        // Test
-        System.out.println("testvis");
-        this.layout.setSize(new Dimension(300,300));
-        BasicVisualizationServer<VNode, Connection> vv = new BasicVisualizationServer<>(layout);
-        vv.setPreferredSize(new Dimension(350, 350));
-        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-        vv.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
-        System.out.println("Server setup complete");
-        
-        JFrame frame = new JFrame("View");
-        System.out.println("adding server to frame");
-        frame.getContentPane().add(vv);
-        System.out.println("server added");
-        frame.pack();
-        System.out.println("frame packed");
-        frame.setVisible(true);
-        System.out.println("frame visible");
+            JFrame frame = new JFrame("View");
+            System.out.println("adding server to frame");
+            frame.getContentPane().add(vv);
+            System.out.println("server added");
+            frame.pack();
+            System.out.println("frame packed");
+            frame.setVisible(true);
+            System.out.println("frame visible");
+        }
     }
     
     /**

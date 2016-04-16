@@ -39,6 +39,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox minHeight="400.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.mihosoft.vrl.workflow.demo.MainWindowFXMLController">
@@ -54,7 +55,12 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#onLayoutAction" text="Layout" />
+            <Menu mnemonicParsing="false" text="Layout">
+                <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="Naive Layout" />
+                <MenuItem mnemonicParsing="false" onAction="#onJungAction" text="Jung Layout" />
+                <MenuItem mnemonicParsing="false" onAction="#onPrefuseAction" text="Prefuse Layout" />
+                <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
+            </Menu>
             <MenuItem mnemonicParsing="false" text="Delete" />
           </items>
         </Menu>

@@ -105,7 +105,9 @@ public class LayoutGeneratorJung implements LayoutGenerator {
         System.out.println("frame visible");
     }
     
-    // Searches linearly for the ID of the given Node
+    /**
+     * Searches linearly for the ID of the given Node
+     */
     private Integer getNodeID(VNode pnode) {
         int i;
         for(i = 0; i < this.nodecount; i++) {

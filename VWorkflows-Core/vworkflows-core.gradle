@@ -1,8 +1,11 @@
 dependencies {
     compile 'com.thoughtworks.xstream:xstream:1.4.8'
+    // Jung - from Maven Repository:
     compile 'net.sf.jung:jung-api:2.1'
     compile 'net.sf.jung:jung-graph-impl:2.1'
     compile 'net.sf.jung:jung-algorithms:2.1'
     compile 'net.sf.jung:jung-visualization:2.1'
     compile 'org.apache.commons:commons-collections4:4.1'
+    // Prefuse -  Old version (2010) from Maven Repository:
+    compile 'org.prefuse:prefuse:beta-20071021'
 }

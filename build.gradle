@@ -185,3 +185,11 @@ task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport, overwrite:
 coveralls {
     jacocoReportPath = "${jacocoRootReportPath}/root.xml"
 }
+
+tasks.coveralls {
+  group = 'Coverage reports'
+  description = 'Uploads the aggregated coverage report to Coveralls'
+
+  dependsOn jacocoRootReport
+  onlyIf { System.env.'CI' }
+}

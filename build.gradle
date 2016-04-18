@@ -126,6 +126,11 @@ subprojects { subproj ->
         }
 
         test {
+            
+            // set heap size for the test JVM(s)
+            minHeapSize = "128m"
+            maxHeapSize = "256m"
+            
             testLogging {
                 afterSuite { desc, result ->
                     if (!desc.parent) {

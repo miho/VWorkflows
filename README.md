@@ -7,6 +7,8 @@ Workflow API with UI bindings for JavaFX.
 
 <img src="https://farm2.staticflickr.com/1453/26419281842_799e5d458a_k.jpg">
 
+<img src="https://farm2.staticflickr.com/1445/26511687665_051a5bf7d9_k.jpg">
+
 See [http://mihosoft.eu/?p=523](http://mihosoft.eu/?p=523) and [http://mihosoft.eu/?p=564](http://mihosoft.eu/?p=564) 
 for an introduction.
 

@@ -122,7 +122,7 @@ subprojects { subproj ->
 
         dependencies {
             compileOnly project.files(project.jfxrtLocation)
-            testCompile 'junit:junit:4.+'
+            testCompile 'junit:junit:4.12'
         }
 
         test {

@@ -4,6 +4,23 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'net.nemerosa.versioning'
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// create one jar for the source files
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
 def pomConfig = {
     name project.name
     description 'VWorkflows'
@@ -38,7 +55,8 @@ publishing {
     publications {
         mavenCustom(MavenPublication) {
             from components.java
-            artifact sourceJar
+            artifact sourcesJar
+            artifact javadocJar
 
             pom.withXml {
                 // all dependencies should use the default scope (compile) but
@@ -82,12 +100,12 @@ bintray {
     key = project.bintrayApiKey
     publications = ['mavenCustom']
     pkg {
-        repo = 'maven'
-        userOrg = 'mihosoft'
+        repo = 'VWorkflows'
+        userOrg = 'miho'
         name = project.name
         desc = project.name
         licenses = ['BSD 2-Clause']
-        labels = ['javafx', 'workoflows']
+        labels = ['javafx', 'workflows','vrl','vrl-studio', 'graphs','flows', 'visual programming']
         websiteUrl = 'https://github.com/miho/VWorkflows'
         issueTrackerUrl = 'https://github.com/miho/VWorkflows/issues'
         vcsUrl = 'https://github.com/miho/VWorkflows.git'

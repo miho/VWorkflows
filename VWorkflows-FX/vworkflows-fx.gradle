@@ -1,15 +1,5 @@
-repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
 dependencies {
-    compile project(':vworkflows-core') 
-
-    if (project.jdk == 7) {
-        compile "org.jfxtras:jfxtras-labs:2.2-r6-SNAPSHOT"
-    } else if (project.jdk == 8) {
-        compile "org.jfxtras:jfxtras-labs:8.0-r1"
-    }
+    compile project(':vworkflows-core')
 
     compile 'org.apache.commons:commons-math3:3.3'
 }

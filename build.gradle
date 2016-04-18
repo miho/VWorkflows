@@ -18,6 +18,10 @@ buildscript {
     }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
+
 Date buildTimeAndDate = new Date()
 ext {
     buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)

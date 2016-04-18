@@ -14,61 +14,38 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 ## Maven Coordinates
 
-Repository: https://oss.sonatype.org/content/repositories/snapshots
+VWorkflows-Core:
 
-### Java 7 ###
+    <dependency>
+      <groupId>eu.mihosoft.vrl.workflow</groupId>
+      <artifactId>vworkflows-core</artifactId>
+      <version>0.2</version>
+    </dependency>
 
 VWorkflows-FX:
 
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
       <artifactId>vworkflows-fx</artifactId>
-      <version>0.1-r2-SNAPSHOT</version>
+      <version>0.2</version>
     </dependency>
-
-VWorkflows-Core:
-
-    <dependency>
-      <groupId>eu.mihosoft.vrl.workflow</groupId>
-      <artifactId>vworkflows-core</artifactId>
-      <version>0.1-r2-SNAPSHOT</version>
-    </dependency>
-    
-### Java 8 ###
-
-VWorkflows-FX:
-
-    <dependency>
-      <groupId>eu.mihosoft.vrl.workflow-8.0</groupId>
-      <artifactId>vworkflows-fx</artifactId>
-      <version>0.1-r2-SNAPSHOT</version>
-    </dependency>
-
-VWorkflows-Core:
-
-    <dependency>
-      <groupId>eu.mihosoft.vrl.workflow-8.0</groupId>
-      <artifactId>vworkflows-core</artifactId>
-      <version>0.1-r2-SNAPSHOT</version>
-    </dependency>
-
 
 ## How To Build
 
 ### Reqirements
 
-- Java >= 1.7.25 (Java 8 is also supported)
+- Java >= 1.8.0_60
 - Internet connection (other dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 
 ### IDE
 
-Open the `VWorkflows-Core/VWorkflows-FX` [Gradle](http://www.gradle.org/) project in your favourite IDE (tested with NetBeans 7.3.1) and build it
+Open the `VWorkflows` [Gradle](http://www.gradle.org/) project in your favourite IDE (tested with NetBeans 8.1) and build it
 by calling the `assemble` task.
 
 ### Command Line
 
-Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/VWorkflows/VWorkflows-FX`) and enter the following command
+Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/VWorkflows`) and enter the following command
 
 #### Bash (Linux/OS X/Cygwin/other Unix-like OS)
 
@@ -81,4 +58,4 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/VWorkfl
 ## Test It
 
 Besides the tests defined in `VWorkflows-Core` (`test` task) it is also possible to run a graphical demo that comes with 
-`VWorkflows-FX`. To run it call the `run` task.
+`VWorkflows-DEMO` subproject. To run it call the `run` task.

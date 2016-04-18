@@ -20,7 +20,7 @@ before_script:
   - ./gradlew --version
   
 script:
-    - TERM=dumb ./gradlew clean build -i -S -x :vworkflows-demo:jfxJar
+    - TERM=dumb ./gradlew clean build -S -x :vworkflows-demo:jfxJar
 
 after_success:
   - TERM=dumb ./gradlew test jacocoTestReport jacocoRootReport coveralls -S

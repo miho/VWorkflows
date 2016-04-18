@@ -5,6 +5,8 @@ VWorkflows
 
 Workflow API with UI bindings for JavaFX.
 
+<img src="https://farm2.staticflickr.com/1453/26419281842_799e5d458a_k.jpg">
+
 <img src="https://github-camo.global.ssl.fastly.net/17875864fac438811e1b42cae32dec12fa2a88ae/687474703a2f2f6661726d342e737461746963666c69636b722e636f6d2f333732382f393936363336373836355f353438656634653331335f7a2e6a7067">
 
 See [http://mihosoft.eu/?p=523](http://mihosoft.eu/?p=523) and [http://mihosoft.eu/?p=564](http://mihosoft.eu/?p=564) 

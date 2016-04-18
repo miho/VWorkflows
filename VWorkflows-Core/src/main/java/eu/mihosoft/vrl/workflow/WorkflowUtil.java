@@ -230,8 +230,6 @@ public class WorkflowUtil {
         List<ConnectionResult> result = new ArrayList<>();
         if (s.getNode().getFlow() == r.getNode().getFlow()) {
             result.add(s.getNode().getFlow().connect(s, r));
-        } else {
-            
         }
         
         return result;

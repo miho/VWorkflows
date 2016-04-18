@@ -182,13 +182,18 @@ public class FXFlowNodeSkin
                 (ListChangeListener.Change<? extends Connector> change) -> {
                     boolean numConnectorsHasChanged = false;
                     while (change.next()) {
-                        if (change.wasPermutated()) {
-                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
-                                //permutate
-                            }
-                        } else if (change.wasUpdated()) {
-                            //update item
-                        } else if (change.wasRemoved()) {
+                        // TODO handle permutation
+//                        if (change.wasPermutated()) {
+//                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+//                                // TODO permutate
+//                            }
+//                        } 
+//                        else if (change.wasUpdated()) {
+//                            // TODO update item
+//                        } 
+//                        else 
+                        
+                        if (change.wasRemoved()) {
                             numConnectorsHasChanged = true;
                             // removed
                             for (Connector connector : change.getRemoved()) {

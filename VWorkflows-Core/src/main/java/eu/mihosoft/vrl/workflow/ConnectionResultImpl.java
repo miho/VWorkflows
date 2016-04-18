@@ -33,8 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.List;
-
 /**
  * This class provides a default implementation of {@code  ConnectionResult}
  * //TODO add documentation about the possible connection results.

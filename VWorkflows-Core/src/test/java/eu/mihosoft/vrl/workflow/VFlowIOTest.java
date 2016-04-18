@@ -37,11 +37,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.Connections;
-import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
 import org.junit.After;
 import org.junit.AfterClass;

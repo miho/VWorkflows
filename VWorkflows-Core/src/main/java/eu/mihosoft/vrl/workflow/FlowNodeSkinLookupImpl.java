@@ -35,10 +35,6 @@
 package eu.mihosoft.vrl.workflow;
 
 
-import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VFlowModel;
-import eu.mihosoft.vrl.workflow.VNode;
 
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;

@@ -40,10 +40,10 @@ import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javafx.beans.InvalidationListener;
 
 import javafx.beans.property.ObjectProperty;
@@ -78,10 +78,6 @@ import jfxtras.scene.control.window.WindowIcon;
 //import jfxtras.labs.scene.control.window.WindowIcon;
 import jfxtras.scene.control.window.WindowUtil;
 
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * A window that represents a flow node.

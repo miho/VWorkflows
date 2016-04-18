@@ -117,10 +117,12 @@ class VNodeImpl implements VNode {
                             //permutate
                             String action = "permutate"; // TODO: implement
                         }
-                    } else if (change.wasUpdated()) {
-                        //update item
-
-                    } else if (change.wasRemoved()) {
+                    }
+//                    else if (change.wasUpdated()) {
+//                        //TODO: update item
+//
+//                    } 
+                    else if (change.wasRemoved()) {
                         for (Connector connector : change.getRemoved()) {
                             if (connector.isInput()) {
                                 inputs.remove(connector);

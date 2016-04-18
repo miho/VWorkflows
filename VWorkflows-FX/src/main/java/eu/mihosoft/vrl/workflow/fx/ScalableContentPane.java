@@ -347,13 +347,15 @@ public class ScalableContentPane extends Region {
         getContent().getChildren().addListener(
                 (ListChangeListener.Change<? extends Node> c) -> {
             while (c.next()) {
-                if (c.wasPermutated()) {
-                    for (int i = c.getFrom(); i < c.getTo(); ++i) {
-                        //permutate
-                    }
-                } else if (c.wasUpdated()) {
-                    //update item
-                } else {
+                // TODO handle permutation
+//                if (c.wasPermutated()) {
+//                    for (int i = c.getFrom(); i < c.getTo(); ++i) {
+//                        //permutate
+//                    }
+//                } else if (c.wasUpdated()) {
+//                    //update item
+//                } else 
+
                     if (c.wasRemoved()) {
                         for (Node n : c.getRemoved()) {
                             n.boundsInLocalProperty().removeListener(boundsListener);
@@ -367,7 +369,7 @@ public class ScalableContentPane extends Region {
                             n.layoutYProperty().addListener(numberListener);
                         }
                     }
-                }
+                
             }
         });
     }

@@ -455,18 +455,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                             if (connResult.getStatus().isCompatible()) {
                                 connectionListener.onCreateNewConnectionReleased(connResult);
-                            }
-
-                            if (connResult.getStatus().isCompatible()) {
-                                //
                             } else {
                                 connectionListener.onConnectionIncompatibleReleased(n);
                             }
                         }
 
 
-                    } else {
-                        //
                     }
 
                     if (!isSameConnection) {

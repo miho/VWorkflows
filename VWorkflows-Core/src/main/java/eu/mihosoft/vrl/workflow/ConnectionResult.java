@@ -33,8 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.List;
-
 /**
  * This interface defines the result of an attempt to connect two {@code Connector}s
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;

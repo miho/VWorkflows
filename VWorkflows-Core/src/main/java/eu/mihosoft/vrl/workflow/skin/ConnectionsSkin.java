@@ -32,10 +32,6 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
 package eu.mihosoft.vrl.workflow.skin;
-
-import eu.mihosoft.vrl.workflow.Connections;
-
-///**
 // * Skin that represents all connections
 // * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
 // */

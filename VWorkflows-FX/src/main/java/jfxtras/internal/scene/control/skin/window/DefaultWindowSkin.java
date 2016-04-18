@@ -42,7 +42,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -75,10 +74,10 @@ public class DefaultWindowSkin extends SkinBase<Window> {
     private double maxScale = 10;
     private double scaleIncrement = 0.001;
     private ResizeMode resizeMode;
-    private boolean RESIZE_TOP;
-    private boolean RESIZE_LEFT;
-    private boolean RESIZE_BOTTOM;
-    private boolean RESIZE_RIGHT;
+    private boolean resizeTop;
+    private boolean resizeLeft;
+    private boolean resizeBottom;
+    private boolean resizeRight;
     private TitleBar titleBar;
     private Window control;
     private Pane root = new Pane();
@@ -115,13 +114,16 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         control.getLeftIcons().addListener(
                 (ListChangeListener.Change<? extends WindowIcon> change) -> {
                     while (change.next()) {
-                        if (change.wasPermutated()) {
-                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
-                                //permutate
-                            }
-                        } else if (change.wasUpdated()) {
-                            //update item
-                        } else if (change.wasRemoved()) {
+                        // TODO handle permutation
+//                        if (change.wasPermutated()) {
+//                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+//                                //permutate
+//                            }
+//                        } else if (change.wasUpdated()) {
+//                            //update item
+//                        } else 
+                            
+                        if (change.wasRemoved()) {
                             for (WindowIcon i : change.getRemoved()) {
                                 titleBar.removeLeftIcon(i);
                             }
@@ -136,13 +138,16 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         control.getRightIcons().addListener(
                 (ListChangeListener.Change<? extends WindowIcon> change) -> {
                     while (change.next()) {
-                        if (change.wasPermutated()) {
-                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
-                                //permutate
-                            }
-                        } else if (change.wasUpdated()) {
-                            //update item
-                        } else if (change.wasRemoved()) {
+                        // TODO handle permutation
+//                        if (change.wasPermutated()) {
+//                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+//                                //permutate
+//                            }
+//                        } else if (change.wasUpdated()) {
+//                            //update item
+//                        } else 
+                            
+                            if (change.wasRemoved()) {
                             for (WindowIcon i : change.getRemoved()) {
                                 titleBar.removeRightIcon(i);
                             }
@@ -261,13 +266,15 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         control.getStylesheets().addListener(
                 (Change<? extends String> change) -> {
                     while (change.next()) {
-                        if (change.wasPermutated()) {
-                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
-                                //permutate
-                            }
-                        } else if (change.wasUpdated()) {
-                            //update item
-                        } else if (change.wasRemoved()) {
+                        // TODO handle permutation
+//                        if (change.wasPermutated()) {
+//                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+//                                //permutate
+//                            }
+//                        } else if (change.wasUpdated()) {
+//                            //update item
+//                        } else 
+                            if (change.wasRemoved()) {
                             for (String i : change.getRemoved()) {
                                 titleBar.getStylesheets().remove(i);
                             }
@@ -424,7 +431,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 double height = n.getBoundsInLocal().getMaxY()
                         - n.getBoundsInLocal().getMinY();
 
-                if (RESIZE_TOP) {
+                if (resizeTop) {
 //                        System.out.println("TOP");
 
                     double insetOffset = getSkinnable().getInsets().getTop() * 0.5;
@@ -441,7 +448,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                         control.setPrefHeight(newHeight);
                     }
                 }
-                if (RESIZE_LEFT) {
+                if (resizeLeft) {
 //                        System.out.println("LEFT");
 
                     double insetOffset = getSkinnable().getInsets().getLeft() * 0.5;
@@ -456,12 +463,10 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                             control.getContentPane().minWidth(0))) {
                         control.setLayoutX(control.getLayoutX() - xDiff);
                         control.setPrefWidth(newWidth);
-                    } else {
-                        //
                     }
                 }
 
-                if (RESIZE_BOTTOM) {
+                if (resizeBottom) {
 //                        System.out.println("BOTTOM");
 
                     double insetOffset = getSkinnable().getInsets().getBottom() * 0.5;
@@ -478,7 +483,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                         control.setPrefHeight(newHeight);
                     }
                 }
-                if (RESIZE_RIGHT) {
+                if (resizeRight) {
 
                     double insetOffset = getSkinnable().getInsets().getRight() * 0.5;
 
@@ -518,10 +523,10 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 
             if (control.isMinimized() || !control.isResizableWindow()) {
 
-                RESIZE_TOP = false;
-                RESIZE_LEFT = false;
-                RESIZE_BOTTOM = false;
-                RESIZE_RIGHT = false;
+                resizeTop = false;
+                resizeLeft = false;
+                resizeBottom = false;
+                resizeRight = false;
 
                 resizeMode = ResizeMode.NONE;
 
@@ -550,47 +555,47 @@ public class DefaultWindowSkin extends SkinBase<Window> {
             boolean right = diffMaxX * scaleX < Math.max(border, getSkinnable().getInsets().getRight() / 2 * scaleX);
             boolean bottom = diffMaxY * scaleY < Math.max(border, getSkinnable().getInsets().getBottom() / 2 * scaleY);
 
-            RESIZE_TOP = false;
-            RESIZE_LEFT = false;
-            RESIZE_BOTTOM = false;
-            RESIZE_RIGHT = false;
+            resizeTop = false;
+            resizeLeft = false;
+            resizeBottom = false;
+            resizeRight = false;
 
             if (left && !top && !bottom) {
                 n.setCursor(Cursor.W_RESIZE);
                 resizeMode = ResizeMode.LEFT;
-                RESIZE_LEFT = true;
+                resizeLeft = true;
             } else if (left && top && !bottom) {
                 n.setCursor(Cursor.NW_RESIZE);
                 resizeMode = ResizeMode.TOP_LEFT;
-                RESIZE_LEFT = true;
-                RESIZE_TOP = true;
+                resizeLeft = true;
+                resizeTop = true;
             } else if (left && !top && bottom) {
                 n.setCursor(Cursor.SW_RESIZE);
                 resizeMode = ResizeMode.BOTTOM_LEFT;
-                RESIZE_LEFT = true;
-                RESIZE_BOTTOM = true;
+                resizeLeft = true;
+                resizeBottom = true;
             } else if (right && !top && !bottom) {
                 n.setCursor(Cursor.E_RESIZE);
                 resizeMode = ResizeMode.RIGHT;
-                RESIZE_RIGHT = true;
+                resizeRight = true;
             } else if (right && top && !bottom) {
                 n.setCursor(Cursor.NE_RESIZE);
                 resizeMode = ResizeMode.TOP_RIGHT;
-                RESIZE_RIGHT = true;
-                RESIZE_TOP = true;
+                resizeRight = true;
+                resizeTop = true;
             } else if (right && !top && bottom) {
                 n.setCursor(Cursor.SE_RESIZE);
                 resizeMode = ResizeMode.BOTTOM_RIGHT;
-                RESIZE_RIGHT = true;
-                RESIZE_BOTTOM = true;
+                resizeRight = true;
+                resizeBottom = true;
             } else if (top && !left && !right) {
                 n.setCursor(Cursor.N_RESIZE);
                 resizeMode = ResizeMode.TOP;
-                RESIZE_TOP = true;
+                resizeTop = true;
             } else if (bottom && !left && !right) {
                 n.setCursor(Cursor.S_RESIZE);
                 resizeMode = ResizeMode.BOTTOM;
-                RESIZE_BOTTOM = true;
+                resizeBottom = true;
             } else {
                 n.setCursor(Cursor.DEFAULT);
                 resizeMode = ResizeMode.NONE;

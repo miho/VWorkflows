@@ -31,7 +31,6 @@ package jfxtras.scene.control.window;
 
 import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 

@@ -365,9 +365,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                     connectionListener.onCreateNewConnectionReleased(connResult);
                 }
                 
-                if (connResult.getStatus().isCompatible()) {
-                    //
-                } else {
+                if (!connResult.getStatus().isCompatible()) {
                     connectionListener.onConnectionIncompatibleReleased(n);
                 }
             }

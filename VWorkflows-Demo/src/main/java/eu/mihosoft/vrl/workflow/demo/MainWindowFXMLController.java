@@ -142,20 +142,129 @@ public class MainWindowFXMLController implements Initializable {
     }
     
     @FXML
-    public void onJungAction(ActionEvent e) {
-        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected());
+    public void onJungCircleAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 1);
         layoutAction(layouter);
     }
     
     @FXML
-    public void onPrefuseAction(ActionEvent e) {
-        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected());
+    public void onJungDAGAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 2);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungFRAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 3);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungFR2Action(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 4);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungISOMAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 5);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungKKAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 6);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungSpringAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 8);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungSpring2Action(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 9);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onJungStaticAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorJung(checkDebugLayout.isSelected(), 10);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefCircleAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 2);
+        layoutAction(layouter);
+    }
+    /*
+    @FXML
+    public void onPrefCollapsedStackAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 3);
+        layoutAction(layouter);
+    }
+    */
+    @FXML
+    public void onPrefCollapsedSubtreeAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 4);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefBalloonTreeAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 5);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefForceDirectedAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 6);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefFruchtermanReingoldAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 7);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefNodeLinkTreeAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 8);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefRadialTreeAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 9);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onPrefSquarifiedTreeMapAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 10);
+        layoutAction(layouter);
+    }
+    /*
+    @FXML
+    public void onPrefGridAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 11);
+        layoutAction(layouter);
+    }
+    */
+    @FXML
+    public void onPrefRandomAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 12);
         layoutAction(layouter);
     }
     
     private void layoutAction(LayoutGenerator playouter) {
         playouter.setUp(workflow);
         playouter.generateLayout();
+        playouter = null;
     }
 
     @FXML

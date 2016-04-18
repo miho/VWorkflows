@@ -7,7 +7,7 @@ package eu.mihosoft.vrl.workflow;
 
 /**
  *
- * @author tobi
+ * @author Tobias Mertz
  */
 public interface LayoutGenerator {
     

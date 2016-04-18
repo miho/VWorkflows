@@ -5,13 +5,8 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.VFlow;
-import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.Connections;
 import javafx.collections.ObservableList;
 import java.util.LinkedList;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -94,6 +89,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     public void generateLayout() {
         if(this.debug) {
             System.out.println("Generating layout.");
+            System.out.println("Running Naive layout.");
         }
         int i, j, k;
         LinkedList<LinkedList<Integer>> layers = new LinkedList<>();
@@ -181,6 +177,9 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
                         VNode currentNode = this.nodes[k];
                         currentNode.setX(posX);
                         currentNode.setY(posY);
+                        if(this.debug) {
+                            System.out.println(currentNode.getId() + " | X: " + posX + " Y: " + posY);
+                        }
                         posY += distY;
                         break;
                     }

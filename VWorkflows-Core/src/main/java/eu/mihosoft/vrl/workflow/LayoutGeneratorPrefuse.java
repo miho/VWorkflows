@@ -7,12 +7,10 @@ package eu.mihosoft.vrl.workflow;
 
 import java.util.Objects;
 import javafx.collections.ObservableList;
-import javax.swing.JFrame;
 import prefuse.action.ActionList;
 import prefuse.action.RepaintAction;
 import prefuse.data.Graph;
 import prefuse.data.Node;
-import prefuse.data.Tuple;
 import prefuse.data.tuple.TupleSet;
 import prefuse.Display;
 import prefuse.visual.NodeItem;
@@ -31,13 +29,12 @@ import prefuse.action.layout.graph.FruchtermanReingoldLayout; // testvis makes a
 import prefuse.action.layout.graph.NodeLinkTreeLayout;
 import prefuse.action.layout.graph.RadialTreeLayout;
 import prefuse.action.layout.graph.SquarifiedTreeMapLayout;
-import prefuse.action.layout.graph.TreeLayout;
 import prefuse.action.layout.GridLayout;
 import prefuse.action.layout.RandomLayout;
-import prefuse.action.layout.SpecifiedLayout;
 import prefuse.action.layout.StackedAreaChart;
 
 // testvis
+import javax.swing.JFrame;
 import prefuse.action.assignment.ColorAction;
 import prefuse.controls.DragControl;
 import prefuse.controls.PanControl;
@@ -49,11 +46,12 @@ import prefuse.visual.VisualItem;
 
 /**
  *
- * @author tobi
+ * @author Tobias Mertz
  */
 public class LayoutGeneratorPrefuse implements LayoutGenerator {
     
     private final boolean debug;
+    private final int layoutselector;
     private VFlow workflow;
     private GenTuple<VNode, Integer>[] nodes;
     private int nodecount;
@@ -62,10 +60,20 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
     
     public LayoutGeneratorPrefuse() {
         this.debug = false;
+        this.layoutselector = 2;
     }
     
     public LayoutGeneratorPrefuse(boolean pdebug) {
         this.debug = pdebug;
+        this.layoutselector = 2;
+        if(this.debug) {
+            System.out.println("Creating layout generator");
+        }
+    }
+    
+    public LayoutGeneratorPrefuse(boolean pdebug, int playout) {
+        this.debug = pdebug;
+        this.layoutselector = playout;
         if(this.debug) {
             System.out.println("Creating layout generator");
         }
@@ -126,9 +134,80 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         if(this.debug) {
             System.out.println("Generating layout.");
         }
-        int i;
+
         ActionList layout = new ActionList();
-        layout.add(new CircleLayout("pgraph"));
+        switch (this.layoutselector) {
+            /* requires additional setup
+            case 0:
+                layout.add(new AxisLabelLayout("pgraph"));
+                if(this.debug) System.out.println("Running Axis Label layout.");
+                break;
+            */
+            /* requires additional setup
+            case 1:
+                layout.add(new AxisLayout("pgraph"));
+                if(this.debug) System.out.println("Running Axis layout");
+                break;
+            */
+            case 2:
+                layout.add(new CircleLayout("pgraph"));
+                if(this.debug) System.out.println("Running Circle layout.");
+                break;
+            /* Can not be used on graphs
+            case 3:
+                layout.add(new CollapsedStackLayout("pgraph"));
+                if(this.debug) System.out.println("Running Collapsed Stack layout.");
+                break;
+            */
+            case 4:
+                layout.add(new CollapsedSubtreeLayout("pgraph"));
+                if(this.debug) System.out.println("Running Collapsed Subtree layout.");
+                break;
+            case 5: 
+                layout.add(new BalloonTreeLayout("pgraph"));
+                if(this.debug) System.out.println("Running Balloon Tree layout.");
+                break;
+            case 6:
+                layout.add(new ForceDirectedLayout("pgraph"));
+                if(this.debug) System.out.println("Running Force Directed layout.");
+                break;
+            case 7: 
+                layout.add(new FruchtermanReingoldLayout("pgraph"));
+                if(this.debug) System.out.println("Running Fruchterman Reingold layout.");
+                break;
+            case 8:
+                layout.add(new NodeLinkTreeLayout("pgraph"));
+                if(this.debug) System.out.println("Running Node Link Tree layout.");
+                break;
+            case 9: 
+                layout.add(new RadialTreeLayout("pgraph"));
+                if(this.debug) System.out.println("Running Radial Tree layout.");
+                break;
+            case 10:
+                layout.add(new SquarifiedTreeMapLayout("pgraph"));
+                if(this.debug) System.out.println("Running Squarified Tree Map layout");
+                break;
+            /* Can not be used on graphs
+            case 11:
+                layout.add(new GridLayout("pgraph"));
+                if(this.debug) System.out.println("Running Grid layout.");
+                break;
+            */
+            case 12: 
+                layout.add(new RandomLayout("pgraph"));
+                if(this.debug) System.out.println("Running Random layout.");
+                break;
+            /* requires additional setup
+            case 13:
+                layout.add(new StackedAreaChart("pgraph"));
+                if(this.debug) System.out.println("Running Stacked Area Chart layout.");
+                break;
+            */
+            default: 
+                layout.add(new CircleLayout("pgraph"));
+                if(this.debug) System.out.println("Running default (Circle) layout.");
+                break;
+        }
         layout.add(new RepaintAction());
         
         Visualization vis = new Visualization();
@@ -136,6 +215,7 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         vis.putAction("layout", layout);
 
         Display d = new Display(vis);
+        int i;
         double maxheight = 0;
         double maxwidth = 0;
         for(i = 0; i < this.nodecount; i++) {
@@ -148,12 +228,14 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
                 maxwidth = currwidth;
             }
         }
-        d.setSize((int) Math.round(maxwidth * this.nodecount), (int) Math.round(maxheight * this.nodecount));
+        //d.setSize((int) Math.round(maxwidth * this.nodecount), (int) Math.round(maxheight * this.nodecount));
+        d.setSize(1280, 720);
         
         vis.run("layout");
         if(this.debug) {
             testvis(vis, d);
         }
+        
         TupleSet temp = vis.getVisualGroup("pgraph");
         VisualGraph vgraph;
         if(temp instanceof VisualGraph) {
@@ -169,7 +251,7 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
                     pnode.setX(vnode.getX());
                     pnode.setY(vnode.getY());
                     if(this.debug) {
-                        System.out.println("Node: " + i + " X: " + vnode.getX() + " Y: " + vnode.getY());
+                        System.out.println(this.nodes[i].x.getId() + " | X: " + vnode.getX() + " Y: " + vnode.getY());
                     }
                 }
                 else {
@@ -197,7 +279,7 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         d.addControlListener(new DragControl());
         d.addControlListener(new PanControl());
         d.addControlListener(new ZoomControl());
-        JFrame frame = new JFrame("Prefuse Example");
+        JFrame frame = new JFrame("Prefuse Display");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(d);
         frame.pack();
@@ -240,7 +322,7 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
             if(other == this) {
                 return true;
             }
-            if(!(other instanceof Tuple)) {
+            if(!(other instanceof GenTuple)) {
                 return false;
             }
             GenTuple<Object, Object> this_ = (GenTuple<Object, Object>) this;

@@ -113,6 +113,8 @@ public class VFlowTest {
 
     @Test
     public void connectNodes() {
+        
+        System.out.println(":TRAVIS:DEBUG:MH:1");
         VFlow flow = FlowFactory.newFlow();
 
         String[] connectionTypes = {"control", "data", "event", "inheritance"};
@@ -125,10 +127,14 @@ public class VFlowTest {
             n.addInput(type);
             n.addOutput(type);
         }
+        
+        System.out.println(":TRAVIS:DEBUG:MH:2");
 
         List<VNode> prevNodes = new ArrayList<>();
 
         for (int i = 0; i < flow.getNodes().size(); i++) {
+            
+            System.out.println(":TRAVIS:DEBUG:MH:3:i="+i);
 
             VNode receiverNode = flow.getNodes().get(i);
 
@@ -142,6 +148,8 @@ public class VFlowTest {
 //                }
 //                System.out.println("");
                 for (int j = 0; j < prevNodes.size(); j++) {
+                    
+                    System.out.println(":TRAVIS:DEBUG:MH:4:j="+j);
 
                     ConnectionResult[] results = new ConnectionResult[connectionTypes.length];
 
@@ -173,11 +181,17 @@ public class VFlowTest {
 
                     } // end for k
                 } // end for j
+                
+                System.out.println(":TRAVIS:DEBUG:MH:5");
 
                 prevNodes.remove(0);
+                
+                System.out.println(":TRAVIS:DEBUG:MH:6");
             }
 
+            System.out.println(":TRAVIS:DEBUG:MH:7");
             prevNodes.add(receiverNode);
+            System.out.println(":TRAVIS:DEBUG:MH:8");
 
         } // end for i
     }

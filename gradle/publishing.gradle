@@ -107,7 +107,7 @@ bintray {
         desc = project.name
         licenses = ['BSD 2-Clause']
         labels = ['javafx', 'workflows','vrl','vrl-studio', 'graphs','flows', 'visual programming']
-        websiteUrl = 'http://vworkflows.mihosoft.eu/'
+        websiteUrl = 'http://vworkflows.mihosoft.eu'
         issueTrackerUrl = 'https://github.com/miho/VWorkflows/issues'
         vcsUrl = 'https://github.com/miho/VWorkflows.git'
         publicDownloadNumbers = true

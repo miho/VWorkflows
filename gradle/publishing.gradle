@@ -66,6 +66,7 @@ publishing {
                         dep.remove(dep.scope)
                     }
                 }
+                asNode().appendNode 'description', 'VWorkflows library'
                 asNode().children().last() + pomConfig
             }
         }

@@ -1,7 +1,7 @@
 VWorkflows
 ==============
 
-[![Build Status](https://travis-ci.org/miho/VWorkflows.svg?branch=master)](https://travis-ci.org/miho/VWorkflows)
+[![Build Status](https://travis-ci.org/miho/VWorkflows.svg?branch=master)](https://travis-ci.org/miho/VWorkflows) 
 
 Interactive flow/graph visualization for building domain specific visual programming environments. Provides UI bindings for JavaFX.
 
@@ -16,20 +16,24 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 ## Maven Coordinates
 
-VWorkflows-Core:
+VWorkflows-Core: [ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-core/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-core/_latestVersion) 
+
+
 
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
       <artifactId>vworkflows-core</artifactId>
-      <version>0.2</version>
+      <version>0.2.2</version>
     </dependency>
 
-VWorkflows-FX:
+VWorkflows-FX: [ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-fx/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-fx/_latestVersion) 
+
+Replace version with the desired version (see above for latest version).
 
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
       <artifactId>vworkflows-fx</artifactId>
-      <version>0.2</version>
+      <version>0.2.2</version>
     </dependency>
 
 ## How To Build

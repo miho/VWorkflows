@@ -24,7 +24,7 @@ artifacts {
 def pomConfig = {
     name project.name
     description 'VWorkflows'
-    url 'https://github.com/miho/VWorkflows'
+    url 'http://vworkflows.mihosoft.eu'
     inceptionYear '2012'
     licenses {
         license([:]) {
@@ -107,7 +107,7 @@ bintray {
         desc = project.name
         licenses = ['BSD 2-Clause']
         labels = ['javafx', 'workflows','vrl','vrl-studio', 'graphs','flows', 'visual programming']
-        websiteUrl = 'https://github.com/miho/VWorkflows'
+        websiteUrl = 'http://vworkflows.mihosoft.eu/'
         issueTrackerUrl = 'https://github.com/miho/VWorkflows/issues'
         vcsUrl = 'https://github.com/miho/VWorkflows.git'
         publicDownloadNumbers = true

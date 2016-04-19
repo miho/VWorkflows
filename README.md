@@ -2,8 +2,7 @@ VWorkflows
 ==============
 
 [![Build Status](https://travis-ci.org/miho/VWorkflows.svg?branch=master)](https://travis-ci.org/miho/VWorkflows)
-
-Workflow API with UI bindings for JavaFX.
+Interactive flow/graph visualization for building domain specific visual programming environments. Provides UI bindings for JavaFX.
 
 <img src="https://farm2.staticflickr.com/1453/26419281842_799e5d458a_k.jpg">
 

@@ -16,7 +16,9 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 ## Maven Coordinates
 
-VWorkflows-Core: [ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-core/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-core/_latestVersion) 
+VWorkflows-Core:
+
+[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-core/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-core/_latestVersion) 
 
 
 
@@ -26,7 +28,9 @@ VWorkflows-Core: [ ![Download](https://api.bintray.com/packages/miho/VWorkflows/
       <version>0.2.2</version>
     </dependency>
 
-VWorkflows-FX: [ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-fx/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-fx/_latestVersion) 
+VWorkflows-FX:
+
+[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-fx/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-fx/_latestVersion) 
 
 Replace version with the desired version (see above for latest version).
 

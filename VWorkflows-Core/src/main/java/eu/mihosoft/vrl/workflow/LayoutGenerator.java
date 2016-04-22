@@ -11,8 +11,15 @@ package eu.mihosoft.vrl.workflow;
  */
 public interface LayoutGenerator {
     
+    /**
+     * Sets up the node- and edge-model for the current workflow.
+     * @param pworkflow VWorfklow: current workflow to be layouted.
+     */
     public void setUp(VFlow pworkflow);
     
+    /**
+     * Generates a Layout for the workflow given at SetUp.
+     */
     public void generateLayout() ;
     
 }

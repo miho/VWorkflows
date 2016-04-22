@@ -81,6 +81,7 @@
                     <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefGridAction" text="Grid Layout" /> -->
                     <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
                 </Menu>
+                <MenuItem mnemonicParsing="false" onAction="#onSmartAction" text="Smart Layout" />
                 <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
             </Menu>
             <MenuItem mnemonicParsing="false" text="Delete" />

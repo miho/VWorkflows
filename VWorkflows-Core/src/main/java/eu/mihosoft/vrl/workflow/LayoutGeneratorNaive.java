@@ -11,12 +11,6 @@ import java.util.Objects;
 
 /**
  * The most naive approach for a layouting algorithm.
- * There are lots of errors.
- *  - graphs are not necessarily trees.
- *  - nodes can have multiple inputs.
- *  - there are different types of connections.
- *  - nodes have different sizes.
- *  - we would want to reduce crossings.
  * @author Tobias Mertz
  */
 public class LayoutGeneratorNaive implements LayoutGenerator {
@@ -28,26 +22,30 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     private int conncount;
     private LinkedList<Tuple<Integer,Integer>> connectionList;
     
+    /**
+     * Default constructor.
+     * Debug is set to false.
+     */
     public LayoutGeneratorNaive() {
         this.debug = false;
     }
     
+    /**
+     * Constructor with debug-functionality.
+     * @param pdebug Boolean: debugging output enable/disable
+     */
     public LayoutGeneratorNaive(boolean pdebug) {
         this.debug = pdebug;
-        if(this.debug) {
-            System.out.println("Creating layout generator");
-        }
+        if(this.debug) System.out.println("Creating layout generator");
     }
     
     /**
-     * Sets up the model for the current workflow.
-     * @param pworkflow current workflow to be layouted.
+     * Sets up the node- and edge-model for the current workflow.
+     * @param pworkflow VWorfklow: current workflow to be layouted.
      */
     @Override
     public void setUp(VFlow pworkflow) {
-        if(this.debug){
-            System.out.println("Setting up workflow for layout generation.");
-        }
+        if(this.debug) System.out.println("Setting up workflow for layout generation.");
         this.workflow = pworkflow;
         this.connectionList = new LinkedList<>();
         
@@ -76,21 +74,15 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
             Integer in = getNodeID(allConnections.get(i).getReceiver().getNode());
             this.connectionList.add(new Tuple<>(out, in));
         }
-        if(this.debug) {
-            System.out.println("Setup complete with " + this.nodecount + " nodes and " + this.conncount + " edges.");
-        }
+        if(this.debug) System.out.println("Setup complete with " + this.nodecount + " nodes and " + this.conncount + " edges.");
     }
     
     /**
-     * Generates a Layout for the workflow 
-     * as well as the nodes and connections given at SetUp.
+     * Generates a Layout for the workflow given at SetUp.
      */
     @Override
     public void generateLayout() {
-        if(this.debug) {
-            System.out.println("Generating layout.");
-            System.out.println("Running Naive layout.");
-        }
+        if(this.debug) System.out.println("Generating layout.");
         int i, j, k;
         LinkedList<LinkedList<Integer>> layers = new LinkedList<>();
         
@@ -177,9 +169,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
                         VNode currentNode = this.nodes[k];
                         currentNode.setX(posX);
                         currentNode.setY(posY);
-                        if(this.debug) {
-                            System.out.println(currentNode.getId() + " | X: " + posX + " Y: " + posY);
-                        }
+                        if(this.debug) System.out.println(currentNode.getId() + " | X: " + posX + " Y: " + posY);
                         posY += distY;
                         break;
                     }
@@ -191,8 +181,8 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     /**
      * Gets the model-ID for the given Node.
-     * @param pnode the given Node.
-     * @return Integer - ID of the given Node.
+     * @param pnode VNode: the given Node.
+     * @return Integer: ID of the given Node.
     */
     private Integer getNodeID(VNode pnode) {
         int i;
@@ -203,10 +193,20 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         return -1;
     }
     
+    /**
+     * Generic Tuple class.
+     * @param <X> Type of first entry in the Tuple.
+     * @param <Y> Type of second entry in the Tuple.
+     */
     class Tuple<X, Y> {
         public final X x;
         public final Y y;
         
+        /**
+         * Constructor setting both entries.
+         * @param px X: first entry.
+         * @param py Y: second entry.
+         */
         public Tuple(X px, Y py) {
             this.x = px;
             this.y = py;

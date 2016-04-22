@@ -45,7 +45,7 @@ import prefuse.util.ColorLib;
 import prefuse.visual.VisualItem;
 
 /**
- *
+ * Layout generator class using the Prefuse Data Visualization Library.
  * @author Tobias Mertz
  */
 public class LayoutGeneratorPrefuse implements LayoutGenerator {
@@ -58,36 +58,47 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
     private int conncount;
     private Graph pgraph;
     
+    /**
+     * Default contructor.
+     * Debugging is disabled and default layout is CircleLayout.
+     */
     public LayoutGeneratorPrefuse() {
         this.debug = false;
         this.layoutselector = 2;
     }
     
+    /**
+     * Constructor with debug-functionality.
+     * Default layout is CircleLayout.
+     * @param pdebug Boolean: debugging output enable/disable.
+     */
     public LayoutGeneratorPrefuse(boolean pdebug) {
         this.debug = pdebug;
         this.layoutselector = 2;
-        if(this.debug) {
-            System.out.println("Creating layout generator");
-        }
-    }
-    
-    public LayoutGeneratorPrefuse(boolean pdebug, int playout) {
-        this.debug = pdebug;
-        this.layoutselector = playout;
-        if(this.debug) {
-            System.out.println("Creating layout generator");
-        }
+        if(this.debug) System.out.println("Creating layout generator");
     }
     
     /**
-     * Sets up the model for the current workflow.
-     * @param pworkflow current workflow to be layouted.
+     * Constructor with debug- and chosen layout-functionality.
+     * @param pdebug Boolean: debugging output enable/disable.
+     * @param playout int: layout to be used. (2: CircleLayout, 
+     * 4: CollapsedSubtreeLayout, 5: BalloonTreeLayout, 6: ForceDirectedLayout, 
+     * 7: FruchtermanReingoldLayout, 8: NodeLinkTreeLayout, 9: RadialTreeLayout, 
+     * 10: SquarifiedTreeMapLayout, 12: RandomLayout)
+     */
+    public LayoutGeneratorPrefuse(boolean pdebug, int playout) {
+        this.debug = pdebug;
+        this.layoutselector = playout;
+        if(this.debug) System.out.println("Creating layout generator");
+    }
+    
+    /**
+     * Sets up the node- and edge-model for the current workflow.
+     * @param pworkflow VWorfklow: current workflow to be layouted.
      */
     @Override
     public void setUp(VFlow pworkflow) {
-        if(this.debug) {
-            System.out.println("Setting up workflow for layout generation.");
-        }
+        if(this.debug) System.out.println("Setting up workflow for layout generation.");
         this.workflow = pworkflow;
         this.pgraph = new Graph();
         
@@ -120,20 +131,15 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
             int receiver = getPNode(currConn.getReceiver().getNode());
             pgraph.addEdge(sender, receiver);
         }
-        if(this.debug) {
-            System.out.println("Setup complete with " + this.pgraph.getNodeCount() + " nodes and " + this.pgraph.getEdgeCount() + " edges.");
-        }
+        if(this.debug) System.out.println("Setup complete with " + this.pgraph.getNodeCount() + " nodes and " + this.pgraph.getEdgeCount() + " edges.");
     }
     
     /**
-     * Generates a Layout for the workflow 
-     * as well as the nodes and connections given at SetUp.
+     * Generates a Layout for the workflow given at SetUp.
      */
     @Override
     public void generateLayout() {
-        if(this.debug) {
-            System.out.println("Generating layout.");
-        }
+        if(this.debug) System.out.println("Generating layout.");
 
         ActionList layout = new ActionList();
         switch (this.layoutselector) {
@@ -232,9 +238,7 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         d.setSize(1280, 720);
         
         vis.run("layout");
-        if(this.debug) {
-            testvis(vis, d);
-        }
+        if(this.debug) testvis(vis, d);
         
         TupleSet temp = vis.getVisualGroup("pgraph");
         VisualGraph vgraph;
@@ -250,9 +254,7 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
                     vnode = (NodeItem) tempnode;
                     pnode.setX(vnode.getX());
                     pnode.setY(vnode.getY());
-                    if(this.debug) {
-                        System.out.println(this.nodes[i].x.getId() + " | X: " + vnode.getX() + " Y: " + vnode.getY());
-                    }
+                    if(this.debug) System.out.println(this.nodes[i].x.getId() + " | X: " + vnode.getX() + " Y: " + vnode.getY());
                 }
                 else {
                     // vnode is not of type NodeItem
@@ -267,6 +269,11 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         }
     }
     
+    /**
+     * Graph visualization for debugging output.
+     * @param vis Visualization
+     * @param d Display
+     */
     private void testvis(Visualization vis, Display d) {
         ColorAction fill = new ColorAction("pgraph.nodes", VisualItem.FILLCOLOR, ColorLib.rgb(0, 200, 0));
         ColorAction edges = new ColorAction("pgraph.edges", VisualItem.STROKECOLOR, ColorLib.gray(200));
@@ -288,7 +295,9 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
     }
     
     /**
-     * Searches linearly for the ID of the given Node
+     * Gets the model-ID for the given Node.
+     * @param pnode VNode: the given Node.
+     * @return Integer: ID of the given Node.
      */
     private int getPNode(VNode pnode) {
         int i;
@@ -299,11 +308,20 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         return -1;
     }
     
-    
+    /**
+     * Generic Tuple class.
+     * @param <X> Type of first entry in the Tuple.
+     * @param <Y> Type of second entry in the Tuple.
+     */
     class GenTuple<X, Y> {
         public final X x;
         public final Y y;
         
+        /**
+         * Constructor setting both entries.
+         * @param px X: first entry.
+         * @param py Y: second entry.
+         */
         public GenTuple(X px, Y py) {
             this.x = px;
             this.y = py;

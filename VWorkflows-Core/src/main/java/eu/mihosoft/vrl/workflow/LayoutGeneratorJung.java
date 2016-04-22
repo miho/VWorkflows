@@ -39,7 +39,7 @@ import javax.swing.JFrame;
 import org.apache.commons.collections15.Transformer;
 
 /**
- *
+ * Layout generator class using the Jung Graph Drawing Library.
  * @author Tobias Mertz
  */
 public class LayoutGeneratorJung implements LayoutGenerator {
@@ -52,37 +52,47 @@ public class LayoutGeneratorJung implements LayoutGenerator {
     private int nodecount;
     private int conncount;
     
+    /**
+     * Default contructor.
+     * Debugging is disabled and default layout is CircleLayout.
+     */
     public LayoutGeneratorJung() {
         this.debug = false;
         this.layoutselector = 1;
         
     }
     
+    /**
+     * Constructor with debug-functionality.
+     * Default layout is CircleLayout.
+     * @param pdebug Boolean: debugging output enable/disable.
+     */
     public LayoutGeneratorJung(boolean pdebug) {
         this.debug = pdebug;
         this.layoutselector = 1;
-        if(this.debug) {
-            System.out.println("Creating layout generator");
-        }
-    }
-    
-    public LayoutGeneratorJung(boolean pdebug, int playout) {
-        this.debug = pdebug;
-        this.layoutselector = playout;
-        if(this.debug) {
-            System.out.println("Creating layout generator.");
-        }
+        if(this.debug) System.out.println("Creating layout generator");
     }
     
     /**
-     * Sets up the model for the current workflow.
-     * @param pworkflow current workflow to be layouted.
+     * Constructor with debug- and chosen layout-functionality.
+     * @param pdebug Boolean: debugging output enable/disable.
+     * @param playout int: layout to be used. (1: CircleLayout, 2: DAGLayout, 
+     * 3: FRLayout, 4: FRLayout2, 5: ISOMLayout, 6: KKLayout, 8: SpringLayout, 
+     * 9: SpringLayout2, 10: StaticLayout)
+     */
+    public LayoutGeneratorJung(boolean pdebug, int playout) {
+        this.debug = pdebug;
+        this.layoutselector = playout;
+        if(this.debug) System.out.println("Creating layout generator.");
+    }
+    
+    /**
+     * Sets up the node- and edge-model for the current workflow.
+     * @param pworkflow VWorfklow: current workflow to be layouted.
      */
     @Override
     public void setUp(VFlow pworkflow) {
-        if(this.debug) {
-            System.out.println("Setting up workflow for layout generation.");
-        }
+        if(this.debug) System.out.println("Setting up workflow for layout generation.");
         this.workflow = pworkflow;
         this.jgraph = new DirectedSparseGraph<>();
         
@@ -114,20 +124,15 @@ public class LayoutGeneratorJung implements LayoutGenerator {
             VNode receiver = this.nodes[getNodeID(currConn.getReceiver().getNode())];
             this.jgraph.addEdge(currConn, sender, receiver);
         }
-        if(this.debug) {
-            System.out.println("Setup complete with " + this.jgraph.getVertexCount() + " nodes and " + this.jgraph.getEdgeCount() + " edges.");
-        }
+        if(this.debug) System.out.println("Setup complete with " + this.jgraph.getVertexCount() + " nodes and " + this.jgraph.getEdgeCount() + " edges.");
     }
     
     /**
-     * Generates a Layout for the workflow 
-     * as well as the nodes and connections given at SetUp.
+     * Generates a Layout for the workflow given at SetUp.
      */
     @Override
     public void generateLayout() {
-        if(this.debug) {
-            System.out.println("Generating layout.");
-        }
+        if(this.debug) System.out.println("Generating layout.");
         
         Layout<VNode, Connection> layout;
         switch (this.layoutselector) {
@@ -204,24 +209,24 @@ public class LayoutGeneratorJung implements LayoutGenerator {
                 maxwidth = currwidth;
             }
         }
-        layout.setSize(new Dimension((int) Math.round(maxwidth * this.nodecount), (int) Math.round(maxheight * this.nodecount)));
-        //layout.setSize(new Dimension(1000, 720));
+        //layout.setSize(new Dimension((int) Math.round(maxwidth * this.nodecount), (int) Math.round(maxheight * this.nodecount)));
+        layout.setSize(new Dimension(1280, 720));
         
-        if(this.debug) {
-            testvis(layout);
-        }
+        if(this.debug) testvis(layout);
         
         for(i = 0; i < this.nodecount; i++) {
             Point2D coords = layout.transform(this.nodes[i]);
             this.nodes[i].setX(coords.getX());
             this.nodes[i].setY(coords.getY());
-            if(this.debug) {
-                System.out.println(this.nodes[i].getId() + " | X: " + coords.getX() + " Y: " + coords.getY());
-            }
+            if(this.debug) System.out.println(this.nodes[i].getId() + " | X: " + coords.getX() + " Y: " + coords.getY());
         }
         
     }
     
+    /**
+     * Graph visualization for debugging output.
+     * @param layout Layout<VNode, Connection>: layout to visualize.
+     */
     private void testvis(Layout<VNode, Connection> layout) {
         VisualizationViewer<VNode, Connection> vis = new VisualizationViewer<>(layout);
         vis.setPreferredSize(new Dimension(1280, 720));
@@ -254,7 +259,9 @@ public class LayoutGeneratorJung implements LayoutGenerator {
     }
     
     /**
-     * Searches linearly for the ID of the given Node
+     * Gets the model-ID for the given Node.
+     * @param pnode VNode: the given Node.
+     * @return Integer: ID of the given Node.
      */
     private Integer getNodeID(VNode pnode) {
         int i;
@@ -265,6 +272,10 @@ public class LayoutGeneratorJung implements LayoutGenerator {
         return -1;
     }
     
+    /**
+     * Labeller that labels VNodes and Connections by their ID.
+     * @param <V> VNode or Connection to be transformed.
+     */
     class IDLabeller<V extends Object> implements Transformer<V, String> {
         
         @Override

@@ -40,6 +40,7 @@ import eu.mihosoft.vrl.workflow.LayoutGenerator;
 import eu.mihosoft.vrl.workflow.LayoutGeneratorJung;
 import eu.mihosoft.vrl.workflow.LayoutGeneratorNaive;
 import eu.mihosoft.vrl.workflow.LayoutGeneratorPrefuse;
+import eu.mihosoft.vrl.workflow.LayoutGeneratorSmart;
 import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -258,6 +259,12 @@ public class MainWindowFXMLController implements Initializable {
     @FXML
     public void onPrefRandomAction(ActionEvent e) {
         LayoutGenerator layouter = new LayoutGeneratorPrefuse(checkDebugLayout.isSelected(), 12);
+        layoutAction(layouter);
+    }
+    
+    @FXML
+    public void onSmartAction(ActionEvent e) {
+        LayoutGenerator layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layoutAction(layouter);
     }
     

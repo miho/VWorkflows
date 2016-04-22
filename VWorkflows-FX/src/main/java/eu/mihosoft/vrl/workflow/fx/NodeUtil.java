@@ -233,6 +233,8 @@ public class NodeUtil {
             ((Group) p).getChildren().add(n);
         } else if (p instanceof Pane) {
             ((Pane) p).getChildren().add(n);
+        } else if (p instanceof ScalableContentPane) {
+            ((ScalableContentPane) p).getContent().getChildren().add(n);
         } else {
             throw new IllegalArgumentException("Unsupported parent: " + p);
         }

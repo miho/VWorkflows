@@ -297,22 +297,34 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                 = new ConnectionListenerImpl(
                         skinFactory, controller, receiverConnectorUI);
 
+        EventHandler<MouseEvent> contextMenuHandler = createContextMenuHandler(createContextMenu());
+        connectionPath.addEventHandler(MouseEvent.MOUSE_CLICKED, contextMenuHandler);
+        getReceiverUI().addEventHandler(MouseEvent.MOUSE_CLICKED, contextMenuHandler);
+    } // end init
+
+    protected EventHandler<MouseEvent> createContextMenuHandler(final ContextMenu contextMenu) {
+        return (MouseEvent event) -> {
+            // TODO: is this check for MouseButton.SECONDARY really necessary?
+            if (event.getButton() == MouseButton.SECONDARY) {
+                contextMenu.show(connectionPath,
+                    event.getScreenX(), event.getScreenY());
+            }
+        };
+    }
+
+    protected Path getConnectionPath() {
+        return connectionPath;
+    }
+
+    protected ContextMenu createContextMenu() {
         final ContextMenu contextMenu = new ContextMenu();
         MenuItem removeITem = new MenuItem("Remove Connection");
         contextMenu.getItems().addAll(removeITem);
-
         removeITem.setOnAction((ActionEvent event) -> {
             controller.getConnections(type).remove(connection);
         });
-        connectionPath.addEventHandler(
-                MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
-                    if (event.getButton() == MouseButton.SECONDARY) {
-                        contextMenu.show(connectionPath,
-                                event.getScreenX(), event.getScreenY());
-                    }
-                });
-
-    } // end init
+        return contextMenu;
+    }
 
     private void initVReqListeners() {
 

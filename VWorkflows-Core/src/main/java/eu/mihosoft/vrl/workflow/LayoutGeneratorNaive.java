@@ -10,23 +10,35 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 /**
- * The most naive approach for a layouting algorithm.
  * @author Tobias Mertz
+ * The most naive approach for a layouting algorithm.
+ * Idea:
+ * - nodes are arranged in columns
+ * - nodes with in-degree of 0 are placed on first column
+ * - other nodes are placed one column after their latest parent node
+ * 
+ * ToDo:
+ * - open up interface for more possibility to interfere with the process
  */
 public class LayoutGeneratorNaive implements LayoutGenerator {
     
-    private final boolean debug;
+    private boolean debug;
     private VFlow workflow;
     private VNode[] nodes;
+    private LinkedList<Tuple<Integer,Integer>> connectionList;
     private int nodecount;
     private int conncount;
-    private LinkedList<Tuple<Integer,Integer>> connectionList;
     
     /**
      * Default constructor.
      * Debug is set to false.
      */
     public LayoutGeneratorNaive() {
+        this.debug = false;
+    }
+    
+    public LayoutGeneratorNaive(VFlow pworkflow) {
+        this.workflow = pworkflow;
         this.debug = false;
     }
     
@@ -39,14 +51,57 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         if(this.debug) System.out.println("Creating layout generator");
     }
     
+    public LayoutGeneratorNaive(VFlow pworkflow, boolean pdebug) {
+        this.workflow = pworkflow;
+        this.debug = pdebug;
+        if(this.debug) System.out.println("Creating layout generator");
+    }
+    
+    @Override
+    public boolean getDebug() {
+        return this.debug;
+    }
+    
+    @Override
+    public VFlow getWorkflow() {
+        return this.workflow;
+    }
+    
+    //@Override
+    public VNode[] getModelNodes() {
+        return this.nodes;
+    }
+    
+    public LinkedList<Tuple<Integer, Integer>> getModelGraph() {
+        return this.connectionList;
+    }
+    
+    @Override
+    public void setDebug(boolean pdebug) {
+        this.debug = pdebug;
+    }
+    
+    @Override
+    public void setWorkflow(VFlow pworkflow) {
+        this.workflow = pworkflow;
+    }
+    
+    //@Override
+    public void setModelNodes(VNode[] pnodes) {
+        this.nodes = pnodes;
+    }
+    
+    public void setModelGraph(LinkedList<Tuple<Integer, Integer>> pconnectionList) {
+        this.connectionList = pconnectionList;
+    }
+    
     /**
      * Sets up the node- and edge-model for the current workflow.
      * @param pworkflow VWorfklow: current workflow to be layouted.
      */
-    @Override
-    public void setUp(VFlow pworkflow) {
-        if(this.debug) System.out.println("Setting up workflow for layout generation.");
-        this.workflow = pworkflow;
+    //@Override
+    public void setUp() {
+        if(this.debug) System.out.println("Setting up model for layout generation.");
         this.connectionList = new LinkedList<>();
         
         // Setting up nodes
@@ -56,7 +111,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         
         int i;
         for(i = 0; i < nodesTemp.size(); i++) {
-            this.nodes[i] = nodesTemp.get(i);
+            this.nodes[i] = nodesTemp.remove(0);
         }
         
         // Setting up edges
@@ -75,6 +130,10 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
             this.connectionList.add(new Tuple<>(out, in));
         }
         if(this.debug) System.out.println("Setup complete with " + this.nodecount + " nodes and " + this.conncount + " edges.");
+    }
+    
+    public void nodeSetUp() {
+        
     }
     
     /**

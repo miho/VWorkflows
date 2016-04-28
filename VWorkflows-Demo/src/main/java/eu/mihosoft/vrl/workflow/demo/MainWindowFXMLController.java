@@ -263,13 +263,38 @@ public class MainWindowFXMLController implements Initializable {
     }
     
     @FXML
-    public void onSmartAction(ActionEvent e) {
-        LayoutGenerator layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+    public void onSmartOriginAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchOrigin();
+    }
+    
+    @FXML
+    public void onSmartJungAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchJungLayout();
+    }
+    
+    @FXML void onSmartFPAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchForcePush();
+    }
+    
+    @FXML
+    public void onSmartAllAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
         layoutAction(layouter);
     }
     
     private void layoutAction(LayoutGenerator playouter) {
-        playouter.setUp(workflow);
+        playouter.setWorkflow(workflow);
         playouter.generateLayout();
         playouter = null;
     }

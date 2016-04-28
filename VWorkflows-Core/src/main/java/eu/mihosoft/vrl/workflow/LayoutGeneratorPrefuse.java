@@ -45,18 +45,28 @@ import prefuse.util.ColorLib;
 import prefuse.visual.VisualItem;
 
 /**
- * Layout generator class using the Prefuse Data Visualization Library.
  * @author Tobias Mertz
+ * Layout generator class using the Prefuse Data Visualization Library.
+ * Idea:
+ * - nodes are modeled with a Prefuse-Library Directed Graph
+ * - nodes are arranged within that graph using one of Prefuse's layouting algorithms
+ * - coordinates are extracted from the Prefuse-Graph
+ * 
+ * ToDo:
+ * - open up interface for more possibility to interfere with the process
+ * - resulting layout inconsistent.
+ *      . different results with debugging enabled / disabled
+ *      . different results when using multiple algorithms one after another
  */
 public class LayoutGeneratorPrefuse implements LayoutGenerator {
     
-    private final boolean debug;
-    private final int layoutselector;
+    private boolean debug;
+    private int layoutselector;
     private VFlow workflow;
     private GenTuple<VNode, Integer>[] nodes;
+    private Graph pgraph;
     private int nodecount;
     private int conncount;
-    private Graph pgraph;
     
     /**
      * Default contructor.
@@ -67,12 +77,30 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         this.layoutselector = 2;
     }
     
+    public LayoutGeneratorPrefuse(VFlow pworkflow) {
+        this.workflow = pworkflow;
+        this.debug = false;
+        this.layoutselector = 2;
+    }
+    
     /**
      * Constructor with debug-functionality.
      * Default layout is CircleLayout.
      * @param pdebug Boolean: debugging output enable/disable.
      */
     public LayoutGeneratorPrefuse(boolean pdebug) {
+        this.debug = pdebug;
+        this.layoutselector = 2;
+        if(this.debug) System.out.println("Creating layout generator");
+    }
+    
+    public LayoutGeneratorPrefuse(int playout) {
+        this.debug = false;
+        this.layoutselector = playout;
+    }
+    
+    public LayoutGeneratorPrefuse(VFlow pworkflow, boolean pdebug) {
+        this.workflow = pworkflow;
         this.debug = pdebug;
         this.layoutselector = 2;
         if(this.debug) System.out.println("Creating layout generator");
@@ -92,14 +120,64 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         if(this.debug) System.out.println("Creating layout generator");
     }
     
+    public LayoutGeneratorPrefuse(VFlow pworkflow, int playout) {
+        this.workflow = pworkflow;
+        this.debug = false;
+        this.layoutselector = playout;
+    }
+    
+    public LayoutGeneratorPrefuse(VFlow pworkflow, boolean pdebug, int playout) {
+        this.workflow = pworkflow;
+        this.debug = pdebug;
+        this.layoutselector = playout;
+        if(this.debug) System.out.println("Creating layout generator");
+    }
+    
+    @Override
+    public boolean getDebug() {
+        return this.debug;
+    }
+    
+    @Override
+    public VFlow getWorkflow() {
+        return this.workflow;
+    }
+    
+    /*@Override
+    public VNode[] getModelNodes() {
+        return this.nodes;
+    }*/
+    
+    public Graph getModelGraph() {
+        return this.pgraph;
+    }
+    
+    @Override
+    public void setDebug(boolean pdebug) {
+        this.debug = pdebug;
+    }
+    
+    @Override
+    public void setWorkflow(VFlow pworkflow) {
+        this.workflow = pworkflow;
+    }
+    
+    /*@Override
+    public void setModelNodes(VNode[] pnodes) {
+        this.nodes = pnodes;
+    }*/
+    
+    public void setModelGraph(Graph ppgraph) {
+        this.pgraph = ppgraph;
+    }
+    
     /**
      * Sets up the node- and edge-model for the current workflow.
      * @param pworkflow VWorfklow: current workflow to be layouted.
      */
-    @Override
-    public void setUp(VFlow pworkflow) {
-        if(this.debug) System.out.println("Setting up workflow for layout generation.");
-        this.workflow = pworkflow;
+    //@Override
+    public void setUp() {
+        if(this.debug) System.out.println("Setting up model for layout generation.");
         this.pgraph = new Graph();
         
         // Setting up nodes

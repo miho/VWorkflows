@@ -81,7 +81,12 @@
                     <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefGridAction" text="Grid Layout" /> -->
                     <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
                 </Menu>
-                <MenuItem mnemonicParsing="false" onAction="#onSmartAction" text="Smart Layout" />
+                <Menu mnemonicParsing="false" text="Smart Layout">
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="Origin Nodes" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartJungAction" text="Apply Jung Layout" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartFPAction" text="Force Push" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartAllAction" text="All" />
+                </Menu>
                 <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
             </Menu>
             <MenuItem mnemonicParsing="false" text="Delete" />

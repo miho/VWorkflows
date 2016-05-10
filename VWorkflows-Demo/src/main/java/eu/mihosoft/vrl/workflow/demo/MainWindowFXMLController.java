@@ -263,7 +263,22 @@ public class MainWindowFXMLController implements Initializable {
     }
     
     @FXML
-    public void onSmartOriginAction(ActionEvent e) {
+    public void onSmartKKAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchKK();
+    }
+    
+    @FXML
+    public void onSmartRotateAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchRotate();
+    }
+    
+    @FXML void onSmartOriginAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setPriority("", "", "");
@@ -271,26 +286,18 @@ public class MainWindowFXMLController implements Initializable {
     }
     
     @FXML
-    public void onSmartJungAction(ActionEvent e) {
+    public void onSmartPushBackAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setPriority("", "", "");
-        layouter.launchJungLayout();
+        layouter.launchPushBack();
     }
     
-    @FXML void onSmartFPAction(ActionEvent e) {
+    @FXML void onSmartForcePushAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setPriority("", "", "");
         layouter.launchForcePush();
-    }
-    
-    @FXML
-    public void onSmartAllAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layoutAction(layouter);
     }
     
     private void layoutAction(LayoutGenerator playouter) {

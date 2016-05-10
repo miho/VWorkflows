@@ -82,10 +82,11 @@
                     <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="Smart Layout">
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="Origin Nodes" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartJungAction" text="Apply Jung Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartFPAction" text="Force Push" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartAllAction" text="All" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="Step 1" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="Steps [1,2]" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="Steps [1,2,3]" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="Steps [1,2,3,4]" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushAction" text="Steps [1,2,3,4,5]" />
                 </Menu>
                 <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
             </Menu>

@@ -6,7 +6,7 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
+ * Interface for layout generator classes.
  * @author Tobias Mertz
  */
 public interface LayoutGenerator {
@@ -17,12 +17,6 @@ public interface LayoutGenerator {
     public void setDebug(boolean pdebug);
     public void setWorkflow(VFlow pworkflow);
     //public void setModelNodes(VNode[] pnodes);
-    
-    /**
-     * Sets up the node- and edge-model for the current workflow.
-     * @param pworkflow VWorfklow: current workflow to be layouted.
-     */
-    //public void setUp();
     
     /**
      * Generates a Layout for the workflow given at SetUp.

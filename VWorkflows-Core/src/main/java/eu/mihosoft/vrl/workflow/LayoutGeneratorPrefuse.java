@@ -25,7 +25,7 @@ import prefuse.action.layout.CollapsedStackLayout;
 import prefuse.action.layout.CollapsedSubtreeLayout;
 import prefuse.action.layout.graph.BalloonTreeLayout;
 import prefuse.action.layout.graph.ForceDirectedLayout;
-import prefuse.action.layout.graph.FruchtermanReingoldLayout; // testvis makes a difference for some reason
+import prefuse.action.layout.graph.FruchtermanReingoldLayout;
 import prefuse.action.layout.graph.NodeLinkTreeLayout;
 import prefuse.action.layout.graph.RadialTreeLayout;
 import prefuse.action.layout.graph.SquarifiedTreeMapLayout;
@@ -46,14 +46,13 @@ import prefuse.visual.VisualItem;
 
 /**
  * @author Tobias Mertz
- * Layout generator class using the Prefuse Data Visualization Library.
+ * Layout generator class demonstrating the different algorithms implemented by the Prefuse Data Visualization Library.
  * Idea:
  * - nodes are modeled with a Prefuse-Library Directed Graph
  * - nodes are arranged within that graph using one of Prefuse's layouting algorithms
  * - coordinates are extracted from the Prefuse-Graph
  * 
- * ToDo:
- * - open up interface for more possibility to interfere with the process
+ * Issues:
  * - resulting layout inconsistent.
  *      . different results with debugging enabled / disabled
  *      . different results when using multiple algorithms one after another
@@ -77,6 +76,10 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         this.layoutselector = 2;
     }
     
+    /**
+     * Constructor with workflow parameter.
+     * @param pworkflow VFlow: workflow to be setup.
+     */
     public LayoutGeneratorPrefuse(VFlow pworkflow) {
         this.workflow = pworkflow;
         this.debug = false;
@@ -94,11 +97,20 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         if(this.debug) System.out.println("Creating layout generator");
     }
     
+    /**
+     * Constructor with layout selection.
+     * @param playout int: layout to be used.
+     */
     public LayoutGeneratorPrefuse(int playout) {
         this.debug = false;
         this.layoutselector = playout;
     }
     
+    /**
+     * Constructor with workflow parameter and debug-functionality.
+     * @param pworkflow VFlow: workflow to be setup.
+     * @param pdebug Boolean: debugging-output enable/disable.
+     */
     public LayoutGeneratorPrefuse(VFlow pworkflow, boolean pdebug) {
         this.workflow = pworkflow;
         this.debug = pdebug;
@@ -120,12 +132,27 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         if(this.debug) System.out.println("Creating layout generator");
     }
     
+    /**
+     * Constructor with workflow parameter and layout selection.
+     * @param pworkflow VFlow: workflow to be setup.
+     * @param playout int: layout to be used. (1: CircleLayout, 2: DAGLayout, 
+     * 3: FRLayout, 4: FRLayout2, 5: ISOMLayout, 6: KKLayout, 8: SpringLayout, 
+     * 9: SpringLayout2, 10: StaticLayout)
+     */
     public LayoutGeneratorPrefuse(VFlow pworkflow, int playout) {
         this.workflow = pworkflow;
         this.debug = false;
         this.layoutselector = playout;
     }
     
+    /**
+     * Constructor with workflow parameter, debugging-functionality and layout selection.
+     * @param pworkflow VFlow: workflow to be setup.
+     * @param pdebug Boolean: debugging output enable/disable.
+     * @param playout int: layout to be used. (1: CircleLayout, 2: DAGLayout, 
+     * 3: FRLayout, 4: FRLayout2, 5: ISOMLayout, 6: KKLayout, 8: SpringLayout, 
+     * 9: SpringLayout2, 10: StaticLayout)
+     */
     public LayoutGeneratorPrefuse(VFlow pworkflow, boolean pdebug, int playout) {
         this.workflow = pworkflow;
         this.debug = pdebug;
@@ -133,11 +160,19 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         if(this.debug) System.out.println("Creating layout generator");
     }
     
+    /**
+     * Get status of debugging output.
+     * @return Boolean debugging output enabled/disabled.
+     */
     @Override
     public boolean getDebug() {
         return this.debug;
     }
     
+    /**
+     * Get the workflow to layout.
+     * @return VFlow workflow.
+     */
     @Override
     public VFlow getWorkflow() {
         return this.workflow;
@@ -148,15 +183,27 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         return this.nodes;
     }*/
     
+    /**
+     * Get the Graph modeled after the workflow.
+     * @return Graph model graph.
+     */
     public Graph getModelGraph() {
         return this.pgraph;
     }
     
+    /**
+     * Set status of debugging output.
+     * @param pdebug Boolean.
+     */
     @Override
     public void setDebug(boolean pdebug) {
         this.debug = pdebug;
     }
     
+    /**
+     * Set the workflow to be layouted.
+     * @param pworkflow VFlow.
+     */
     @Override
     public void setWorkflow(VFlow pworkflow) {
         this.workflow = pworkflow;
@@ -167,15 +214,17 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         this.nodes = pnodes;
     }*/
     
+    /**
+     * Set the model graph to be layouted.
+     * @param ppgraph Graph
+     */
     public void setModelGraph(Graph ppgraph) {
         this.pgraph = ppgraph;
     }
     
     /**
      * Sets up the node- and edge-model for the current workflow.
-     * @param pworkflow VWorfklow: current workflow to be layouted.
      */
-    //@Override
     public void setUp() {
         if(this.debug) System.out.println("Setting up model for layout generation.");
         this.pgraph = new Graph();
@@ -217,6 +266,7 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
      */
     @Override
     public void generateLayout() {
+        setUp();
         if(this.debug) System.out.println("Generating layout.");
 
         ActionList layout = new ActionList();

@@ -16,9 +16,6 @@ import java.util.Objects;
  * - nodes are arranged in columns
  * - nodes with in-degree of 0 are placed on first column
  * - other nodes are placed one column after their latest parent node
- * 
- * ToDo:
- * - open up interface for more possibility to interfere with the process
  */
 public class LayoutGeneratorNaive implements LayoutGenerator {
     
@@ -37,6 +34,10 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         this.debug = false;
     }
     
+    /**
+     * Constructor with workflow parameter.
+     * @param pworkflow VFlow: workflow to be setup.
+     */
     public LayoutGeneratorNaive(VFlow pworkflow) {
         this.workflow = pworkflow;
         this.debug = false;
@@ -51,55 +52,90 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         if(this.debug) System.out.println("Creating layout generator");
     }
     
+    /**
+     * Constructor with workflow parameter and debug-functionality.
+     * @param pworkflow VFlow: workflow to be setup.
+     * @param pdebug Boolean: debugging-output enable/disable.
+     */
     public LayoutGeneratorNaive(VFlow pworkflow, boolean pdebug) {
         this.workflow = pworkflow;
         this.debug = pdebug;
         if(this.debug) System.out.println("Creating layout generator");
     }
     
+    /**
+     * Get status of debugging output.
+     * @return Boolean debugging output enabled/disabled.
+     */
     @Override
     public boolean getDebug() {
         return this.debug;
     }
     
+    /**
+     * Get the workflow to layout.
+     * @return VFlow workflow.
+     */
     @Override
     public VFlow getWorkflow() {
         return this.workflow;
     }
     
+    /**
+     * Get an array of model nodes.
+     * @return VNode[] nodes.
+     */        
     //@Override
     public VNode[] getModelNodes() {
         return this.nodes;
     }
     
+    /**
+     * Get the Graph modeled after the workflow.
+     * @return LinkedList<Tuple<Integer, Integer>> model graph.
+     */
     public LinkedList<Tuple<Integer, Integer>> getModelGraph() {
         return this.connectionList;
     }
     
+    /**
+     * Set status of debugging output.
+     * @param pdebug Boolean.
+     */
     @Override
     public void setDebug(boolean pdebug) {
         this.debug = pdebug;
     }
     
+    /**
+     * Set the workflow to be layouted.
+     * @param pworkflow VFlow.
+     */
     @Override
     public void setWorkflow(VFlow pworkflow) {
         this.workflow = pworkflow;
     }
     
+    /**
+     * Set the array of model nodes.
+     * @param pnodes VNode[]
+     */
     //@Override
     public void setModelNodes(VNode[] pnodes) {
         this.nodes = pnodes;
     }
     
+    /**
+     * Set the model graph to be layouted.
+     * @param pconnectionList LinkedList<Tuple<Integer, Integer>>
+     */
     public void setModelGraph(LinkedList<Tuple<Integer, Integer>> pconnectionList) {
         this.connectionList = pconnectionList;
     }
     
     /**
      * Sets up the node- and edge-model for the current workflow.
-     * @param pworkflow VWorfklow: current workflow to be layouted.
      */
-    //@Override
     public void setUp() {
         if(this.debug) System.out.println("Setting up model for layout generation.");
         this.connectionList = new LinkedList<>();
@@ -111,7 +147,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         
         int i;
         for(i = 0; i < nodesTemp.size(); i++) {
-            this.nodes[i] = nodesTemp.remove(0);
+            this.nodes[i] = nodesTemp.get(i);
         }
         
         // Setting up edges
@@ -132,15 +168,12 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         if(this.debug) System.out.println("Setup complete with " + this.nodecount + " nodes and " + this.conncount + " edges.");
     }
     
-    public void nodeSetUp() {
-        
-    }
-    
     /**
      * Generates a Layout for the workflow given at SetUp.
      */
     @Override
     public void generateLayout() {
+        setUp();
         if(this.debug) System.out.println("Generating layout.");
         int i, j, k;
         LinkedList<LinkedList<Integer>> layers = new LinkedList<>();

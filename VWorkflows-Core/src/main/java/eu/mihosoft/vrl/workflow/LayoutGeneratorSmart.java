@@ -5,7 +5,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import edu.uci.ics.jung.algorithms.layout.DAGLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
@@ -39,14 +38,14 @@ import org.apache.commons.collections15.Transformer;
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
+ * - replace force push with physics simulation of forces that push each other away and result in a balance
  * - apply layout to subflows.
+ * - find better initial area for node placement in KK layout. Currently 1280x720 is arbitrarily chosen as common display resolution
+ * - replace getDesiredNodeDist with calculated distance instead of max(height,width)
+ * - find better desired x coordinate for origin nodes
  * - separate disjuct graphs.
  * - separate priorities.
- * - find better initial area for node placement in KK layout. Currently 1280x720 is arbitrarily chosen as common display resolution
  * - replace KK layout with Fruchterman Reingold Layout or combine the two. (KK layout only finds local minima, FR can circumvent it with its temperature)
- * - replace origin with better alternative
- * - replace desired node distance in force push with calculated distance instead of max(height,width)
- * - replace force push with physics simulation of forces that push each other away and result in a balance
  */
 public class LayoutGeneratorSmart implements LayoutGenerator {
     
@@ -55,13 +54,15 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private String[] priority;
     private VNode[] nodes;
     private DirectedGraph<VNode, Connection> jgraph;
-    private Layout<VNode, Connection> layout;
+    private KKLayout<VNode, Connection> layout;
     private VisualizationViewer<VNode, Connection> vis;
     private int nodecount;
     private int conncount;
     private Point2D graphcenter;
     
     private Pair<Integer>[] origin;
+    
+    private final int forcePushIterations = 20;
     
     /**
      * Default contructor.
@@ -236,7 +237,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * Set the layout object to be applied to the graph.
      * @param playout Layout<VNode, Connection>
      */
-    public void setLayout(Layout<VNode, Connection> playout) {
+    public void setLayout(KKLayout<VNode, Connection> playout) {
         this.layout = playout;
         this.vis = new VisualizationViewer<>(this.layout);
     }
@@ -320,6 +321,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     public void launchKK() {
         allNodesSetUp();
         stepLayoutApply();
+        if(this.debug) testvis("Original Layout");
     }
     
     /**
@@ -329,7 +331,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         allNodesSetUp();
         stepLayoutApply();
         stepRotate();
-        if(this.debug) testvis();
+        if(this.debug) testvis("After Rotate");
     }
     
     /**
@@ -341,7 +343,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         stepLayoutApply();
         stepRotate();
         stepOrigin();
-        if(this.debug) testvis();
+        if(this.debug) testvis("After Origin");
     }
     
     /**
@@ -355,7 +357,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         stepRotate();
         stepOrigin();
         stepPushBack();
-        if(this.debug) testvis();
+        if(this.debug) testvis("After PushBack");
     }
     
     /**
@@ -372,8 +374,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         stepRotate();
         stepOrigin();
         stepPushBack();
-        forcePush();
-        if(this.debug) testvis();
+        forcePushLazy();
+        if(this.debug) testvis("After ForcePush");
     }
     
     /**
@@ -498,8 +500,11 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     private void stepLayoutApply() {
         if(this.debug) System.out.println("--- applying layout.");
-        int i;
+        this.vis = new VisualizationViewer<>(this.layout);
+        vis.setPreferredSize(new Dimension(1280, 720));
+        
         // set layout coordinates
+        int i;
         for(i = 0; i < this.nodecount; i++) {
             Point2D coords;
             coords = this.layout.transform(this.nodes[i]);
@@ -507,6 +512,12 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             this.nodes[i].setY(coords.getY());
             if(this.debug) System.out.println(this.nodes[i].getId() + " | X: " + coords.getX() + " Y: " + coords.getY());
         }
+
+        /*for(i = 0; i < this.nodecount; i++) {
+            this.layout.lock(this.nodes[i], true);
+            Point2D coords = new Point2D.Double(this.nodes[i].getX(), this.nodes[i].getY());
+            this.layout.setLocation(this.nodes[i], coords);
+        }*/
     }
     
     /**
@@ -545,7 +556,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             double diry = receiver.getY() - sender.getY();
             avgdirx += dirx;
             avgdiry += diry;
-            if(this.debug) System.out.println("Edge from " + currConn.getSender().getNode().getId() + " to " + currConn.getReceiver().getNode().getId() + " has direction: (" + dirx + "|" +diry + ")");
+            if(this.debug) System.out.println("Edge from " + currConn.getSender().getNode().getId() + " to " + currConn.getReceiver().getNode().getId() + " has direction: (" + dirx + "|" +diry + ") = " + (diry / dirx));
         }
         avgdirx /= this.conncount;
         avgdiry /= this.conncount;
@@ -607,7 +618,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             double diry = receiver.getY() - sender.getY();
             avgdirx += dirx;
             avgdiry += diry;
-            if(this.debug) System.out.println("Edge from " + currConn.getSender().getNode().getId() + " to " + currConn.getReceiver().getNode().getId() + " has direction: (" + dirx + "|" +diry + ")");
+            if(this.debug) System.out.println("Edge from " + currConn.getSender().getNode().getId() + " to " + currConn.getReceiver().getNode().getId() + " has direction: (" + dirx + "|" +diry + ") = " + (diry / dirx));
         }
         avgdirx /= this.conncount;
         avgdiry /= this.conncount;
@@ -629,17 +640,19 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         // get lowest x coordinate in graph
         double minx = this.nodes[0].getX();
         double maxw = 0.;
+        double maxh = 0.;
         for(i = 0; i < this.nodecount; i++) {
             if(this.nodes[i].getX() < minx) minx = this.nodes[i].getX();
             if(this.nodes[i].getWidth() > maxw) maxw = this.nodes[i].getWidth();
+            if(this.nodes[i].getHeight() > maxh) maxh = this.nodes[i].getHeight();
         }
         
         // place origin nodes on lowest x coordinate
-        double lastpos = this.graphcenter.getY();
+        double lastpos = this.graphcenter.getY() - ((this.origin.length / 2) * maxh * 1.2);
         for(i = 0; i < this.origin.length; i++) {
             Point2D coords = new Point2D.Double();
             coords.setLocation((minx - (1.2 * maxw)), lastpos);
-            lastpos += 1.2 * (this.nodes[this.origin[i].getFirst()].getHeight());
+            lastpos += 1.2 * (maxh);
             VNode currNode = this.nodes[this.origin[i].getFirst()];
             this.layout.setLocation(currNode, coords);
             currNode.setX(coords.getX());
@@ -795,7 +808,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     /**
      * Applies force to each node, to push each other away and remove overlaps.
-     * @param origin Pair<Integer>[]: List of origin nodes.
      */
     private void forcePush() {
         if(this.debug) System.out.println("--- starting force push");
@@ -823,13 +835,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 double vx = x2 - x1;
                 double vy = y2 - y1;
                 double len = Math.sqrt(Math.pow(vy, 2) + Math.pow(vx, 2));
-                double f1;
-                double f2;
-                if(this.nodes[i].getWidth() > this.nodes[i].getHeight()) f1 = this.nodes[i].getWidth() / 2;
-                else f1 = this.nodes[i].getHeight() / 2;
-                if(this.nodes[j].getWidth() > this.nodes[j].getHeight()) f2 = this.nodes[j].getWidth() / 2;
-                else f2 = this.nodes[j].getHeight() / 2;
-                double dst = 1.2 * (f1 + f2);
+                double dst = getDesiredNodeDist(this.nodes[i], this.nodes[j]);
                 double xf;
                 double yf;
                 if((len < dst) && ((x1 != x2) || (y1 != y2))) {
@@ -852,12 +858,107 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         }
     }
     
+    private void forcePushNew() {
+        /*
+        New algorithm:
+            find desired distance between nodes
+            find real distance between nodes
+            if desired distance > real distance:
+                - force expressed as vector away from node
+                - connected nodes attract each other              <--- to do
+                - length of vector: pow(abs(desired distance - real distance), 2)
+            sum up forces on singular node
+            move node according to resulting force
+            continue with next node
+            after all nodes are through, start next iteration
+        */
+        if(this.debug) System.out.println("--- starting force push");
+        int iteration;
+        boolean change = true;
+        for(iteration = 0; iteration < this.forcePushIterations; iteration++) {
+            if(this.debug) System.out.println("iteration: " + iteration);
+            if(!change) break;
+            change = false;
+            int i;
+            for(i = 0; i < (this.nodecount - 1); i++) {
+                double forcesx = 0.;
+                double forcesy = 0.;
+                int j;
+                for(j = (i + 1); j < this.nodecount; j++) {
+                    double desDist = getDesiredNodeDist(this.nodes[i], this.nodes[j]);
+                    double realDist = getRealNodeDist(this.nodes[i], this.nodes[j]);
+                    if(this.debug) System.out.println("Pair: (" + this.nodes[i].getId() + " , " + this.nodes[j].getId() + ") real dist: " + realDist + " desired dist: " + desDist);
+                    double forcex = 0.;
+                    double forcey = 0.;
+                    if(desDist > realDist) {
+                        double dx = this.nodes[i].getX() - this.nodes[j].getX();
+                        double dy = this.nodes[i].getY() - this.nodes[j].getY();
+                        if(realDist != 0) {
+                            double phi = Math.pow((desDist - realDist), 2) / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / this.forcePushIterations;
+                            forcex = phi * dx;
+                            forcey = phi * dy;
+                        }
+                        if(this.debug) System.out.println("pushed " + this.nodes[i].getId() + " away from " + this.nodes[j].getId());
+                        change = true;
+                    }
+                    forcesx += forcex;
+                    forcesy += forcey;
+                }
+                double newx = this.nodes[i].getX() + forcesx;
+                double newy = this.nodes[i].getY() + forcesy;
+                this.nodes[i].setX(newx);
+                this.nodes[i].setY(newy);
+                this.layout.setLocation(this.nodes[i], newx, newy);
+                if(this.debug) System.out.println(this.nodes[i].getId() + " has new position (" + newx + "|" + newy + ")");
+            }
+        }
+    }
+    
+    private void forcePushLazy() {
+        if(this.debug) System.out.println("--- starting force push");
+        int iteration;
+        boolean change = true;
+        for(iteration = 0; iteration < this.forcePushIterations; iteration ++) {
+            if(!change) break;
+            change = false;
+            int i;
+            for(i = 0; i < (this.nodecount - 1); i++) {
+                int j;
+                for(j = (i + 1); j < this.nodecount; j++) {
+                    double realDist = getRealNodeDist(this.nodes[i], this.nodes[j]);
+                    double desDist = getDesiredNodeDist(this.nodes[i], this.nodes[j]);
+                    if(realDist < desDist) change = true;
+                }
+            }
+            if(change) {
+                for(i = 0; i < this.nodecount; i++) {
+                    this.nodes[i].setX(this.nodes[i].getX() * 1.2);
+                    this.nodes[i].setY(this.nodes[i].getY() * 1.2);
+                }
+            }
+        }
+    }
+    
+    private double getRealNodeDist(VNode node1, VNode node2) {
+        double distx = node1.getX() - node2.getX();
+        double disty = node1.getY() - node2.getY();
+        return Math.sqrt(Math.pow(distx, 2) + Math.pow(disty, 2));
+    }
+    
+    private double getDesiredNodeDist(VNode node1, VNode node2) {
+        double f1;
+        double f2;
+        if(node1.getHeight() > node1.getWidth()) f1 = node1.getHeight() / 2;
+        else f1 = node1.getWidth() / 2;
+        if(node2.getHeight() > node2.getWidth()) f2 = node2.getHeight() / 2;
+        else f2 = node2.getWidth() / 2;
+        return (1.2 * (f1 + f2));
+    }
+    
     /**
      * Graph visualization for debugging output.
      */
-    private void testvis() {
-        VisualizationViewer<VNode, Connection> vis = new VisualizationViewer<>(this.layout);
-        vis.setPreferredSize(new Dimension(1280, 720));
+    private void testvis(String pname) {
         Transformer<VNode, Paint> vertexPaintT = new Transformer<VNode, Paint>() {
             @Override
             public Paint transform(VNode n) {
@@ -871,19 +972,25 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 return edgeStroke;
             }
         };
-        vis.getRenderContext().setVertexFillPaintTransformer(vertexPaintT);
-        vis.getRenderContext().setVertexLabelTransformer(new IDLabeller());
-        vis.getRenderContext().setEdgeStrokeTransformer(edgeStrokeT);
-        vis.getRenderContext().setEdgeLabelTransformer(new IDLabeller());
-        vis.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+        this.vis.getRenderContext().setVertexFillPaintTransformer(vertexPaintT);
+        this.vis.getRenderContext().setVertexLabelTransformer(new IDLabeller());
+        this.vis.getRenderContext().setEdgeStrokeTransformer(edgeStrokeT);
+        this.vis.getRenderContext().setEdgeLabelTransformer(new IDLabeller());
+        this.vis.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
         DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
         gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
-        vis.setGraphMouse(gm);
-        JFrame frame = new JFrame("Jung Display");
+        this.vis.setGraphMouse(gm);
+        JFrame frame = new JFrame(pname);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.getContentPane().add(vis);
+        frame.getContentPane().add(this.vis);
         frame.pack();
         frame.setVisible(true);
+        System.out.println("--- node positions on show:");
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            Point2D coords = this.layout.transform(this.nodes[i]);
+            System.out.println(this.nodes[i].getId() + " | X: " + coords.getX() + " Y: " + coords.getY());
+        }
     }
     
     /**

@@ -360,6 +360,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         if(this.debug) testvis("After PushBack");
     }
     
+    
     /**
      * launches all steps of the algorithm in order.
      * - Kamada & Kawai layout
@@ -368,7 +369,25 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * - pushing all children-nodes past their parents
      * - pushing nodes away from each other to remove overlaps
      */
-    public void launchForcePush() {
+    public void launchForcePushOld() {
+        allNodesSetUp();
+        stepLayoutApply();
+        stepRotate();
+        stepOrigin();
+        stepPushBack();
+        forcePush();
+        if(this.debug) testvis("After ForcePush");
+    }
+    
+    /**
+     * launches all steps of the algorithm in order.
+     * - Kamada & Kawai layout
+     * - rotation of the graph
+     * - moving of all root-nodes to the left
+     * - pushing all children-nodes past their parents
+     * - pushing nodes away from each other to remove overlaps
+     */
+    public void launchForcePushLazy() {
         allNodesSetUp();
         stepLayoutApply();
         stepRotate();
@@ -379,12 +398,30 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
+     * launches all steps of the algorithm in order.
+     * - Kamada & Kawai layout
+     * - rotation of the graph
+     * - moving of all root-nodes to the left
+     * - pushing all children-nodes past their parents
+     * - pushing nodes away from each other to remove overlaps
+     */
+    public void launchForcePushNew() {
+        allNodesSetUp();
+        stepLayoutApply();
+        stepRotate();
+        stepOrigin();
+        stepPushBack();
+        forcePushNew();
+        if(this.debug) testvis("After ForcePush");
+    }
+    
+    /**
      * Generates a Layout for the workflow given.
      */
     @Override
     public void generateLayout() {
         if(this.debug) System.out.println("Generating layout.");
-        launchForcePush();
+        launchForcePushOld();
     }
     /* used for 
         // Setting up nodes

@@ -293,11 +293,28 @@ public class MainWindowFXMLController implements Initializable {
         layouter.launchPushBack();
     }
     
-    @FXML void onSmartForcePushAction(ActionEvent e) {
+    @FXML
+    public void onSmartForcePushOldAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setPriority("", "", "");
-        layouter.launchForcePush();
+        layouter.launchForcePushOld();
+    }
+    
+    @FXML
+    public void onSmartForcePushLazyAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchForcePushLazy();
+    }
+    
+    @FXML
+    public void onSmartForcePushNewAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchForcePushNew();
     }
     
     private void layoutAction(LayoutGenerator playouter) {

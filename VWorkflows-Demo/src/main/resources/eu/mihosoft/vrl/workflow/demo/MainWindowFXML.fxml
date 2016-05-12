@@ -82,11 +82,13 @@
                     <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="Smart Layout">
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="Step 1" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="Steps [1,2]" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="Steps [1,2,3]" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="Steps [1,2,3,4]" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushAction" text="Steps [1,2,3,4,5]" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="1. Only KK Layout" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="2. Rotation" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="3. Origin" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. Push Back" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushOldAction" text="5. Old Force Push" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushLazyAction" text="5. Lazy Force Push" />
+                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushNewAction" text="5. New Force Push" />
                 </Menu>
                 <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
             </Menu>

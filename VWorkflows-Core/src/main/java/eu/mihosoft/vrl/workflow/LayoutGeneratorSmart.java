@@ -38,14 +38,13 @@ import org.apache.commons.collections15.Transformer;
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
- * - replace force push with physics simulation of forces that push each other away and result in a balance
- * - apply layout to subflows.
- * - find better initial area for node placement in KK layout. Currently 1280x720 is arbitrarily chosen as common display resolution
  * - replace getDesiredNodeDist with calculated distance instead of max(height,width)
  * - find better desired x coordinate for origin nodes
  * - separate disjuct graphs.
  * - separate priorities.
  * - replace KK layout with Fruchterman Reingold Layout or combine the two. (KK layout only finds local minima, FR can circumvent it with its temperature)
+ * 
+ * - apply layout to subflows. Bad idea because of poor performance and memory usage. rather apply layout to selected subflows from FXMLController.
  */
 public class LayoutGeneratorSmart implements LayoutGenerator {
     
@@ -421,7 +420,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     @Override
     public void generateLayout() {
         if(this.debug) System.out.println("Generating layout.");
-        launchForcePushOld();
+        launchForcePushLazy();
     }
     /* used for 
         // Setting up nodes

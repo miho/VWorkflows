@@ -306,7 +306,7 @@ public class MainWindowFXMLController implements Initializable {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setPriority("", "", "");
-        layouter.launchForcePushLazy();
+        layouter.generateLayout();
     }
     
     @FXML

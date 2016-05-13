@@ -33,8 +33,9 @@ import org.apache.commons.collections15.Transformer;
  * steps:
  * 1 - place nodes according to the Kamada & Kawai layout implemented in the Jung library
  * 2 - rotate the graph so the average edge direction is now parallel to the x axis
- * 3 - push all nodes to the right, so no children nodes are left of their parents
- * 4 - push all nodes away from each other until no overlaps are left.
+ * 3 - place all origin nodes (nodes without predecessors) at the left border of the graph
+ * 4 - push all nodes to the right, so no children nodes are left of their parents
+ * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
  * - separate disjuct graphs.
@@ -42,7 +43,7 @@ import org.apache.commons.collections15.Transformer;
  * - separate priorities.
  * - replace KK layout with Fruchterman Reingold Layout or combine the two. (KK layout only finds local minima, FR can circumvent it with its temperature)
  * 
- * - step origin unnecessary. Rather find disjunct graphs and place loose nodes that way.
+ * - stepOrigin unnecessary once disjunct graphs are implemented.
  * - apply layout to subflows. Bad idea because of poor performance and memory usage. rather apply layout to selected subflows from FXMLController.
  */
 public class LayoutGeneratorSmart implements LayoutGenerator {
@@ -466,7 +467,24 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         allNodesSetUp();
         stepLayoutApply();
         stepRotate();
-        //stepOrigin();
+        stepOrigin();
+        stepPushBack();
+        forcePushLazy();
+        if(this.debug) testvis("After ForcePush");
+    }
+    
+    /**
+     * launches all steps of the algorithm in order.
+     * - Kamada & Kawai layout
+     * - rotation of the graph
+     * - moving of all root-nodes to the left
+     * - pushing all children-nodes past their parents
+     * - pushing nodes away from each other to remove overlaps
+     */
+    public void launchLazyNoOrigin() {
+        allNodesSetUp();
+        stepLayoutApply();
+        stepRotate();
         stepPushBack();
         forcePushLazy();
         if(this.debug) testvis("After ForcePush");

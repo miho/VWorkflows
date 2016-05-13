@@ -136,7 +136,7 @@ public class MainWindowFXMLController implements Initializable {
     @FXML
     private CheckMenuItem checkDebugLayout;
     
-// <editor-fold desc="Development" defaultstate="collapsed">
+    // <editor-fold desc="Development" defaultstate="collapsed">
     
     @FXML
     public void onNaiveAction(ActionEvent e) {
@@ -311,6 +311,14 @@ public class MainWindowFXMLController implements Initializable {
         layouter.generateLayout();
     }
     
+    @FXML
+    public void onSmartNoOriginAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.launchLazyNoOrigin();
+    }
+    
     private void layoutAction(LayoutGenerator playouter) {
         playouter.setWorkflow(workflow);
         playouter.generateLayout();
@@ -325,6 +333,18 @@ public class MainWindowFXMLController implements Initializable {
     @FXML
     public void onOriginalAction(ActionEvent e) {
         testcase = 1;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onAdditionalEdgeAction(ActionEvent e) {
+        testcase = 2;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onAdditionalGraphAction(ActionEvent e) {
+        testcase = 3;
         onGenerateAction(e);
     }
     // </editor-fold>
@@ -453,18 +473,47 @@ public class MainWindowFXMLController implements Initializable {
         }
         
         // Create example connections
-        if(this.testcase == 1) {
-            ObservableList<VNode> nodes = workflow.getNodes();
-            workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
-            workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
-            workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
-            workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
-            workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
-            workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
-        
-            workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
-            workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
-            workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+        ObservableList<VNode> nodes;
+        switch (this.testcase) {
+            case 1: // original
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                break;
+            case 2: // additional edge
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                workflow.connect(nodes.get(2).getOutputs().get(2), nodes.get(8).getInputs().get(4));
+                break;
+            case 3: // additional graph
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(4).getInputs().get(1));
+                workflow.connect(nodes.get(4).getOutputs().get(1), nodes.get(7).getInputs().get(1));
+                break;
+            default:
+                break;
         }
     }
 

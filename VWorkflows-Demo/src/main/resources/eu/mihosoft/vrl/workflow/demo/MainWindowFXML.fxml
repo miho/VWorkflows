@@ -50,6 +50,8 @@
           <items>
             <Menu mnemonicParsing="false" text="Testcases">
                 <MenuItem mnemonicParsing="false" onAction="#onOriginalAction" text="Original" />
+                <MenuItem mnemonicParsing="false" onAction="#onAdditionalEdgeAction" text="Additional Edge" />
+                <MenuItem mnemonicParsing="false" onAction="#onAdditionalGraphAction" text="Additional Graph" />
             </Menu>
             <MenuItem mnemonicParsing="false" onAction="#onGenerateAction" text="Generate" />
             <MenuItem mnemonicParsing="false" onAction="#onLoadAction" text="Load" />
@@ -92,6 +94,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. Push Back" />
                         <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushOldAction" text="5. Old Force Push" />
                         <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushLazyAction" text="5. Lazy Force Push" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartNoOriginAction" text="5. Lazy No Origin" />
                     </Menu>
                     <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
                 </Menu>

@@ -62,7 +62,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     private Pair<Integer>[] origin;
     
-    private final int forcePushIterations = 20;
+    private final double scaling = 1.2;
     
     /**
      * Default contructor.
@@ -537,8 +537,13 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     private void stepLayoutApply() {
         if(this.debug) System.out.println("--- applying layout.");
+
+        // find longest path
+        int maxpath = (int) Math.round(findMaxPathWidth() * this.scaling);
+        int y = (maxpath / 16) * 9;
+        
         this.vis = new VisualizationViewer<>(this.layout);
-        vis.setPreferredSize(new Dimension(1280, 720));
+        vis.setPreferredSize(new Dimension(maxpath, y));
         
         // set layout coordinates
         int i;
@@ -549,12 +554,65 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             this.nodes[i].setY(coords.getY());
             if(this.debug) System.out.println(this.nodes[i].getId() + " | X: " + coords.getX() + " Y: " + coords.getY());
         }
-
-        /*for(i = 0; i < this.nodecount; i++) {
-            this.layout.lock(this.nodes[i], true);
-            Point2D coords = new Point2D.Double(this.nodes[i].getX(), this.nodes[i].getY());
-            this.layout.setLocation(this.nodes[i], coords);
-        }*/
+    }
+    
+    private double findMaxPathWidth() {
+        int[] maxPathFollowing = new int[this.nodecount];
+        int maxPath = 0;
+        int maxPathIndex = 0;
+        double maxPathWidth = 0.;
+        LinkedList<Integer> fifo = new LinkedList<>();
+        Collection<VNode> nodelist;
+        Iterator<VNode> it;
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            if(this.jgraph.getSuccessorCount(this.nodes[i]) == 0) {
+                maxPathFollowing[i] = 0;
+                fifo.add(i);
+            }
+        }
+        while(!fifo.isEmpty()) {
+            Integer currNode = fifo.removeFirst();
+            if(this.jgraph.getSuccessorCount(this.nodes[currNode]) == 0) {
+                maxPathFollowing[currNode] = 0;
+            }
+            else {
+                nodelist = this.jgraph.getSuccessors(this.nodes[currNode]);
+                it = nodelist.iterator();
+                while(it.hasNext()) {
+                    Integer currSucc = getNodeID(it.next());
+                    int tempFollowing = 1 + maxPathFollowing[currSucc];
+                    if(tempFollowing > maxPathFollowing[currNode]) {
+                        maxPathFollowing[currNode] = tempFollowing;
+                    }
+                }
+                nodelist = this.jgraph.getPredecessors(this.nodes[currNode]);
+                it = nodelist.iterator();
+                while(it.hasNext()) {
+                    fifo.add(getNodeID(it.next()));
+                }
+            }
+        }
+        fifo = new LinkedList<>();
+        for(i = 0; i < this.nodecount; i++) {
+            if(maxPathFollowing[i] > maxPath) {
+                maxPath = maxPathFollowing[i];
+                maxPathIndex = i;
+            }
+        }
+        maxPathWidth += this.nodes[maxPathIndex].getWidth();
+        nodelist = this.jgraph.getSuccessors(this.nodes[maxPathIndex]);
+        maxPath -= 1;
+        it = nodelist.iterator();
+        while(it.hasNext()) {
+            VNode currSucc = it.next();
+            if(maxPath == maxPathFollowing[getNodeID(currSucc)]) {
+                maxPathWidth += this.nodes[getNodeID(currSucc)].getWidth();
+                nodelist = this.jgraph.getSuccessors(currSucc);
+                it = nodelist.iterator();
+            }
+        }
+        return maxPathWidth;
     }
     
     /**
@@ -685,11 +743,11 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         }
         
         // place origin nodes on lowest x coordinate
-        double lastpos = this.graphcenter.getY() - ((this.origin.length / 2) * maxh * 1.2);
+        double lastpos = this.graphcenter.getY() - ((this.origin.length / 2) * maxh * this.scaling);
         for(i = 0; i < this.origin.length; i++) {
             Point2D coords = new Point2D.Double();
-            coords.setLocation((minx - (1.2 * maxw)), lastpos);
-            lastpos += 1.2 * (maxh);
+            coords.setLocation((minx - (this.scaling * maxw)), lastpos);
+            lastpos += this.scaling * (maxh);
             VNode currNode = this.nodes[this.origin[i].getFirst()];
             this.layout.setLocation(currNode, coords);
             currNode.setX(coords.getX());
@@ -828,8 +886,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             Iterator<VNode> it = nodelist.iterator();
             while(it.hasNext()) {
                 VNode pred = it.next();
-                if(pred.getX() >= this.nodes[i].getX()) {
-                    this.nodes[i].setX(pred.getX() + (1.2 * pred.getWidth()));
+                double minpos = pred.getX() + (pred.getWidth() * this.scaling);
+                if(this.nodes[i].getX() < minpos) {
+                    this.nodes[i].setX(minpos);
                     Point2D coords = new Point2D.Double(this.nodes[i].getX(), this.nodes[i].getY());
                     this.layout.setLocation(this.nodes[i], coords);
                 }
@@ -910,9 +969,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             after all nodes are through, start next iteration
         */
         if(this.debug) System.out.println("--- starting force push");
+        int maxits = Math.max(1, (100 / this.nodecount));
         int iteration;
         boolean change = true;
-        for(iteration = 0; iteration < this.forcePushIterations; iteration++) {
+        for(iteration = 0; iteration < maxits; iteration++) {
             if(this.debug) System.out.println("iteration: " + iteration);
             if(!change) break;
             change = false;
@@ -931,7 +991,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                         double dx = this.nodes[i].getX() - this.nodes[j].getX();
                         double dy = this.nodes[i].getY() - this.nodes[j].getY();
                         if(realDist != 0) {
-                            double phi = Math.pow((desDist - realDist), 2) / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / this.forcePushIterations;
+                            double phi = Math.pow((desDist - realDist), 2) / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / maxits;
                             forcex = phi * dx;
                             forcey = phi * dy;
                         }
@@ -953,9 +1013,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     private void forcePushLazy() {
         if(this.debug) System.out.println("--- starting force push");
+        int maxits = Math.max(1, (100 / this.nodecount));
         int iteration;
         boolean change = true;
-        for(iteration = 0; iteration < this.forcePushIterations; iteration ++) {
+        for(iteration = 0; iteration < maxits; iteration ++) {
             if(!change) break;
             change = false;
             int i;
@@ -969,8 +1030,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             }
             if(change) {
                 for(i = 0; i < this.nodecount; i++) {
-                    this.nodes[i].setX(this.nodes[i].getX() * 1.2);
-                    this.nodes[i].setY(this.nodes[i].getY() * 1.2);
+                    this.nodes[i].setX(this.nodes[i].getX() * this.scaling);
+                    this.nodes[i].setY(this.nodes[i].getY() * this.scaling);
                 }
             }
         }
@@ -989,7 +1050,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         else f1 = node1.getWidth() / 2;
         if(node2.getHeight() > node2.getWidth()) f2 = node2.getHeight() / 2;
         else f2 = node2.getWidth() / 2;
-        return (1.2 * (f1 + f2));
+        return (this.scaling * (f1 + f2));
     }
     
     /**

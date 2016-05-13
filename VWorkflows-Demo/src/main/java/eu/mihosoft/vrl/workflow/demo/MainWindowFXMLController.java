@@ -319,6 +319,16 @@ public class MainWindowFXMLController implements Initializable {
     
     // </editor-fold>
     
+    // <editor-fold desc="Test cases" defaultstate="collapsed">
+    private int testcase = 0;
+    
+    @FXML
+    public void onOriginalAction(ActionEvent e) {
+        testcase = 1;
+        onGenerateAction(e);
+    }
+    // </editor-fold>
+    
     @FXML
     public void onStableAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(false);
@@ -443,17 +453,19 @@ public class MainWindowFXMLController implements Initializable {
         }
         
         // Create example connections
-        ObservableList<VNode> nodes = workflow.getNodes();
-        workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
-        workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
-        workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
-        workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
-        workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
-        workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+        if(this.testcase == 1) {
+            ObservableList<VNode> nodes = workflow.getNodes();
+            workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+            workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+            workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+            workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+            workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+            workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
         
-        workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
-        workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
-        workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+            workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+            workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+            workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+        }
     }
 
     private void updateUI() {

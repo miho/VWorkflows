@@ -48,6 +48,9 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
+            <Menu mnemonicParsing="false" text="Testcases">
+                <MenuItem mnemonicParsing="false" onAction="#onOriginalAction" text="Original" />
+            </Menu>
             <MenuItem mnemonicParsing="false" onAction="#onGenerateAction" text="Generate" />
             <MenuItem mnemonicParsing="false" onAction="#onLoadAction" text="Load" />
             <MenuItem mnemonicParsing="false" onAction="#onSaveAction" text="Save" />

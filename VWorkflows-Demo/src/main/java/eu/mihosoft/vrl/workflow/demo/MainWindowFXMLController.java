@@ -136,6 +136,8 @@ public class MainWindowFXMLController implements Initializable {
     @FXML
     private CheckMenuItem checkDebugLayout;
     
+// <editor-fold desc="Development" defaultstate="collapsed">
+    
     @FXML
     public void onNaiveAction(ActionEvent e) {
         LayoutGenerator layouter = new LayoutGeneratorNaive(checkDebugLayout.isSelected());
@@ -309,18 +311,20 @@ public class MainWindowFXMLController implements Initializable {
         layouter.generateLayout();
     }
     
-    @FXML
-    public void onSmartForcePushNewAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layouter.launchForcePushNew();
-    }
-    
     private void layoutAction(LayoutGenerator playouter) {
         playouter.setWorkflow(workflow);
         playouter.generateLayout();
         playouter = null;
+    }
+    
+    // </editor-fold>
+    
+    @FXML
+    public void onStableAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(false);
+        layouter.setWorkflow(workflow);
+        layouter.setPriority("", "", "");
+        layouter.generateLayout();
     }
 
     @FXML

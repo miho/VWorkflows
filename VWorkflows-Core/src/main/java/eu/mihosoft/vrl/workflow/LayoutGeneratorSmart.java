@@ -33,17 +33,16 @@ import org.apache.commons.collections15.Transformer;
  * steps:
  * 1 - place nodes according to the Kamada & Kawai layout implemented in the Jung library
  * 2 - rotate the graph so the average edge direction is now parallel to the x axis
- * 3 - move all root nodes to the leftmost edge of the graph
- * 4 - push all nodes to the right, so no children nodes are left of their parents
- * 5 - push all nodes away from each other until no overlaps are left.
+ * 3 - push all nodes to the right, so no children nodes are left of their parents
+ * 4 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
- * - replace getDesiredNodeDist with calculated distance instead of max(height,width)
- * - find better desired x coordinate for origin nodes
  * - separate disjuct graphs.
+ * - replace getDesiredNodeDist with calculated distance instead of diagonal
  * - separate priorities.
  * - replace KK layout with Fruchterman Reingold Layout or combine the two. (KK layout only finds local minima, FR can circumvent it with its temperature)
  * 
+ * - step origin unnecessary. Rather find disjunct graphs and place loose nodes that way.
  * - apply layout to subflows. Bad idea because of poor performance and memory usage. rather apply layout to selected subflows from FXMLController.
  */
 public class LayoutGeneratorSmart implements LayoutGenerator {
@@ -61,7 +60,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     private Pair<Integer>[] origin;
     
-    private final double scaling = 1.2;
+    private final double scaling = 1.1;
     
     /**
      * Default contructor.
@@ -127,9 +126,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.priority[2] = "";
         this.jgraph = new DirectedSparseGraph<>();
         this.layout = new KKLayout<>(this.jgraph);
-        this.vis = new VisualizationViewer<>(this.layout);
         this.layout.setSize(new Dimension(1000, 1000));
-        
+        this.vis = new VisualizationViewer<>(this.layout);
         if(this.debug) System.out.println("Creating Layout Generator.");
     }
     
@@ -272,47 +270,125 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             VNode receiver = this.nodes[getNodeID(currConn.getReceiver().getNode())];
             this.jgraph.addEdge(currConn, sender, receiver);
         }
+        
+        // get origin nodes
+        this.origin = getOrigin();
+        // sort origin nodes by successor-count
+        this.origin = quickSortDesc(this.origin);
+        this.origin = triangularOrigin(this.origin);
     }
     
+        /**
+     * Gets all origin nodes of the graph created at SetUp.
+     * origin nodes are all nodes with an in-degree of 0.
+     * @return Pair<Integer>[]: Array of Pairs. Each Pair contains the model-ID 
+     * of the node and its successor count.
+     */
+    private Pair<Integer>[] getOrigin() {
+        int i;
+        LinkedList<Integer> originL = new LinkedList<>();
+        for(i = 0; i < this.nodecount; i++) {
+            if(this.jgraph.inDegree(this.nodes[i]) == 0) originL.add(i);
+        }
+        // get successorcount of origin nodes
+        int length = originL.size();
+        Pair<Integer>[] origina = new Pair[length];
+        for(i = 0; i < length; i++) {
+            int curr = originL.removeFirst();
+            origina[i] = new Pair<>(curr, this.jgraph.getSuccessorCount(this.nodes[curr]));
+            if(this.debug) System.out.println(this.nodes[curr].getId() + " | In-Degree: " + this.jgraph.inDegree(this.nodes[curr]) + " Successors: " + this.jgraph.getSuccessorCount(this.nodes[curr]));
+        }
+        return origina;
+    }
     
     /**
-     * 
-     * @param prio
-     * @return 
+     * Sorts an Array of origin nodes in descending order by their successor 
+     * count via Quicksort.
+     * @param origin Pair<Integer>[]: Array to be sorted.
+     * @return Pair<Integer>[]: Sorted Array.
      */
-    /* used for priority seperation
-    private ObservableList<VNode> oneNodesSetUp(int prio) {
-        Connections connections = this.workflow.getConnections(this.priority[prio]);
-        ObservableList connList = connections.getConnections();
-        this.conncount += connList.size();
-        
-        int i;
-        for(i = 0; i < this.conncount; i++) {
-            Connection currConn = (Connection) connList.remove(0);
-            VNode sender = currConn.getSender().getNode();
-            VNode receiver = currConn.getReceiver().getNode();
-            if(!(this.jgraph.containsVertex(sender))) 
-                this.jgraph.addVertex(sender);
-            if(!(this.jgraph.containsVertex(receiver)))
-                this.jgraph.addVertex(receiver);
-            this.jgraph.addEdge(currConn, sender, receiver);
+    private Pair<Integer>[] quickSortDesc(Pair<Integer>[] porigin) {
+        // cancellation
+        if(porigin.length <= 1) {
+            return porigin;
         }
         
-        if(prio == 2) {
-            ObservableList<VNode> nodesTemp = this.workflow.getNodes();
-            this.nodecount = nodesTemp.size();
+        // setup
+        int l = 1;
+        int r = porigin.length - 1;
+        Pair<Integer> pivot = porigin[0];
+        Pair<Integer> temp;
         
-            for(i = 0; i < this.nodecount; i++) {
-                VNode currVert = nodesTemp.remove(0);
-                if(!(this.jgraph.containsVertex(currVert)))
-                    this.jgraph.addVertex(currVert);
+        // sort
+        while(l < r) {
+            if((porigin[l].getSecond() <= pivot.getSecond()) && (porigin[r].getSecond() > pivot.getSecond())) {
+                temp = porigin[r];
+                porigin[r] = porigin[l];
+                porigin[l] = temp;
+            }
+            else {
+                if(porigin[l].getSecond() > pivot.getSecond()) l++;
+                if(porigin[r].getSecond() <= pivot.getSecond()) r--;
             }
         }
         
-        ObservableList<VNode> nodesTemp = (ObservableList<VNode>) this.jgraph.getVertices();
-        return nodesTemp;
+        // split array into left and right arrays
+        Pair<Integer>[] left;
+        Pair<Integer>[] right;
+        int leftcount = 0;
+        int i;
+        for(i = 1; i < porigin.length; i++) {
+            if(porigin[i].getSecond() > pivot.getSecond()) leftcount++;
+        }
+        left = new Pair[leftcount];
+        right = new Pair[porigin.length - leftcount - 1];
+        for(i = 1; i < porigin.length; i++) {
+            if(porigin[i].getSecond() > pivot.getSecond()) left[i-1] = porigin[i];
+            else right[i-leftcount-1] = porigin[i];
+        }
+        
+        // sort left and right arrays
+        left = quickSortDesc(left);
+        right = quickSortDesc(right);
+        
+        // fuse left and right arrays back together
+        for(i = 0; i < left.length; i++) {
+            porigin[i] = left[i];
+        }
+        porigin[i] = pivot;
+        i++;
+        while(i < porigin.length) {
+            porigin[i] = right[i - leftcount-1];
+            i++;
+        }
+        return porigin;
     }
-    */
+    
+    /**
+     * Sorts a descending Array into a triangular shape of ascending size up to 
+     * the maximum value at the center position, followed by descending values.
+     * @param origin Pair<Integer>[]: Array of origin nodes sorted in descending 
+     *  order by their successor count.
+     * @return Pair<Integer>[]: Sorted Array.
+     */
+    private Pair<Integer>[] triangularOrigin(Pair<Integer>[] porigin) {
+        Pair<Integer>[] originT = new Pair[porigin.length];
+        int i;
+        for(i = 0; i < porigin.length; i++) {
+            originT[(porigin.length / 2) + (((i / 2) + (i % 2)) * powOne(i))] = porigin[i];
+        }
+        return originT;
+    }
+    
+    /**
+     * Returns -1 to the power of x.
+     * @param x int: exponent
+     * @return int
+     */
+    private int powOne(int x) {
+        if((x % 2) == 0) return 1;
+        else return -1;
+    }
     
     /**
      * launches only the Kamada & Kawai layout operation.
@@ -390,27 +466,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         allNodesSetUp();
         stepLayoutApply();
         stepRotate();
-        stepOrigin();
+        //stepOrigin();
         stepPushBack();
         forcePushLazy();
-        if(this.debug) testvis("After ForcePush");
-    }
-    
-    /**
-     * launches all steps of the algorithm in order.
-     * - Kamada & Kawai layout
-     * - rotation of the graph
-     * - moving of all root-nodes to the left
-     * - pushing all children-nodes past their parents
-     * - pushing nodes away from each other to remove overlaps
-     */
-    public void launchForcePushNew() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        stepOrigin();
-        stepPushBack();
-        forcePushNew();
         if(this.debug) testvis("After ForcePush");
     }
     
@@ -422,102 +480,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         if(this.debug) System.out.println("Generating layout.");
         launchForcePushLazy();
     }
-    /* used for 
-        // Setting up nodes
-        if(this.priority[0].equals("")) {
-            if(this.priority[1].equals("")) {
-                if(this.priority[2].equals("")) {
-                    // "", "", "" - all priorities equal
-                    allNodesSetUp();
-                    allSteps();
-                }
-                else {
-                    // "", "", "X" - X has lowest priority. the other two are equal
-                    // run 0, 1
-                    int i;
-                    this.conncount = 0;
-                    ObservableList<VNode> nodesTemp0 = oneNodesSetUp(0);
-                    ObservableList<VNode> nodesTemp1 = oneNodesSetUp(1);
-                    this.nodecount = nodesTemp1.size();
-                    this.nodes = new VNode[this.nodecount];
-                    for(i = 0; i < nodesTemp1.size(); i++) {
-                        this.nodes[i] = nodesTemp1.remove(0);
-                    }
-                    allSteps();
-                    // run 2
-                    ObservableList<VNode> nodesTemp2 = oneNodesSetUp(2);
-                    this.nodecount = nodesTemp2.size();
-                    this.nodes = new VNode[this.nodecount];
-                    for(i = 0; i < this.nodecount; i++) {
-                        this.nodes[i] = nodesTemp2.remove(0);
-                    }
-                    allSteps();
-                }
-            }
-            else {
-                // "", "X", "Y" - invalid
-                if(this.debug) System.out.println("Wrong Priorities!");
-                return;
-            }
-        }
-        else {
-            // run 0
-            int i;
-            this.conncount = 0;
-            ObservableList<VNode> nodesTemp0 = oneNodesSetUp(0);
-            this.nodecount = nodesTemp0.size();
-            this.nodes = new VNode[this.nodecount];
-            for(i = 0; i < this.nodecount; i++) {
-                this.nodes[i] = nodesTemp0.remove(0);
-            }
-            allSteps();
-            if(this.priority[1].equals("")) {
-                if(this.priority[2].equals("")) {
-                    // "X", "", ""
-                    // run 1, 2
-                    ObservableList<VNode> nodesTemp1 = oneNodesSetUp(1);
-                    ObservableList<VNode> nodesTemp2 = oneNodesSetUp(2);
-                    this.nodecount = nodesTemp2.size();
-                    this.nodes = new VNode[this.nodecount];
-                    for(i = 0; i < this.nodecount; i++) {
-                        this.nodes[i] = nodesTemp2.remove(0);
-                    }
-                }
-                else {
-                    // "X", "", "Y" - invalid
-                    if(this.debug) System.out.println("Wrong Priorities!");
-                    return;
-                }
-            }
-            else {
-                if(this.priority[2].equals("")) {
-                    // "X", "Y", "" - invalid
-                    if(this.debug) System.out.println("Wrong Priorities!");
-                    return;
-                }
-                else {
-                    // "X", "Y", "Z"
-                    // run 1
-                    ObservableList<VNode> nodesTemp1 = oneNodesSetUp(1);
-                    this.nodecount = nodesTemp1.size();
-                    this.nodes = new VNode[this.nodecount];
-                    for(i = 0; i < this.nodecount; i++) {
-                        this.nodes[i] = nodesTemp1.remove(0);
-                    }
-                    allSteps();
-                    // run 2
-                    ObservableList<VNode> nodesTemp2 = oneNodesSetUp(2);
-                    this.nodecount = nodesTemp2.size();
-                    this.nodes = new VNode[this.nodecount];
-                    for(i = 0; i < this.nodecount; i++) {
-                        this.nodes[i] = nodesTemp1.remove(0);
-                    }
-                    allSteps();
-                }
-            }
-        }
-        if(this.debug) testvis();
-    }*/
     
     /**
      * Runs all steps of the layouting algorithm in order.
@@ -543,6 +505,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         
         this.vis = new VisualizationViewer<>(this.layout);
         vis.setPreferredSize(new Dimension(maxpath, y));
+        layout.setSize(new Dimension(maxpath, y));
         
         // set layout coordinates
         int i;
@@ -555,6 +518,11 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         }
     }
     
+    /**
+     * Finds the cumulative width of all nodes on the longest path in the graph.
+     * @return double: sum of width of all nodes on the longest path multiplied 
+     * by constant scaling factor
+     */
     private double findMaxPathWidth() {
         int[] maxPathFollowing = new int[this.nodecount];
         int maxPath = 0;
@@ -592,7 +560,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 }
             }
         }
-        fifo = new LinkedList<>();
         for(i = 0; i < this.nodecount; i++) {
             if(maxPathFollowing[i] > maxPath) {
                 maxPath = maxPathFollowing[i];
@@ -725,11 +692,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private void stepOrigin() {
         if(this.debug) System.out.println("--- starting origin");
         int i;
-        // get origin nodes
-        this.origin = getOrigin();
-        // sort origin nodes by successor-count
-        this.origin = quickSortDesc(this.origin);
-        this.origin = triangularOrigin(this.origin);
         
         // get lowest x coordinate in graph
         double minx = this.nodes[0].getX();
@@ -752,118 +714,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             currNode.setX(coords.getX());
             currNode.setY(coords.getY());
         }
-    }
-    
-    /**
-     * Gets all origin nodes of the graph created at SetUp.
-     * origin nodes are all nodes with an in-degree of 0.
-     * @return Pair<Integer>[]: Array of Pairs. Each Pair contains the model-ID 
-     * of the node and its successor count.
-     */
-    private Pair<Integer>[] getOrigin() {
-        int i;
-        LinkedList<Integer> originL = new LinkedList<>();
-        for(i = 0; i < this.nodecount; i++) {
-            if(this.jgraph.inDegree(this.nodes[i]) == 0) originL.add(i);
-        }
-        // get successorcount of origin nodes
-        int length = originL.size();
-        Pair<Integer>[] origina = new Pair[length];
-        for(i = 0; i < length; i++) {
-            int curr = originL.removeFirst();
-            origina[i] = new Pair<>(curr, this.jgraph.getSuccessorCount(this.nodes[curr]));
-            if(this.debug) System.out.println(this.nodes[curr].getId() + " | In-Degree: " + this.jgraph.inDegree(this.nodes[curr]) + " Successors: " + this.jgraph.getSuccessorCount(this.nodes[curr]));
-        }
-        return origina;
-    }
-    
-    /**
-     * Sorts an Array of origin nodes in descending order by their successor 
-     * count via Quicksort.
-     * @param origin Pair<Integer>[]: Array to be sorted.
-     * @return Pair<Integer>[]: Sorted Array.
-     */
-    private Pair<Integer>[] quickSortDesc(Pair<Integer>[] porigin) {
-        // cancellation
-        if(porigin.length <= 1) {
-            return porigin;
-        }
-        
-        // setup
-        int l = 1;
-        int r = porigin.length - 1;
-        Pair<Integer> pivot = porigin[0];
-        Pair<Integer> temp;
-        
-        // sort
-        while(l < r) {
-            if((porigin[l].getSecond() <= pivot.getSecond()) && (porigin[r].getSecond() > pivot.getSecond())) {
-                temp = porigin[r];
-                porigin[r] = porigin[l];
-                porigin[l] = temp;
-            }
-            else {
-                if(porigin[l].getSecond() > pivot.getSecond()) l++;
-                if(porigin[r].getSecond() <= pivot.getSecond()) r--;
-            }
-        }
-        
-        // split array into left and right arrays
-        Pair<Integer>[] left;
-        Pair<Integer>[] right;
-        int leftcount = 0;
-        int i;
-        for(i = 1; i < porigin.length; i++) {
-            if(porigin[i].getSecond() > pivot.getSecond()) leftcount++;
-        }
-        left = new Pair[leftcount];
-        right = new Pair[porigin.length - leftcount - 1];
-        for(i = 1; i < porigin.length; i++) {
-            if(porigin[i].getSecond() > pivot.getSecond()) left[i-1] = porigin[i];
-            else right[i-leftcount-1] = porigin[i];
-        }
-        
-        // sort left and right arrays
-        left = quickSortDesc(left);
-        right = quickSortDesc(right);
-        
-        // fuse left and right arrays back together
-        for(i = 0; i < left.length; i++) {
-            porigin[i] = left[i];
-        }
-        porigin[i] = pivot;
-        i++;
-        while(i < porigin.length) {
-            porigin[i] = right[i - leftcount-1];
-            i++;
-        }
-        return porigin;
-    }
-    
-    /**
-     * Sorts a descending Array into a triangular shape of ascending size up to 
-     * the maximum value at the center position, followed by descending values.
-     * @param origin Pair<Integer>[]: Array of origin nodes sorted in descending 
-     *  order by their successor count.
-     * @return Pair<Integer>[]: Sorted Array.
-     */
-    private Pair<Integer>[] triangularOrigin(Pair<Integer>[] porigin) {
-        Pair<Integer>[] originT = new Pair[porigin.length];
-        int i;
-        for(i = 0; i < porigin.length; i++) {
-            originT[(porigin.length / 2) + (((i / 2) + (i % 2)) * powOne(i))] = porigin[i];
-        }
-        return originT;
-    }
-    
-    /**
-     * Returns -1 to the power of x.
-     * @param x int: exponent
-     * @return int
-     */
-    private int powOne(int x) {
-        if((x % 2) == 0) return 1;
-        else return -1;
     }
     
     /**
@@ -953,69 +803,17 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         }
     }
     
-    private void forcePushNew() {
-        /*
-        New algorithm:
-            find desired distance between nodes
-            find real distance between nodes
-            if desired distance > real distance:
-                - force expressed as vector away from node
-                - connected nodes attract each other              <--- to do
-                - length of vector: pow(abs(desired distance - real distance), 2)
-            sum up forces on singular node
-            move node according to resulting force
-            continue with next node
-            after all nodes are through, start next iteration
-        */
-        if(this.debug) System.out.println("--- starting force push");
-        int maxits = Math.max(1, (100 / this.nodecount));
-        int iteration;
-        boolean change = true;
-        for(iteration = 0; iteration < maxits; iteration++) {
-            if(this.debug) System.out.println("iteration: " + iteration);
-            if(!change) break;
-            change = false;
-            int i;
-            for(i = 0; i < (this.nodecount - 1); i++) {
-                double forcesx = 0.;
-                double forcesy = 0.;
-                int j;
-                for(j = (i + 1); j < this.nodecount; j++) {
-                    double desDist = getDesiredNodeDist(this.nodes[i], this.nodes[j]);
-                    double realDist = getRealNodeDist(this.nodes[i], this.nodes[j]);
-                    if(this.debug) System.out.println("Pair: (" + this.nodes[i].getId() + " , " + this.nodes[j].getId() + ") real dist: " + realDist + " desired dist: " + desDist);
-                    double forcex = 0.;
-                    double forcey = 0.;
-                    if(desDist > realDist) {
-                        double dx = this.nodes[i].getX() - this.nodes[j].getX();
-                        double dy = this.nodes[i].getY() - this.nodes[j].getY();
-                        if(realDist != 0) {
-                            double phi = Math.pow((desDist - realDist), 2) / Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / maxits;
-                            forcex = phi * dx;
-                            forcey = phi * dy;
-                        }
-                        if(this.debug) System.out.println("pushed " + this.nodes[i].getId() + " away from " + this.nodes[j].getId());
-                        change = true;
-                    }
-                    forcesx += forcex;
-                    forcesy += forcey;
-                }
-                double newx = this.nodes[i].getX() + forcesx;
-                double newy = this.nodes[i].getY() + forcesy;
-                this.nodes[i].setX(newx);
-                this.nodes[i].setY(newy);
-                this.layout.setLocation(this.nodes[i], newx, newy);
-                if(this.debug) System.out.println(this.nodes[i].getId() + " has new position (" + newx + "|" + newy + ")");
-            }
-        }
-    }
-    
+    /**
+     * Removes overlaps by scaling coordinates of all nodes with constant factor
+     * until all overlaps are gone or maximum number of iterations has been reached.
+     */
     private void forcePushLazy() {
         if(this.debug) System.out.println("--- starting force push");
         int maxits = Math.max(1, (100 / this.nodecount));
         int iteration;
         boolean change = true;
         for(iteration = 0; iteration < maxits; iteration ++) {
+            if(this.debug) System.out.println("iteration " + (iteration + 1) + " of " + maxits);
             if(!change) break;
             change = false;
             int i;
@@ -1024,6 +822,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 for(j = (i + 1); j < this.nodecount; j++) {
                     double realDist = getRealNodeDist(this.nodes[i], this.nodes[j]);
                     double desDist = getDesiredNodeDist(this.nodes[i], this.nodes[j]);
+                    if(this.debug) System.out.println(this.nodes[i].getId() + " and " + this.nodes[j].getId() + " have real distance of: " + realDist + " and desired distance of: " + desDist);
                     if(realDist < desDist) change = true;
                 }
             }
@@ -1036,22 +835,49 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         }
     }
     
+    /**
+     * Returns distance between center points of two nodes.
+     * @param node1 VNode
+     * @param node2 VNode
+     * @return double: distance between node1 and node2
+     */
     private double getRealNodeDist(VNode node1, VNode node2) {
-        double distx = node1.getX() - node2.getX();
-        double disty = node1.getY() - node2.getY();
+        double distx = (node1.getX() + (node1.getWidth() / 2)) - (node2.getX() + (node2.getWidth() / 2));
+        double disty = (node1.getY() + (node1.getHeight() / 2)) - (node2.getY() + (node2.getHeight() / 2));
         return Math.sqrt(Math.pow(distx, 2) + Math.pow(disty, 2));
     }
     
+    /**
+     * Returns the desired distance between center points of two nodes.
+     * Currently nodes are simulated as circles with a diameter equal to their 
+     * diagonal. Desired distance is the sum of the radii of both 
+     * circles multiplied with a constant scaling factor.
+     * @param node1 VNode
+     * @param node2 VNode
+     * @return double: desired distance between node1 and node2
+     */
     private double getDesiredNodeDist(VNode node1, VNode node2) {
         double f1;
         double f2;
-        if(node1.getHeight() > node1.getWidth()) f1 = node1.getHeight() / 2;
-        else f1 = node1.getWidth() / 2;
-        if(node2.getHeight() > node2.getWidth()) f2 = node2.getHeight() / 2;
-        else f2 = node2.getWidth() / 2;
-        return (this.scaling * (f1 + f2));
+        f1 = Math.sqrt(Math.pow(node1.getWidth(), 2) + Math.pow(node1.getHeight(), 2));
+        f2 = Math.sqrt(Math.pow(node2.getWidth(), 2) + Math.pow(node2.getHeight(), 2));
+        return (this.scaling * (f1 + f2) / 2);
     }
     
+    /**
+     * Gets the model-ID for the given Node.
+     * @param pnode VNode: the given Node.
+     * @return Integer: ID of the given Node.
+     */
+    private Integer getNodeID(VNode pnode) {
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            if(this.nodes[i].equals(pnode))
+                return i;
+        }
+        return -1;
+    }
+
     /**
      * Graph visualization for debugging output.
      */
@@ -1088,20 +914,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             Point2D coords = this.layout.transform(this.nodes[i]);
             System.out.println(this.nodes[i].getId() + " | X: " + coords.getX() + " Y: " + coords.getY());
         }
-    }
-    
-    /**
-     * Gets the model-ID for the given Node.
-     * @param pnode VNode: the given Node.
-     * @return Integer: ID of the given Node.
-     */
-    private Integer getNodeID(VNode pnode) {
-        int i;
-        for(i = 0; i < this.nodecount; i++) {
-            if(this.nodes[i].equals(pnode))
-                return i;
-        }
-        return -1;
     }
     
     /**

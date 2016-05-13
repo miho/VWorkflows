@@ -56,41 +56,43 @@
         <Menu mnemonicParsing="false" text="Edit">
           <items>
             <Menu mnemonicParsing="false" text="Layout">
-                <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="Naive Algorithm" />
-                <Menu mnemonicParsing="false" text="Jung Algorithms">
-                    <MenuItem mnemonicParsing="false" onAction="#onJungCircleAction" text="Circle Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungDAGAction" text="DAG Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungFRAction" text="FR Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungFR2Action" text="FR2 Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungISOMAction" text="ISOM Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungKKAction" text="KK Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungSpringAction" text="Spring Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungSpring2Action" text="Spring2 Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onJungStaticAction" text="Static Layout" />
+                <Menu mnemonicParsing="false" text="Development">
+                    <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="Naive Algorithm" />
+                    <Menu mnemonicParsing="false" text="Jung Algorithms">
+                        <MenuItem mnemonicParsing="false" onAction="#onJungCircleAction" text="Circle Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungDAGAction" text="DAG Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungFRAction" text="FR Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungFR2Action" text="FR2 Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungISOMAction" text="ISOM Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungKKAction" text="KK Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungSpringAction" text="Spring Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungSpring2Action" text="Spring2 Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onJungStaticAction" text="Static Layout" />
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Prefuse Algortihms">
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefCircleAction" text="Circle Layout" />
+                        <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefCollapsedStackAction" text="Collapsed Stack Layout" /> -->
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefCollapsedSubtreeAction" text="Collapsed Subtree Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefBalloonTreeAction" text="Balloon Tree Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefForceDirectedAction" text="Force Directed Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefFruchtermanReingoldAction" text="Fruchterman Reingold Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefNodeLinkTreeAction" text="Node Link Tree Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefRadialTreeAction" text="Radial Tree Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefSquarifiedTreeMapAction" text="Squarified Tree Map Layout" />
+                        <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefGridAction" text="Grid Layout" /> -->
+                        <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Smart Layout">
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="1. Only KK Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="2. Rotation" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="3. Origin" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. Push Back" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushOldAction" text="5. Old Force Push" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushLazyAction" text="5. Lazy Force Push" />
+                    </Menu>
+                    <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
                 </Menu>
-                <Menu mnemonicParsing="false" text="Prefuse Algortihms">
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefCircleAction" text="Circle Layout" />
-                    <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefCollapsedStackAction" text="Collapsed Stack Layout" /> -->
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefCollapsedSubtreeAction" text="Collapsed Subtree Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefBalloonTreeAction" text="Balloon Tree Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefForceDirectedAction" text="Force Directed Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefFruchtermanReingoldAction" text="Fruchterman Reingold Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefNodeLinkTreeAction" text="Node Link Tree Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefRadialTreeAction" text="Radial Tree Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefSquarifiedTreeMapAction" text="Squarified Tree Map Layout" />
-                    <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefGridAction" text="Grid Layout" /> -->
-                    <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
-                </Menu>
-                <Menu mnemonicParsing="false" text="Smart Layout">
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="1. Only KK Layout" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="2. Rotation" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="3. Origin" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. Push Back" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushOldAction" text="5. Old Force Push" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushLazyAction" text="5. Lazy Force Push" />
-                    <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushNewAction" text="5. New Force Push" />
-                </Menu>
-                <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
+                <MenuItem mnemonicParsing="false" onAction="#onStableAction" text="Stable" />
             </Menu>
             <MenuItem mnemonicParsing="false" text="Delete" />
           </items>

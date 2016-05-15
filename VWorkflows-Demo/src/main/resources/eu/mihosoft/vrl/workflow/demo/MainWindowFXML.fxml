@@ -53,6 +53,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#onAdditionalEdgeAction" text="Additional Edge" />
                 <MenuItem mnemonicParsing="false" onAction="#onAdditionalGraphAction" text="Additional Graph" />
                 <MenuItem mnemonicParsing="false" onAction="#onTriLaneAction" text="Tri Lane" />
+                <MenuItem mnemonicParsing="false" onAction="#onDifferentSizesAction" text="Different Sizes" />
             </Menu>
             <MenuItem mnemonicParsing="false" onAction="#onGenerateAction" text="Generate" />
             <MenuItem mnemonicParsing="false" onAction="#onLoadAction" text="Load" />

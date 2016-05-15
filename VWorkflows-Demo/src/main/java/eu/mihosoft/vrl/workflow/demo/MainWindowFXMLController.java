@@ -353,6 +353,13 @@ public class MainWindowFXMLController implements Initializable {
         testcase = 4;
         onGenerateAction(e);
     }
+    
+    @FXML
+    public void onDifferentSizesAction(ActionEvent e) {
+        testcase = 5;
+        onGenerateAction(e);
+    }
+    
     // </editor-fold>
     
     @FXML
@@ -525,11 +532,28 @@ public class MainWindowFXMLController implements Initializable {
                 workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(6).getInputs().get(1));
                 workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(2).getInputs().get(1));
                 workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(7).getInputs().get(1));
-                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(7).getInputs().get(1));
-                workflow.connect(nodes.get(6).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(6).getOutputs().get(1), nodes.get(7).getInputs().get(1));
                 workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(8).getInputs().get(1));
                 workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(1));
                 workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(1));
+                break;
+            case 5: // different sizes
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                nodes.get(5).setHeight(nodes.get(5).getHeight() * 1.5);
+                nodes.get(5).setWidth(nodes.get(5).getWidth() * 1.5);
+                nodes.get(7).setHeight(nodes.get(7).getHeight() * 2);
+                nodes.get(8).setWidth(nodes.get(8).getWidth() * 2);
+                break;
             default:
                 break;
         }

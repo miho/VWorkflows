@@ -69,7 +69,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     private Pair<Integer>[] origin;
     
-    private final double scaling = 1.1;
+    private final double scaling = 1.2;
     
     /**
      * Default contructor.
@@ -820,7 +820,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     private void forcePushLazy() {
         if(this.debug) System.out.println("--- starting force push");
-        int maxits = Math.max(1, (100 / this.nodecount));
+        int maxits = Math.max(1, (500 / this.nodecount));
         int iteration;
         boolean change = true;
         for(iteration = 0; iteration < maxits; iteration ++) {
@@ -832,7 +832,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 int j;
                 for(j = (i + 1); j < this.nodecount; j++) {
                     double realDist = getRealNodeDist(this.nodes[i], this.nodes[j]);
-                    double desDist = getDesiredNodeDist(this.nodes[i], this.nodes[j]);
+                    double desDist = getDesiredNodeDistNew(this.nodes[i], this.nodes[j]);
                     if(this.debug) System.out.println(this.nodes[i].getId() + " and " + this.nodes[j].getId() + " have real distance of: " + realDist + " and desired distance of: " + desDist);
                     if(realDist < desDist) change = true;
                 }
@@ -873,6 +873,40 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         f1 = Math.sqrt(Math.pow(node1.getWidth(), 2) + Math.pow(node1.getHeight(), 2));
         f2 = Math.sqrt(Math.pow(node2.getWidth(), 2) + Math.pow(node2.getHeight(), 2));
         return (this.scaling * (f1 + f2) / 2);
+    }
+    
+    private double getDesiredNodeDistNew(VNode node1, VNode node2) {
+        double w1 = node1.getWidth();
+        double h1 = node1.getHeight();
+        double x1 = node1.getX() + (w1 / 2);
+        double y1 = node1.getY() + (h1 / 2);
+        double w2 = node2.getWidth();
+        double h2 = node2.getHeight();
+        double x2 = node2.getX() + (w2 / 2);
+        double y2 = node2.getY() + (h2 / 2);
+        // f1
+        double f1;
+        double vx = x1 - x2;
+        double vy = y1 - y2;
+        double xcomp = Math.abs(2 * vx / w1);
+        double ycomp = Math.abs(2 * vy / h1);
+        if(xcomp >= ycomp) {
+            f1 = Math.cos(Math.atan(vy / vx)) * w1 / 2;
+        }
+        else {
+            f1 = Math.cos(Math.atan(vx / vy)) * h1 / 2;
+        }
+        // f2
+        double f2;
+        xcomp = Math.abs(2 * vx / w2);
+        ycomp = Math.abs(2 * vy / h2);
+        if(xcomp >= ycomp) {
+            f2 = Math.cos(Math.atan(vy / vx)) * w2 / 2; 
+        }
+        else {
+            f2 = Math.cos(Math.atan(vx / vy)) * h2 / 2;
+        }
+        return (f1 + f2) * this.scaling;
     }
     
     /**

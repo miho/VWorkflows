@@ -347,6 +347,12 @@ public class MainWindowFXMLController implements Initializable {
         testcase = 3;
         onGenerateAction(e);
     }
+    
+    @FXML
+    public void onTriLaneAction(ActionEvent e) {
+        testcase = 4;
+        onGenerateAction(e);
+    }
     // </editor-fold>
     
     @FXML
@@ -512,6 +518,18 @@ public class MainWindowFXMLController implements Initializable {
                 workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(4).getInputs().get(1));
                 workflow.connect(nodes.get(4).getOutputs().get(1), nodes.get(7).getInputs().get(1));
                 break;
+            case 4: // tri lane
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(5).getInputs().get(1));
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(6).getInputs().get(1));
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(2).getInputs().get(1));
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(6).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(8).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(1));
             default:
                 break;
         }

@@ -5,6 +5,12 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import edu.uci.ics.jung.algorithms.layout.DAGLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout2;
+import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.algorithms.layout.SpringLayout;
+import edu.uci.ics.jung.algorithms.layout.SpringLayout2;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
@@ -38,10 +44,12 @@ import org.apache.commons.collections15.Transformer;
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
+ * - find out which Jung-Layout is the best basis for the algorithm.
+ *      DAGLayout, FRLayout, ISOMLayout, KKLayout and SpringLayout seem viable in theory
+ *      FRLayout2 and SpringLayout2 are seem to be variations that seem to produce worse results.
  * - separate disjuct graphs.
  * - replace getDesiredNodeDist with calculated distance instead of diagonal
  * - separate priorities.
- * - replace KK layout with Fruchterman Reingold Layout or combine the two. (KK layout only finds local minima, FR can circumvent it with its temperature)
  * 
  * - stepOrigin unnecessary once disjunct graphs are implemented.
  * - apply layout to subflows. Bad idea because of poor performance and memory usage. rather apply layout to selected subflows from FXMLController.
@@ -53,7 +61,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private String[] priority;
     private VNode[] nodes;
     private DirectedGraph<VNode, Connection> jgraph;
-    private KKLayout<VNode, Connection> layout;
+    private Layout<VNode, Connection> layout;
     private VisualizationViewer<VNode, Connection> vis;
     private int nodecount;
     private int conncount;
@@ -69,14 +77,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     public LayoutGeneratorSmart() {
         this.debug = false;
-        this.priority = new String[3];
-        this.priority[0] = "";
-        this.priority[1] = "";
-        this.priority[2] = "";
-        this.jgraph = new DirectedSparseGraph<>();
-        this.layout = new KKLayout<>(this.jgraph);
-        this.layout.setSize(new Dimension(1000, 1000));
-        this.vis = new VisualizationViewer<>(this.layout);
+        initialization();
     }
     
     /**
@@ -86,14 +87,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     public LayoutGeneratorSmart(VFlow pworkflow) {
         this.workflow = pworkflow;
         this.debug = false;
-        this.priority = new String[3];
-        this.priority[0] = "";
-        this.priority[1] = "";
-        this.priority[2] = "";
-        this.jgraph = new DirectedSparseGraph<>();
-        this.layout = new KKLayout<>(this.jgraph);
-        this.layout.setSize(new Dimension(1000, 1000));
-        this.vis = new VisualizationViewer<>(this.layout);
+        initialization();
     }
     
     /**
@@ -102,14 +96,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     public LayoutGeneratorSmart(boolean pdebug) {
         this.debug = pdebug;
-        this.priority = new String[3];
-        this.priority[0] = "";
-        this.priority[1] = "";
-        this.priority[2] = "";
-        this.jgraph = new DirectedSparseGraph<>();
-        this.layout = new KKLayout<>(this.jgraph);
-        this.layout.setSize(new Dimension(1000, 1000));
-        this.vis = new VisualizationViewer<>(this.layout);
+        initialization();
         if(this.debug) System.out.println("Creating Layout Generator.");
     }
     
@@ -121,15 +108,21 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     public LayoutGeneratorSmart(VFlow pworkflow, boolean pdebug) {
         this.workflow = pworkflow;
         this.debug = pdebug;
+        initialization();
+        if(this.debug) System.out.println("Creating Layout Generator.");
+    }
+    
+    /**
+     * Initializes the fields of the class needed in future methods.
+     */
+    private void initialization() {
         this.priority = new String[3];
         this.priority[0] = "";
         this.priority[1] = "";
         this.priority[2] = "";
         this.jgraph = new DirectedSparseGraph<>();
         this.layout = new KKLayout<>(this.jgraph);
-        this.layout.setSize(new Dimension(1000, 1000));
         this.vis = new VisualizationViewer<>(this.layout);
-        if(this.debug) System.out.println("Creating Layout Generator.");
     }
     
     /**

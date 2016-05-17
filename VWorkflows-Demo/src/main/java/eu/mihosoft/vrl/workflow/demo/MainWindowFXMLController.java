@@ -381,8 +381,8 @@ public class MainWindowFXMLController implements Initializable {
 
         updateUI();
 
-        workflowTest(workflow, 5, 10);
-//        workflowTest(workflow, 2, 2);
+        //workflowTest(workflow, 5, 10);
+        workflowTest(workflow, 2, 10);
 
         System.out.println(" [done]");
 

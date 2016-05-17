@@ -296,11 +296,11 @@ public class MainWindowFXMLController implements Initializable {
     }
     
     @FXML
-    public void onSmartForcePushOldAction(ActionEvent e) {
+    public void onSmartForcePushAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setPriority("", "", "");
-        layouter.launchForcePushOld();
+        layouter.launchForcePush();
     }
     
     @FXML
@@ -316,7 +316,7 @@ public class MainWindowFXMLController implements Initializable {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setPriority("", "", "");
-        layouter.launchLazyNoOrigin();
+        layouter.launchNoOrigin();
     }
     
     private void layoutAction(LayoutGenerator playouter) {

@@ -268,46 +268,43 @@ public class MainWindowFXMLController implements Initializable {
     public void onSmartKKAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layouter.launchKK();
+        layouter.setLaunchRotate(false);
+        layouter.setLaunchOrigin(false);
+        layouter.setLaunchPushBack(false);
+        layouter.setLaunchForcePush(false);
+        layouter.generateLayout();
     }
     
     @FXML
     public void onSmartRotateAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layouter.launchRotate();
+        layouter.setLaunchOrigin(false);
+        layouter.setLaunchPushBack(false);
+        layouter.setLaunchForcePush(false);
+        layouter.generateLayout();
     }
     
     @FXML void onSmartOriginAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layouter.launchOrigin();
+        layouter.setLaunchPushBack(false);
+        layouter.setLaunchForcePush(false);
+        layouter.generateLayout();
     }
     
     @FXML
     public void onSmartPushBackAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layouter.launchPushBack();
+        layouter.setLaunchForcePush(false);
+        layouter.generateLayout();
     }
     
     @FXML
     public void onSmartForcePushAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layouter.launchForcePush();
-    }
-    
-    @FXML
-    public void onSmartForcePushLazyAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
         layouter.generateLayout();
     }
     
@@ -315,8 +312,16 @@ public class MainWindowFXMLController implements Initializable {
     public void onSmartNoOriginAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
-        layouter.launchNoOrigin();
+        layouter.setLaunchOrigin(false);
+        layouter.generateLayout();
+    }
+    
+    @FXML
+    public void onSmartRecursiveAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setRecursive(true);
+        layouter.generateLayout();
     }
     
     private void layoutAction(LayoutGenerator playouter) {
@@ -366,7 +371,6 @@ public class MainWindowFXMLController implements Initializable {
     public void onStableAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(false);
         layouter.setWorkflow(workflow);
-        layouter.setPriority("", "", "");
         layouter.generateLayout();
     }
 

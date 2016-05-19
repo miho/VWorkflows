@@ -96,6 +96,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. Push Back" />
                         <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushAction" text="5. Force Push" />
                         <MenuItem mnemonicParsing="false" onAction="#onSmartNoOriginAction" text="5. No Origin" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartRecursiveAction" text="5. Recursive" />
                     </Menu>
                     <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
                 </Menu>

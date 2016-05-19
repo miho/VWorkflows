@@ -44,6 +44,7 @@ import org.apache.commons.collections15.Transformer;
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
+ * - check consistency and termination bugs
  * - apply layout to subflows
  * - check graph for circles
  * - find out which Jung-Layout is the best basis for the algorithm.
@@ -64,6 +65,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private boolean recursive;
     private boolean autoscaleNodes;
     private int maxiterations;
+    private boolean launchRotate;
+    private boolean launchOrigin;
+    private boolean launchPushBack;
+    private boolean launchForcePush;
     
     private String[] priority;
     private VNode[] nodes;
@@ -129,6 +134,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.recursive = false;
         this.autoscaleNodes = false;
         this.maxiterations = 500;
+        this.launchRotate = true;
+        this.launchOrigin = true;
+        this.launchPushBack = true;
+        this.launchForcePush = true;
     }
     
     /**
@@ -189,13 +198,19 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         return this.maxiterations;
     }
     
-    /**
-     * Get an array of model nodes.
-     * @return VNode[] nodes.
-     */
-    //@Override
-    public VNode[] getModelNodes() {
-        return this.nodes;
+    public boolean getLaunchRotate() {
+        return this.launchRotate;
+    }
+    
+    public boolean getLaunchOrigin() {
+        return this.launchOrigin;
+    }
+    public boolean getLaunchPushBack() {
+        return this.launchPushBack;
+    }
+    
+    public boolean getLaunchForcePush() {
+        return this.launchForcePush;
     }
     
     /**
@@ -204,22 +219,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     public DirectedGraph getModelGraph() {
         return this.jgraph;
-    }
-    
-    /**
-     * Get the priority order.
-     * @return String[] priority.
-     */
-    public String[] getPriority() {
-        return this.priority;
-    }
-    
-    /**
-     * Get the layout object applied to the model.
-     * @return Layout<VNode, Connection>.
-     */
-    public Layout<VNode, Connection> getLayout() {
-        return this.layout;
     }
     
     /**
@@ -280,13 +279,20 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.maxiterations = pmaxiterations;
     }
     
-    /**
-     * Set the array of model nodes.
-     * @param pnodes VNode[]
-     */
-    //@Override
-    public void setModelNodes(VNode[] pnodes) {
-        this.nodes = pnodes;
+    public void setLaunchRotate(boolean plaunchRotate) {
+        this.launchRotate = plaunchRotate;
+    }
+    
+    public void setLaunchOrigin(boolean plaunchOrigin) {
+        this.launchOrigin = plaunchOrigin;
+    }
+    
+    public void setLaunchPushBack(boolean plaunchPushBack) {
+        this.launchPushBack = plaunchPushBack;
+    }
+    
+    public void setLaunchForcePush(boolean plaunchForcePush) {
+        this.launchForcePush = plaunchForcePush;
     }
     
     /**
@@ -298,33 +304,13 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the priority order.
-     * @param pr0 String: priority 1
-     * @param pr1 String: priority 2
-     * @param pr2 String: priority 3
-     */
-    public void setPriority(String pr0, String pr1, String pr2) {
-        this.priority = new String[3];
-        this.priority[0] = pr0;
-        this.priority[1] = pr1;
-        this.priority[2] = pr2;
-    }
-    
-    /**
-     * Set the layout object to be applied to the graph.
-     * @param playout Layout<VNode, Connection>
-     */
-    public void setLayout(KKLayout<VNode, Connection> playout) {
-        this.layout = playout;
-        this.vis = new DefaultVisualizationModel<>(this.layout);
-    }
-    
-    /**
      * creates the model graph from the workflow given at creation.
      */
-    private void allNodesSetUp() {
+    private boolean allNodesSetUp() {
         ObservableList<VNode> nodesTemp = this.workflow.getNodes();
+        if(nodesTemp == null) return false;
         this.nodecount = nodesTemp.size();
+        if(this.nodecount == 0) return false;
         this.nodes = new VNode[this.nodecount];
         
         int i;
@@ -358,6 +344,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         // sort origin nodes by successor-count
         this.origin = quickSortDesc(this.origin);
         this.origin = triangularOrigin(this.origin);
+        return true;
     }
     
     /**
@@ -491,117 +478,37 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * launches only the Kamada & Kawai layout operation.
-     */
-    public void launchKK() {
-        allNodesSetUp();
-        stepLayoutApply();
-        if(this.debug) testvis("Original Layout");
-    }
-    
-    /**
-     * Launches the Kamada & Kawai layout, followed by a rotation of the resulting graph.
-     */
-    public void launchRotate() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        if(this.debug) testvis("After Rotate");
-    }
-    
-    /**
-     * positions all nodes according to the Kamada & Kawai layout, rotates the resulting graph
-     * and moves all nodes without predecessors to the left.
-     */
-    public void launchOrigin() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        stepOrigin();
-        if(this.debug) testvis("After Origin");
-    }
-    
-    /**
-     * positions all nodes according to the Kamada & Kawai layout, rotates the resulting graph,
-     * moves all nodes without predecessors to the left and pushes all successors past their
-     * predecessors.
-     */
-    public void launchPushBack() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        stepOrigin();
-        stepPushBack();
-        if(this.debug) testvis("After PushBack");
-    }
-    
-    /**
-     * launches all steps of the algorithm in order.
-     * - Kamada & Kawai layout
-     * - rotation of the graph
-     * - moving of all root-nodes to the left
-     * - pushing all children-nodes past their parents
-     * - pushing nodes away from each other to remove overlaps
-     */
-    public void launchForcePush() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        stepOrigin();
-        stepPushBack();
-        forcePush();
-        if(this.debug) testvis("After ForcePush");
-    }
-    
-    /**
-     * launches all steps of the algorithm in order.
-     * - Kamada & Kawai layout
-     * - rotation of the graph
-     * - moving of all root-nodes to the left
-     * - pushing all children-nodes past their parents
-     * - pushing nodes away from each other to remove overlaps
-     */
-    public void launchForcePushLazy() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        stepOrigin();
-        stepPushBack();
-        forcePushLazy();
-        if(this.debug) testvis("After ForcePush");
-    }
-    
-    /**
-     * launches all steps of the algorithm in order.
-     * - Kamada & Kawai layout
-     * - rotation of the graph
-     * - moving of all root-nodes to the left
-     * - pushing all children-nodes past their parents
-     * - pushing nodes away from each other to remove overlaps
-     */
-    public void launchNoOrigin() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        stepPushBack();
-        forcePush();
-        if(this.debug) testvis("After ForcePush");
-    }
-    
-    /**
      * Generates a Layout for the workflow given.
      */
     @Override
     public void generateLayout() {
         if(this.debug) System.out.println("Generating layout.");
-        if(this.recursive) {
-            // generate layout for subflows
-            
+        if(allNodesSetUp()) {
+            if(this.recursive) {
+                LayoutGeneratorSmart subgen = new LayoutGeneratorSmart(false);
+                subgen.setRecursive(this.recursive);
+                subgen.setLaunchRotate(this.launchRotate);
+                subgen.setLaunchOrigin(this.launchOrigin);
+                subgen.setLaunchPushBack(this.launchPushBack);
+                subgen.setLaunchForcePush(this.launchForcePush);
+                Collection<VFlow> subconts = this.workflow.getSubControllers();
+                Iterator<VFlow> it = subconts.iterator();
+                while(it.hasNext()) {
+                    VFlow subflow = it.next();
+                    subgen.setWorkflow(subflow);
+                    subgen.generateLayout();
+                }
+            }
+            if(this.autoscaleNodes) {
+                // scale nodes according to their contents.
+            }
+            stepLayoutApply();
+            if(this.launchRotate) stepRotate();
+            if(this.launchOrigin) stepOrigin();
+            if(this.launchPushBack) stepPushBack();
+            if(this.launchForcePush) forcePush();
+            if(this.debug) testvis("Result");
         }
-        if(this.autoscaleNodes) {
-            // scale nodes according to their contents.
-        }
-        launchForcePush();
     }
     
     /**

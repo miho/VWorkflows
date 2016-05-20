@@ -54,6 +54,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#onAdditionalGraphAction" text="Additional Graph" />
                 <MenuItem mnemonicParsing="false" onAction="#onTriLaneAction" text="Tri Lane" />
                 <MenuItem mnemonicParsing="false" onAction="#onDifferentSizesAction" text="Different Sizes" />
+                <MenuItem mnemonicParsing="false" onAction="#onCycleAction" text="Cycle" />
             </Menu>
             <MenuItem mnemonicParsing="false" onAction="#onGenerateAction" text="Generate" />
             <MenuItem mnemonicParsing="false" onAction="#onLoadAction" text="Load" />
@@ -90,7 +91,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
                     </Menu>
                     <Menu mnemonicParsing="false" text="Smart Layout">
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="1. Only KK Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="1. Only Jung Layout" />
                         <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="2. Rotation" />
                         <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="3. Origin" />
                         <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. Push Back" />

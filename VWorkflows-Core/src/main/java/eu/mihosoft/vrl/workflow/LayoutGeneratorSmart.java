@@ -5,15 +5,15 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
+import edu.uci.ics.jung.algorithms.layout.DAGLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
-import edu.uci.ics.jung.visualization.VisualizationModel;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
@@ -44,12 +44,6 @@ import org.apache.commons.collections15.Transformer;
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
- * - check consistency and termination bugs
- * - apply layout to subflows
- * - check graph for circles
- * - find out which Jung-Layout is the best basis for the algorithm.
- *      DAGLayout, FRLayout, ISOMLayout, KKLayout and SpringLayout seem viable in theory
- *      FRLayout2 and SpringLayout2 are seem to be variations that seem to produce worse results.
  * - separate disjuct graphs.
  * - scale nodes according to their contents
  * - separate priorities.
@@ -58,17 +52,19 @@ import org.apache.commons.collections15.Transformer;
  */
 public class LayoutGeneratorSmart implements LayoutGenerator {
     
-    private boolean debug;
     private VFlow workflow;
-    private double scaling;
-    private double aspectratio;
     private boolean recursive;
     private boolean autoscaleNodes;
-    private int maxiterations;
+    private int layoutSelector;
+    private double aspectratio;
     private boolean launchRotate;
     private boolean launchOrigin;
     private boolean launchPushBack;
+    private boolean launchDisplaceIdents;
     private boolean launchForcePush;
+    private int maxiterations;
+    private double scaling;
+    private boolean debug;
     
     private String[] priority;
     private VNode[] nodes;
@@ -79,6 +75,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private int conncount;
     private Point2D graphcenter;
     private Pair<Integer>[] origin;
+    private boolean cycle;
     
     /**
      * Default contructor.
@@ -126,31 +123,23 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     private void initialization() {
         this.jgraph = new DirectedSparseGraph<>();
-        this.layout = new KKLayout<>(this.jgraph);
-        //this.vis = new VisualizationViewer<>(this.layout);
-        this.vis = new DefaultVisualizationModel<>(this.layout);
-        this.scaling = 1.5;
-        this.aspectratio = 16. / 9.;
+        
+        // default parameters:
         this.recursive = false;
         this.autoscaleNodes = false;
-        this.maxiterations = 500;
+        this.layoutSelector = 0;
+        this.aspectratio = 16. / 9.;
         this.launchRotate = true;
         this.launchOrigin = true;
         this.launchPushBack = true;
+        this.launchDisplaceIdents = true;
         this.launchForcePush = true;
+        this.maxiterations = 500;
+        this.scaling = 1.5;
     }
     
     /**
-     * Get status of debugging output.
-     * @return Boolean debugging output enabled/disabled.
-     */
-    @Override
-    public boolean getDebug() {
-        return this.debug;
-    }
-    
-    /**
-     * Get the workflow to layout.
+     * Get the workflow to be laid out.
      * @return VFlow workflow.
      */
     @Override
@@ -159,79 +148,147 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
-     * @return 
+     * If set to true, the layout is applied to all subflows of the given 
+     * workflow recursively.
+     * default: false
+     * @return boolean
      */
-    public double getScaling() {
-        return this.scaling;
+    @Override
+    public boolean getRecursive() {
+        return this.recursive;
     }
     
     /**
-     * 
-     * @return 
+     * If set to true, subflow nodes in the given workflow are automatically 
+     * scaled 
+     * to fit their contents.
+     * default: false
+     * @return boolean
+     */
+    @Override
+    public boolean getAutoscaleNodes() {
+        return this.autoscaleNodes;
+    }
+    
+    /**
+     * Get the Jung layout that is used in the first step of the algorithm.
+     * 0 - ISOM Layout
+     * 1 - FR Layout
+     * 2 - KK Layout
+     * 3 - DAG Layout (Does not terminate if the graph contains cycles)
+     * default: 0
+     * @return int
+     */
+    public int getLayoutSelector() {
+        return this.layoutSelector;
+    }
+    
+    /**
+     * Get the aspect ratio of the initial drawing space of the graph.
+     * Width is determined via the longest path in the graph.
+     * Height is determined by dividing the width by the aspect ratio.
+     * default: 16:9
+     * @return double
      */
     public double getAspectratio() {
         return this.aspectratio;
     }
     
     /**
-     * 
-     * @return 
+     * If set to true, the graph is rotated to reach an average flow direction 
+     * parallel to the horizontal axis.
+     * default: true
+     * @return boolean
      */
-    public boolean getRecursive() {
-        return this.recursive;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public boolean getAutoscaleNodes() {
-        return this.autoscaleNodes;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public int setMaxiterations() {
-        return this.maxiterations;
-    }
-    
     public boolean getLaunchRotate() {
         return this.launchRotate;
     }
     
+    /**
+     * If set to true, nodes with an in-degree of 0 will be placed at the 
+     * leftmost
+     * edge of the drawing space.
+     * default: true
+     * @return boolean
+     */
     public boolean getLaunchOrigin() {
         return this.launchOrigin;
     }
+    
+    /**
+     * If set to true, all nodes will be pushed to the right of their 
+     * predecessors 
+     * so no edge has a direction with a negative x-component.
+     * (Does not terminate if the graph contains cycles)
+     * default: true
+     * @return boolean
+     */
     public boolean getLaunchPushBack() {
         return this.launchPushBack;
     }
     
+    /**
+     * If set to true, nodes that are placed on the same coordinates will be 
+     * displaced slightly, so the forcePush step can move them accordingly.
+     * default: true
+     * @return boolean
+     */
+    public boolean getLaunchDisplaceIdents() {
+        return this.launchDisplaceIdents;
+    }
+    
+    /**
+     * If set to true, all nodes will repel each other until no overlaps between 
+     * nodes are left or the maximum amount of iterations has been reached.
+     * default: true
+     * @return boolean
+     */
     public boolean getLaunchForcePush() {
         return this.launchForcePush;
     }
     
     /**
-     * Get the Graph modeled after the workflow.
-     * @return DirectedGraph model graph.
+     * Get the maximum amount of iterations used by the force push step of the 
+     * algorithm.
+     * default: 500
+     * @return boolean
+     */
+    public int getMaxiterations() {
+        return this.maxiterations;
+    }
+    
+    /**
+     * Get the scaling parameter of the algorithm. 
+     * Determines the distance between nodes.
+     * default: 1.2
+     * @return double
+     */
+    public double getScaling() {
+        return this.scaling;
+    }
+    
+    /**
+     * If set to true, debugging output will be printed in the command line and 
+     * a second representation of the graph will be shown.
+     * default: false
+     * @return boolean
+     */
+    @Override
+    public boolean getDebug() {
+        return this.debug;
+    }
+    
+    /**
+     * Get the model graph to be laid out.
+     * default: a graph is generated automatically from the workflow given.
+     * @return DirectedGraph
      */
     public DirectedGraph getModelGraph() {
         return this.jgraph;
     }
     
     /**
-     * Set status of debugging output.
-     * @param pdebug Boolean.
-     */
-    @Override
-    public void setDebug(boolean pdebug) {
-        this.debug = pdebug;
-    }
-    
-    /**
-     * Set the workflow to be layouted.
+     * Set the workflow to be laid out.
      * @param pworkflow VFlow.
      */
     @Override
@@ -240,63 +297,142 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
-     * @param pscaling 
+     * If set to true, the layout is applied to all subflows of the given 
+     * workflow recursively.
+     * default: false
+     * @param precursive boolean
      */
-    public void setScaling(double pscaling) {
-        this.scaling = pscaling;
+    @Override
+    public void setRecursive(boolean precursive) {
+        this.recursive = precursive;
     }
     
     /**
-     * 
-     * @param paspectratio 
+     * If set to true, subflow nodes in the given workflow are automatically 
+     * scaled 
+     * to fit their contents.
+     * default: false
+     * @param pautoscaleNodes boolean
+     */
+    @Override
+    public void setAutoscaleNodes(boolean pautoscaleNodes) {
+        this.autoscaleNodes = pautoscaleNodes;
+    }
+    
+    /**
+     * Select the Jung layout that is supposed to be used in the first step of 
+     * the algorithm.
+     * 0 - ISOM Layout
+     * 1 - FR Layout
+     * 2 - KK Layout
+     * 3 - DAG Layout (Does not terminate if the graph contains cycles)
+     * default: 0
+     * @param playoutSelector int
+     */
+    public void setLayoutSelector(int playoutSelector) {
+        this.layoutSelector = playoutSelector;
+    }
+    
+    /**
+     * Set the aspect ratio of the initial drawing space of the graph.
+     * Width of the drawing space is determined via the longest path in the 
+     * graph.
+     * Height is determined by dividing the width by the aspect ratio.
+     * default: 16:9
+     * @param paspectratio double
      */
     public void setAspectratio(double paspectratio) {
         this.aspectratio = paspectratio;
     }
     
     /**
-     * 
-     * @param precursive 
+     * If set to true, the graph is rotated to reach an average flow direction 
+     * parallel to the horizontal axis.
+     * default: true
+     * @param plaunchRotate boolean
      */
-    public void setRecursive(boolean precursive) {
-        this.recursive = precursive;
-    }
-    
-    /**
-     * 
-     * @param pautoscaleNodes 
-     */
-    public void setAutoscaleNodes(boolean pautoscaleNodes) {
-        this.autoscaleNodes = pautoscaleNodes;
-    }
-    
-    /**
-     * 
-     * @param pmaxiterations 
-     */
-    public void setMaxiterations(int pmaxiterations) {
-        this.maxiterations = pmaxiterations;
-    }
-    
     public void setLaunchRotate(boolean plaunchRotate) {
         this.launchRotate = plaunchRotate;
     }
     
+    /**
+     * If set to true, nodes with an in-degree of 0 will be placed at the 
+     * leftmost
+     * edge of the drawing space.
+     * default: true
+     * @param plaunchOrigin boolean
+     */
     public void setLaunchOrigin(boolean plaunchOrigin) {
         this.launchOrigin = plaunchOrigin;
     }
     
+    /**
+     * If set to true, all nodes will be pushed to the right of their 
+     * predecessors 
+     * so no edge has a direction with a negative x-component.
+     * (Does not terminate if the graph contains cycles)
+     * default: true
+     * @param plaunchPushBack boolean
+     */
     public void setLaunchPushBack(boolean plaunchPushBack) {
         this.launchPushBack = plaunchPushBack;
     }
     
+    /**
+     * If set to true, nodes that are placed on the same coordinates will be 
+     * displaced slightly, so the forcePush step can move them accordingly.
+     * default: true
+     * @param plaunchDisplaceIdents boolean
+     */
+    public void setLaunchDisplaceIdents(boolean plaunchDisplaceIdents) {
+        this.launchDisplaceIdents = plaunchDisplaceIdents;
+    }
+    
+    /**
+     * Set true if all nodes shall be pushing each other away until no overlaps 
+     * between nodes remain or the maximum amount of iterations has been 
+     * reached.
+     * default: true
+     * @param plaunchForcePush boolean
+     */
     public void setLaunchForcePush(boolean plaunchForcePush) {
         this.launchForcePush = plaunchForcePush;
     }
     
     /**
-     * Set the model graph to be layouted.
+     * Set the maximum amount of iterations for the force push step of the 
+     * algorithm.
+     * default: 500
+     * @param pmaxiterations int
+     */
+    public void setMaxiterations(int pmaxiterations) {
+        this.maxiterations = pmaxiterations;
+    }
+    
+    /**
+     * Set the scaling parameter of the algorithm. 
+     * Determines the distance between nodes.
+     * default: 1.2
+     * @param pscaling double
+     */
+    public void setScaling(double pscaling) {
+        this.scaling = pscaling;
+    }
+    
+    /**
+     * If set to true, debugging output will be printed in the command line and 
+     * a second representation of the graph will be shown.
+     * default: false
+     * @param pdebug boolean
+     */
+    @Override
+    public void setDebug(boolean pdebug) {
+        this.debug = pdebug;
+    }
+    
+    /**
+     * Set the model graph to be laid out.
+     * default: a graph is generated automatically from the workflow given.
      * @param pjgraph DirectedGraph
      */
     public void setModelGraph(DirectedGraph pjgraph) {
@@ -307,6 +443,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * creates the model graph from the workflow given at creation.
      */
     private boolean allNodesSetUp() {
+        if(this.workflow == null) return false;
         ObservableList<VNode> nodesTemp = this.workflow.getNodes();
         if(nodesTemp == null) return false;
         this.nodecount = nodesTemp.size();
@@ -337,13 +474,13 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             }
         }
         
-        // get graph center
-        this.graphcenter = getGraphCenter();
         // get origin nodes
         this.origin = getOrigin();
         // sort origin nodes by successor-count
         this.origin = quickSortDesc(this.origin);
         this.origin = triangularOrigin(this.origin);
+        // check the graph for cycles
+        this.cycle = checkCycles();
         return true;
     }
     
@@ -460,8 +597,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
-     * @return 
+     * Calculates the average x and y coordinates of all nodes.
+     * @return Point2D
      */
     private Point2D getGraphCenter() {
         int i;
@@ -474,7 +611,47 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         }
         centerx /= this.nodecount;
         centery /= this.nodecount;
+        if(this.debug) System.out.println("Center of graph is at: (" + centerx + "|" + centery + ")");
         return new Point2D.Double(centerx, centery);
+    }
+    
+    /**
+     * Checks if the graph contains cycles.
+     * @return boolean
+     */
+    private boolean checkCycles() {
+        int i;
+        boolean[] checked = new boolean[this.nodecount];
+        for(i = 0; i < this.nodecount; i++) {
+            int j;
+            for(j = 0; j < this.nodecount; j++) {
+                checked[j] = false;
+            }
+            VNode start = this.nodes[i];
+            if(this.jgraph.getSuccessorCount(start) > 0) {
+                Collection<VNode> succsnomod = this.jgraph.getSuccessors(start);
+                LinkedList<VNode> succs = new LinkedList<>();
+                succs.addAll(succsnomod);
+                Iterator<VNode> it = succs.iterator();
+                while(it.hasNext()) {
+                    VNode currNode = it.next();
+                    if(currNode.equals(start)) {
+                        if(this.debug) System.out.println("graph contains cycles.");
+                        return true;
+                    }
+                    else {
+                        if(!checked[getNodeID(currNode)]) {
+                            succs.addAll(this.jgraph.getSuccessors(currNode));
+                            it = succs.iterator();
+                            checked[getNodeID(currNode)] = true;
+                        }
+                    }
+                }
+            }
+            
+        }
+        if(this.debug) System.out.println("graph contains no cycles.");
+        return false; 
     }
     
     /**
@@ -485,44 +662,72 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         if(this.debug) System.out.println("Generating layout.");
         if(allNodesSetUp()) {
             if(this.recursive) {
-                LayoutGeneratorSmart subgen = new LayoutGeneratorSmart(false);
-                subgen.setRecursive(this.recursive);
-                subgen.setLaunchRotate(this.launchRotate);
-                subgen.setLaunchOrigin(this.launchOrigin);
-                subgen.setLaunchPushBack(this.launchPushBack);
-                subgen.setLaunchForcePush(this.launchForcePush);
-                Collection<VFlow> subconts = this.workflow.getSubControllers();
-                Iterator<VFlow> it = subconts.iterator();
-                while(it.hasNext()) {
-                    VFlow subflow = it.next();
-                    subgen.setWorkflow(subflow);
-                    subgen.generateLayout();
-                }
+                runSubflows();
             }
             if(this.autoscaleNodes) {
                 // scale nodes according to their contents.
             }
+            switch(this.layoutSelector) {
+                case 0: // ISOM Layout
+                    this.layout = new ISOMLayout<>(this.jgraph);
+                    break;
+                case 1: // FR Layout
+                    this.layout = new FRLayout<>(this.jgraph);
+                    break;
+                case 2: // KK Layout
+                    this.layout = new KKLayout<>(this.jgraph);
+                    break;
+                case 3: // DAG Layout
+                    if(!this.cycle) this.layout = new DAGLayout<>(this.jgraph);
+                    else {
+                        this.layout = new ISOMLayout<>(this.jgraph);
+                        if(this.debug) System.out.println("Graph contains cycles -> ISOM Layout used instead of DAG Layout.");
+                    }
+                    break;
+                default:
+                    this.layout = new ISOMLayout<>(this.jgraph);
+                    break;
+            }
             stepLayoutApply();
+            this.graphcenter = getGraphCenter();
             if(this.launchRotate) stepRotate();
             if(this.launchOrigin) stepOrigin();
-            if(this.launchPushBack) stepPushBack();
+            if(this.launchPushBack) {
+                if(!this.cycle) stepPushBack();
+                else if(this.debug) System.out.println("Graph contains cycles -> PushBack skipped.");
+            }
+            if(this.launchDisplaceIdents) displaceIdents();
             if(this.launchForcePush) forcePush();
-            if(this.debug) testvis("Result");
+            // testvis does not display the same graph as generated anymore.
+            //if(this.debug) testvis("Result");
+        }
+        else {
+            if(this.debug) System.out.println("Error on setup.");
         }
     }
     
     /**
-     * Runs all steps of the layouting algorithm in order.
+     * Applies the layout with the same parameters to each subflow.
      */
-    private void allSteps() {
-        allNodesSetUp();
-        stepLayoutApply();
-        stepRotate();
-        stepOrigin();
-        stepPushBack();
-        forcePush();
+    private void runSubflows() {
+        LayoutGeneratorSmart subgen = new LayoutGeneratorSmart(false);
+        subgen.setRecursive(this.recursive);
+        subgen.setAutoscaleNodes(this.autoscaleNodes);
+        subgen.setScaling(this.scaling);
+        subgen.setLayoutSelector(this.layoutSelector);
+        subgen.setLaunchRotate(this.launchRotate);
+        subgen.setLaunchOrigin(this.launchOrigin);
+        subgen.setLaunchPushBack(this.launchPushBack);
+        subgen.setLaunchForcePush(this.launchForcePush);
+        Collection<VFlow> subconts = this.workflow.getSubControllers();
+        Iterator<VFlow> it = subconts.iterator();
+        while(it.hasNext()) {
+            VFlow subflow = it.next();
+            subgen.setWorkflow(subflow);
+            subgen.generateLayout();
+        }
     }
-    
+
     /**
      * applies the Kamada & Kawai Layout implemented in the Jung-Graph-Drawing-Library
      */
@@ -772,31 +977,22 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Removes overlaps by scaling coordinates of all nodes with constant factor
-     * until all overlaps are gone or maximum number of iterations has been reached.
+     * Displaces nodes that are in exactly the same location.
      */
-    private void forcePushLazy() {
-        if(this.debug) System.out.println("--- starting force push");
-        int iteration;
-        boolean change = true;
-        for(iteration = 0; iteration < this.maxiterations; iteration ++) {
-            if(this.debug) System.out.println("iteration " + (iteration + 1) + " of " + this.maxiterations);
-            if(!change) break;
-            change = false;
-            int i;
-            for(i = 0; i < (this.nodecount - 1); i++) {
-                int j;
-                for(j = (i + 1); j < this.nodecount; j++) {
-                    double realDist = getRealNodeDist(this.nodes[i], this.nodes[j]);
-                    double desDist = getDesiredNodeDistNew(this.nodes[i], this.nodes[j]);
-                    if(this.debug) System.out.println(this.nodes[i].getId() + " and " + this.nodes[j].getId() + " have real distance of: " + realDist + " and desired distance of: " + desDist);
-                    if(realDist < desDist) change = true;
-                }
-            }
-            if(change) {
-                for(i = 0; i < this.nodecount; i++) {
-                    this.nodes[i].setX(this.nodes[i].getX() * this.scaling);
-                    this.nodes[i].setY(this.nodes[i].getY() * this.scaling);
+    private void displaceIdents() {
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            int j;
+            for(j = 0; j < this.nodecount; j++) {
+                if(i == j) continue;
+                if(getRealNodeDist(this.nodes[i], this.nodes[j]) == 0) {
+                    Collection<VNode> succs = this.jgraph.getSuccessors(this.nodes[i]);
+                    if(succs.contains(this.nodes[j])) this.nodes[j].setX(this.nodes[j].getX() + this.scaling);
+                    else {
+                        succs = this.jgraph.getSuccessors(this.nodes[j]);
+                        if(succs.contains(this.nodes[i])) this.nodes[i].setX(this.nodes[i].getX() + this.scaling);
+                        else this.nodes[i].setY(this.nodes[i].getY() + this.scaling);
+                    }
                 }
             }
         }
@@ -824,29 +1020,31 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
 
                     if((realDist < desDist) && (realDist != 0)) {
                         change = true;
+                        // midpoints of both nodes:
                         double x1 = this.nodes[i].getX() + (this.nodes[i].getWidth() / 2);
                         double y1 = this.nodes[i].getY() + (this.nodes[i].getHeight() / 2);
                         double x2 = this.nodes[j].getX() + (this.nodes[j].getWidth() / 2);
                         double y2 = this.nodes[j].getY() + (this.nodes[j].getHeight() / 2);
+                        // vector between nodes:
                         double vx = x2 - x1;
                         double vy = y2 - y1;
+                        // displacement factor:
                         double phi = (desDist - realDist) / Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
-                        double xf = x2 + (vx * phi);
-                        double yf = y2 + (vy * phi);
-                        /*if(vy >= 0) {
-                            yf = y1 + ((desDist * vy) / Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2)));
-                        }
-                        else {
-                            yf = y1 - ((desDist * vy) / Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2)));
-                        }
-                        xf = ((vx * (yf - y1)) / vy) + x1;*/
+                        // new positions of midpoints:
+                        double xf = x2 + (vx * phi) + 1.;
+                        double yf = y2 + (vy * phi) + 1.;
+                        // displacement:
                         double newx = xf - (this.nodes[j].getWidth() / 2);
                         double newy = yf - (this.nodes[j].getHeight() / 2);
                         this.nodes[j].setX(newx);
                         this.nodes[j].setY(newy);
                         Point2D coords = new Point2D.Double(newx, newy);
                         this.layout.setLocation(this.nodes[j], coords);
-                        if(this.debug) System.out.println(this.nodes[i].getId() + " pushed " + this.nodes[j].getId() + " from (" + x2 + "|" + y2 + ") to (" + xf + "|" + yf + ")");
+                        if(this.debug) {
+                            System.out.println(this.nodes[i].getId() + " pushed " + this.nodes[j].getId() + " from (" + x2 + "|" + y2 + ") to (" + xf + "|" + yf + ")");
+                            System.out.println("distances before -> real: " + realDist + "; desired: " + desDist);
+                            System.out.println("distances after -> real: " + getRealNodeDist(this.nodes[i], this.nodes[j]) + "; desired: " + getDesiredNodeDistNew(this.nodes[i], this.nodes[j]));
+                        }
                     }
                 }
             }
@@ -866,8 +1064,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Returns the desired distance between center points of two nodes.
-     * Currently nodes are simulated as circles with a diameter equal to their 
+     * Returns the desired distance between the center points of two nodes.
+     * Nodes are simulated as circles with a diameter equal to their 
      * diagonal. Desired distance is the sum of the radii of both 
      * circles multiplied with a constant scaling factor.
      * @param node1 VNode
@@ -882,6 +1080,12 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         return (this.scaling * (f1 + f2) / 2);
     }
     
+    /**
+     * Returns the desired distance between the center points of two nodes.
+     * @param node1 VNode
+     * @param node2 VNode
+     * @return double
+     */
     private double getDesiredNodeDistNew(VNode node1, VNode node2) {
         double w1 = node1.getWidth();
         double h1 = node1.getHeight();
@@ -934,6 +1138,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * Graph visualization for debugging output.
      */
     private void testvis(String pname) {
+        this.vis = new DefaultVisualizationModel<>(this.layout);
         Transformer<VNode, Paint> vertexPaintT = new Transformer<VNode, Paint>() {
             @Override
             public Paint transform(VNode n) {

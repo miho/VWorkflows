@@ -365,6 +365,12 @@ public class MainWindowFXMLController implements Initializable {
         onGenerateAction(e);
     }
     
+    @FXML
+    public void onCycleAction(ActionEvent e) {
+        testcase = 6;
+        onGenerateAction(e);
+    }
+    
     // </editor-fold>
     
     @FXML
@@ -557,6 +563,14 @@ public class MainWindowFXMLController implements Initializable {
                 nodes.get(5).setWidth(nodes.get(5).getWidth() * 1.5);
                 nodes.get(7).setHeight(nodes.get(7).getHeight() * 2);
                 nodes.get(8).setWidth(nodes.get(8).getWidth() * 2);
+                break;
+            case 6: // cycle
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(2).getInputs().get(1));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(4).getInputs().get(1));
+                workflow.connect(nodes.get(4).getOutputs().get(1), nodes.get(0).getInputs().get(1));
                 break;
             default:
                 break;

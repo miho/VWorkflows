@@ -161,6 +161,33 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
     }
     
     /**
+     * Get the workflow to layout.
+     * @return VFlow workflow.
+     */
+    @Override
+    public VFlow getWorkflow() {
+        return this.workflow;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public boolean getRecursive() {
+        return false;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public boolean getAutoscaleNodes() {
+        return false;
+    }
+    
+    /**
      * Get status of debugging output.
      * @return Boolean debugging output enabled/disabled.
      */
@@ -170,34 +197,11 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
     }
     
     /**
-     * Get the workflow to layout.
-     * @return VFlow workflow.
-     */
-    @Override
-    public VFlow getWorkflow() {
-        return this.workflow;
-    }
-    
-    /*@Override
-    public VNode[] getModelNodes() {
-        return this.nodes;
-    }*/
-    
-    /**
      * Get the Graph modeled after the workflow.
      * @return Graph model graph.
      */
     public Graph getModelGraph() {
         return this.pgraph;
-    }
-    
-    /**
-     * Set status of debugging output.
-     * @param pdebug Boolean.
-     */
-    @Override
-    public void setDebug(boolean pdebug) {
-        this.debug = pdebug;
     }
     
     /**
@@ -209,10 +213,32 @@ public class LayoutGeneratorPrefuse implements LayoutGenerator {
         this.workflow = pworkflow;
     }
     
-    /*@Override
-    public void setModelNodes(VNode[] pnodes) {
-        this.nodes = pnodes;
-    }*/
+    /**
+     * 
+     * @param precursive 
+     */
+    @Override
+    public void setRecursive(boolean precursive) {
+        
+    }
+    
+    /**
+     * 
+     * @param pautoscaleNodes 
+     */
+    @Override
+    public void setAutoscaleNodes(boolean pautoscaleNodes) {
+        
+    }
+    
+    /**
+     * Set status of debugging output.
+     * @param pdebug Boolean.
+     */
+    @Override
+    public void setDebug(boolean pdebug) {
+        this.debug = pdebug;
+    }
     
     /**
      * Set the model graph to be layouted.

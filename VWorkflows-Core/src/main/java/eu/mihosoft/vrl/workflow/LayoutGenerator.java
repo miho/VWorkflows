@@ -11,12 +11,14 @@ package eu.mihosoft.vrl.workflow;
  */
 public interface LayoutGenerator {
     
-    public boolean getDebug();
     public VFlow getWorkflow();
-    //public VNode[] getModelNodes();
-    public void setDebug(boolean pdebug);
+    public boolean getRecursive();
+    public boolean getAutoscaleNodes();
+    public boolean getDebug();
     public void setWorkflow(VFlow pworkflow);
-    //public void setModelNodes(VNode[] pnodes);
+    public void setRecursive(boolean precursive);
+    public void setAutoscaleNodes(boolean pautoscaleNodes);
+    public void setDebug(boolean pdebug);
     
     /**
      * Generates a Layout for the workflow given at SetUp.

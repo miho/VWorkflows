@@ -64,15 +64,6 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Get status of debugging output.
-     * @return Boolean debugging output enabled/disabled.
-     */
-    @Override
-    public boolean getDebug() {
-        return this.debug;
-    }
-    
-    /**
      * Get the workflow to layout.
      * @return VFlow workflow.
      */
@@ -82,12 +73,30 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Get an array of model nodes.
-     * @return VNode[] nodes.
-     */        
-    //@Override
-    public VNode[] getModelNodes() {
-        return this.nodes;
+     * 
+     * @return 
+     */
+    @Override
+    public boolean getRecursive() {
+        return false;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public boolean getAutoscaleNodes() {
+        return false;
+    }
+    
+    /**
+     * Get status of debugging output.
+     * @return Boolean debugging output enabled/disabled.
+     */
+    @Override
+    public boolean getDebug() {
+        return this.debug;
     }
     
     /**
@@ -96,15 +105,6 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      */
     public LinkedList<Tuple<Integer, Integer>> getModelGraph() {
         return this.connectionList;
-    }
-    
-    /**
-     * Set status of debugging output.
-     * @param pdebug Boolean.
-     */
-    @Override
-    public void setDebug(boolean pdebug) {
-        this.debug = pdebug;
     }
     
     /**
@@ -117,12 +117,30 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Set the array of model nodes.
-     * @param pnodes VNode[]
+     * 
+     * @param precursive 
      */
-    //@Override
-    public void setModelNodes(VNode[] pnodes) {
-        this.nodes = pnodes;
+    @Override
+    public void setRecursive(boolean precursive) {
+        
+    }
+    
+    /**
+     * 
+     * @param pautoscaleNodes 
+     */
+    @Override
+    public void setAutoscaleNodes(boolean pautoscaleNodes) {
+        
+    }
+    
+    /**
+     * Set status of debugging output.
+     * @param pdebug Boolean.
+     */
+    @Override
+    public void setDebug(boolean pdebug) {
+        this.debug = pdebug;
     }
     
     /**

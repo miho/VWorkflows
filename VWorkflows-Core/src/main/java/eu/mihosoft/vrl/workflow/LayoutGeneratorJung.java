@@ -149,15 +149,6 @@ public class LayoutGeneratorJung implements LayoutGenerator {
     }
     
     /**
-     * Get status of debugging output.
-     * @return Boolean debugging output enabled/disabled.
-     */
-    @Override
-    public boolean getDebug() {
-        return this.debug;
-    }
-    
-    /**
      * Get the workflow to layout.
      * @return VFlow workflow.
      */
@@ -167,12 +158,30 @@ public class LayoutGeneratorJung implements LayoutGenerator {
     }
     
     /**
-     * Get an array of model nodes.
-     * @return VNode[] nodes.
-     */    
-    //@Override
-    public VNode[] getModelNodes() {
-        return this.nodes;
+     * 
+     * @return 
+     */
+    @Override
+    public boolean getRecursive() {
+        return false;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public boolean getAutoscaleNodes() {
+        return false;
+    }
+    
+    /**
+     * Get status of debugging output.
+     * @return Boolean debugging output enabled/disabled.
+     */
+    @Override
+    public boolean getDebug() {
+        return this.debug;
     }
     
     /**
@@ -181,15 +190,6 @@ public class LayoutGeneratorJung implements LayoutGenerator {
      */
     public DirectedGraph getModelGraph() {
         return this.jgraph;
-    }
-    
-    /**
-     * Set status of debugging output.
-     * @param pdebug Boolean.
-     */
-    @Override
-    public void setDebug(boolean pdebug) {
-        this.debug = pdebug;
     }
     
     /**
@@ -202,12 +202,30 @@ public class LayoutGeneratorJung implements LayoutGenerator {
     }
     
     /**
-     * Set the array of model nodes.
-     * @param pnodes VNode[]
+     * 
+     * @param precursive 
      */
-    //@Override
-    public void setModelNodes(VNode[] pnodes) {
-        this.nodes = pnodes;
+    @Override
+    public void setRecursive(boolean precursive) {
+        
+    }
+    
+    /**
+     * 
+     * @param pautoscaleNodes 
+     */
+    @Override
+    public void setAutoscaleNodes(boolean pautoscaleNodes) {
+        
+    }
+    
+    /**
+     * Set status of debugging output.
+     * @param pdebug Boolean.
+     */
+    @Override
+    public void setDebug(boolean pdebug) {
+        this.debug = pdebug;
     }
     
     /**

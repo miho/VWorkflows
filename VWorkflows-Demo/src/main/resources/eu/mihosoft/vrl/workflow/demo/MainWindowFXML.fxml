@@ -91,13 +91,16 @@
                         <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
                     </Menu>
                     <Menu mnemonicParsing="false" text="Smart Layout">
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="1. Only Jung Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="2. Rotation" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="3. Origin" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. Push Back" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushAction" text="5. Force Push" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartNoOriginAction" text="5. No Origin" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartRecursiveAction" text="5. Recursive" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartISOMAction" text="1. Just ISOM Layout" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="2. ISOM + Rotation" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="3. ISOM + Rotation + Origin" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. ISOM + Rotation + Origin + PushBack" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushAction" text="5. ISOM + All" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartNoOriginAction" text="ISOM + All wihout Origin" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartRecursiveAction" text="ISOM + All recursive (Stable)" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartFRAction" text="FR + All recursive" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="KK + All recursive" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartDAGAction" text="DAG + Rotation + ForcePush recursive" />
                     </Menu>
                     <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
                 </Menu>

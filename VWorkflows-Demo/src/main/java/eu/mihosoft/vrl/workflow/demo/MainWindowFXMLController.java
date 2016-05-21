@@ -264,8 +264,14 @@ public class MainWindowFXMLController implements Initializable {
         layoutAction(layouter);
     }
     
+    private void layoutAction(LayoutGenerator playouter) {
+        playouter.setWorkflow(workflow);
+        playouter.generateLayout();
+        playouter = null;
+    }
+    
     @FXML
-    public void onSmartKKAction(ActionEvent e) {
+    public void onSmartISOMAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
         layouter.setWorkflow(workflow);
         layouter.setLaunchRotate(false);
@@ -324,10 +330,31 @@ public class MainWindowFXMLController implements Initializable {
         layouter.generateLayout();
     }
     
-    private void layoutAction(LayoutGenerator playouter) {
-        playouter.setWorkflow(workflow);
-        playouter.generateLayout();
-        playouter = null;
+    @FXML
+    public void onSmartFRAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setRecursive(true);
+        layouter.setLayoutSelector(1);
+        layouter.generateLayout();
+    }
+    
+    @FXML
+    public void onSmartKKAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setLayoutSelector(2);
+        layouter.generateLayout();
+    }
+    
+    @FXML
+    public void onSmartDAGAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.setLaunchOrigin(false);
+        layouter.setLaunchPushBack(false);
+        layouter.setLayoutSelector(3);
+        layouter.generateLayout();
     }
     
     // </editor-fold>
@@ -377,6 +404,7 @@ public class MainWindowFXMLController implements Initializable {
     public void onStableAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(false);
         layouter.setWorkflow(workflow);
+        layouter.setRecursive(true);
         layouter.generateLayout();
     }
 

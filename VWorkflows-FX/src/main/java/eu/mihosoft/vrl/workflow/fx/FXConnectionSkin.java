@@ -619,7 +619,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         return skinFactory;
     }
 
-    public void toFront() {
+    @Override
+    public void receiverToFront() {
         getReceiverUI().toFront();
     }
 

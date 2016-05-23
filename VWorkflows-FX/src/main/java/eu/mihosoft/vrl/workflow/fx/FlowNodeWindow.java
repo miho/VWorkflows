@@ -416,7 +416,7 @@ public final class FlowNodeWindow extends Window {
 
             if (skinI instanceof FXConnectionSkin) {
                 FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
-                fxSkin.toFront();
+                fxSkin.receiverToFront();
             }
         }
     }

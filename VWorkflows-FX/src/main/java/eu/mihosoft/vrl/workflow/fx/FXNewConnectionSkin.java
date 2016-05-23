@@ -484,4 +484,9 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     public FXSkinFactory getSkinFactory() {
         return skinFactory;
     }
+
+    @Override
+    public void receiverToFront() {
+        receiverConnectorUI.toFront();
+    }
 }

@@ -61,7 +61,7 @@ public class FXValueSkinFactory extends FXSkinFactory {
     private final Map<String, Class<? extends FXConnectionSkin>> connectionSkins = new HashMap<>();
 
     private Class<? extends FXFlowNodeSkinBase> defaultNodeSkinClass = FXFlowNodeSkinBase.class;
-    private Class<? extends FXConnectionSkin> defaultConnectionSkinClass = FXConnectionSkin.class;
+    private Class<? extends FXConnectionSkin> defaultConnectionSkinClass = DefaultFXConnectionSkin.class;
 
     public FXValueSkinFactory(Parent parent) {
         super(parent);
@@ -145,7 +145,7 @@ public class FXValueSkinFactory extends FXSkinFactory {
         Class<? extends FXConnectionSkin> skinClass = connectionSkins.get(connectionType);
 
         if (skinClass == null) {
-            skinClass = FXConnectionSkin.class;
+            skinClass = DefaultFXConnectionSkin.class;
         }
 
         return createConnectionSkinOfClass(skinClass, c, flow, type);
@@ -164,6 +164,7 @@ public class FXValueSkinFactory extends FXSkinFactory {
             FXConnectionSkin skin
                     = (FXConnectionSkin) constructor.newInstance(
                             this, getFxParent(), c, flow, type);
+            skin.init();
 
             return skin;
 
@@ -231,7 +232,7 @@ public class FXValueSkinFactory extends FXSkinFactory {
         try {
 
             Constructor<?> constructor
-                    = FXConnectionSkin.class.getConstructor(
+                    = DefaultFXConnectionSkin.class.getConstructor(
                             FXSkinFactory.class, Parent.class,
                             Connection.class, VFlow.class, String.class);
             notAvailable = false;

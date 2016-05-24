@@ -89,7 +89,7 @@ public class FXFlowNodeSkin
     private ChangeListener<Number> nodeWidthListener;
     private ChangeListener<Number> nodeHeightListener;
 
-    private FXNewConnectionSkin newConnectionSkin;
+    private FXConnectionSkin newConnectionSkin;
     private MouseEvent newConnectionPressEvent;
     private boolean removeSkinOnly = false;
     VFlow controller;
@@ -290,8 +290,8 @@ public class FXFlowNodeSkin
                     map(conn -> controller.
                             getNodeSkinLookup().getById(skinFactory,
                                     conn)).
-                    filter(cSkin -> cSkin instanceof FXConnectionSkin).
-                    map(cSkin -> (FXConnectionSkin) cSkin).
+                    filter(cSkin -> cSkin instanceof DefaultFXConnectionSkin).
+                    map(cSkin -> (DefaultFXConnectionSkin) cSkin).
                     forEach(cSkin -> cSkin.configureEditCapability(notEditable));
 
             for (VNode vn : flowModel.getNodes()) {
@@ -311,8 +311,8 @@ public class FXFlowNodeSkin
                     map(conn -> controller.
                             getNodeSkinLookup().getById(skinFactory,
                                     conn)).
-                    filter(cSkin -> cSkin instanceof FXConnectionSkin).
-                    map(cSkin -> (FXConnectionSkin) cSkin).
+                    filter(cSkin -> cSkin instanceof DefaultFXConnectionSkin).
+                    map(cSkin -> (DefaultFXConnectionSkin) cSkin).
                     forEach(cSkin -> cSkin.configureEditCapability(notEditable));
         }
     }
@@ -595,22 +595,22 @@ public class FXFlowNodeSkin
                             newConnectionSkin
                             = new FXNewConnectionSkin(getSkinFactory(),
                                     getParent(), connector,
-                                    getController(), connector.getType());
+                                    getController(), connector.getType()).init();
 
                             newConnectionSkin.add();
 
                             MouseEvent.fireEvent(
-                                    newConnectionSkin.getReceiverConnector(),
+                                    newConnectionSkin.getReceiverUI(),
                                     newConnectionPressEvent);
                         }
 
                         t.consume();
                         MouseEvent.fireEvent(
-                                newConnectionSkin.getReceiverConnector(), t);
+                                newConnectionSkin.getReceiverUI(), t);
 
                         t.consume();
                         MouseEvent.fireEvent(
-                                newConnectionSkin.getReceiverConnector(), t);
+                                newConnectionSkin.getReceiverUI(), t);
                     }
                 });
 
@@ -632,7 +632,7 @@ public class FXFlowNodeSkin
                     t.consume();
                     try {
                         MouseEvent.fireEvent(
-                                newConnectionSkin.getReceiverConnector(), t);
+                                newConnectionSkin.getReceiverUI(), t);
                     } catch (Exception ex) {
                         // TODO exception is not critical here (node already removed)
                     }

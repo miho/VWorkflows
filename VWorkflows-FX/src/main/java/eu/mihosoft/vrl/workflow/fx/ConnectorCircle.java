@@ -116,8 +116,12 @@ class ConnectorCircle extends Region implements ConnectorShape {
 
         if (connector.isInput() && flow.getConnections(connector.getType()).isInputConnected(connector)) {
             for (Connection conn : flow.getConnections(connector.getType()).getConnections()) {
-                connectionSkin = flow.getNodeSkinLookup().getById(skinFactory, conn);
-                connectionSkin.receiverToFront();
+                ConnectionSkin connectionSkin = flow.getNodeSkinLookup().getById(skinFactory, conn);
+                System.out.println(connectionSkin);
+                if( connectionSkin != null) {
+                    this.connectionSkin = connectionSkin;
+                    connectionSkin.receiverToFront();
+                }
             }
         }
     }

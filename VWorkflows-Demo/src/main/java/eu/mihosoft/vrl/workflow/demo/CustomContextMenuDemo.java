@@ -42,7 +42,7 @@ import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.fx.FXConnectionSkin;
+import eu.mihosoft.vrl.workflow.fx.DefaultFXConnectionSkin;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
@@ -104,11 +104,11 @@ public class CustomContextMenuDemo extends Application {
 
         @Override
         public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
-            return new CustomFXConnectionSkin(this, getFxParent(), c, flow, type);
+            return new CustomFXConnectionSkin(this, getFxParent(), c, flow, type).init();
         }
     }
 
-    private static class CustomFXConnectionSkin extends FXConnectionSkin {
+    private static class CustomFXConnectionSkin extends DefaultFXConnectionSkin {
         public CustomFXConnectionSkin(FXSkinFactory skinFactory, Parent parent, Connection connection, VFlow flow, String type) {
             super(skinFactory, parent, connection, flow, type);
         }

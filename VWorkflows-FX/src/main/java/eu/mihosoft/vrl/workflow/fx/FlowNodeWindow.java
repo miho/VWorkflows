@@ -396,9 +396,9 @@ public final class FlowNodeWindow extends Window {
         // move connectors to front
         FXFlowNodeSkin skin = nodeSkinProperty().get();
 
-        for (List<ConnectorCircle> shapeList : skin.shapeLists) {
-            for (Node n : shapeList) {
-                n.toFront();
+        for (List<ConnectorShape> shapeList : skin.shapeLists) {
+            for (ConnectorShape cs : shapeList) {
+                cs.getNode().toFront();
             }
         }
 

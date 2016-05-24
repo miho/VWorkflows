@@ -74,12 +74,12 @@ class FXConnectorUtil {
         Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
-                FlowNodeWindow.class, ConnectorCircle.class);
+                FlowNodeWindow.class, ConnectorShape.class);
         Connector connector = null;
 
         if (myNode != null) {
-            if (myNode instanceof ConnectorCircle) {
-                ConnectorCircle circle = (ConnectorCircle) myNode;
+            if (myNode instanceof ConnectorShape) {
+                ConnectorShape circle = (ConnectorShape) myNode;
                 connector = circle.getConnector();
             } else if (myNode instanceof FlowNodeWindow) {
 
@@ -107,13 +107,13 @@ class FXConnectorUtil {
         Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
-                ConnectorCircle.class,
+                ConnectorShape.class,
                 FlowNodeWindow.class);
         Connector connector = null;
 
         if (myNode != null) {
-            if (myNode instanceof ConnectorCircle) {
-                ConnectorCircle circle = (ConnectorCircle) myNode;
+            if (myNode instanceof ConnectorShape) {
+                ConnectorShape circle = (ConnectorShape) myNode;
                 connector = circle.getConnector();
             } else if (myNode instanceof FlowNodeWindow) {
 
@@ -286,8 +286,8 @@ class FXConnectorUtil {
 
         if (target instanceof Circle) {
             targetRadius = ((Circle) target).getRadius();
-        } else if (target instanceof ConnectorCircle) {
-            targetRadius = ((ConnectorCircle) target).getRadius();
+        } else if (target instanceof ConnectorShape) {
+            targetRadius = ((ConnectorShape) target).getRadius();
         }
 
         if (n instanceof Circle) {

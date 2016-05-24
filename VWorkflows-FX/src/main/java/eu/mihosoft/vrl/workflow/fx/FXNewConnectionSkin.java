@@ -69,7 +69,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
     private CubicCurveTo curveTo = new CubicCurveTo();
 //    private Shape startConnector;
     private Circle receiverConnectorUI;
-    private ConnectorCircle senderConnectorUI;
+    private ConnectorShape senderConnectorUI;
     private VFlowModel flow;
     private VFlow flowController;
     private ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();
@@ -114,36 +114,35 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().
                 getNodeSkinLookup().getById(skinFactory, sender.getId());
         
-        final ConnectorCircle senderNode = (ConnectorCircle)senderSkin.
-                getConnectorNodeByReference(getSender());
+        final ConnectorShape sendershape = senderSkin.getConnectorShape(getSender());
+        final Node senderNode = sendershape.getNode();
 
-        senderConnectorUI = (ConnectorCircle) senderNode;
+        senderConnectorUI = sendershape;
 
         DoubleBinding startXBinding = new DoubleBinding() {
             {
                 super.bind(senderNode.layoutXProperty(),
-                        senderNode.radiusProperty());
+                    sendershape.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
 
                 return senderNode.getLayoutX()
-                        + senderNode.getRadius();
-
+                        + sendershape.getRadius();
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
                 super.bind(senderNode.layoutYProperty(),
-                        senderNode.radiusProperty());
+                    sendershape.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
                 return senderNode.getLayoutY()
-                        + senderNode.getRadius();
+                        + sendershape.getRadius();
             }
         };
 

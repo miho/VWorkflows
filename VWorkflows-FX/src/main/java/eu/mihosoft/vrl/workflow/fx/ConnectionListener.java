@@ -63,7 +63,6 @@ public interface ConnectionListener {
     void onNoConnection(Node n);
 
     void onRemoveConnectionReleased();
-
 }
 
 class ConnectionListenerImpl implements ConnectionListener {
@@ -158,7 +157,7 @@ class ConnectionListenerImpl implements ConnectionListener {
                     = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
                             skinFactory, connResult.getConnection());
 
-            FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getSenderNode());
+            FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getSenderShape().getNode());
         }
     }
 

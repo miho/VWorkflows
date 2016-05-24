@@ -341,6 +341,11 @@ final class ConnectionSkinStub implements ConnectionSkin<Connection> {
     }
 
     @Override
+    public void receiverToFront() {
+        //
+    }
+
+    @Override
     public void add() {
         //
     }

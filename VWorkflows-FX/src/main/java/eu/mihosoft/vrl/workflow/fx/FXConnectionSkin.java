@@ -84,8 +84,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     private Node lastNode;
 
     private final FXSkinFactory skinFactory;
-    private ConnectorCircle senderNode;
-    private ConnectorCircle receiverNode;
+    private ConnectorShape senderShape;
+    private ConnectorShape receiverShape;
     private ConnectionListener connectionListener;
 
     private boolean receiverDraggingStarted = false;
@@ -133,8 +133,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         connection.getSender().getId());
 
         // retrieve the sender node from its skin
-        senderNode = (ConnectorCircle) senderSkin.getConnectorNodeByReference(
-                connection.getSender());
+        senderShape = senderSkin.getConnectorShape(connection.getSender());
 
         // find the receiver skin via lookup
         // TODO: replace lookup by direct reference?
@@ -143,13 +142,12 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
                         connection.getReceiver().getId());
 
         // retrieve the receiver node from its skin
-        receiverNode = (ConnectorCircle) receiverSkin.
-                getConnectorNodeByReference(connection.getReceiver());
+        receiverShape = receiverSkin.getConnectorShape(connection.getReceiver());
 
         // if we establish a connection between different flows
         // we have to create intermediate connections
-        if (receiverNode.getParent() != senderNode.getParent()) {
-            createIntermediateConnection(senderNode, receiverNode, connection);
+        if (receiverShape.getNode().getParent() != senderShape.getNode().getParent()) {
+            createIntermediateConnection(senderShape, receiverShape, connection);
         }
 
         setSender(getController().getNodeLookup().getConnectorById(
@@ -157,112 +155,102 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         setReceiver(getController().getNodeLookup().getConnectorById(
                 connection.getReceiver().getId()));
 
-        // bind the radius property of the connector and the circle shape
-        if (getReceiverNode() instanceof ConnectorCircle) {
-            ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
-
-//            if (getReceiverUI() instanceof Circle) {
-//                ((Circle) getReceiverUI()).radiusProperty().
-//                        bind(recConnNode.radiusProperty());
-//            }
-        }
-
         DoubleBinding startXBinding = new DoubleBinding() {
             {
-                super.bind(getSenderNode().layoutXProperty(),
-                        getSenderNode().radiusProperty());
+                super.bind(getSenderShape().getNode().layoutXProperty(),
+                        getSenderShape().radiusProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return getSenderNode().getLayoutX()
-                        + getSenderNode().getRadius();
+                return getSenderShape().getNode().getLayoutX()
+                        + getSenderShape().getRadius();
 
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
-                super.bind(getSenderNode().layoutYProperty(),
-                        getSenderNode().radiusProperty());
+                super.bind(getSenderShape().getNode().layoutYProperty(),
+                        getSenderShape().radiusProperty());
             }
 
             @Override
             protected double computeValue() {
-                return getSenderNode().getLayoutY()
-                        + getSenderNode().getRadius();
+                return getSenderShape().getNode().getLayoutY()
+                        + getSenderShape().getRadius();
             }
         };
 
         final DoubleBinding receiveXBinding = new DoubleBinding() {
             {
-                super.bind(getReceiverNode().layoutXProperty(),
-                        getReceiverNode().radiusProperty());
+                super.bind(getReceiverShape().getNode().layoutXProperty(),
+                        getReceiverShape().radiusProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return getReceiverNode().layoutXProperty().get()
-                        + getReceiverNode().getRadius();
+                return getReceiverShape().getNode().layoutXProperty().get()
+                        + getReceiverShape().getRadius();
             }
         };
 
         final DoubleBinding receiveYBinding = new DoubleBinding() {
             {
-                super.bind(getReceiverNode().layoutYProperty(),
-                        getReceiverNode().radiusProperty());
+                super.bind(getReceiverShape().getNode().layoutYProperty(),
+                        getReceiverShape().radiusProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return getReceiverNode().layoutYProperty().get()
-                        + getReceiverNode().getRadius();
+                return getReceiverShape().getNode().layoutYProperty().get()
+                        + getReceiverShape().getRadius();
             }
         };
 
         DoubleBinding controlX1Binding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutXProperty(), receiverConnectorUI.layoutXProperty());
+                super.bind(senderShape.getNode().boundsInLocalProperty(),
+                        senderShape.getNode().layoutXProperty(), receiverConnectorUI.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return senderNode.getLayoutX()
-                        + (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX()) / 2;
+                return senderShape.getNode().getLayoutX()
+                        + (receiverConnectorUI.getLayoutX() - senderShape.getNode().getLayoutX()) / 2;
 
             }
         };
 
         DoubleBinding controlY1Binding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutYProperty());
+                super.bind(senderShape.getNode().boundsInLocalProperty(),
+                        senderShape.getNode().layoutYProperty());
             }
 
             @Override
             protected double computeValue() {
 
-                return senderNode.getLayoutY();
+                return senderShape.getNode().getLayoutY();
 
             }
         };
 
         DoubleBinding controlX2Binding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutXProperty(), receiverConnectorUI.layoutXProperty());
+                super.bind(senderShape.getNode().boundsInLocalProperty(),
+                        senderShape.getNode().layoutXProperty(), receiverConnectorUI.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
 
                 return receiverConnectorUI.getLayoutX()
-                        - (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX()) / 2;
+                        - (receiverConnectorUI.getLayoutX() - senderShape.getNode().getLayoutX()) / 2;
 
             }
         };
@@ -485,8 +473,8 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
 
                         remove();
                         connection.getConnections().remove(connection);
-                    } else if (getReceiverNode() instanceof ConnectorCircle) {
-                        ConnectorCircle recConnNode = (ConnectorCircle) getReceiverNode();
+                    } else if (getReceiverShape() instanceof ConnectorShape) {
+                        ConnectorShape recConnNode = getReceiverShape();
 
                         if (getReceiverUI() instanceof Circle) {
                             ((Circle) getReceiverUI()).radiusProperty().unbind();
@@ -632,20 +620,20 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
     }
 
     /**
-     * @return the senderNode
+     * @return the senderShape
      */
-    public ConnectorCircle getSenderNode() {
-        return senderNode;
+    public ConnectorShape getSenderShape() {
+        return senderShape;
     }
 
     /**
-     * @return the receiverNode
+     * @return the receiverShape
      */
-    public ConnectorCircle getReceiverNode() {
-        return receiverNode;
+    public ConnectorShape getReceiverShape() {
+        return receiverShape;
     }
 
-    private void createIntermediateConnection(ConnectorCircle senderNode, ConnectorCircle receiverNode, Connection connection) {
+    private void createIntermediateConnection(ConnectorShape senderNode, ConnectorShape receiverNode, Connection connection) {
         VNode sender = connection.getSender().getNode();
         VNode receiver = connection.getReceiver().getNode();
 
@@ -662,7 +650,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
             notEditable = disableEditing.get();
         }
 
-        senderNode.setMouseTransparent(notEditable);
+        senderShape.getNode().setMouseTransparent(notEditable);
         receiverConnectorUI.setMouseTransparent(notEditable);
         connectionPath.setMouseTransparent(notEditable);
 

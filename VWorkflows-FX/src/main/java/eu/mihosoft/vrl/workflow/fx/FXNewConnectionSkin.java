@@ -228,7 +228,7 @@ public class FXNewConnectionSkin implements ConnectionSkin<Connection>, FXSkin<C
                 +receiverConnectorUI.getRadius());
 
         connectionListener
-                = new ConnectionListenerImpl(
+                = new DefaultConnectionListener(
                         skinFactory, flowController, receiverConnectorUI);
 
     }

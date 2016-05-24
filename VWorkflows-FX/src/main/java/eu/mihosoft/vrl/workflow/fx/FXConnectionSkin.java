@@ -282,7 +282,7 @@ public class FXConnectionSkin implements ConnectionSkin<Connection>, FXSkin<Conn
         makeDraggable(receiveXBinding, receiveYBinding);
 
         connectionListener
-                = new ConnectionListenerImpl(
+                = new DefaultConnectionListener(
                         skinFactory, controller, receiverConnectorUI);
 
         EventHandler<MouseEvent> contextMenuHandler = createContextMenuHandler(createContextMenu());

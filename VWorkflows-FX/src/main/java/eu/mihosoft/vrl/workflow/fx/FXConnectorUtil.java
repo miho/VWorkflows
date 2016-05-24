@@ -53,11 +53,11 @@ import javafx.util.Duration;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class FXConnectorUtil {
+public class FXConnectorUtil {
 
     private static Timeline timeline;
 
-    static void stopTimeLine() {
+    public static void stopTimeLine() {
         if (timeline != null) {
             timeline.stop();
         }
@@ -310,7 +310,7 @@ class FXConnectorUtil {
 
     }
 
-    static void incompatibleAnim(Node receiverConnector) {
+    public static void incompatibleAnim(Node receiverConnector) {
 
         if (!(receiverConnector instanceof Circle)) {
             throw new IllegalArgumentException(

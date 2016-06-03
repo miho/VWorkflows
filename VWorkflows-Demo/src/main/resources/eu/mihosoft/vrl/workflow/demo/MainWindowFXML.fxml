@@ -40,6 +40,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox minHeight="400.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.mihosoft.vrl.workflow.demo.MainWindowFXMLController">
@@ -91,16 +92,25 @@
                         <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
                     </Menu>
                     <Menu mnemonicParsing="false" text="Smart Layout">
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartISOMAction" text="1. Just ISOM Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartRotateAction" text="2. ISOM + Rotation" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartOriginAction" text="3. ISOM + Rotation + Origin" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartPushBackAction" text="4. ISOM + Rotation + Origin + PushBack" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartForcePushAction" text="5. ISOM + All" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartNoOriginAction" text="ISOM + All wihout Origin" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartRecursiveAction" text="ISOM + All recursive (Stable)" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartFRAction" text="FR + All recursive" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartKKAction" text="KK + All recursive" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartDAGAction" text="DAG + Rotation + ForcePush recursive" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartRunAction" text="apply layout" />
+                        <Menu mnemonicParsing="false" text="customize">
+                            <CheckMenuItem fx:id="checkRecursive" mnemonicParsing="false" selected="true"  text="recursive execution" />
+                            <CheckMenuItem fx:id="checkAutoscaleNodes" mnemonicParsing="false" selected="false" text="autoscale nodes" disable="true" />
+                             <Menu mnemonicParsing="false" text="layout selection">
+                                <RadioMenuItem fx:id="radISOM" text="ISOM Layout" />
+                                <RadioMenuItem fx:id="radFR" text="Fruchterman-Reingold Layout" />
+                                <RadioMenuItem fx:id="radKK" text="Kamada-Kawai Layout" />
+                                <RadioMenuItem fx:id="radDAG" text="DAG Layout" />
+                            </Menu>
+                            <CheckMenuItem fx:id="checkJustgraph" mnemonicParsing="false" selected="false" disable="true" text="apply layout to jgraph" />
+                            <CheckMenuItem fx:id="checkLaunchRemoveCycles" mnemonicParsing="false" selected="true" text="remove cycles" />
+                            <CheckMenuItem fx:id="checkLaunchSeparateDisjunctGraphs" mnemonicParsing="false" selected="true" text="separate disjunct graphs" />
+                            <CheckMenuItem fx:id="checkLaunchRotate" mnemonicParsing="false" selected="true" text="rotate graph" />
+                            <CheckMenuItem fx:id="checkLaunchOrigin" mnemonicParsing="false" selected="false" text="move origin nodes" />
+                            <CheckMenuItem fx:id="checkLaunchPushBack" mnemonicParsing="false" selected="true" text="push successors"  />
+                            <CheckMenuItem fx:id="checkLaunchDisplaceIdents" mnemonicParsing="false" selected="true" text="displace nodes in identical positions" />
+                            <CheckMenuItem fx:id="checkLaunchForcePush" mnemonicParsing="false" selected="true" text="force push nodes away from each other" />
+                        </Menu>    
                     </Menu>
                     <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
                 </Menu>

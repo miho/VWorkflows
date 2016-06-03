@@ -58,6 +58,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import jfxtras.labs.scene.control.window.Window;
@@ -95,6 +97,13 @@ public class MainWindowFXMLController implements Initializable {
         rootPane = root;
 
         onGenerateAction(null);
+        
+        // layout interface:
+        ToggleGroup layoutselection = new ToggleGroup();
+        radISOM.setToggleGroup(layoutselection);
+        radFR.setToggleGroup(layoutselection);
+        radKK.setToggleGroup(layoutselection);
+        radDAG.setToggleGroup(layoutselection);
     }
     private Pane rootPane;
     private VCanvas canvas;
@@ -133,11 +142,54 @@ public class MainWindowFXMLController implements Initializable {
         System.out.println(" [done]");
     }
     
+    // <editor-fold defaultstate="collapsed" desc="menu items">
     @FXML
     private CheckMenuItem checkDebugLayout;
     
-    // <editor-fold desc="Development" defaultstate="collapsed">
+    @FXML
+    private CheckMenuItem checkRecursive;
     
+    @FXML
+    private CheckMenuItem checkAutoscaleNodes;
+    
+    @FXML
+    private RadioMenuItem radISOM;
+    
+    @FXML
+    private RadioMenuItem radFR;
+    
+    @FXML
+    private RadioMenuItem radKK;
+    
+    @FXML
+    private RadioMenuItem radDAG;
+    
+    @FXML
+    private CheckMenuItem checkJustgraph;
+    
+    @FXML
+    private CheckMenuItem checkLaunchRemoveCycles;
+    
+    @FXML
+    private CheckMenuItem checkLaunchSeparateDisjunctGraphs;
+    
+    @FXML
+    private CheckMenuItem checkLaunchRotate;
+    
+    @FXML
+    private CheckMenuItem checkLaunchOrigin;
+    
+    @FXML
+    private CheckMenuItem checkLaunchPushBack;
+    
+    @FXML
+    private CheckMenuItem checkLaunchDisplaceIdents;
+    
+    @FXML
+    private CheckMenuItem checkLaunchForcePush;
+    // </editor-fold>
+    
+    // <editor-fold desc="Development" defaultstate="collapsed">
     @FXML
     public void onNaiveAction(ActionEvent e) {
         LayoutGenerator layouter = new LayoutGeneratorNaive(checkDebugLayout.isSelected());
@@ -270,93 +322,38 @@ public class MainWindowFXMLController implements Initializable {
         playouter = null;
     }
     
-    @FXML
-    public void onSmartISOMAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setLaunchRotate(false);
-        layouter.setLaunchOrigin(false);
-        layouter.setLaunchPushBack(false);
-        layouter.setLaunchForcePush(false);
-        layouter.generateLayout();
-    }
+    /*
+    still to make choseable:
+    double aspectratio;
+    int maxiterations;
+    double scaling;
+    */
     
     @FXML
-    public void onSmartRotateAction(ActionEvent e) {
+    public void onSmartRunAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setLaunchOrigin(false);
-        layouter.setLaunchPushBack(false);
-        layouter.setLaunchForcePush(false);
+        layouter.setRecursive(checkRecursive.isSelected());
+        layouter.setAutoscaleNodes(checkAutoscaleNodes.isSelected());
+        layouter.setJustgraph(checkJustgraph.isSelected());
+        layouter.setLaunchRemoveCycles(checkLaunchRemoveCycles.isSelected());
+        layouter.setLaunchSeparateDisjunctGraphs(checkLaunchSeparateDisjunctGraphs.isSelected());
+        layouter.setLaunchRotate(checkLaunchRotate.isSelected());
+        layouter.setLaunchOrigin(checkLaunchOrigin.isSelected());
+        layouter.setLaunchPushBack(checkLaunchPushBack.isSelected());
+        layouter.setLaunchDisplaceIdents(checkLaunchDisplaceIdents.isSelected());
+        layouter.setLaunchForcePush(checkLaunchForcePush.isSelected());
+        if(radDAG.isSelected()) layouter.setLayoutSelector(3);
+        else if(radKK.isSelected()) layouter.setLayoutSelector(2);
+        else if(radFR.isSelected()) layouter.setLayoutSelector(1);
+        else layouter.setLayoutSelector(0);
+        if(checkJustgraph.isSelected()) {
+            // todo
+        }
+        else {
+            layouter.setWorkflow(workflow);
+        }
         layouter.generateLayout();
     }
-    
-    @FXML void onSmartOriginAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setLaunchPushBack(false);
-        layouter.setLaunchForcePush(false);
-        layouter.generateLayout();
-    }
-    
-    @FXML
-    public void onSmartPushBackAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setLaunchForcePush(false);
-        layouter.generateLayout();
-    }
-    
-    @FXML
-    public void onSmartForcePushAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.generateLayout();
-    }
-    
-    @FXML
-    public void onSmartNoOriginAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setLaunchOrigin(false);
-        layouter.generateLayout();
-    }
-    
-    @FXML
-    public void onSmartRecursiveAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setRecursive(true);
-        layouter.generateLayout();
-    }
-    
-    @FXML
-    public void onSmartFRAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setRecursive(true);
-        layouter.setLayoutSelector(1);
-        layouter.generateLayout();
-    }
-    
-    @FXML
-    public void onSmartKKAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setLayoutSelector(2);
-        layouter.generateLayout();
-    }
-    
-    @FXML
-    public void onSmartDAGAction(ActionEvent e) {
-        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(checkDebugLayout.isSelected());
-        layouter.setWorkflow(workflow);
-        layouter.setLaunchOrigin(false);
-        layouter.setLaunchPushBack(false);
-        layouter.setLayoutSelector(3);
-        layouter.generateLayout();
-    }
-    
     // </editor-fold>
     
     // <editor-fold desc="Test cases" defaultstate="collapsed">
@@ -404,7 +401,6 @@ public class MainWindowFXMLController implements Initializable {
     public void onStableAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(false);
         layouter.setWorkflow(workflow);
-        layouter.setRecursive(true);
         layouter.generateLayout();
     }
 

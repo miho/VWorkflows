@@ -198,6 +198,9 @@ public class MainWindowFXMLController implements Initializable {
     
     @FXML
     private CheckMenuItem checkLaunchForcePush;
+    
+    @FXML
+    private CheckMenuItem checkLaunchAlignNodes;
     // </editor-fold>
     
     // <editor-fold desc="Development" defaultstate="collapsed">
@@ -356,6 +359,7 @@ public class MainWindowFXMLController implements Initializable {
         layouter.setLaunchPushBack(checkLaunchPushBack.isSelected());
         layouter.setLaunchDisplaceIdents(checkLaunchDisplaceIdents.isSelected());
         layouter.setLaunchForcePush(checkLaunchForcePush.isSelected());
+        layouter.setLaunchAlignNodes(checkLaunchAlignNodes.isSelected());
         if(radDAG.isSelected()) layouter.setLayoutSelector(3);
         else if(radKK.isSelected()) layouter.setLayoutSelector(2);
         else if(radFR.isSelected()) layouter.setLayoutSelector(1);

@@ -45,7 +45,6 @@ import org.apache.commons.collections15.Transformer;
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
- * - align nodes with similar position
  * - scale nodes according to their contents
  * - separate priorities.
  */
@@ -66,6 +65,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private boolean launchPushBack;
     private boolean launchDisplaceIdents;
     private boolean launchForcePush;
+    private boolean launchAlignNodes;
     private int maxiterations;
     private double scaling;
     private boolean debug;
@@ -140,6 +140,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.launchPushBack = true;
         this.launchDisplaceIdents = true;
         this.launchForcePush = true;
+        this.launchAlignNodes = true;
         this.maxiterations = 500;
         this.scaling = 1.2;
     }
@@ -289,6 +290,14 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     public boolean getLaunchForcePush() {
         return this.launchForcePush;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public boolean getLaunchAlignNodes() {
+        return this.launchAlignNodes;
     }
     
     /**
@@ -480,6 +489,14 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     public void setLaunchForcePush(boolean plaunchForcePush) {
         this.launchForcePush = plaunchForcePush;
+    }
+    
+    /**
+     * 
+     * @param plaunchAlignNodes 
+     */
+    public void setLaunchAlignNodes(boolean plaunchAlignNodes) {
+        this.launchAlignNodes = plaunchAlignNodes;
     }
     
     /**
@@ -912,6 +929,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         subgen.setAutoscaleNodes(this.autoscaleNodes);
         subgen.setDebug(this.debug);
         subgen.setJustgraph(true);
+        subgen.setLaunchAlignNodes(this.launchAlignNodes);
         subgen.setLaunchDisplaceIdents(this.launchDisplaceIdents);
         subgen.setLaunchForcePush(this.launchForcePush);
         subgen.setLaunchOrigin(this.launchOrigin);
@@ -1069,6 +1087,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             }
             if(this.launchDisplaceIdents) displaceIdents();
             if(this.launchForcePush) forcePush();
+            if(this.launchAlignNodes) alignNodes();
             if(this.debug) {
                 int i;
                 for(i = 0; i < this.nodecount; i++) {
@@ -1103,6 +1122,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         subgen.setLaunchPushBack(this.launchPushBack);
         subgen.setLaunchDisplaceIdents(this.launchDisplaceIdents);
         subgen.setLaunchForcePush(this.launchForcePush);
+        subgen.setLaunchAlignNodes(this.launchAlignNodes);
         subgen.setMaxiterations(this.maxiterations);
         // apply layout to each subflow
         Collection<VFlow> subconts = this.workflow.getSubControllers();
@@ -1566,6 +1586,44 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             f2 = h2 / (Math.cos(Math.atan(vx / vy)) * 2);
         }
         return (f1 + f2) * this.scaling;
+    }
+    
+    /**
+     * 
+     */
+    private void alignNodes() {
+        if(this.debug) System.out.println("aligning nodes with similar "
+                + "coordinates.");
+        int i;
+        int j;
+        for(i = 0; i < this.nodecount; i++) {
+            VNode n1 = this.nodes[i];
+            double x1 = n1.getX();
+            double y1 = n1.getY();
+            double w1 = n1.getWidth();
+            double h1 = n1.getHeight();
+            for(j = 0; j < this.nodecount; j++) {
+                if(i != j) {
+                    VNode n2 = this.nodes[j];
+                    double x2 = n2.getX();
+                    double y2 = n2.getY();
+                    double w2 = n2.getWidth();
+                    double h2 = n2.getHeight();
+                    double threshold = (w1 + w2) * (this.scaling - 1) / 2;
+                    double distance = Math.abs(x1 - x2);
+                    if(distance < threshold) {
+                        n1.setX((x1 + x2) / 2);
+                        n2.setX((x1 + x2) / 2);
+                    }
+                    threshold = (h1 + h2) * (this.scaling - 1) / 2;
+                    distance = Math.abs(y1 - y2);
+                    if(distance < threshold) {
+                        n1.setY((y1 + y2) / 2);
+                        n2.setY((y1 + y2) / 2);
+                    }
+                }
+            }
+        }
     }
     
     /**

@@ -117,6 +117,7 @@
                             <CheckMenuItem fx:id="checkLaunchPushBack" mnemonicParsing="false" selected="true" text="push successors"  />
                             <CheckMenuItem fx:id="checkLaunchDisplaceIdents" mnemonicParsing="false" selected="true" text="displace nodes in identical positions" />
                             <CheckMenuItem fx:id="checkLaunchForcePush" mnemonicParsing="false" selected="true" text="force push nodes away from each other" />
+                            <CheckMenuItem fx:id="checkLaunchAlignNodes" mnemonicParsing="false" selected="true" text="align nodes wirth similar coordinates" />
                         </Menu>    
                     </Menu>
                     <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />

@@ -33,7 +33,9 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
+import edu.uci.ics.jung.graph.DirectedGraph;
 import eu.mihosoft.vrl.workflow.ClickEvent;
+import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.LayoutGenerator;
@@ -147,6 +149,15 @@ public class MainWindowFXMLController implements Initializable {
     private CheckMenuItem checkDebugLayout;
     
     @FXML
+    private CheckMenuItem checkNaiveRecursive;
+    
+    @FXML
+    private CheckMenuItem checkNaiveAutoscaleNodes;
+    
+    @FXML
+    private CheckMenuItem checkNaiveLaunchRemoveCycles;
+    
+    @FXML
     private CheckMenuItem checkRecursive;
     
     @FXML
@@ -192,8 +203,12 @@ public class MainWindowFXMLController implements Initializable {
     // <editor-fold desc="Development" defaultstate="collapsed">
     @FXML
     public void onNaiveAction(ActionEvent e) {
-        LayoutGenerator layouter = new LayoutGeneratorNaive(checkDebugLayout.isSelected());
-        layoutAction(layouter);
+        LayoutGeneratorNaive layouter = new LayoutGeneratorNaive(checkDebugLayout.isSelected());
+        layouter.setRecursive(checkNaiveRecursive.isSelected());
+        layouter.setAutoscaleNodes(checkNaiveAutoscaleNodes.isSelected());
+        layouter.setLaunchRemoveCycles(checkNaiveLaunchRemoveCycles.isSelected());
+        layouter.setWorkflow(workflow);
+        layouter.generateLayout();
     }
     
     @FXML
@@ -319,7 +334,6 @@ public class MainWindowFXMLController implements Initializable {
     private void layoutAction(LayoutGenerator playouter) {
         playouter.setWorkflow(workflow);
         playouter.generateLayout();
-        playouter = null;
     }
     
     /*
@@ -347,7 +361,13 @@ public class MainWindowFXMLController implements Initializable {
         else if(radFR.isSelected()) layouter.setLayoutSelector(1);
         else layouter.setLayoutSelector(0);
         if(checkJustgraph.isSelected()) {
-            // todo
+            LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
+            altlay.setWorkflow(workflow);
+            altlay.generateLayout();
+            DirectedGraph<VNode, Connection> jgraph = altlay.getModelGraph();
+            layouter.setModelGraph(jgraph);
+            layouter.setRecursive(false);
+            layouter.setJustgraph(true);
         }
         else {
             layouter.setWorkflow(workflow);

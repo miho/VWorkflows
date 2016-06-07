@@ -45,6 +45,7 @@ import org.apache.commons.collections15.Transformer;
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
  * ideas:
+ * - align nodes with similar position
  * - scale nodes according to their contents
  * - separate priorities.
  */
@@ -526,6 +527,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * Sets up the model-fields. These include the nodearray, nodecount, origin-
      * nodes and the model graph.
      * Uses either a VFlow or a Jung-Graph depending on the justgraph parameter.
+     * @return boolean
      */
     private boolean allNodesSetUp() {
         int i;
@@ -544,6 +546,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             }
         
             // get all edges
+            this.conncount = 0;
             ObservableMap<String, Connections> allConnections = 
                     this.workflow.getAllConnections();
             Set<String> keys = allConnections.keySet();
@@ -556,6 +559,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                     currConns.getConnections();
                 int currConnCount = connections.size();
                 for(i = 0; i < currConnCount; i++) {
+                    this.conncount++;
                     Connection currConn = connections.get(i);
                     VNode sender = 
                         this.nodes[getNodeID(currConn.getSender().getNode())];
@@ -572,6 +576,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             Collection<VNode> temp = this.jgraph.getVertices();
             Iterator<VNode> it = temp.iterator();
             this.nodecount = temp.size();
+            this.conncount = this.jgraph.getEdgeCount();
             this.nodes = new VNode[this.nodecount];
             i = 0;
             while(it.hasNext()) {
@@ -819,6 +824,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                         Iterator<Connection> its = conns.iterator();
                         while(its.hasNext()) {
                             this.jgraph.removeEdge(its.next());
+                            this.conncount--;
                         }
                         if(this.debug) System.out.println("removing edge from " 
                                 + curr.getId() + " to " + currSucc.getId());
@@ -1109,8 +1115,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
 
     /**
-     * applies the Kamada & Kawai Layout implemented in the 
-     * Jung-Graph-Drawing-Library
+     * Applies the Kamada & Kawai Layout implemented in the 
+     * Jung-Graph-Drawing-Library.
      */
     private void stepLayoutApply() {
         if(this.debug) System.out.println("--- applying layout.");

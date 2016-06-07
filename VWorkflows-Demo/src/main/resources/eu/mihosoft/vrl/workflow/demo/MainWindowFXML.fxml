@@ -66,7 +66,14 @@
           <items>
             <Menu mnemonicParsing="false" text="Layout">
                 <Menu mnemonicParsing="false" text="Development">
-                    <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="Naive Algorithm" />
+                    <Menu mnemonicParsing="false" text="Naive Layout">
+                        <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="apply layout" />
+                        <Menu mnemonicParsing="false" text="customize">
+                            <CheckMenuItem fx:id="checkNaiveRecursive" mnemonicParsing="false" selected="true" text="recursive execution" />
+                            <CheckMenuItem fx:id="checkNaiveAutoscaleNodes" mnemonicParsing="false" selected="false" text="autoscale nodes" disable="true" />
+                            <CheckMenuItem fx:id="checkNaiveLaunchRemoveCycles" mnemonicParsing="false" selected="true" text="remove cycles" />
+                        </Menu>
+                    </Menu>
                     <Menu mnemonicParsing="false" text="Jung Algorithms">
                         <MenuItem mnemonicParsing="false" onAction="#onJungCircleAction" text="Circle Layout" />
                         <MenuItem mnemonicParsing="false" onAction="#onJungDAGAction" text="DAG Layout" />
@@ -97,12 +104,12 @@
                             <CheckMenuItem fx:id="checkRecursive" mnemonicParsing="false" selected="true"  text="recursive execution" />
                             <CheckMenuItem fx:id="checkAutoscaleNodes" mnemonicParsing="false" selected="false" text="autoscale nodes" disable="true" />
                              <Menu mnemonicParsing="false" text="layout selection">
-                                <RadioMenuItem fx:id="radISOM" text="ISOM Layout" />
-                                <RadioMenuItem fx:id="radFR" text="Fruchterman-Reingold Layout" />
-                                <RadioMenuItem fx:id="radKK" text="Kamada-Kawai Layout" />
-                                <RadioMenuItem fx:id="radDAG" text="DAG Layout" />
+                                <RadioMenuItem fx:id="radISOM" mnemonicParsing="false" selected="true" text="ISOM Layout" />
+                                <RadioMenuItem fx:id="radFR" mnemonicParsing="false" text="Fruchterman-Reingold Layout" />
+                                <RadioMenuItem fx:id="radKK" mnemonicParsing="false" text="Kamada-Kawai Layout" />
+                                <RadioMenuItem fx:id="radDAG" mnemonicParsing="false" text="DAG Layout" />
                             </Menu>
-                            <CheckMenuItem fx:id="checkJustgraph" mnemonicParsing="false" selected="false" disable="true" text="apply layout to jgraph" />
+                            <CheckMenuItem fx:id="checkJustgraph" mnemonicParsing="false" selected="false" text="apply layout to jgraph" />
                             <CheckMenuItem fx:id="checkLaunchRemoveCycles" mnemonicParsing="false" selected="true" text="remove cycles" />
                             <CheckMenuItem fx:id="checkLaunchSeparateDisjunctGraphs" mnemonicParsing="false" selected="true" text="separate disjunct graphs" />
                             <CheckMenuItem fx:id="checkLaunchRotate" mnemonicParsing="false" selected="true" text="rotate graph" />

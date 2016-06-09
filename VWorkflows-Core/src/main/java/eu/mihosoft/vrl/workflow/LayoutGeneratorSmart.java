@@ -44,9 +44,11 @@ import org.apache.commons.collections15.Transformer;
  * 4 - push all nodes to the right, so no children nodes are left of their parents
  * 5 - push all nodes away from each other until no overlaps are left.
  * 
- * ideas:
- * - scale nodes according to their contents
- * - separate priorities.
+ * todo:
+ * - subflowscale needs to be tweaked and experimented with
+ * - threshold for alignNodes needs to be tweaked
+ * - in some cases, node overlap is still possible. need to find a reproducible
+ *      case.
  */
 public class LayoutGeneratorSmart implements LayoutGenerator {
     
@@ -68,6 +70,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private boolean launchAlignNodes;
     private int maxiterations;
     private double scaling;
+    private double subflowscale;
     private boolean debug;
     
     // internal fields:
@@ -129,7 +132,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         
         // default parameters:
         this.recursive = true;
-        this.autoscaleNodes = false;
+        this.autoscaleNodes = true;
         this.layoutSelector = 0;
         this.aspectratio = 16. / 9.;
         this.justgraph = false;
@@ -143,6 +146,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.launchAlignNodes = true;
         this.maxiterations = 500;
         this.scaling = 1.2;
+        this.subflowscale = 1. / 4.;
     }
     
     // <editor-fold desc="getter" defaultstate="collapsed">
@@ -169,7 +173,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * If set to true, subflow nodes in the given workflow are automatically 
      * scaled to fit their contents.
-     * default: false
+     * default: true
      * @return boolean
      */
     @Override
@@ -321,6 +325,14 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
+     * 
+     * @return 
+     */
+    public double getSubflowscale() {
+        return this.subflowscale;
+    }
+    
+    /**
      * If set to true, debugging output will be printed in the command line and 
      * a second representation of the graph will be shown.
      * default: false
@@ -365,7 +377,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * If set to true, subflow nodes in the given workflow are automatically 
      * scaled to fit their contents.
-     * default: false
+     * default: true
      * @param pautoscaleNodes boolean
      */
     @Override
@@ -517,6 +529,14 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     public void setScaling(double pscaling) {
         this.scaling = pscaling;
+    }
+    
+    /**
+     * 
+     * @param psubflowscale 
+     */
+    public void setSubflowscale(double psubflowscale) {
+        this.subflowscale = psubflowscale;
     }
     
     /**
@@ -926,7 +946,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         // initialize subgenerator
         LayoutGeneratorSmart subgen = new LayoutGeneratorSmart();
         subgen.setAspectratio(this.aspectratio);
-        subgen.setAutoscaleNodes(this.autoscaleNodes);
+        subgen.setAutoscaleNodes(false);
         subgen.setDebug(this.debug);
         subgen.setJustgraph(true);
         subgen.setLaunchAlignNodes(this.launchAlignNodes);
@@ -1032,7 +1052,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             }
             // scale nodes according to their contents.
             if(this.autoscaleNodes) {
-                // code
+                autoscaleNodes();
             }
             if(this.launchSeparateDisjunctGraphs) {
                 // only run if the graph contains no cycles
@@ -1113,6 +1133,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         subgen.setAutoscaleNodes(this.autoscaleNodes);
         subgen.setRecursive(this.recursive);
         subgen.setScaling(this.scaling);
+        subgen.setSubflowscale(this.subflowscale);
         subgen.setLayoutSelector(this.layoutSelector);
         subgen.setJustgraph(false);
         subgen.setLaunchRemoveCycles(this.launchRemoveCycles);
@@ -1131,6 +1152,53 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             VFlow subflow = it.next();
             subgen.setWorkflow(subflow);
             subgen.generateLayout();
+        }
+    }
+    
+    /**
+     * 
+     */
+    private void autoscaleNodes() {
+        Collection<VFlow> subconts = this.workflow.getSubControllers();
+        Iterator<VFlow> it = subconts.iterator();
+        while(it.hasNext()) {
+            VFlow subflow = it.next();
+            VNode flownode = subflow.getModel();
+            if(this.debug) System.out.println("Resizing subflow-node "
+                    + flownode.getId());
+            Collection<VNode> subnodes = subflow.getNodes();
+            if(subnodes.isEmpty()) continue;
+            Iterator<VNode> nodeit = subnodes.iterator();
+            double minx = Double.POSITIVE_INFINITY;
+            double maxx = Double.NEGATIVE_INFINITY;
+            double miny = Double.POSITIVE_INFINITY;
+            double maxy = Double.NEGATIVE_INFINITY;
+            while(nodeit.hasNext()) {
+                VNode currNode = nodeit.next();
+                double x = currNode.getX();
+                double y = currNode.getY();
+                if(this.debug) System.out.println(currNode.getId() + " has "
+                        + "position (" + x + "|" + y + ")");
+                if(minx > x) minx = x;
+                if(maxx < (x + currNode.getWidth())) maxx = x 
+                        + currNode.getWidth();
+                if(miny > y) miny = y;
+                if(maxy < (y + currNode.getHeight())) maxy = y
+                        + currNode.getHeight();
+            }
+            if(this.debug) System.out.println("extreme positions of " 
+                    + flownode.getId() + " are min: (" + minx + "|" + miny 
+                    + ") max: (" + maxx + "|" + maxy + ")");
+            double width = maxx - minx;
+            double height = maxy - miny;
+            double depth = flownode.getDepth();
+            if(this.debug) System.out.println("Resizing subflow-node "
+                    + flownode.getId() + " from size (" + flownode.getWidth()
+                    + "|" + flownode.getHeight() + ") to size ("
+                    + (width * this.subflowscale) + "|" 
+                    + (height * this.subflowscale) + ")");
+            flownode.setWidth(width * this.subflowscale);
+            flownode.setHeight(height * this.subflowscale);
         }
     }
 
@@ -1152,8 +1220,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         for(i = 0; i < this.nodecount; i++) {
             Point2D coords;
             coords = this.layout.transform(this.nodes[i]);
-            this.nodes[i].setX(coords.getX());
-            this.nodes[i].setY(coords.getY());
+            this.nodes[i].setX(coords.getX() - this.nodes[i].getWidth() / 2);
+            this.nodes[i].setY(coords.getY() - this.nodes[i].getHeight() / 2);
             if(this.debug) System.out.println(this.nodes[i].getId() + " | X: " 
                     + coords.getX() + " Y: " + coords.getY());
         }

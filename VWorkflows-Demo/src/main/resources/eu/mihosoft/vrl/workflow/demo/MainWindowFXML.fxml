@@ -102,7 +102,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onSmartRunAction" text="apply layout" />
                         <Menu mnemonicParsing="false" text="customize">
                             <CheckMenuItem fx:id="checkRecursive" mnemonicParsing="false" selected="true"  text="recursive execution" />
-                            <CheckMenuItem fx:id="checkAutoscaleNodes" mnemonicParsing="false" selected="false" text="autoscale nodes" disable="true" />
+                            <CheckMenuItem fx:id="checkAutoscaleNodes" mnemonicParsing="false" selected="true" text="autoscale nodes" />
                              <Menu mnemonicParsing="false" text="layout selection">
                                 <RadioMenuItem fx:id="radISOM" mnemonicParsing="false" selected="true" text="ISOM Layout" />
                                 <RadioMenuItem fx:id="radFR" mnemonicParsing="false" text="Fruchterman-Reingold Layout" />

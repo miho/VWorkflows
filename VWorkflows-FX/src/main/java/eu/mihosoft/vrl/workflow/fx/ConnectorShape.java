@@ -33,37 +33,51 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import javafx.scene.transform.Transform;
+import eu.mihosoft.vrl.workflow.Connector;
+import javafx.beans.property.DoubleProperty;
+import javafx.scene.Node;
 
 /**
+ * Represents a connector "shape" without specifying a particular path.
  *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
+ * @author Andres Almiray
  */
-public interface OptimizationRule {
+public interface ConnectorShape {
+    String CONNECTOR_SHAPE_CLASS = ConnectorShape.class.getName();
 
     /**
-     * Determines whether the content pane shall be visible or not.
-     *
-     * @param p pane
-     * @param t transform
-     * @return {@code true} if the content shall be visible; {@code false}
-     * otherwise
+     * @return the connector
      */
-    public boolean visible(OptimizableContentPane p, Transform t);
+    Connector getConnector();
 
     /**
-     * Determines whether the content pane shall be attached or not.
-     *
-     * <p>
-     * <b>NOTE:</b> attaching/detaching nodes from the scene graph is an
-     * expensive operation.
-     * </p>
-     *
-     * @param p pane
-     * @param t transform
-     * @return {@code true} if the content shall be attached; {@code false}
-     * otherwise
+     * @param connector the connector to set
      */
-    public boolean attached(OptimizableContentPane p, Transform t);
+    void setConnector(Connector connector);
+
+    /**
+     * Moves the shape to the front of the visual area.
+     */
+    void toFront();
+
+    /**
+     * @return the radiusProperty
+     */
+    DoubleProperty radiusProperty();
+
+    /**
+     * Set the radius of the connector shape.
+     *
+     * @param radius the radius to use. Should be > 0.
+     */
+    void setRadius(double radius);
+
+    double getRadius();
+
+    /**
+     * Returns the real JavaFX Node that represents the visual state of this connector shape.
+     *
+     * @return the backing node for this connector shape
+     */
+    Node getNode();
 }
-

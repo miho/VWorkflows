@@ -37,10 +37,10 @@ import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.CacheHint;
+import javafx.scene.Node;
 import javafx.scene.layout.Region;
 
 
@@ -49,12 +49,12 @@ import javafx.scene.layout.Region;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class ConnectorCircle extends Region {
+class ConnectorCircle extends Region implements ConnectorShape {
     
     private Connector connector;
     private final VFlow flow;
     private final FXSkinFactory skinFactory;
-    private FXConnectionSkin connectionSkin;
+    private ConnectionSkin connectionSkin;
     private final DoubleProperty radiusProperty = new SimpleDoubleProperty();
     
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector) {
@@ -91,16 +91,12 @@ class ConnectorCircle extends Region {
         });
     }
 
-    /**
-     * @return the connector
-     */
+    @Override
     public Connector getConnector() {
         return connector;
     }
 
-    /**
-     * @param connector the connector to set
-     */
+    @Override
     public final void setConnector(Connector connector) {
         
         if (getConnector() != null) {
@@ -117,15 +113,13 @@ class ConnectorCircle extends Region {
     
     private void moveConnectionReceiverToFront() {
         connectionSkin = null;
-        
+
         if (connector.isInput() && flow.getConnections(connector.getType()).isInputConnected(connector)) {
             for (Connection conn : flow.getConnections(connector.getType()).getConnections()) {
-                ConnectionSkin skinI = flow.getNodeSkinLookup().getById(skinFactory, conn);
-                
-                if (skinI instanceof FXConnectionSkin) {
-                    FXConnectionSkin fxSkin = (FXConnectionSkin) skinI;
-                    connectionSkin = fxSkin;
-                    connectionSkin.toFront();
+                ConnectionSkin connectionSkin = flow.getNodeSkinLookup().getById(skinFactory, conn);
+                if (connectionSkin != null) {
+                    this.connectionSkin = connectionSkin;
+                    connectionSkin.receiverToFront();
                 }
             }
         }
@@ -137,18 +131,23 @@ class ConnectorCircle extends Region {
         moveConnectionReceiverToFront();
     }
 
-    /**
-     * @return the radiusProperty
-     */
+    @Override
     public DoubleProperty radiusProperty() {
         return radiusProperty;
     }
     
+    @Override
     public void setRadius(double radius) {
         radiusProperty().set(radius);
     }
     
+    @Override
     public double getRadius() {
         return radiusProperty().get();
+    }
+
+    @Override
+    public Node getNode() {
+        return this;
     }
 }

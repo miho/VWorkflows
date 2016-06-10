@@ -40,7 +40,7 @@ import javafx.scene.Node;
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-class SelectedConnector {
+public class SelectedConnector {
     private Node node;
     private Connector connector;
 
@@ -67,6 +67,4 @@ class SelectedConnector {
     public Node getNode() {
         return node;
     }
-    
-    
 }

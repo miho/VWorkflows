@@ -70,7 +70,7 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
     @Override
     public ConnectionSkin createSkin(Connection c, VFlow flow, String type) {
-        return new FXConnectionSkin(this, getFxParent(), c, flow, type/*, clipboard*/);
+        return new DefaultFXConnectionSkin(this, getFxParent(), c, flow, type/*, clipboard*/).init();
     }
 
     @Override

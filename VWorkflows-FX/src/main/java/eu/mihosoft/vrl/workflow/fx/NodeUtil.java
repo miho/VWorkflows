@@ -310,6 +310,7 @@ public class NodeUtil {
      * instance of the specified class or <code>null</code> if no such node
      * exist
      */
+    /*
     public static Node getDeepestNode(Parent p, double sceneX, double sceneY, Class<?>... nodeClasses) {
 
         // dammit! javafx uses "wrong" children order.
@@ -345,6 +346,7 @@ public class NodeUtil {
 
         return null;
     }
+    */
 
     /**
      * Returns the first node at the given location that is an instance of the
@@ -374,22 +376,23 @@ public class NodeUtil {
                 Node result = null;
 
                 if (n instanceof Parent) {
-                    result = getDeepestNode((Parent) n, sceneX, sceneY, nodeClasses);
+                    result = getNode((Parent) n, sceneX, sceneY, nodeClasses);
                 }
 
                 if (result == null) {
                     result = n;
                 }
-                
+
                 for (Class<?> nodeClass : nodeClasses) {
-
+                    // may not implement the interface. We check if the Node has a property marking the link
+                    // a custom node may have established a link to the ConnectorShape type but the Node itself
+                    Class<?> connectorShapeClass = (Class<?>) n.getProperties().get(ConnectorShape.CONNECTOR_SHAPE_CLASS);
                     if (nodeClass.isAssignableFrom(result.getClass())) {
-
                         return result;
-
+                    } else if (connectorShapeClass != null && connectorShapeClass.isAssignableFrom(result.getClass())) {
+                        return result;
                     }
                 }
-
             }
         }
 

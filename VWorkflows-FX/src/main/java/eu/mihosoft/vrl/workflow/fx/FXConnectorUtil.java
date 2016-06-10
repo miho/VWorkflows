@@ -1,7 +1,5 @@
 /*
- * FXConnectorUtil.java
- * 
- * Copyright 2012-2013 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -12,7 +10,7 @@
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * Please cite the following publication(s):
  *
  * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
@@ -55,11 +53,11 @@ import javafx.util.Duration;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class FXConnectorUtil {
+public class FXConnectorUtil {
 
     private static Timeline timeline;
 
-    static void stopTimeLine() {
+    public static void stopTimeLine() {
         if (timeline != null) {
             timeline.stop();
         }
@@ -74,12 +72,12 @@ class FXConnectorUtil {
         Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
-                FlowNodeWindow.class, ConnectorCircle.class);
+                FlowNodeWindow.class, ConnectorShape.class);
         Connector connector = null;
 
         if (myNode != null) {
-            if (myNode instanceof ConnectorCircle) {
-                ConnectorCircle circle = (ConnectorCircle) myNode;
+            if (myNode instanceof ConnectorShape) {
+                ConnectorShape circle = (ConnectorShape) myNode;
                 connector = circle.getConnector();
             } else if (myNode instanceof FlowNodeWindow) {
 
@@ -107,13 +105,13 @@ class FXConnectorUtil {
         Node myNode = NodeUtil.getNode(
                 fxParent,
                 t.getSceneX(), t.getSceneY(),
-                ConnectorCircle.class,
+                ConnectorShape.class,
                 FlowNodeWindow.class);
         Connector connector = null;
 
         if (myNode != null) {
-            if (myNode instanceof ConnectorCircle) {
-                ConnectorCircle circle = (ConnectorCircle) myNode;
+            if (myNode instanceof ConnectorShape) {
+                ConnectorShape circle = (ConnectorShape) myNode;
                 connector = circle.getConnector();
             } else if (myNode instanceof FlowNodeWindow) {
 
@@ -286,8 +284,8 @@ class FXConnectorUtil {
 
         if (target instanceof Circle) {
             targetRadius = ((Circle) target).getRadius();
-        } else if (target instanceof ConnectorCircle) {
-            targetRadius = ((ConnectorCircle) target).getRadius();
+        } else if (target instanceof ConnectorShape) {
+            targetRadius = ((ConnectorShape) target).getRadius();
         }
 
         if (n instanceof Circle) {
@@ -312,7 +310,7 @@ class FXConnectorUtil {
 
     }
 
-    static void incompatibleAnim(Node receiverConnector) {
+    public static void incompatibleAnim(Node receiverConnector) {
 
         if (!(receiverConnector instanceof Circle)) {
             throw new IllegalArgumentException(

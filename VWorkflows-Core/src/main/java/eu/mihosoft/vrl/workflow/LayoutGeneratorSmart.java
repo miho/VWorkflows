@@ -146,13 +146,13 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.launchAlignNodes = true;
         this.maxiterations = 500;
         this.scaling = 1.2;
-        this.subflowscale = 1. / 4.;
+        this.subflowscale = 2.;
     }
     
     // <editor-fold desc="getter" defaultstate="collapsed">
     /**
      * Get the workflow to be laid out.
-     * @return VFlow workflow.
+     * @return VFlow
      */
     @Override
     public VFlow getWorkflow() {
@@ -297,8 +297,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
-     * @return 
+     * If set to true, node-pairs that have coordinates in close proximity to each 
+     * other, will be aligned ad the mean coordinate between them.
+     * default: true
+     * @return boolean
      */
     public boolean getLaunchAlignNodes() {
         return this.launchAlignNodes;
@@ -325,8 +327,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
-     * @return 
+     * Get the scaling factor that is used to scale subflow-nodes in the 
+     * autoscaleNodes procedure.
+     * default: 2.0
+     * @return double
      */
     public double getSubflowscale() {
         return this.subflowscale;
@@ -504,8 +508,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
-     * @param plaunchAlignNodes 
+     * If set to true, node-pairs that have coordinates in close proximity to each 
+     * other, will be aligned ad the mean coordinate between them.
+     * default: true
+     * @param plaunchAlignNodes boolean
      */
     public void setLaunchAlignNodes(boolean plaunchAlignNodes) {
         this.launchAlignNodes = plaunchAlignNodes;
@@ -532,8 +538,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
-     * @param psubflowscale 
+     * Set the scaling factor that is used to scale subflow-nodes in the 
+     * autoscaleNodes procedure.
+     * default: 2.0
+     * @param psubflowscale double
      */
     public void setSubflowscale(double psubflowscale) {
         this.subflowscale = psubflowscale;
@@ -1106,8 +1114,16 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                         + "-> PushBack skipped.");
             }
             if(this.launchDisplaceIdents) displaceIdents();
-            if(this.launchForcePush) forcePush();
-            if(this.launchAlignNodes) alignNodes();
+            if(this.launchAlignNodes) {
+                this.maxiterations /= 2;
+                if(this.launchForcePush) forcePush();
+                alignNodes();
+                if(this.launchDisplaceIdents) displaceIdents();
+                if(this.launchForcePush) forcePush();
+            }
+            else {
+                if(this.launchForcePush) forcePush();
+            }
             if(this.debug) {
                 int i;
                 for(i = 0; i < this.nodecount; i++) {
@@ -1156,7 +1172,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
+     * Scales subflow-nodes according to their contents.
      */
     private void autoscaleNodes() {
         Collection<VFlow> subconts = this.workflow.getSubControllers();
@@ -1191,19 +1207,18 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                     + ") max: (" + maxx + "|" + maxy + ")");
             double width = maxx - minx;
             double height = maxy - miny;
-            double depth = flownode.getDepth();
             if(this.debug) System.out.println("Resizing subflow-node "
                     + flownode.getId() + " from size (" + flownode.getWidth()
                     + "|" + flownode.getHeight() + ") to size ("
-                    + (width * this.subflowscale) + "|" 
-                    + (height * this.subflowscale) + ")");
-            flownode.setWidth(width * this.subflowscale);
-            flownode.setHeight(height * this.subflowscale);
+                    + (width / subnodes.size() * this.subflowscale) + "|" 
+                    + (height / subnodes.size() * this.subflowscale) + ")");
+            flownode.setWidth(width / subnodes.size() * this.subflowscale);
+            flownode.setHeight(height / subnodes.size() * this.subflowscale);
         }
     }
 
     /**
-     * Applies the Kamada & Kawai Layout implemented in the 
+     * Applies the chosen layout implemented in the 
      * Jung-Graph-Drawing-Library.
      */
     private void stepLayoutApply() {
@@ -1291,7 +1306,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * rotates the entire graph around its center point, so its new average 
+     * Rotates the entire graph around its center point, so its new average 
      * edge-direction is parallel to the horizontal axis from left to right.
      */
     private void stepRotate() {
@@ -1377,8 +1392,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * returns the average direction of all edges in the graph.
-     * @return average direction as an angle to the horizontal axis.
+     * Returns the average direction of all edges in the graph relative to the 
+     * horizontal axis.
+     * @return double
      */
     private double getAvgDir() {
         double avgdirx = 0;
@@ -1408,7 +1424,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * places all nodes without predecessors at the leftmost edge of the graph
+     * Places all nodes without predecessors at the leftmost edge of the graph.
      */
     private void stepOrigin() {
         if(this.debug) System.out.println("--- starting origin");
@@ -1657,13 +1673,14 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * 
+     * Aligns nodes pairwise with each other.
      */
     private void alignNodes() {
         if(this.debug) System.out.println("aligning nodes with similar "
                 + "coordinates.");
         int i;
         int j;
+        boolean change;
         for(i = 0; i < this.nodecount; i++) {
             VNode n1 = this.nodes[i];
             double x1 = n1.getX();
@@ -1677,17 +1694,50 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                     double y2 = n2.getY();
                     double w2 = n2.getWidth();
                     double h2 = n2.getHeight();
-                    double threshold = (w1 + w2) * (this.scaling - 1) / 2;
-                    double distance = Math.abs(x1 - x2);
-                    if(distance < threshold) {
-                        n1.setX((x1 + x2) / 2);
-                        n2.setX((x1 + x2) / 2);
+                    double threshold;
+                    if(x1 != x2) {
+                        threshold = (w1 + w2) * (this.scaling - 1) / 2;
+                        change = false;
+                        if(Math.abs(x1 - x2) < threshold) {
+                            change = true;
+                            n1.setX((x1 + x2) / 2);
+                            n2.setX((x1 + x2) / 2);
+                        }
+                        else if(Math.abs((x1 + w1) - (x2 + w2)) < threshold) {
+                            change = true;
+                            n1.setX(((x1 + w1 + x2 + w2) / 2) - w1);
+                            n2.setX(((x1 + w1 + x2 + w2) / 2) - w2);
+                        }
+                        else if(Math.abs((x1 + (w1 / 2)) - (x2 + (w2 / 2))) < threshold) {
+                            change = true;
+                            n1.setX((((2 * x1) + w1 + (2 * x2) + w2) / 4) - (w1 / 2));
+                            n2.setX((((2 * x1) + w1 + (2 * x2) + w2) / 4) - (w2 / 2));
+                        }
+                        if((this.debug) && (change)) System.out.println(n1.getId() 
+                                + " and " + n2.getId() + " have been aligned at"
+                                + " x coordinate " + n1.getX());
                     }
-                    threshold = (h1 + h2) * (this.scaling - 1) / 2;
-                    distance = Math.abs(y1 - y2);
-                    if(distance < threshold) {
-                        n1.setY((y1 + y2) / 2);
-                        n2.setY((y1 + y2) / 2);
+                    if(y1 != y2) {
+                        threshold = (h1 + h2) * (this.scaling - 1) / 2;
+                        change = false;
+                        if(Math.abs(y1 - y2) < threshold) {
+                            change = true;
+                            n1.setY((y1 + y2) / 2);
+                            n2.setY((y1 + y2) / 2);
+                        }
+                        else if(Math.abs((y1 + h1) - (y2 + h2)) < threshold) {
+                            change = true;
+                            n1.setY(((y1 + h1 + y2 + h2) / 2) - h1);
+                            n2.setY(((y1 + h1 + y2 + h2) / 2) - h2);
+                        }
+                        else if(Math.abs((y1 + (h1 / 2)) - (y2 - (h2 / 2))) < threshold) {
+                            change = true;
+                            n1.setY((((2 * y1) + h1 + (2 * y2) + h2) / 4) - (h1 / 2));
+                            n2.setY((((2 * y1) + h1 + (2 * y2) + h2) / 4) - (h2 / 2));
+                        }
+                        if((this.debug) && (change)) System.out.println(n1.getId() 
+                                + " and " + n2.getId() + " have been aligned at"
+                                + " y coordinate " + n1.getY());
                     }
                 }
             }

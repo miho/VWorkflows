@@ -144,7 +144,7 @@ public class MainWindowFXMLController implements Initializable {
         System.out.println(" [done]");
     }
     
-    // <editor-fold defaultstate="collapsed" desc="menu items">
+    // <editor-fold defaultstate="collapsed" desc="menus">
     @FXML
     private CheckMenuItem checkDebugLayout;
     

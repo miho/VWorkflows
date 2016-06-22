@@ -64,7 +64,7 @@ public class Main extends Application {
         launch(args);
     }
     private MainWindowFXMLController controller;
-
+    
     @Override
     public void start(Stage primaryStage) {
 

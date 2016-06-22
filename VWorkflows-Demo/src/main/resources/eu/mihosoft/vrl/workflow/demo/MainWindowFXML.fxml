@@ -70,55 +70,13 @@
                         <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="apply layout" />
                         <Menu mnemonicParsing="false" text="customize">
                             <CheckMenuItem fx:id="checkNaiveRecursive" mnemonicParsing="false" selected="true" text="recursive execution" />
-                            <CheckMenuItem fx:id="checkNaiveAutoscaleNodes" mnemonicParsing="false" selected="false" text="autoscale nodes" disable="true" />
+                            <CheckMenuItem fx:id="checkNaiveAutoscaleNodes" mnemonicParsing="false" selected="true" text="autoscale nodes" />
                             <CheckMenuItem fx:id="checkNaiveLaunchRemoveCycles" mnemonicParsing="false" selected="true" text="remove cycles" />
                         </Menu>
                     </Menu>
-                    <Menu mnemonicParsing="false" text="Jung Algorithms">
-                        <MenuItem mnemonicParsing="false" onAction="#onJungCircleAction" text="Circle Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungDAGAction" text="DAG Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungFRAction" text="FR Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungFR2Action" text="FR2 Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungISOMAction" text="ISOM Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungKKAction" text="KK Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungSpringAction" text="Spring Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungSpring2Action" text="Spring2 Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onJungStaticAction" text="Static Layout" />
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Prefuse Algortihms">
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefCircleAction" text="Circle Layout" />
-                        <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefCollapsedStackAction" text="Collapsed Stack Layout" /> -->
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefCollapsedSubtreeAction" text="Collapsed Subtree Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefBalloonTreeAction" text="Balloon Tree Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefForceDirectedAction" text="Force Directed Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefFruchtermanReingoldAction" text="Fruchterman Reingold Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefNodeLinkTreeAction" text="Node Link Tree Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefRadialTreeAction" text="Radial Tree Layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefSquarifiedTreeMapAction" text="Squarified Tree Map Layout" />
-                        <!-- <MenuItem mnemonicParsing="false" onAction="#onPrefGridAction" text="Grid Layout" /> -->
-                        <MenuItem mnemonicParsing="false" onAction="#onPrefRandomAction" text="Random Layout" />
-                    </Menu>
                     <Menu mnemonicParsing="false" text="Smart Layout">
                         <MenuItem mnemonicParsing="false" onAction="#onSmartRunAction" text="apply layout" />
-                        <Menu mnemonicParsing="false" text="customize">
-                            <CheckMenuItem fx:id="checkRecursive" mnemonicParsing="false" selected="true"  text="recursive execution" />
-                            <CheckMenuItem fx:id="checkAutoscaleNodes" mnemonicParsing="false" selected="true" text="autoscale nodes" />
-                             <Menu mnemonicParsing="false" text="layout selection">
-                                <RadioMenuItem fx:id="radISOM" mnemonicParsing="false" selected="true" text="ISOM Layout" />
-                                <RadioMenuItem fx:id="radFR" mnemonicParsing="false" text="Fruchterman-Reingold Layout" />
-                                <RadioMenuItem fx:id="radKK" mnemonicParsing="false" text="Kamada-Kawai Layout" />
-                                <RadioMenuItem fx:id="radDAG" mnemonicParsing="false" text="DAG Layout" />
-                            </Menu>
-                            <CheckMenuItem fx:id="checkJustgraph" mnemonicParsing="false" selected="false" text="apply layout to jgraph" />
-                            <CheckMenuItem fx:id="checkLaunchRemoveCycles" mnemonicParsing="false" selected="true" text="remove cycles" />
-                            <CheckMenuItem fx:id="checkLaunchSeparateDisjunctGraphs" mnemonicParsing="false" selected="true" text="separate disjunct graphs" />
-                            <CheckMenuItem fx:id="checkLaunchRotate" mnemonicParsing="false" selected="true" text="rotate graph" />
-                            <CheckMenuItem fx:id="checkLaunchOrigin" mnemonicParsing="false" selected="false" text="move origin nodes" />
-                            <CheckMenuItem fx:id="checkLaunchPushBack" mnemonicParsing="false" selected="true" text="push successors"  />
-                            <CheckMenuItem fx:id="checkLaunchDisplaceIdents" mnemonicParsing="false" selected="true" text="displace nodes in identical positions" />
-                            <CheckMenuItem fx:id="checkLaunchForcePush" mnemonicParsing="false" selected="true" text="force push nodes away from each other" />
-                            <CheckMenuItem fx:id="checkLaunchAlignNodes" mnemonicParsing="false" selected="true" text="align nodes wirth similar coordinates" />
-                        </Menu>    
+                        <MenuItem mnemonicParsing="false" onAction="#onSmartOptionsAction" text="Options" />
                     </Menu>
                     <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
                 </Menu>

@@ -249,6 +249,71 @@ public class MainWindowFXMLController implements Initializable {
         onGenerateAction(e);
     }
     
+    @FXML
+    public void onTestTree1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestTree2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestTree3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestNontree1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestNontree2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestNontree3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestCyclic1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestCyclic2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestCyclic3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestSizes1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestSizes2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestSizes3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestRunAll(ActionEvent e) {
+        // run
+    }
+    
     // </editor-fold>
     
     @FXML

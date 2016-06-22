@@ -56,6 +56,29 @@
                 <MenuItem mnemonicParsing="false" onAction="#onTriLaneAction" text="Tri Lane" />
                 <MenuItem mnemonicParsing="false" onAction="#onDifferentSizesAction" text="Different Sizes" />
                 <MenuItem mnemonicParsing="false" onAction="#onCycleAction" text="Cycle" />
+                <Menu mnemonicParsing="false" text="final test">
+                    <Menu mnemonicParsing="false" text="Tree">
+                        <MenuItem mnemonicParsing="false" onAction="#onTestTree1" text="Case 1" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestTree2" text="Case 2" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestTree3" text="Case 3" />
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Nontree">
+                        <MenuItem mnemonicParsing="false" onAction="#onTestNontree1" text="Case 1" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestNontree2" text="Case 2" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestNontree3" text="Case 3" />
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Cyclic">
+                        <MenuItem mnemonicParsing="false" onAction="#onTestCyclic1" text="Case 1" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestCyclic2" text="Case 2" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestCyclic3" text="Case 3" />
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Different Sizes">
+                        <MenuItem mnemonicParsing="false" onAction="#onTestSizes1" text="Case 1" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestSizes2" text="Case 2" />
+                        <MenuItem mnemonicParsing="false" onAction="#onTestSizes3" text="Case 3" />
+                    </Menu>
+                    <MenuItem mnemonicParsing="false" onAction="#onTestRunAll" text="Run All" />
+                </Menu>
             </Menu>
             <MenuItem mnemonicParsing="false" onAction="#onGenerateAction" text="Generate" />
             <MenuItem mnemonicParsing="false" onAction="#onLoadAction" text="Load" />

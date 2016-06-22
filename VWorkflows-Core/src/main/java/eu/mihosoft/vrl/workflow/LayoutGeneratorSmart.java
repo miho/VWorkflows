@@ -1152,7 +1152,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private void stepLayoutApply() {
         if(this.debug) System.out.println("--- applying layout.");
         // find cumulative width of longest path
-        int maxpath = (int) Math.round(findMaxPathWidth() / this.scaling);
+        int maxpath = (int) Math.round(findMaxPathWidth() / (this.scaling * 2));
         // calculate height from maxpath-width and aspectratio
         int y = (int) Math.round(maxpath / this.aspectratio);
         this.layout.setSize(new Dimension(maxpath, y));

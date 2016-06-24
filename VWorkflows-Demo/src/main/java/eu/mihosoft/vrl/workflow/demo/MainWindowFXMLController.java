@@ -94,7 +94,7 @@ public class MainWindowFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        canvas = new VCanvas();
+       canvas = new VCanvas();
 
         Pane root = canvas.getContent();
 
@@ -334,8 +334,8 @@ public class MainWindowFXMLController implements Initializable {
 
         updateUI();
 
-        //workflowTest(workflow, 5, 10);
-        workflowTest(workflow, 2, 10);
+        workflowTest(workflow, 5, 10);
+//        workflowTest(workflow, 2, 2);
 
         System.out.println(" [done]");
 

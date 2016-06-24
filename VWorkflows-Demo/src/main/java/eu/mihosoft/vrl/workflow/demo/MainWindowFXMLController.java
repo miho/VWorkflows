@@ -33,9 +33,13 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
+import edu.uci.ics.jung.graph.DirectedGraph;
 import eu.mihosoft.vrl.workflow.ClickEvent;
+import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.FlowFactory;
+import eu.mihosoft.vrl.workflow.LayoutGeneratorNaive;
+import eu.mihosoft.vrl.workflow.LayoutGeneratorSmart;
 import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -45,21 +49,28 @@ import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import jfxtras.labs.scene.control.window.Window;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jfxtras.scene.control.window.Window;
 
 /**
  * FXML Controller class
@@ -72,6 +83,11 @@ public class MainWindowFXMLController implements Initializable {
     private Window clipboard;
     private VFlow specialViewFlow1;
     private VFlow specialViewFlow2;
+    private FXMLLoader fxmlLoader;
+    private OptionsWindowFXMLController options;
+    private Stage optionsstage;
+    private LayoutGeneratorSmart smartLayout;
+    private LayoutGeneratorNaive naiveLayout;
 
     /**
      * Initializes the controller class.
@@ -87,7 +103,27 @@ public class MainWindowFXMLController implements Initializable {
         rootPane = root;
 
         onGenerateAction(null);
+        
+        // layout interface:
+        smartLayout = new LayoutGeneratorSmart();
+        naiveLayout = new LayoutGeneratorNaive();
+        
+        fxmlLoader = new FXMLLoader(getClass().getResource("OptionsWindowFXML.fxml"));
+        optionsstage = new Stage();
+        optionsstage.setTitle("Smart Layout Options");
+        
+        try {
+            Parent p = (Parent) fxmlLoader.load();
+            optionsstage.setScene(new Scene(p));
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        options = fxmlLoader.getController();
+        options.setGenerator(smartLayout);
+        options.setStage(optionsstage);
     }
+    
     private Pane rootPane;
     private VCanvas canvas;
     VFlow workflow;
@@ -123,6 +159,168 @@ public class MainWindowFXMLController implements Initializable {
         }
 
         System.out.println(" [done]");
+    }
+    
+    // <editor-fold defaultstate="collapsed" desc="Menu items">
+    @FXML
+    private CheckMenuItem checkDebugLayout;
+    
+    @FXML
+    private CheckMenuItem checkNaiveRecursive;
+    
+    @FXML
+    private CheckMenuItem checkNaiveAutoscaleNodes;
+    
+    @FXML
+    private CheckMenuItem checkNaiveLaunchRemoveCycles;
+    // </editor-fold>
+    
+    // <editor-fold desc="Development" defaultstate="collapsed">
+    @FXML
+    public void onNaiveAction(ActionEvent e) {
+        this.naiveLayout.setDebug(this.checkDebugLayout.isSelected());
+        this.naiveLayout.setRecursive(this.checkNaiveRecursive.isSelected());
+        this.naiveLayout.setAutoscaleNodes(this.checkNaiveAutoscaleNodes.isSelected());
+        this.naiveLayout.setLaunchRemoveCycles(this.checkNaiveLaunchRemoveCycles.isSelected());
+        this.naiveLayout.setWorkflow(this.workflow);
+        this.naiveLayout.generateLayout();
+    }
+    
+    @FXML
+    public void onSmartRunAction(ActionEvent e) {
+        this.smartLayout.setDebug(this.checkDebugLayout.isSelected());
+        if(this.smartLayout.getJustgraph()) {
+            LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
+            altlay.setWorkflow(this.workflow);
+            altlay.generateLayout();
+            DirectedGraph<VNode, Connection> jgraph = altlay.getModelGraph();
+            this.smartLayout.setModelGraph(jgraph);
+            this.smartLayout.setRecursive(false);
+        }
+        else {
+            this.smartLayout.setWorkflow(this.workflow);
+        }
+        this.smartLayout.generateLayout();
+    }
+    
+    @FXML
+    public void onSmartOptionsAction(ActionEvent e) {
+        options.set();
+        optionsstage.show();
+    }
+    // </editor-fold>
+    
+    // <editor-fold desc="Test cases" defaultstate="collapsed">
+    private int testcase = 0;
+    
+    @FXML
+    public void onOriginalAction(ActionEvent e) {
+        testcase = 1;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onAdditionalEdgeAction(ActionEvent e) {
+        testcase = 2;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onAdditionalGraphAction(ActionEvent e) {
+        testcase = 3;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onTriLaneAction(ActionEvent e) {
+        testcase = 4;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onDifferentSizesAction(ActionEvent e) {
+        testcase = 5;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onCycleAction(ActionEvent e) {
+        testcase = 6;
+        onGenerateAction(e);
+    }
+    
+    @FXML
+    public void onTestTree1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestTree2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestTree3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestNontree1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestNontree2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestNontree3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestCyclic1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestCyclic2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestCyclic3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestSizes1(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestSizes2(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestSizes3(ActionEvent e) {
+        // generation
+    }
+    
+    @FXML
+    public void onTestRunAll(ActionEvent e) {
+        // run
+    }
+    
+    // </editor-fold>
+    
+    @FXML
+    public void onStableAction(ActionEvent e) {
+        LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(false);
+        layouter.setWorkflow(workflow);
+        layouter.generateLayout();
     }
 
     @FXML
@@ -238,6 +436,87 @@ public class MainWindowFXMLController implements Initializable {
 
             n.setX((i % 5) * (n.getWidth() + 30));
             n.setY((i / 5) * (n.getHeight() + 30));
+        }
+        
+        // Create example connections
+        ObservableList<VNode> nodes;
+        switch (this.testcase) {
+            case 1: // original
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                break;
+            case 2: // additional edge
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                workflow.connect(nodes.get(2).getOutputs().get(2), nodes.get(8).getInputs().get(4));
+                break;
+            case 3: // additional graph
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(4).getInputs().get(1));
+                workflow.connect(nodes.get(4).getOutputs().get(1), nodes.get(7).getInputs().get(1));
+                break;
+            case 4: // tri lane
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(5).getInputs().get(1));
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(6).getInputs().get(1));
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(2).getInputs().get(1));
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(6).getOutputs().get(1), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(8).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(1));
+                break;
+            case 5: // different sizes
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(8).getInputs().get(3));
+                workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(5).getOutputs().get(3), nodes.get(7).getInputs().get(1));
+                workflow.connect(nodes.get(7).getOutputs().get(1), nodes.get(8).getInputs().get(0));
+                workflow.connect(nodes.get(8).getOutputs().get(2), nodes.get(9).getInputs().get(1));
+                workflow.connect(nodes.get(3).getOutputs().get(0), nodes.get(6).getInputs().get(0));
+                workflow.connect(nodes.get(6).getOutputs().get(0), nodes.get(0).getInputs().get(0));
+                workflow.connect(nodes.get(0).getOutputs().get(0), nodes.get(9).getInputs().get(0));
+                nodes.get(5).setHeight(nodes.get(5).getHeight() * 1.5);
+                nodes.get(5).setWidth(nodes.get(5).getWidth() * 1.5);
+                nodes.get(7).setHeight(nodes.get(7).getHeight() * 2);
+                nodes.get(8).setWidth(nodes.get(8).getWidth() * 2);
+                break;
+            case 6: // cycle
+                nodes = workflow.getNodes();
+                workflow.connect(nodes.get(0).getOutputs().get(1), nodes.get(1).getInputs().get(1));
+                workflow.connect(nodes.get(1).getOutputs().get(1), nodes.get(2).getInputs().get(1));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(3).getInputs().get(1));
+                workflow.connect(nodes.get(2).getOutputs().get(1), nodes.get(4).getInputs().get(1));
+                workflow.connect(nodes.get(4).getOutputs().get(1), nodes.get(0).getInputs().get(1));
+                break;
+            default:
+                break;
         }
     }
 

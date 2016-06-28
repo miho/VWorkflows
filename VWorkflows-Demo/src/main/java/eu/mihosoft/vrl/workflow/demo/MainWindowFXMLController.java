@@ -188,22 +188,28 @@ public class MainWindowFXMLController implements Initializable {
     @FXML
     public void onSmartRunAction(ActionEvent e) {
         this.smartLayout.setDebug(this.checkDebugLayout.isSelected());
-        if(this.smartLayout.getJustgraph()) {
-            LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
-            altlay.setWorkflow(this.workflow);
-            altlay.generateLayout();
-            DirectedGraph<VNode, Connection> jgraph = altlay.getModelGraph();
-            this.smartLayout.setModelGraph(jgraph);
-            this.smartLayout.setRecursive(false);
-        }
-        else {
-            this.smartLayout.setWorkflow(this.workflow);
+        switch(this.smartLayout.getGraphmode()) {
+            case 0:
+                this.smartLayout.setWorkflow(this.workflow);
+                break;
+            case 1:
+                LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
+                altlay.setWorkflow(this.workflow);
+                altlay.generateLayout();
+                DirectedGraph<VNode, Connection> jgraph = altlay.getModelGraph();
+                this.smartLayout.setModelGraph(jgraph);
+                this.smartLayout.setRecursive(false);
+                break;
+            case 2:
+                // run with nodelist
+                break;
         }
         this.smartLayout.generateLayout();
     }
     
     @FXML
     public void onSmartOptionsAction(ActionEvent e) {
+        options.setWorkflow(workflow);
         options.set();
         optionsstage.show();
     }

@@ -600,34 +600,23 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
             }
         }
         // Calculate size of layers.
-        // In the naive approach all layers have the same size and nodes are 
-        // equidistant.
         double[] sizeX = new double[layers.size()];
-        double sizeY = 0;
         for(i = 0; i < layers.size(); i++) {
-            double tempsizeY = 0;
-            for(j = 0; j < layers.get(i).size(); j++) {
-                sizeX[i] = 0.;
-                VNode currentNode;
-                for(k = 0; k < this.nodecount; k++) {
-                    if(layers.get(i).get(j).equals((Integer) k)) {
-                        currentNode = this.nodes[k];
-                        if(sizeX[i] < currentNode.getWidth())
-                            sizeX[i] = currentNode.getWidth();
-                        tempsizeY += currentNode.getHeight();
-                        break;
-                    } 
-                }
+            sizeX[i] = 0.;
+            Iterator<Integer> it;
+            it = layers.get(i).iterator();
+            while(it.hasNext()) {
+                int curr = it.next();
+                VNode currNode = this.nodes[curr];
+                if(sizeX[i] < currNode.getWidth())
+                    sizeX[i] = currNode.getWidth();
             }
-            if(tempsizeY > sizeY)
-                sizeY = tempsizeY;
         }
         // apply layout
         double posX = 0;
-        double posY = 0;
+        double posY;
         for(i = 0; i < layers.size(); i++) {
             double distX = this.scaling * sizeX[i];
-            double distY = this.scaling * sizeY / layers.get(i).size();
             posY = 0;
             for(j = 0; j < layers.get(i).size(); j++) {
                 for(k = 0; k < this.nodecount; k++) {
@@ -637,7 +626,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
                         currentNode.setY(posY);
                         if(this.debug) System.out.println(currentNode.getId() 
                                 + " | X: " + posX + " Y: " + posY);
-                        posY += distY;
+                        posY += (currentNode.getHeight() * this.scaling);
                         break;
                     }
                 }

@@ -49,6 +49,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,6 +100,9 @@ public class OptionsWindowFXMLController implements Initializable {
     
     @FXML
     private CheckBox checkSeparateDisjunctGraphs;
+    
+    @FXML
+    private CheckBox checkSeparateEdgeTypes;
     
     @FXML
     private CheckBox checkDisplaceIdents;
@@ -194,24 +198,36 @@ public class OptionsWindowFXMLController implements Initializable {
     
     @FXML
     void onShowPress(ActionEvent e) {
+        int i;
         accept();
         switch(this.generator.getGraphmode()) {
             case 0:
-                this.generator.setWorkflow(this.workflow);
+                this.generator.setWorkflow(this.workflow.getModel());
+                this.generator.generateLayout();
                 break;
             case 1:
                 LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
-                altlay.setWorkflow(this.workflow);
+                altlay.setWorkflow(this.workflow.getModel());
                 altlay.generateLayout();
                 DirectedGraph<VNode, Connection> jgraph = altlay.getModelGraph();
                 this.generator.setModelGraph(jgraph);
-                this.generator.setRecursive(false);
+                this.generator.generateLayout();
                 break;
             case 2:
-                // run with nodelist
+                ObservableList<VNode> obsnodes = workflow.getNodes();
+                LinkedList<VNode> nodelist = new LinkedList<>();
+                for(i = 0; i < obsnodes.size(); i++) {
+                    VNode curr = obsnodes.get(i);
+                    if(curr.isSelected()) {
+                        nodelist.add(curr);
+                    }
+                }
+                if(!nodelist.isEmpty()) {
+                    this.generator.setNodelist(nodelist);
+                    this.generator.generateLayout();
+                }
                 break;
         }
-        this.generator.generateLayout();
     }
     
     /**
@@ -221,6 +237,7 @@ public class OptionsWindowFXMLController implements Initializable {
     public void set() {
         this.checkForcePush.setSelected(this.generator.getLaunchForcePush());
         this.checkSeparateDisjunctGraphs.setSelected(this.generator.getLaunchSeparateDisjunctGraphs());
+        this.checkSeparateEdgeTypes.setSelected(this.generator.getLaunchSeparateEdgeTypes());
         this.checkDisplaceIdents.setSelected(this.generator.getLaunchDisplaceIdents());
         this.tfMaxiterations.setText(Integer.toString(this.generator.getMaxiterations()));
         this.checkRecursive.setSelected(this.generator.getRecursive());
@@ -250,6 +267,7 @@ public class OptionsWindowFXMLController implements Initializable {
         String temp;
         this.generator.setLaunchForcePush(this.checkForcePush.isSelected());
         this.generator.setLaunchSeparateDisjunctGraphs(this.checkSeparateDisjunctGraphs.isSelected());
+        this.generator.setLaunchSeparateEdgeTypes(this.checkSeparateEdgeTypes.isSelected());
         this.generator.setLaunchDisplaceIdents(this.checkDisplaceIdents.isSelected());
         i = this.generator.getMaxiterations();
         temp = this.tfMaxiterations.getText();

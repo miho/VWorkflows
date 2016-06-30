@@ -45,7 +45,7 @@ public interface LayoutGenerator {
      * Returns the workflow to be laid out.
      * @return VFlow
      */
-    public VFlow getWorkflow();
+    public VFlowModel getWorkflow();
     
     /**
      * If set to true, the layout is applied to all subflows of the given 
@@ -72,7 +72,7 @@ public interface LayoutGenerator {
      * Set the workflow to be laid out.
      * @param pworkflow VFlow
      */
-    public void setWorkflow(VFlow pworkflow);
+    public void setWorkflow(VFlowModel pworkflow);
     
     /**
      * If set to true, the layout is applied to all subflows of the given 

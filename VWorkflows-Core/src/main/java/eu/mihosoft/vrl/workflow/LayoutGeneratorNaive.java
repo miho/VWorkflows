@@ -53,7 +53,7 @@ import javafx.collections.ObservableMap;
 public class LayoutGeneratorNaive implements LayoutGenerator {
     
     // parameters:
-    private VFlow workflow;
+    private VFlowModel workflow;
     private LinkedList<Pair<Integer>> connectionList;
     //private LinkedList<Tuple<Integer,Integer>> connectionList;
     private boolean recursive;
@@ -108,7 +108,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      * @return VFlow
      */
     @Override
-    public VFlow getWorkflow() {
+    public VFlowModel getWorkflow() {
         return this.workflow;
     }
     
@@ -192,7 +192,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      * @param pworkflow VFlow.
      */
     @Override
-    public void setWorkflow(VFlow pworkflow) {
+    public void setWorkflow(VFlowModel pworkflow) {
         this.workflow = pworkflow;
     }
     
@@ -486,12 +486,12 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         subgen.setAutoscaleNodes(this.autoscaleNodes);
         subgen.setLaunchRemoveCycles(this.launchRemoveCycles);
         // apply layout to each subflow
-        Collection<VFlow> subconts = this.workflow.getSubControllers();
-        Iterator<VFlow> it = subconts.iterator();
-        while(it.hasNext()) {
-            VFlow subflow = it.next();
-            subgen.setWorkflow(subflow);
-            subgen.generateLayout();
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            if(this.nodes[i] instanceof VFlowModel) {
+                subgen.setWorkflow((VFlowModel) this.nodes[i]);
+                subgen.generateLayout();
+            }
         }
     }
     
@@ -499,13 +499,13 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      * Scales subflow-nodes according to their contents.
      */
     private void autoscaleNodes() {
-        Collection<VFlow> subconts = this.workflow.getSubControllers();
-        Iterator<VFlow> it = subconts.iterator();
-        // iterate over all subflows
-        while(it.hasNext()) {
-            VFlow subflow = it.next();
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            VFlowModel subflow;
+            if(!(this.nodes[i] instanceof VFlowModel)) continue;
+            subflow = (VFlowModel) this.nodes[i];
             // get node representation of the current subflow
-            VNode flownode = subflow.getModel();
+            VNode flownode = this.nodes[i];
             if(this.debug) System.out.println("Resizing subflow-node "
                     + flownode.getId());
             // get nodes from the subflow

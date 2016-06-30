@@ -48,12 +48,12 @@
       <TextField fx:id="tfAspectratio" layoutX="14.0" layoutY="87.0" />
       <CheckBox fx:id="checkRemoveCycles" layoutX="201.0" layoutY="68.0" mnemonicParsing="false" text="removeCycles" />
       <CheckBox fx:id="checkSeparateDisjunctGraphs" layoutX="201.0" layoutY="95.0" mnemonicParsing="false" text="separateDisjunctGraphs" />
-      <CheckBox fx:id="checkRotate" layoutX="201.0" layoutY="149.0" mnemonicParsing="false" text="rotate" />
-      <CheckBox fx:id="checkOrigin" layoutX="201.0" layoutY="176.0" mnemonicParsing="false" text="origin" />
-      <CheckBox fx:id="checkPushBack" layoutX="201.0" layoutY="203.0" mnemonicParsing="false" text="pushBack" />
-      <CheckBox fx:id="checkDisplaceIdents" layoutX="201.0" layoutY="230.0" mnemonicParsing="false" text="displaceIdents" />
-      <CheckBox fx:id="checkForcePush" layoutX="201.0" layoutY="257.0" mnemonicParsing="false" text="forcePush" />
-      <CheckBox fx:id="checkAlignNodes" layoutX="201.0" layoutY="284.0" mnemonicParsing="false" text="alignNodes" />
+      <CheckBox fx:id="checkRotate" layoutX="201.0" layoutY="176.0" mnemonicParsing="false" text="rotate" />
+      <CheckBox fx:id="checkOrigin" layoutX="201.0" layoutY="203.0" mnemonicParsing="false" text="origin" />
+      <CheckBox fx:id="checkPushBack" layoutX="201.0" layoutY="230.0" mnemonicParsing="false" text="pushBack" />
+      <CheckBox fx:id="checkDisplaceIdents" layoutX="201.0" layoutY="257.0" mnemonicParsing="false" text="displaceIdents" />
+      <CheckBox fx:id="checkForcePush" layoutX="201.0" layoutY="284.0" mnemonicParsing="false" text="forcePush" />
+      <CheckBox fx:id="checkAlignNodes" layoutX="201.0" layoutY="311.0" mnemonicParsing="false" text="alignNodes" />
       <TextField fx:id="tfMaxiterations" layoutX="14.0" layoutY="189.0" />
       <TextField fx:id="tfScaling" layoutX="14.0" layoutY="240.0" />
       <TextField fx:id="tfSubflowscale" layoutX="14.0" layoutY="291.0" />
@@ -70,7 +70,8 @@
       <TextField fx:id="tfDirection" layoutX="14.0" layoutY="342.0" />
       <Label layoutX="14.0" layoutY="371.0" text="alignmentThreshold:" />
       <TextField fx:id="tfAlignmentThreshold" layoutX="14.0" layoutY="393.0" />
-      <CheckBox fx:id="checkJungLayout" layoutX="201.0" layoutY="122.0" mnemonicParsing="false" text="jungLayout" />
+      <CheckBox fx:id="checkJungLayout" layoutX="201.0" layoutY="149.0" mnemonicParsing="false" text="jungLayout" />
       <Button layoutX="216.0" layoutY="371.0" mnemonicParsing="false" onAction="#onShowPress" prefHeight="25.0" prefWidth="82.0" text="Generate" />
+      <CheckBox fx:id="checkSeparateEdgeTypes" layoutX="201.0" layoutY="122.0" mnemonicParsing="false" text="separateEdgeTypes" />
    </children>
 </AnchorPane>

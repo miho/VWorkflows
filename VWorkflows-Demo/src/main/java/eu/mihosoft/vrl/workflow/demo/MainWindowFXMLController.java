@@ -66,6 +66,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -181,35 +182,48 @@ public class MainWindowFXMLController implements Initializable {
         this.naiveLayout.setRecursive(this.checkNaiveRecursive.isSelected());
         this.naiveLayout.setAutoscaleNodes(this.checkNaiveAutoscaleNodes.isSelected());
         this.naiveLayout.setLaunchRemoveCycles(this.checkNaiveLaunchRemoveCycles.isSelected());
-        this.naiveLayout.setWorkflow(this.workflow);
+        this.naiveLayout.setWorkflow(this.workflow.getModel());
         this.naiveLayout.generateLayout();
     }
     
     @FXML
     public void onSmartRunAction(ActionEvent e) {
+        int i;
         this.smartLayout.setDebug(this.checkDebugLayout.isSelected());
         switch(this.smartLayout.getGraphmode()) {
             case 0:
-                this.smartLayout.setWorkflow(this.workflow);
+                this.smartLayout.setWorkflow(this.workflow.getModel());
+                this.smartLayout.generateLayout();
                 break;
             case 1:
                 LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
-                altlay.setWorkflow(this.workflow);
+                altlay.setWorkflow(this.workflow.getModel());
                 altlay.generateLayout();
                 DirectedGraph<VNode, Connection> jgraph = altlay.getModelGraph();
                 this.smartLayout.setModelGraph(jgraph);
-                this.smartLayout.setRecursive(false);
+                this.smartLayout.generateLayout();
                 break;
             case 2:
-                // run with nodelist
+                ObservableList<VNode> obsnodes = workflow.getNodes();
+                LinkedList<VNode> nodelist = new LinkedList<>();
+                for(i = 0; i < obsnodes.size(); i++) {
+                    VNode curr = obsnodes.get(i);
+                    if(curr.isSelected()) {
+                        nodelist.add(curr);
+                    }
+                }
+                if(!nodelist.isEmpty()) {
+                    this.smartLayout.setNodelist(nodelist);
+                    this.smartLayout.generateLayout();
+                }
                 break;
         }
-        this.smartLayout.generateLayout();
     }
     
     @FXML
     public void onSmartOptionsAction(ActionEvent e) {
         options.setWorkflow(workflow);
+        smartLayout.setDebug(checkDebugLayout.isSelected());
         options.set();
         optionsstage.show();
     }
@@ -324,7 +338,7 @@ public class MainWindowFXMLController implements Initializable {
     @FXML
     public void onStableAction(ActionEvent e) {
         LayoutGeneratorSmart layouter = new LayoutGeneratorSmart(false);
-        layouter.setWorkflow(workflow);
+        layouter.setWorkflow(workflow.getModel());
         layouter.generateLayout();
     }
 

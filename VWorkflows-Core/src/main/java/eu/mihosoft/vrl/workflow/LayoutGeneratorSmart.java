@@ -1212,6 +1212,10 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 if(this.nodes[i].getX() < minx) minx = this.nodes[i].getX();
                 if(this.nodes[i].getY() < miny) miny = this.nodes[i].getY();
             }
+            for(i = 0; i < this.nodecount; i++) {
+                this.nodes[i].setX(this.nodes[i].getX() - minx);
+                this.nodes[i].setY(this.nodes[i].getY() - miny);
+            }
             
             if(this.cycle && this.launchRemoveCycles) {
                 removeCycles();
@@ -1666,7 +1670,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 if(this.debug) System.out.println("handling connection from " + pred.getId() + " to " + this.nodes[i].getId());
                 double preDiag = Math.sqrt(Math.pow((pred.getWidth() / 2), 2) + Math.pow((pred.getHeight() / 2), 2));
                 double currDiag = Math.sqrt(Math.pow((this.nodes[i].getWidth() / 2), 2) + Math.pow((this.nodes[i].getHeight() / 2), 2));
-                double desDist = (preDiag + currDiag) * this.scaling;
+                double desDist = preDiag * this.scaling;
                 // predecessor:
                 double xa = pred.getX() + pred.getWidth()/2;
                 double ya = pred.getY() + pred.getHeight()/2;

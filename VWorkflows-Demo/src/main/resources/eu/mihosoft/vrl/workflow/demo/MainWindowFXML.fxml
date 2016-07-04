@@ -95,13 +95,16 @@
                             <CheckMenuItem fx:id="checkNaiveRecursive" mnemonicParsing="false" selected="true" text="recursive execution" />
                             <CheckMenuItem fx:id="checkNaiveAutoscaleNodes" mnemonicParsing="false" selected="true" text="autoscale nodes" />
                             <CheckMenuItem fx:id="checkNaiveLaunchRemoveCycles" mnemonicParsing="false" selected="true" text="remove cycles" />
+                            <CheckMenuItem fx:id="checkCreateLayering" mnemonicParsing="false" selected="true" text="Create Layering" />
+                            <CheckMenuItem fx:id="checkCalcVertPos" mnemonicParsing="false" selected="true" text="Calculate Vertical Positions" />
+                            <CheckMenuItem fx:id="checkCalcHorPos" mnemonicParsing="false" selected="true" text="Calculate Horizontal Positions" />
                         </Menu>
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Smart Layout">
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartRunAction" text="apply layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartOptionsAction" text="Options" />
-                    </Menu>
-                    <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Smart Layout">
+                            <MenuItem mnemonicParsing="false" onAction="#onSmartRunAction" text="apply layout" />
+                            <MenuItem mnemonicParsing="false" onAction="#onSmartOptionsAction" text="Options" />
+                        </Menu>
+                        <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
                 </Menu>
                 <MenuItem mnemonicParsing="false" onAction="#onStableAction" text="Stable" />
             </Menu>

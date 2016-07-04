@@ -55,10 +55,12 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     // parameters:
     private VFlowModel workflow;
     private LinkedList<Pair<Integer>> connectionList;
-    //private LinkedList<Tuple<Integer,Integer>> connectionList;
     private boolean recursive;
     private boolean autoscaleNodes;
     private boolean launchRemoveCycles;
+    private boolean launchCreateLayering;
+    private boolean launchCalculateHorizontalPositions;
+    private boolean launchCalculateVerticalPositions;
     private double scaling;
     private double subflowscale;
     private boolean debug;
@@ -68,6 +70,8 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     private int nodecount;
     private int conncount;
     private boolean cycle;
+    private int[] layering;
+    private int layercount;
     
     /**
      * Default constructor.
@@ -98,14 +102,17 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         this.recursive = true;
         this.autoscaleNodes = true;
         this.launchRemoveCycles = true;
-        this.scaling = 1.5;
+        this.launchCreateLayering = true;
+        this.launchCalculateVerticalPositions = true;
+        this.launchCalculateHorizontalPositions = true;
+        this.scaling = -1.5;
         this.subflowscale = 2.;
     }
     
     // <editor-fold defaultstate="collapsed" desc="getter">
     /**
      * Returns the workflow to be laid out.
-     * @return VFlow
+     * @return VFlowModel
      */
     @Override
     public VFlowModel getWorkflow() {
@@ -147,6 +154,36 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
+     * If set to true a new layering for the given graph is created.
+     * default: true
+     * @return boolean
+     */
+    public boolean getLaunchCreateLayering() {
+        return this.launchCreateLayering;
+    }
+    
+    /**
+     * If set to true the vertical position for each node is calculated and 
+     * changed.
+     * Does not change the order of nodes on each layer.
+     * default: true
+     * @return boolean
+     */
+    public boolean getLaunchCalculateVerticalPositions() {
+        return this.launchCalculateVerticalPositions;
+    }
+    
+    /**
+     * If set to true the horizontal position for each layer is calculated and 
+     * changed.
+     * default: true
+     * @return boolean
+     */
+    public boolean getLaunchCalculateHorizontalPositions() {
+        return this.launchCalculateHorizontalPositions;
+    }
+    
+    /**
      * Get the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
      * default: 1.5
@@ -184,12 +221,20 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     public LinkedList<Pair<Integer>> getModelGraph() {
         return this.connectionList;
     }
+    
+    /**
+     * Returns the layering of the current graph as an array of layer indices.
+     * @return int[]
+     */
+    public int[] getLayering() {
+        return this.layering;
+    }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="setter">
     /**
      * Set the workflow to be laid out.
-     * @param pworkflow VFlow.
+     * @param pworkflow VFlowModel
      */
     @Override
     public void setWorkflow(VFlowModel pworkflow) {
@@ -230,6 +275,41 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         this.launchRemoveCycles = plaunchRemoveCycles;
     }
     
+    
+    /**
+     * If set to true a new layering for the given graph is created.
+     * default: true
+     * @param plaunchCreateLayering boolean
+     */
+    public void setLaunchCreateLayering(boolean plaunchCreateLayering) {
+        this.launchCreateLayering = plaunchCreateLayering;
+    }
+    
+    /**
+     * If set to true the vertical position for each node is calculated and 
+     * changed.
+     * Does not change the order of nodes on each layer.
+     * default: true
+     * @param plaunchCalculateVerticalPositions boolean
+     */
+    public void setLaunchCalculateVerticalPositions(
+            boolean plaunchCalculateVerticalPositions) {
+        this.launchCalculateVerticalPositions = 
+                plaunchCalculateVerticalPositions;
+    }
+    
+    /**
+     * If set to true the horizontal position for each layer is calculated and 
+     * changed.
+     * default: true
+     * @param plaunchCalculateHorizontalPositions boolean
+     */
+    public void setLaunchCalculateHorizontalPositions(
+            boolean plaunchCalculateHorizontalPositions) {
+        this.launchCalculateHorizontalPositions = 
+                plaunchCalculateHorizontalPositions;
+    }
+    
     /**
      * Set the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
@@ -267,6 +347,14 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      */
     public void setModelGraph(LinkedList<Pair<Integer>> pconnectionList) {
         this.connectionList = pconnectionList;
+    }
+    
+    /**
+     * Set the layering of the current graph as an array of layer indices.
+     * @param playering int[]
+     */
+    public void setLayering(int[] playering) {
+        this.layering = playering;
     }
     // </editor-fold>
     
@@ -357,9 +445,10 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
                     // be checked once.
                     if(!checked[currNode]) {
                         for(j = 0; j < this.conncount; j++) {
-                            if(Objects.equals(this.connectionList.get(j).getFirst(),
-                                    currNode)) {
-                                succs.add(this.connectionList.get(j).getSecond());
+                            if(Objects.equals(this.connectionList.get(j)
+                                    .getFirst(), currNode)) {
+                                succs.add(this.connectionList.get(j)
+                                        .getSecond());
                                 it = succs.iterator();
                                 checked[currNode] = true;
                             }
@@ -399,7 +488,8 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      * @param checked boolean[]: array of length nodecount showing which nodes 
      * were already checked
      */
-    private void remCycR(Integer curr, LinkedList<Integer> path, boolean[] checked) {
+    private void remCycR(Integer curr, LinkedList<Integer> path, 
+            boolean[] checked) {
         if(!checked[curr]) {
             // add current node to path
             path.addFirst(curr);
@@ -420,7 +510,8 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
                     // if edge from curr to currSucc is a back edge
                     if(path.contains(currSucc)) {
                         // remove all edges from curr to currSucc
-                        Iterator<Pair<Integer>> its = this.connectionList.iterator();
+                        Iterator<Pair<Integer>> its = this.connectionList
+                                .iterator();
                         while(its.hasNext()) {
                             Pair<Integer> currConn = its.next();
                             if(Objects.equals(currConn.getFirst(), curr) 
@@ -472,7 +563,11 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
                 autoscaleNodes();
             }
             // apply layout
-            applyLayout();
+            if(this.launchCreateLayering) createLayering();
+            if(this.launchCalculateVerticalPositions) 
+                calculateVerticalPositions();
+            if(this.launchCalculateHorizontalPositions) 
+                calculateHorizontalPositions();
         }
     }
     
@@ -549,90 +644,152 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Applies the layout to the VFlow given.
+     * Creates a new layering, assigning each node the lowest layer possible, 
+     * while still having all of its preceeding nodes on a lower layer.
      */
-    private void applyLayout() {
-        int i, j, k;
-        LinkedList<LinkedList<Integer>> layers = new LinkedList<>();
-        // first layer contains all nodes without input
-        LinkedList<Integer> noIn = new LinkedList<>();
+    private void createLayering() {
+        int i;
+        // init layering
+        this.layering = new int[this.nodecount];
+        int lockable = 0;
+        boolean[] locked = new boolean[this.nodecount];
         for(i = 0; i < this.nodecount; i++) {
-            boolean in = false;
-            for(j = 0; j < this.connectionList.size(); j++) {
-                if(this.connectionList.get(j).getSecond().equals((Integer) i))
-                    in = true;
-            }
-            if(!in)
-                noIn.add((Integer) i);
+            this.layering[i] = 0;
+            locked[i] = false;
         }
-        layers.add(noIn);
-        // layer n contains all nodes with inputs from nodes in layer n-1
-        i = 0;
-        while(true) {
-            LinkedList<Integer> currentLayer = new LinkedList<>();
-            for(j = 0; j < layers.get(i).size(); j++) {
-                Integer currentNode = layers.get(i).get(j);
-                for(k = 0; k < this.connectionList.size(); k++) {
-                    if(this.connectionList.get(k).getFirst().equals(currentNode))
-                        currentLayer.add(this.connectionList.get(k).getSecond());
-                }
-            }
-            if(currentLayer.size() > 0) {
-                layers.add(currentLayer);
-                i++;
-            }
-            else
-                break;
-        }
-        // remove doubles
-        boolean[] duplicates = new boolean[this.nodecount];
-        for(i = 0; i < this.nodecount; i++) {
-            duplicates[i] = false;
-        }
-        for(i = layers.size()-1; i >= 0; i--) {
-            for(j = 0; j < layers.get(i).size(); j++) {
-                if(duplicates[layers.get(i).get(j)]) {
-                    layers.get(i).remove(j);
-                    j--;
-                }
-                else
-                    duplicates[layers.get(i).get(j)] = true;
-            }
-        }
-        // Calculate size of layers.
-        double[] sizeX = new double[layers.size()];
-        for(i = 0; i < layers.size(); i++) {
-            sizeX[i] = 0.;
-            Iterator<Integer> it;
-            it = layers.get(i).iterator();
+        
+        while(!allLocked(locked)) {
+            Iterator<Pair<Integer>> it = this.connectionList.iterator();
+            // iterate over all connections
             while(it.hasNext()) {
-                int curr = it.next();
-                VNode currNode = this.nodes[curr];
-                if(sizeX[i] < currNode.getWidth())
-                    sizeX[i] = currNode.getWidth();
-            }
-        }
-        // apply layout
-        double posX = 0;
-        double posY;
-        for(i = 0; i < layers.size(); i++) {
-            double distX = this.scaling * sizeX[i];
-            posY = 0;
-            for(j = 0; j < layers.get(i).size(); j++) {
-                for(k = 0; k < this.nodecount; k++) {
-                    if(layers.get(i).get(j).equals((Integer) k)) {
-                        VNode currentNode = this.nodes[k];
-                        currentNode.setX(posX);
-                        currentNode.setY(posY);
-                        if(this.debug) System.out.println(currentNode.getId() 
-                                + " | X: " + posX + " Y: " + posY);
-                        posY += (currentNode.getHeight() * this.scaling);
-                        break;
-                    }
+                Pair<Integer> curr = it.next();
+                // set all receivers of the current connection to the layer of 
+                // their receiver + 1
+                if((!locked[curr.getSecond()]) 
+                        && (this.layering[curr.getSecond()] 
+                        < (this.layering[curr.getFirst()] + 1))) {
+                    this.layering[curr.getSecond()] = 
+                            this.layering[curr.getFirst()] + 1;
                 }
             }
-            posX += distX;
-        }        
+            for(i = 0; i < this.nodecount; i++) {
+                // layers that have been finalized
+                if(this.layering[i] == lockable) {
+                    locked[i] = true;
+                    if(this.debug) System.out.println(this.nodes[i].getId() 
+                            + " locked on layer " + lockable);
+                }
+            }
+            // each iteration, the next layer can be locked
+            lockable++;
+        }
+        this.layercount = lockable;
+    }
+    
+    /**
+     * Returns true if all nodes are on a locked layer.
+     * @param locked boolean[]
+     * @return boolean
+     */
+    private boolean allLocked(boolean[] locked) {
+        boolean result = true;
+        int i;
+        for(i = 0; i < locked.length; i++) {
+            if(!locked[i]) result = false;
+        }
+        return result;
+    }
+    
+    /**
+     * Calculates the vertical positions of the nodes in each layer depending on 
+     * their height and the scaling parameter.
+     * Does not sort nodes to reduce edge crossings.
+     */
+    private void calculateVerticalPositions() {
+        int i;
+        int currlayer;
+        int[] layer;
+        for(currlayer = 0; currlayer < this.layercount; currlayer++) {
+            // create array of the layer
+            int nodeson = 0;
+            // find number of nodes on current layer
+            for(i = 0; i < this.nodecount; i++) {
+                if(this.layering[i] == currlayer) nodeson++;
+            }
+            int layeri = 0;
+            layer = new int[nodeson];
+            // find nodes on current layer
+            for(i = 0; i < this.nodecount; i++) {
+                if(this.layering[i] == currlayer) {
+                    layer[layeri] = i;
+                    layeri++;
+                }
+            }
+            // iterate over all nodes on current layer
+            double posy = 0.;
+            for(i = 0; i < nodeson; i++) {
+                if(this.debug) System.out.println("Vertical position of " 
+                        + this.nodes[layer[i]].getId() + " on layer " 
+                        + currlayer + " set to " + posy);
+                this.nodes[layer[i]].setY(posy);
+                // increase position for next node by height of current node 
+                // and scaling
+                if(this.scaling < 0) {
+                    posy = posy + this.nodes[layer[i]].getHeight() 
+                            * this.scaling * (-1);
+                }
+                else {
+                    posy = posy + this.nodes[layer[i]].getHeight() 
+                            + this.scaling;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Calculates horizontal positions of the layers depending on node width.
+     */
+    private void calculateHorizontalPositions() {
+        int i;
+        int currlayer;
+        int[] layer;
+        double posx = 0.;
+        for(currlayer = 0; currlayer < this.layercount; currlayer++) {
+            // create array of layer
+            int nodeson = 0;
+            // find number of nodes on current layer
+            for(i = 0; i < this.nodecount; i++) {
+                if(this.layering[i] == currlayer) nodeson++;
+            }
+            int layeri = 0;
+            layer = new int[nodeson];
+            // find nodes on current layer
+            for(i = 0; i < this.nodecount; i++) {
+                if(this.layering[i] == currlayer) {
+                    layer[layeri] = i;
+                    layeri++;
+                }
+            }
+            // iterate over all nodes on current layer
+            double maxwidth = Double.NEGATIVE_INFINITY;
+            for(i = 0; i < nodeson; i++) {
+                if(this.debug) System.out.println("Horizontal position of " 
+                        + this.nodes[layer[i]].getId() + " on layer " 
+                        + currlayer + " set to " + posx);
+                this.nodes[layer[i]].setX(posx);
+                // find max width on current layer
+                if(this.nodes[layer[i]].getWidth() > maxwidth) {
+                    maxwidth = this.nodes[layer[i]].getWidth();
+                }
+            }
+            // increase position for next layer by max width and scaling
+            if(this.scaling < 0) {
+                posx = posx + maxwidth * this.scaling * (-1);
+            }
+            else {
+                posx = posx + maxwidth + this.scaling;
+            }
+        }
     }
     
     /**

@@ -43,7 +43,7 @@ public interface LayoutGenerator {
     
     /**
      * Returns the workflow to be laid out.
-     * @return VFlow
+     * @return VFlowModel
      */
     public VFlowModel getWorkflow();
     
@@ -70,7 +70,7 @@ public interface LayoutGenerator {
     
     /**
      * Set the workflow to be laid out.
-     * @param pworkflow VFlow
+     * @param pworkflow VFlowModel
      */
     public void setWorkflow(VFlowModel pworkflow);
     

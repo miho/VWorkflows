@@ -73,6 +73,8 @@ public class OptionsWindowFXMLController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url URL
+     * @param rb ResourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -209,7 +211,8 @@ public class OptionsWindowFXMLController implements Initializable {
                 LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
                 altlay.setWorkflow(this.workflow.getModel());
                 altlay.generateLayout();
-                DirectedGraph<VNode, Connection> jgraph = altlay.getModelGraph();
+                DirectedGraph<VNode, Connection> jgraph = 
+                        altlay.getModelGraph();
                 this.generator.setModelGraph(jgraph);
                 this.generator.generateLayout();
                 break;
@@ -236,25 +239,37 @@ public class OptionsWindowFXMLController implements Initializable {
      */
     public void set() {
         this.checkForcePush.setSelected(this.generator.getLaunchForcePush());
-        this.checkSeparateDisjunctGraphs.setSelected(this.generator.getLaunchSeparateDisjunctGraphs());
-        this.checkSeparateEdgeTypes.setSelected(this.generator.getLaunchSeparateEdgeTypes());
-        this.checkDisplaceIdents.setSelected(this.generator.getLaunchDisplaceIdents());
-        this.tfMaxiterations.setText(Integer.toString(this.generator.getMaxiterations()));
+        this.checkSeparateDisjunctGraphs.setSelected(this.generator
+                .getLaunchSeparateDisjunctGraphs());
+        this.checkSeparateEdgeTypes.setSelected(this.generator
+                .getLaunchSeparateEdgeTypes());
+        this.checkDisplaceIdents.setSelected(this.generator
+                .getLaunchDisplaceIdents());
+        this.tfMaxiterations.setText(Integer.toString(this.generator
+                .getMaxiterations()));
         this.checkRecursive.setSelected(this.generator.getRecursive());
-        this.tfAspectratio.setText(Double.toString(this.generator.getAspectratio()));
+        this.tfAspectratio.setText(Double.toString(this.generator
+                .getAspectratio()));
         this.tfScaling.setText(Double.toString(this.generator.getScaling()));
-        this.selLayout.setValue(this.layouts[this.generator.getLayoutSelector()]);
+        this.selLayout.setValue(this.layouts[this.generator
+                .getLayoutSelector()]);
         this.checkAlignNodes.setSelected(this.generator.getLaunchAlignNodes());
-        this.checkRemoveCycles.setSelected(this.generator.getLaunchRemoveCycles());
+        this.checkRemoveCycles.setSelected(this.generator
+                .getLaunchRemoveCycles());
         this.checkOrigin.setSelected(this.generator.getLaunchOrigin());
-        this.tfSubflowscale.setText(Double.toString(this.generator.getSubflowscale()));
+        this.tfSubflowscale.setText(Double.toString(this.generator
+                .getSubflowscale()));
         this.checkRotate.setSelected(this.generator.getLaunchRotate());
         this.checkPushBack.setSelected(this.generator.getLaunchPushBack());
-        this.checkAutoscaleNodes.setSelected(this.generator.getAutoscaleNodes());
+        this.checkAutoscaleNodes.setSelected(this.generator
+                .getAutoscaleNodes());
         this.checkJungLayout.setSelected(this.generator.getLaunchJungLayout());
-        this.selGraphmode.setValue(this.graphmodes[this.generator.getGraphmode()]);
-        this.tfDirection.setText(Double.toString(this.generator.getDirection()));
-        this.tfAlignmentThreshold.setText(Double.toString(this.generator.getAlignmentThreshold()));
+        this.selGraphmode.setValue(this.graphmodes[this.generator
+                .getGraphmode()]);
+        this.tfDirection.setText(Double.toString(this.generator
+                .getDirection()));
+        this.tfAlignmentThreshold.setText(Double.toString(this.generator
+                .getAlignmentThreshold()));
     }
 
     /**
@@ -266,9 +281,12 @@ public class OptionsWindowFXMLController implements Initializable {
         double j;
         String temp;
         this.generator.setLaunchForcePush(this.checkForcePush.isSelected());
-        this.generator.setLaunchSeparateDisjunctGraphs(this.checkSeparateDisjunctGraphs.isSelected());
-        this.generator.setLaunchSeparateEdgeTypes(this.checkSeparateEdgeTypes.isSelected());
-        this.generator.setLaunchDisplaceIdents(this.checkDisplaceIdents.isSelected());
+        this.generator.setLaunchSeparateDisjunctGraphs(this
+                .checkSeparateDisjunctGraphs.isSelected());
+        this.generator.setLaunchSeparateEdgeTypes(this.checkSeparateEdgeTypes
+                .isSelected());
+        this.generator.setLaunchDisplaceIdents(this.checkDisplaceIdents
+                .isSelected());
         i = this.generator.getMaxiterations();
         temp = this.tfMaxiterations.getText();
         try {
@@ -301,7 +319,8 @@ public class OptionsWindowFXMLController implements Initializable {
             }
         }
         this.generator.setLaunchAlignNodes(this.checkAlignNodes.isSelected());
-        this.generator.setLaunchRemoveCycles(this.checkRemoveCycles.isSelected());
+        this.generator.setLaunchRemoveCycles(this.checkRemoveCycles
+                .isSelected());
         this.generator.setLaunchOrigin(this.checkOrigin.isSelected());
         j = this.generator.getSubflowscale();
         temp = this.tfSubflowscale.getText();

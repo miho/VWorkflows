@@ -35,6 +35,7 @@ package eu.mihosoft.vrl.workflow;
 
 
 import edu.uci.ics.jung.graph.util.Pair;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -57,6 +58,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     private LinkedList<Pair<Integer>> connectionList;
     private boolean recursive;
     private boolean autoscaleNodes;
+    private int graphmode;
     private boolean launchRemoveCycles;
     private boolean launchCreateLayering;
     private boolean launchCalculateHorizontalPositions;
@@ -101,6 +103,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         // default parameters:
         this.recursive = true;
         this.autoscaleNodes = true;
+        this.graphmode = 0;
         this.launchRemoveCycles = true;
         this.launchCreateLayering = true;
         this.launchCalculateVerticalPositions = true;
@@ -117,6 +120,20 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     @Override
     public VFlowModel getWorkflow() {
         return this.workflow;
+    }
+    
+    /**
+     * Returns a list of the nodes to be laid out.
+     * default: the nodelist is gathered from the given workflow.
+     * @return Collection<VNode>
+     */
+    public Collection<VNode> getNodelist() {
+        Collection<VNode> nodelist = new ArrayList<>();
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            nodelist.add(this.nodes[i]);
+        }
+        return nodelist;
     }
     
     /**
@@ -139,6 +156,19 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     @Override
     public boolean getAutoscaleNodes() {
         return this.autoscaleNodes;
+    }
+    
+    /**
+     * Returns the set input type.
+     * 0 - VFlow (setWorkflow)
+     * 2 - nodelist (setNodelist)
+     * The input must be delivered via the corresponding setter method before 
+     * the call of generateLayout().
+     * default: 0
+     * @return int
+     */
+    public int getGraphmode() {
+        return this.graphmode;
     }
     
     /**
@@ -242,6 +272,21 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
+     * Set the list of nodes to be laid out.
+     * default: the nodelist is gathered from the given workflow.
+     * @param pnodelist Collection<VNode>
+     */
+    public void setNodelist(Collection<VNode> pnodelist) {
+        this.nodes = new VNode[pnodelist.size()];
+        int i = 0;
+        Iterator<VNode> it = pnodelist.iterator();
+        while(it.hasNext()) {
+            this.nodes[i] = it.next();
+            i++;
+        }
+    }
+    
+    /**
      * If set to true, the layout is applied to all subflows of the given 
      * workflow recursively.
      * default: true
@@ -261,6 +306,19 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     @Override
     public void setAutoscaleNodes(boolean pautoscaleNodes) {
         this.autoscaleNodes = pautoscaleNodes;
+    }
+    
+    /**
+     * Set the input type.
+     * 0 - VFlow (setWorkflow)
+     * 2 - nodelist (setNodelist)
+     * The input must be delivered via the corresponding setter method before 
+     * the call of generateLayout().
+     * default: 0
+     * @param pgraphmode int
+     */
+    public void setGraphmode(int pgraphmode) {
+        this.graphmode = pgraphmode;
     }
     
     /**
@@ -365,20 +423,35 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
      */
     public boolean setUp() {
         int i;
-        if(this.workflow == null) return false;
-        // gather nodelist from workflow
-        this.connectionList = new LinkedList<>();
-        ObservableList<VNode> nodesTemp = this.workflow.getNodes(); 
-        if(nodesTemp == null) return false;
-        this.nodecount = nodesTemp.size();
-        this.nodes = new VNode[this.nodecount];
-        
-        // copy nodelist into nodearray for better performance in the future
-        for(i = 0; i < nodesTemp.size(); i++) {
-            this.nodes[i] = nodesTemp.get(i);
+        switch(this.graphmode) {
+            // VFlowModel:
+            case 0:
+                if(this.workflow == null) return false;
+                // gather nodelist from workflow
+                ObservableList<VNode> nodesTemp = this.workflow.getNodes(); 
+                if(nodesTemp == null) return false;
+                this.nodecount = nodesTemp.size();
+                this.nodes = new VNode[this.nodecount];
+                // copy nodelist into nodearray for better performance in the future
+                for(i = 0; i < nodesTemp.size(); i++) {
+                    this.nodes[i] = nodesTemp.get(i);
+                }
+                break;
+            // nodelist:
+            case 2:
+                if(this.debug) System.out.println("laying out with nodelist");
+                if(this.nodes == null) return false;
+                this.nodecount = this.nodes.length;
+                if(this.nodecount == 0) return false;
+                this.workflow = this.nodes[0].getFlow();
+                break;
+            // default:
+            default:
+                this.graphmode = 0;
+                return setUp();
         }
-        
         // get all edges
+        this.connectionList = new LinkedList<>();
         this.conncount = 0;
         ObservableMap<String, Connections> allConnections = 
                 this.workflow.getAllConnections();
@@ -392,13 +465,15 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
             ObservableList<Connection> connections = currConns.getConnections();
             int currConnCount = connections.size();
             for(i = 0; i < currConnCount; i++) {
-                this.conncount++;
                 Connection currConn = connections.get(i);
                 // create a tuple of the sender and receiver of the current
                 // connection and add it to the connectionlist
                 Integer out = getNodeID(currConn.getSender().getNode());
                 Integer in = getNodeID(currConn.getReceiver().getNode());
-                this.connectionList.add(new Pair<>(out, in));
+                if((out != -1) && (in != -1)) {
+                    this.connectionList.add(new Pair<>(out, in));
+                    this.conncount++;
+                }
             }
         }
         this.cycle = checkCycles();
@@ -544,6 +619,19 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         if(this.debug) System.out.println("Generating layout.");
         // setup and check for errors
         if(this.setUp()) {
+            // get origin point
+            double minx = Double.POSITIVE_INFINITY;
+            double miny = Double.POSITIVE_INFINITY;
+            int i;
+            for(i = 0; i < this.nodecount; i++) {
+                if(this.nodes[i].getX() < minx) minx = this.nodes[i].getX();
+                if(this.nodes[i].getY() < miny) miny = this.nodes[i].getY();
+            }
+            for(i = 0; i < this.nodecount; i++) {
+                this.nodes[i].setX(this.nodes[i].getX() - minx);
+                this.nodes[i].setY(this.nodes[i].getY() - miny);
+            }
+            
             if(this.cycle) {
                 if(this.launchRemoveCycles) {
                     removeCycles();
@@ -568,6 +656,11 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
                 calculateVerticalPositions();
             if(this.launchCalculateHorizontalPositions) 
                 calculateHorizontalPositions();
+            // displace by origin point
+            for(i = 0; i < this.nodecount; i++) {
+                this.nodes[i].setX(this.nodes[i].getX() + minx);
+                this.nodes[i].setY(this.nodes[i].getY() + miny);
+            }
         }
     }
     

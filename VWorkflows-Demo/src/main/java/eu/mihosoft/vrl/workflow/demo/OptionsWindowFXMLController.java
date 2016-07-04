@@ -82,7 +82,7 @@ public class OptionsWindowFXMLController implements Initializable {
         this.layouts[1] = "FR Layout";
         this.layouts[2] = "KK Layout";
         this.layouts[3] = "DAG Layout";
-        this.graphmodes[0] = "VFlow";
+        this.graphmodes[0] = "VFlowModel";
         this.graphmodes[1] = "jgraph";
         this.graphmodes[2] = "nodelist";
         ObservableList<String> layoutlist = this.selLayout.getItems();

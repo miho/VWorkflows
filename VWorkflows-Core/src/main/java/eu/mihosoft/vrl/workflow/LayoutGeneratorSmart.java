@@ -703,7 +703,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private boolean allNodesSetUp() {
         int i;
         switch(this.graphmode) {
-            // VFlow:
+            // VFlowModel:
             case 0:
                 if(this.workflow == null) return false;
                 // gather nodelist from workflow
@@ -747,8 +747,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 if(this.nodes == null) return false;
                 this.nodecount = this.nodes.length;
                 if(this.nodecount == 0) return false;
-                // get all connections
                 this.workflow = this.nodes[0].getFlow();
+                // get all connections
                 this.jgraph = new DirectedSparseGraph<>();
                 for(i = 0; i < this.nodecount; i++) {
                     this.jgraph.addVertex(this.nodes[i]);

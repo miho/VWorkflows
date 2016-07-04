@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.mihosoft.vrl.workflow.demo.OptionsWindowNaiveFXMLController">
+   <children>
+      <Label layoutX="14.0" layoutY="14.0" text="graphmode:" />
+      <ComboBox fx:id="selGraphmode" layoutX="14.0" layoutY="36.0" prefWidth="150.0" />
+      <Label layoutX="14.0" layoutY="65.0" text="scaling:" />
+      <Label layoutX="14.0" layoutY="116.0" text="subflowscale:" />
+      <TextField fx:id="tfScaling" layoutX="14.0" layoutY="87.0" />
+      <TextField fx:id="tfSubflowscale" layoutX="14.0" layoutY="138.0" />
+      <CheckBox fx:id="checkRecursive" layoutX="201.0" layoutY="14.0" mnemonicParsing="false" text="recursive" />
+      <CheckBox fx:id="checkAutoscaleNodes" layoutX="201.0" layoutY="41.0" mnemonicParsing="false" text="autoscaleNodes" />
+      <CheckBox fx:id="checkRemoveCycles" layoutX="201.0" layoutY="68.0" mnemonicParsing="false" text="removeCycles" />
+      <CheckBox fx:id="checkCreateLayering" layoutX="201.0" layoutY="95.0" mnemonicParsing="false" text="createLayering" />
+      <CheckBox fx:id="checkCalcVertPos" layoutX="201.0" layoutY="122.0" mnemonicParsing="false" text="calculateVerticalPositions" />
+      <CheckBox fx:id="checkCalcHorPos" layoutX="201.0" layoutY="149.0" mnemonicParsing="false" text="calculateHorizontalPositions" />
+      <Button layoutX="47.0" layoutY="427.0" mnemonicParsing="false" onAction="#onOkPress" prefHeight="25.0" prefWidth="82.0" text="Ok" />
+      <Button layoutX="230.0" layoutY="427.0" mnemonicParsing="false" onAction="#onCancelPress" prefHeight="25.0" prefWidth="82.0" text="Cancel" />
+      <Button layoutX="230.0" layoutY="371.0" mnemonicParsing="false" onAction="#onShowPress" prefHeight="25.0" prefWidth="82.0" text="Generate" />
+   </children>
+</AnchorPane>

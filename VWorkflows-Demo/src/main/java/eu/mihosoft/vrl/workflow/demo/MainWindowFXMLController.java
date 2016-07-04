@@ -92,9 +92,12 @@ public class MainWindowFXMLController implements Initializable {
     private Window clipboard;
     private VFlow specialViewFlow1;
     private VFlow specialViewFlow2;
-    private FXMLLoader fxmlLoader;
-    private OptionsWindowFXMLController options;
-    private Stage optionsstage;
+    private FXMLLoader fxmlLoaderSmart;
+    private FXMLLoader fxmlLoaderNaive;
+    private OptionsWindowFXMLController optionsSmart;
+    private OptionsWindowNaiveFXMLController optionsNaive;
+    private Stage optionsstageSmart;
+    private Stage optionsstageNaive;
     private LayoutGeneratorSmart smartLayout;
     private LayoutGeneratorNaive naiveLayout;
 
@@ -117,21 +120,33 @@ public class MainWindowFXMLController implements Initializable {
         smartLayout = new LayoutGeneratorSmart();
         naiveLayout = new LayoutGeneratorNaive();
         
-        fxmlLoader = new FXMLLoader(getClass()
+        fxmlLoaderSmart = new FXMLLoader(getClass()
                 .getResource("OptionsWindowFXML.fxml"));
-        optionsstage = new Stage();
-        optionsstage.setTitle("Smart Layout Options");
-        
+        optionsstageSmart = new Stage();
+        optionsstageSmart.setTitle("Smart Layout Options");
         try {
-            Parent p = (Parent) fxmlLoader.load();
-            optionsstage.setScene(new Scene(p));
+            Parent p = (Parent) fxmlLoaderSmart.load();
+            optionsstageSmart.setScene(new Scene(p));
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        optionsSmart = fxmlLoaderSmart.getController();
+        optionsSmart.setGenerator(smartLayout);
+        optionsSmart.setStage(optionsstageSmart);
         
-        options = fxmlLoader.getController();
-        options.setGenerator(smartLayout);
-        options.setStage(optionsstage);
+        fxmlLoaderNaive = new FXMLLoader(getClass()
+                .getResource("OptionsWindowNaiveFXML.fxml"));
+        optionsstageNaive = new Stage();
+        optionsstageNaive.setTitle("Naive Layout Options");
+        try {
+            Parent p = (Parent) fxmlLoaderNaive.load();
+            optionsstageNaive.setScene(new Scene(p));
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        optionsNaive = fxmlLoaderNaive.getController();
+        optionsNaive.setGenerator(naiveLayout);
+        optionsNaive.setStage(optionsstageNaive);
     }
     
     private Pane rootPane;
@@ -197,20 +212,29 @@ public class MainWindowFXMLController implements Initializable {
     // <editor-fold desc="Development" defaultstate="collapsed">
     @FXML
     public void onNaiveAction(ActionEvent e) {
+        int i;
         this.naiveLayout.setDebug(this.checkDebugLayout.isSelected());
-        this.naiveLayout.setRecursive(this.checkNaiveRecursive.isSelected());
-        this.naiveLayout.setAutoscaleNodes(this.checkNaiveAutoscaleNodes
-                .isSelected());
-        this.naiveLayout.setLaunchRemoveCycles(this.checkNaiveLaunchRemoveCycles
-                .isSelected());
-        this.naiveLayout.setLaunchCreateLayering(this.checkCreateLayering
-                .isSelected());
-        this.naiveLayout.setLaunchCalculateVerticalPositions(
-                this.checkCalcVertPos.isSelected());
-        this.naiveLayout.setLaunchCalculateHorizontalPositions(
-                this.checkCalcHorPos.isSelected());
-        this.naiveLayout.setWorkflow(this.workflow.getModel());
-        this.naiveLayout.generateLayout();
+        switch(this.naiveLayout.getGraphmode()) {
+            case 0:
+                this.naiveLayout.setWorkflow(this.workflow.getModel());
+                this.naiveLayout.generateLayout();
+                break;
+            case 2:
+                ObservableList<VNode> obsnodes = workflow.getNodes();
+                LinkedList<VNode> nodelist = new LinkedList<>();
+                for(i = 0; i < obsnodes.size(); i++) {
+                    VNode curr = obsnodes.get(i);
+                    if(curr.isSelected()) {
+                        nodelist.add(curr);
+                    }
+                }
+                if(!nodelist.isEmpty()) {
+                    this.smartLayout.setNodelist(nodelist);
+                    this.smartLayout.generateLayout();
+                }
+                break;
+        }
+        
     }
     
     @FXML
@@ -250,10 +274,18 @@ public class MainWindowFXMLController implements Initializable {
     
     @FXML
     public void onSmartOptionsAction(ActionEvent e) {
-        options.setWorkflow(workflow);
+        optionsSmart.setWorkflow(workflow);
         smartLayout.setDebug(checkDebugLayout.isSelected());
-        options.set();
-        optionsstage.show();
+        optionsSmart.set();
+        optionsstageSmart.show();
+    }
+    
+    @FXML
+    public void onNaiveOptionsAction(ActionEvent e) {
+        optionsNaive.setWorkflow(workflow);
+        naiveLayout.setDebug(checkDebugLayout.isSelected());
+        optionsNaive.set();
+        optionsstageNaive.show();
     }
     // </editor-fold>
     

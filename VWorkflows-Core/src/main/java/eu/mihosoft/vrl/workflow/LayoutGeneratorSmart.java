@@ -44,6 +44,7 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.Pair;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,15 +62,17 @@ import javafx.collections.ObservableMap;
 public class LayoutGeneratorSmart implements LayoutGenerator {
     
     // parameters:
-    private VFlow workflow;
+    private VFlowModel workflow;
     private DirectedGraph<VNode, Connection> jgraph;
     private boolean recursive;
     private boolean autoscaleNodes;
     private int layoutSelector;
     private double aspectratio;
-    private boolean justgraph;
+    private int graphmode;
     private boolean launchRemoveCycles;
     private boolean launchSeparateDisjunctGraphs;
+    private boolean launchSeparateEdgeTypes;
+    private boolean launchJungLayout;
     private boolean launchRotate;
     private boolean launchOrigin;
     private boolean launchPushBack;
@@ -79,6 +82,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private int maxiterations;
     private double scaling;
     private double subflowscale;
+    private double direction;
+    private double alignmentThreshold;
     private boolean debug;
     
     // internal fields:
@@ -115,16 +120,16 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * Initializes the fields of the class needed in future methods.
      */
     private void initialization() {
-        this.jgraph = new DirectedSparseGraph<>();
-        
         // default parameters:
         this.recursive = true;
         this.autoscaleNodes = true;
         this.layoutSelector = 0;
         this.aspectratio = 16. / 9.;
-        this.justgraph = false;
+        this.graphmode = 0;
         this.launchRemoveCycles = true;
         this.launchSeparateDisjunctGraphs = true;
+        this.launchSeparateEdgeTypes = false;
+        this.launchJungLayout = true;
         this.launchRotate = true;
         this.launchOrigin = false;
         this.launchPushBack = true;
@@ -134,16 +139,41 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.maxiterations = 500;
         this.scaling = 1.2;
         this.subflowscale = 2.;
+        this.direction = 0.;
+        this.alignmentThreshold = (this.scaling - 1) * (-1);
     }
     
     // <editor-fold desc="getter" defaultstate="collapsed">
     /**
      * Returns the workflow to be laid out.
-     * @return VFlow
+     * @return VFlowModel
      */
     @Override
-    public VFlow getWorkflow() {
+    public VFlowModel getWorkflow() {
         return this.workflow;
+    }
+    
+    /**
+     * Returns the model graph to be laid out.
+     * default: a graph is generated automatically from the workflow given.
+     * @return DirectedGraph<VNode, Connection>
+     */
+    public DirectedGraph<VNode, Connection> getModelGraph() {
+        return this.jgraph;
+    }
+    
+    /**
+     * Returns a list of the nodes to be laid out.
+     * default: the nodelist is gathered from the given workflow.
+     * @return Collection<VNode>
+     */
+    public Collection<VNode> getNodelist() {
+        Collection<VNode> nodelist = new ArrayList<>();
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            nodelist.add(this.nodes[i]);
+        }
+        return nodelist;
     }
     
     /**
@@ -169,7 +199,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the Jung layout that is used in the first step of the algorithm.
+     * Returns the Jung layout that is used in the first step of the algorithm.
      * 0 - ISOM Layout
      * 1 - FR Layout
      * 2 - KK Layout
@@ -182,7 +212,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the aspect ratio of the initial drawing space of the graph.
+     * Returns the aspect ratio of the initial drawing area of the graph.
      * Width is determined via the longest path in the graph.
      * Height is determined by dividing the width by the aspect ratio.
      * default: 16:9
@@ -193,18 +223,21 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, the layout is applied to a given Jung-Graph of types 
-     * <VNode, Connection> instead of a VFlow.
-     * Is used for sublayouts by separateDisjunctGraphs().
-     * default: false
-     * @return boolean
+     * Returns the set input type.
+     * 0 - VFlow (setWorkflow)
+     * 1 - jgraph (setModelGraph)
+     * 2 - nodelist (setNodelist)
+     * The input must be delivered via the corresponding setter method before 
+     * the call of generateLayout().
+     * default: 0
+     * @return int
      */
-    public boolean getJustgraph() {
-        return this.justgraph;
+    public int getGraphmode() {
+        return this.graphmode;
     }
     
     /**
-     * If set to true a depth-first-search is performed and all back edges are 
+     * If set to true, a depth-first-search is performed and all back edges are 
      * removed from the model graph. The layout is then applied without these 
      * edges.
      * Is only run if the graph contains cycles.
@@ -216,7 +249,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true disjunct parts of the model graph will be laid out 
+     * If set to true, disjunct parts of the model graph will be laid out 
      * separately and then arranged over each other to create the cumulative 
      * layout.
      * Is never run if launchRemoveCycles is false and the graph contains 
@@ -229,8 +262,30 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
+     * If set to true, edge types will be separated and a layout generated that 
+     * follows edge type priorities.
+     * There is no working implementation for this feature yet.
+     * default: false
+     * @return boolean
+     */
+    public boolean getLaunchSeparateEdgeTypes() {
+        return this.launchSeparateEdgeTypes;
+    }
+    
+    /**
+     * If set to true, the specified algorithm from the JUNG-library is applied 
+     * to the graph.
+     * The algorithm is specified using setLayoutSelector().
+     * default: true
+     * @return boolean
+     */
+    public boolean getLaunchJungLayout() {
+        return this.launchJungLayout;
+    }
+    
+    /**
      * If set to true, the graph is rotated to reach an average flow direction 
-     * parallel to the horizontal axis.
+     * that is the direction specified.
      * default: true
      * @return boolean
      */
@@ -252,8 +307,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, all nodes will be pushed to the right of their 
-     * predecessors so no edge has a direction with a negative x-component.
+     * If set to true, all nodes will be pushed past their predecessors, so no 
+     * edges have a direction inverse to the specified direction.
      * Is never run if launchRemoveCycles is false and the graph contains 
      * cycles, because it does not terminate in this case.
      * default: true
@@ -284,8 +339,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, node-pairs that have coordinates in close proximity to each 
-     * other, will be aligned ad the mean coordinate between them.
+     * If set to true, nodes will be aligned either with each other or on a 
+     * global grid.
      * default: true
      * @return boolean
      */
@@ -294,8 +349,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the maximum amount of iterations used by the force push step of the 
-     * algorithm.
+     * Returns the maximum amount of iterations used by the force push step 
+     * of the algorithm.
      * default: 500
      * @return boolean
      */
@@ -304,7 +359,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the scaling parameter of the algorithm. 
+     * Returns the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
      * default: 1.2
      * @return double
@@ -314,7 +369,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the scaling factor that is used to scale subflow-nodes in the 
+     * Returns the scaling factor that is used to scale subflow-nodes in the 
      * autoscaleNodes procedure.
      * default: 2.0
      * @return double
@@ -324,8 +379,32 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * Returns the desired average edge direction of the resulting graph as an
+     * angle to the abscissa in degrees.
+     * default: 0.
+     * @return double
+     */
+    public double getDirection() {
+        return this.direction;
+    }
+    
+    /**
+     * Sets the alignment parameter used to align nodes with each other.
+     * If the value is positive it describes the size of a grid which nodes 
+     * will be aligned on.
+     * If the value is negative its absolute value will be used as multiplier 
+     * to the mean size of each pair of nodes which will then result in a 
+     * threshold under which these two nodes will be positioned at the same 
+     * coordinate.
+     * default: -(scaling - 1)
+     * @return double
+     */
+    public double getAlignmentThreshold() {
+        return this.alignmentThreshold;
+    }
+    
+    /**
+     * If set to true, debugging output will be printed in the command line.
      * default: false
      * @return boolean
      */
@@ -333,25 +412,40 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     public boolean getDebug() {
         return this.debug;
     }
-    
-    /**
-     * Get the model graph to be laid out.
-     * default: a graph is generated automatically from the workflow given.
-     * @return DirectedGraph
-     */
-    public DirectedGraph getModelGraph() {
-        return this.jgraph;
-    }
     // </editor-fold>
     
     // <editor-fold desc="setter" defaultstate="collapsed">
     /**
-     * Set the workflow to be laid out.
-     * @param pworkflow VFlow.
+     * Sets the workflow to be laid out.
+     * @param pworkflow VFlowModel
      */
     @Override
-    public void setWorkflow(VFlow pworkflow) {
+    public void setWorkflow(VFlowModel pworkflow) {
         this.workflow = pworkflow;
+    }
+    
+    /**
+     * Sets the model graph to be laid out.
+     * default: a graph is generated automatically from the workflow given.
+     * @param pjgraph DirectedGraph<VNode, Connection>
+     */
+    public void setModelGraph(DirectedGraph<VNode, Connection> pjgraph) {
+        this.jgraph = pjgraph;
+    }
+    
+    /**
+     * Sets the list of nodes to be laid out.
+     * default: the nodelist is gathered from the given workflow.
+     * @param pnodelist Collection<VNode>
+     */
+    public void setNodelist(Collection<VNode> pnodelist) {
+        this.nodes = new VNode[pnodelist.size()];
+        int i = 0;
+        Iterator<VNode> it = pnodelist.iterator();
+        while(it.hasNext()) {
+            this.nodes[i] = it.next();
+            i++;
+        }
     }
     
     /**
@@ -368,6 +462,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * If set to true, subflow nodes in the given workflow are automatically 
      * scaled to fit their contents.
+     * Can only be run if graphmode is set to 0.
      * default: true
      * @param pautoscaleNodes boolean
      */
@@ -391,7 +486,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the aspect ratio of the initial drawing space of the graph.
+     * Sets the aspect ratio of the initial drawing area of the graph.
      * Width of the drawing space is determined via the longest path in the 
      * graph.
      * Height is determined by dividing the width by the aspect ratio.
@@ -403,18 +498,21 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, the layout is applied to a given Jung-Graph of types 
-     * <VNode, Connection> instead of a VFlow.
-     * Is used for sublayouts by separateDisjunctGraphs().
-     * default: false
-     * @param pjustgraph boolean
+     * Sets the input type.
+     * 0 - VFlow (setWorkflow)
+     * 1 - jgraph (setModelGraph)
+     * 2 - nodelist (setNodelist)
+     * The input must be delivered via the corresponding setter method before 
+     * the call of generateLayout().
+     * default: 0
+     * @param pgraphmode int
      */
-    public void setJustgraph(boolean pjustgraph) {
-        this.justgraph = pjustgraph;
+    public void setGraphmode(int pgraphmode) {
+        this.graphmode = pgraphmode;
     }
     
     /**
-     * If set to true a depth-first-search is performed and all back edges are 
+     * If set to true, a depth-first-search is performed and all back edges are 
      * removed from the model graph. The layout is then applied without these 
      * edges.
      * Is only run if the graph contains cycles.
@@ -426,7 +524,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true disjunct parts of the model graph will be laid out 
+     * If set to true, disjunct parts of the model graph will be laid out 
      * separately and then arranged over each other to create the cumulative 
      * layout.
      * Is never run if launchRemoveCycles is false and the graph contains 
@@ -434,13 +532,36 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * default: true
      * @param plaunchSeparateDisjunctGraphs boolean
      */
-    public void setLaunchSeparateDisjunctGraphs(boolean plaunchSeparateDisjunctGraphs) {
+    public void setLaunchSeparateDisjunctGraphs(
+            boolean plaunchSeparateDisjunctGraphs) {
         this.launchSeparateDisjunctGraphs = plaunchSeparateDisjunctGraphs;
     }
     
     /**
+     * If set to true, edge types will be separated and a layout generated that 
+     * follows edge type priorities.
+     * There is no working implementation for this feature yet.
+     * default: false
+     * @param plaunchSeparateEdgeTypes boolean
+     */
+    public void setLaunchSeparateEdgeTypes(boolean plaunchSeparateEdgeTypes) {
+        this.launchSeparateEdgeTypes = plaunchSeparateEdgeTypes;
+    }
+    
+    /**
+     * If set to true, the specified algorithm from the JUNG-library is applied 
+     * to the graph.
+     * The algorithm is specified using setLayoutSelector().
+     * default: true
+     * @param plaunchJungLayout boolean
+     */
+    public void setLaunchJungLayout(boolean plaunchJungLayout) {
+        this.launchJungLayout = plaunchJungLayout;
+    }
+    
+    /**
      * If set to true, the graph is rotated to reach an average flow direction 
-     * parallel to the horizontal axis.
+     * that is the direction specified.
      * default: true
      * @param plaunchRotate boolean
      */
@@ -462,9 +583,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, all nodes will be pushed to the right of their 
-     * predecessors 
-     * so no edge has a direction with a negative x-component.
+     * If set to true, all nodes will be pushed past their predecessors, so no 
+     * edges have a direction inverse to the specified direction.
      * (Does not terminate if the graph contains cycles)
      * default: true
      * @param plaunchPushBack boolean
@@ -484,9 +604,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set true if all nodes shall be pushing each other away until no overlaps 
-     * between nodes remain or the maximum amount of iterations has been 
-     * reached.
+     * If set to true, all nodes will repel each other until no overlaps between 
+     * nodes are left or the maximum amount of iterations has been reached.
      * default: true
      * @param plaunchForcePush boolean
      */
@@ -495,8 +614,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, node-pairs that have coordinates in close proximity to each 
-     * other, will be aligned ad the mean coordinate between them.
+     * If set to true, nodes will be aligned either with each other or on a 
+     * global grid.
      * default: true
      * @param plaunchAlignNodes boolean
      */
@@ -505,7 +624,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the maximum amount of iterations for the force push step of the 
+     * Sets the maximum amount of iterations for the force push step of the 
      * algorithm.
      * default: 500
      * @param pmaxiterations int
@@ -515,7 +634,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the scaling parameter of the algorithm. 
+     * Sets the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
      * default: 1.2
      * @param pscaling double
@@ -525,7 +644,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the scaling factor that is used to scale subflow-nodes in the 
+     * Sets the scaling factor that is used to scale subflow-nodes in the 
      * autoscaleNodes procedure.
      * default: 2.0
      * @param psubflowscale double
@@ -535,8 +654,32 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * Sets the desired average edge direction as an angle to the abscissa in 
+     * degrees.
+     * default: 0.
+     * @param pdirection double
+     */
+    public void setDirection(double pdirection) {
+        this.direction = pdirection;
+    }
+    
+    /**
+     * Sets the alignment parameter used to align nodes with each other.
+     * If the value is positive it describes the size of a grid which nodes 
+     * will be aligned on.
+     * If the value is negative its absolute value will be used as multiplier 
+     * to the mean size of each pair of nodes which will then result in a 
+     * threshold under which these two nodes will be positioned at the same 
+     * coordinate.
+     * default: -(scaling - 1)
+     * @param palignmentThreshold double
+     */
+    public void setAlignmentThreshold(double palignmentThreshold) {
+        this.alignmentThreshold = palignmentThreshold;
+    }
+    
+    /**
+     * If set to true, debugging output will be printed in the command line.
      * default: false
      * @param pdebug boolean
      */
@@ -544,85 +687,75 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     public void setDebug(boolean pdebug) {
         this.debug = pdebug;
     }
-    
-    /**
-     * Set the model graph to be laid out.
-     * default: a graph is generated automatically from the workflow given.
-     * @param pjgraph DirectedGraph
-     */
-    public void setModelGraph(DirectedGraph pjgraph) {
-        this.jgraph = pjgraph;
-    }
     // </editor-fold>
     
     /**
      * Sets up the model-fields. These include the nodearray, nodecount, origin-
      * nodes and the model graph.
-     * Uses either a VFlow or a Jung-Graph depending on the justgraph parameter.
+     * Uses either a VFlowModel, a Jung-Graph or a nodelist depending on the 
+     * graphmode parameter.
      * @return boolean
      */
     private boolean allNodesSetUp() {
         int i;
-        if(!this.justgraph) {
-            if(this.workflow == null) return false;
-            // gather nodelist from workflow
-            ObservableList<VNode> nodesTemp = this.workflow.getNodes();
-            if(nodesTemp == null) return false;
-            this.nodecount = nodesTemp.size();
-            if(this.nodecount == 0) return false;
-            this.nodes = new VNode[this.nodecount];
-            
-            // copy nodelist into nodearray for better performance in the future
-            // and add nodes to the jgraph
-            for(i = 0; i < this.nodecount; i++) {
-                this.nodes[i] = nodesTemp.get(i);
-                this.jgraph.addVertex(this.nodes[i]);
-            }
-        
-            // get all edges
-            this.conncount = 0;
-            ObservableMap<String, Connections> allConnections = 
-                    this.workflow.getAllConnections();
-            // get all types of connections
-            Set<String> keys = allConnections.keySet();
-            Iterator<String> it = keys.iterator();
-            while(it.hasNext()) {
-                // get all connections for current type
-                String currType = it.next();
-                Connections currConns = allConnections.get(currType);
-                ObservableList<Connection> connections =
-                    currConns.getConnections();
-                int currConnCount = connections.size();
-                for(i = 0; i < currConnCount; i++) {
-                    this.conncount++;
-                    Connection currConn = connections.get(i);
-                    // add an edge correspondig to the current connection to the 
-                    // jgraph
-                    VNode sender = 
-                        this.nodes[getNodeID(currConn.getSender().getNode())];
-                    VNode receiver = 
-                        this.nodes[getNodeID(currConn.getReceiver().getNode())];
-                    this.jgraph.addEdge(currConn, sender, receiver);
+        switch(this.graphmode) {
+            // VFlowModel:
+            case 0:
+                if(this.workflow == null) return false;
+                // gather nodelist from workflow
+                ObservableList<VNode> nodesTemp = this.workflow.getNodes();
+                if(nodesTemp == null) return false;
+                this.nodecount = nodesTemp.size();
+                if(this.nodecount == 0) return false;
+                this.nodes = new VNode[this.nodecount];
+                this.jgraph = new DirectedSparseGraph<>();
+                // copy nodelist into nodearray for better performance in the 
+                // future and add nodes to the jgraph
+                for(i = 0; i < this.nodecount; i++) {
+                    this.nodes[i] = nodesTemp.get(i);
+                    this.jgraph.addVertex(this.nodes[i]);
                 }
-            }
+                createGraph(this.workflow.getAllConnections());
+                break;
+            // jgraph:
+            case 1:
+                if(this.debug) System.out.println("laying out jgraph.");
+                if(this.jgraph == null) return false;
+                // gather nodelist from modelgraph
+                Collection<VNode> temp = this.jgraph.getVertices();
+                Iterator<VNode> it = temp.iterator();
+                this.nodecount = temp.size();
+                if(this.nodecount == 0) return false;
+                this.conncount = this.jgraph.getEdgeCount();
+                this.nodes = new VNode[this.nodecount];
+                // copy nodelist into nodearray for better performance in the 
+                // future
+                i = 0;
+                while(it.hasNext()) {
+                    this.nodes[i] = it.next();
+                    i++;
+                }
+                this.workflow = this.nodes[0].getFlow();
+                break;
+            // nodelist:
+            case 2:
+                if(this.debug) System.out.println("laying out with nodelist");
+                if(this.nodes == null) return false;
+                this.nodecount = this.nodes.length;
+                if(this.nodecount == 0) return false;
+                this.workflow = this.nodes[0].getFlow();
+                // get all connections
+                this.jgraph = new DirectedSparseGraph<>();
+                for(i = 0; i < this.nodecount; i++) {
+                    this.jgraph.addVertex(this.nodes[i]);
+                }
+                createGraph(this.workflow.getAllConnections());
+                break;
+            // default:
+            default:
+                this.graphmode = 0;
+                return allNodesSetUp();
         }
-        else {
-            if(this.debug) System.out.println("laying out jgraph.");
-            if(this.jgraph == null) return false;
-            // gather nodelist from modelgraph
-            Collection<VNode> temp = this.jgraph.getVertices();
-            Iterator<VNode> it = temp.iterator();
-            this.nodecount = temp.size();
-            this.conncount = this.jgraph.getEdgeCount();
-            this.nodes = new VNode[this.nodecount];
-            // copy nodelist into nodearray for better performance in the future
-            i = 0;
-            while(it.hasNext()) {
-                this.nodes[i] = it.next();
-                i++;
-            }
-        }
-        
         // get origin nodes
         this.origin = getOrigin();
         // check the graph for cycles
@@ -631,7 +764,38 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Gets all origin nodes of the graph.
+     * Creates a jung graph from a map of connections.
+     * @param allConnections ObservableMap<String, Connections>
+     */
+    private void createGraph(ObservableMap<String, Connections> allConnections) {
+        int i;
+        this.conncount = 0;
+        // get all types of connections
+        Set<String> keys = allConnections.keySet();
+        Iterator<String> it = keys.iterator();
+        while(it.hasNext()) {
+            // get all connections for current type
+            String currType = it.next();
+            Connections currConns = allConnections.get(currType);
+            ObservableList<Connection> connections = currConns.getConnections();
+            int currConnCount = connections.size();
+            for(i = 0; i < currConnCount; i++) {
+                Connection currConn = connections.get(i);
+                // add an edge correspondig to the current connection to the 
+                // jgraph if both sender and receiver are part of the nodearray
+                Integer sender = getNodeID(currConn.getSender().getNode());
+                Integer receiver = getNodeID(currConn.getReceiver().getNode());
+                if((sender != -1) && (receiver != -1)) {
+                    this.jgraph.addEdge(currConn, this.nodes[sender], 
+                            this.nodes[receiver]);
+                    this.conncount++;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Returns all origin nodes of the graph.
      * Origin nodes are all nodes with an in-degree of 0.
      * @return Pair<Integer>[]: Array of Pairs. Each Pair contains the model-ID 
      * of the node and its successor count.
@@ -651,7 +815,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         for(i = 0; i < length; i++) {
             int curr = originL.removeFirst();
             origina[i] = 
-                new Pair<>(curr, this.jgraph.getSuccessorCount(this.nodes[curr]));
+                new Pair<>(curr, this.jgraph.getSuccessorCount(
+                        this.nodes[curr]));
             if(this.debug) System.out.println(this.nodes[curr].getId() 
                     + " | In-Degree: " + this.jgraph.inDegree(this.nodes[curr]) 
                     + " Successors: " 
@@ -669,9 +834,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         double centerx = 0;
         double centery = 0;
         for(i = 0; i < this.nodecount; i++) {
-            Point2D currCoords = this.layout.transform(this.nodes[i]);
-            centerx += currCoords.getX();
-            centery += currCoords.getY();
+            centerx += this.nodes[i].getX();
+            centery += this.nodes[i].getY();
         }
         centerx /= this.nodecount;
         centery /= this.nodecount;
@@ -703,6 +867,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 // iterate through all successors of start node
                 while(it.hasNext()) {
                     VNode currNode = it.next();
+                    if(getNodeID(currNode) == -1) continue;
                     // if current node is the start node, the start node can be 
                     // reached -> there is a cycle
                     if(currNode.equals(start)) {
@@ -780,6 +945,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 Iterator<VNode> it = succs.iterator();
                 while(it.hasNext()) {
                     VNode currSucc = it.next();
+                    if(getNodeID(currSucc) == -1) continue;
                     // if edge from curr to currSucc is a back edge
                     if(path.contains(currSucc)) {
                         // remove all edges from curr to currSucc
@@ -787,11 +953,13 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                                 this.jgraph.findEdgeSet(curr, currSucc);
                         Iterator<Connection> its = conns.iterator();
                         while(its.hasNext()) {
-                            this.jgraph.removeEdge(its.next());
+                            Connection currConn = its.next();
+                            this.jgraph.removeEdge(currConn);
                             this.conncount--;
                         }
                         if(this.debug) System.out.println("removing edge from " 
                                 + curr.getId() + " to " + currSucc.getId());
+                        it = succs.iterator();
                     }
                     // if edge from curr to currSucc is not a back edge
                     else {
@@ -857,6 +1025,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                     Iterator<VNode> it = succ.iterator();
                     while(it.hasNext()) {
                         VNode temp = it.next();
+                        if(getNodeID(temp) == -1) continue;
                         if(graphs[getNodeID(temp)] != currID) {
                             nextnodes.add(temp);
                         }
@@ -868,7 +1037,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 if(graphs[j] > maxID) maxID = graphs[j];
             }
         }
-        
         if(this.debug) {
             for(i = 0; i < this.nodecount; i++) {
                 System.out.println(this.nodes[i].getId() + " belongs to graph " 
@@ -881,20 +1049,25 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         subgen.setAspectratio(this.aspectratio);
         subgen.setAutoscaleNodes(false);
         subgen.setDebug(this.debug);
-        // use justgraph parameter in this case
-        subgen.setJustgraph(true);
+        // set graphmode to 1 in this case, to use jgraph instead of VFlow
+        subgen.setGraphmode(1);
         subgen.setLaunchAlignNodes(this.launchAlignNodes);
         subgen.setLaunchDisplaceIdents(this.launchDisplaceIdents);
         subgen.setLaunchForcePush(this.launchForcePush);
+        subgen.setLaunchJungLayout(this.launchJungLayout);
         subgen.setLaunchOrigin(this.launchOrigin);
         subgen.setLaunchPushBack(this.launchPushBack);
         subgen.setLaunchRemoveCycles(this.launchRemoveCycles);
         subgen.setLaunchRotate(this.launchRotate);
         subgen.setLaunchSeparateDisjunctGraphs(false);
+        subgen.setLaunchSeparateEdgeTypes(this.launchSeparateEdgeTypes);
         subgen.setLayoutSelector(this.layoutSelector);
         subgen.setMaxiterations(this.maxiterations);
         subgen.setRecursive(false);
         subgen.setScaling(this.scaling);
+        subgen.setSubflowscale(this.subflowscale);
+        subgen.setAlignmentThreshold(this.alignmentThreshold);
+        subgen.setDirection(this.direction);
         double y = 0.;
         double x = 0.;
         double[] xpos = new double[this.nodecount];
@@ -934,7 +1107,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 if(graphs[j] == i) {
                     if(this.nodes[j].getX() < minx) minx = this.nodes[j].getX();
                     if(this.nodes[j].getY() < miny) miny = this.nodes[j].getY();
-                    if((this.nodes[j].getY() + this.nodes[j].getHeight()) > maxy) {
+                    if((this.nodes[j].getY() 
+                            + this.nodes[j].getHeight()) > maxy) {
                         maxy = this.nodes[j].getY() + this.nodes[j].getHeight();
                     }
                 }
@@ -969,13 +1143,93 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Generates a Layout for the workflow or jung-graph given.
+     * Separates edge types and generates a layout for each edge type 
+     * separately.
+     * This is not a working implementation.
+     */
+    private void separateEdgeTypes() {
+        // setup subgen
+        LayoutGeneratorSmart subgen = new LayoutGeneratorSmart();
+        subgen.setAlignmentThreshold(this.alignmentThreshold);
+        subgen.setAspectratio(this.aspectratio);
+        subgen.setAutoscaleNodes(this.autoscaleNodes);
+        subgen.setDebug(this.debug);
+        subgen.setDirection(this.direction);
+        subgen.setGraphmode(2);
+        subgen.setLaunchAlignNodes(this.launchAlignNodes);
+        subgen.setLaunchDisplaceIdents(this.launchDisplaceIdents);
+        subgen.setLaunchForcePush(this.launchForcePush);
+        subgen.setLaunchJungLayout(this.launchJungLayout);
+        subgen.setLaunchOrigin(this.launchOrigin);
+        subgen.setLaunchPushBack(this.launchPushBack);
+        subgen.setLaunchRemoveCycles(this.launchRemoveCycles);
+        subgen.setLaunchRotate(this.launchRotate);
+        subgen.setLaunchSeparateDisjunctGraphs(
+                this.launchSeparateDisjunctGraphs);
+        subgen.setLaunchSeparateEdgeTypes(false);
+        subgen.setLayoutSelector(this.layoutSelector);
+        subgen.setMaxiterations(this.maxiterations);
+        subgen.setRecursive(false);
+        subgen.setScaling(this.scaling);
+        subgen.setSubflowscale(this.subflowscale);
+        
+        // get connectiontypes
+        LinkedList<VNode> nodelist;
+        VFlowModel flow = this.nodes[0].getFlow();
+        ObservableMap<String, Connections> allConns = flow.getAllConnections();
+        Set<String> keys = allConns.keySet();
+        Iterator<String> keyit = keys.iterator();
+        nodelist = new LinkedList<>();
+        // iterate through connection types
+        while(keyit.hasNext()) {
+            String currkey = keyit.next();
+            Connections currConns = allConns.get(currkey);
+            ObservableList<Connection> connList = currConns.getConnections();
+            Iterator<Connection> connit = connList.iterator();
+            // add all nodes of current connection type to nodelist
+            while(connit.hasNext()) {
+                Connection currConn = connit.next();
+                VNode sender = currConn.getSender().getNode();
+                VNode receiver = currConn.getReceiver().getNode();
+                if((getNodeID(sender) != -1) && (!nodelist.contains(sender))) {
+                    nodelist.add(sender);
+                }
+                if((getNodeID(receiver) != -1) 
+                        && (!nodelist.contains(receiver))) {
+                    nodelist.add(receiver);
+                }
+            }
+            if(nodelist.isEmpty()) continue;
+            // create layout on current nodelist
+            subgen.setNodelist(nodelist);
+            subgen.generateLayout();
+            // only on first connection type apply jung layout and rotate
+            subgen.setLaunchJungLayout(false);
+            subgen.setLaunchRotate(false);
+        }
+    }
+    
+    /**
+     * Applies all steps of the layout, whose launch-parameters are set to true.
      */
     @Override
     public void generateLayout() {
         if(this.debug) System.out.println("Generating layout.");
         // setup and check for errors
         if(allNodesSetUp()) {
+            // get origin point
+            double minx = Double.POSITIVE_INFINITY;
+            double miny = Double.POSITIVE_INFINITY;
+            int i;
+            for(i = 0; i < this.nodecount; i++) {
+                if(this.nodes[i].getX() < minx) minx = this.nodes[i].getX();
+                if(this.nodes[i].getY() < miny) miny = this.nodes[i].getY();
+            }
+            for(i = 0; i < this.nodecount; i++) {
+                this.nodes[i].setX(this.nodes[i].getX() - minx);
+                this.nodes[i].setY(this.nodes[i].getY() - miny);
+            }
+            
             if(this.cycle && this.launchRemoveCycles) {
                 removeCycles();
                 this.origin = getOrigin();
@@ -992,6 +1246,11 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 // only run if the graph contains no cycles
                 if(!this.cycle) {
                     separateDisjunctGraphs();
+                    // displace by origin point
+                    for(i = 0; i < this.nodecount; i++) {
+                        this.nodes[i].setX(this.nodes[i].getX() + minx);
+                        this.nodes[i].setY(this.nodes[i].getY() + miny);
+                    }
                     return;
                 }
                 // run origin instead
@@ -1001,6 +1260,15 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                             + " origin used instead of seperate disjunct graphs"
                             + ".");
                 }
+            }
+            if(this.launchSeparateEdgeTypes) {
+                separateEdgeTypes();
+                // displace by origin point
+                for(i = 0; i < this.nodecount; i++) {
+                    this.nodes[i].setX(this.nodes[i].getX() + minx);
+                    this.nodes[i].setY(this.nodes[i].getY() + miny);
+                }
+                return;
             }
             // create jung-layout
             switch(this.layoutSelector) {
@@ -1026,7 +1294,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                     this.layout = new ISOMLayout<>(this.jgraph);
                     break;
             }
-            stepLayoutApply();
+            if(this.launchJungLayout) stepLayoutApply();
             this.graphcenter = getGraphCenter();
             if(this.launchRotate) stepRotate();
             if(this.launchOrigin) stepOrigin();
@@ -1046,13 +1314,16 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             else {
                 if(this.launchForcePush) forcePush();
             }
+            // displace by origin point
+            for(i = 0; i < this.nodecount; i++) {
+                this.nodes[i].setX(this.nodes[i].getX() + minx);
+                this.nodes[i].setY(this.nodes[i].getY() + miny);
+            }
             if(this.debug) {
-                int i;
                 for(i = 0; i < this.nodecount; i++) {
-                    Point2D currPos = this.layout.transform(this.nodes[i]);
                     System.out.println(this.nodes[i].getId() + " has final "
-                            + "position: (" + currPos.getX() + "|" 
-                            + currPos.getY() + ")");
+                            + "position: (" + this.nodes[i].getX() + "|" 
+                            + this.nodes[i].getY() + ")");
                 }
             }
         }
@@ -1067,15 +1338,20 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     private void runSubflows() {
         // initialize sub generator with the same parameters
         LayoutGeneratorSmart subgen = new LayoutGeneratorSmart(false);
+        subgen.setAlignmentThreshold(this.alignmentThreshold);
         subgen.setAspectratio(this.aspectratio);
         subgen.setAutoscaleNodes(this.autoscaleNodes);
+        subgen.setDirection(this.direction);
         subgen.setRecursive(this.recursive);
         subgen.setScaling(this.scaling);
         subgen.setSubflowscale(this.subflowscale);
         subgen.setLayoutSelector(this.layoutSelector);
-        subgen.setJustgraph(false);
+        subgen.setGraphmode(0);
         subgen.setLaunchRemoveCycles(this.launchRemoveCycles);
-        subgen.setLaunchSeparateDisjunctGraphs(this.launchSeparateDisjunctGraphs);
+        subgen.setLaunchSeparateDisjunctGraphs(
+                this.launchSeparateDisjunctGraphs);
+        subgen.setLaunchSeparateEdgeTypes(this.launchSeparateEdgeTypes);
+        subgen.setLaunchJungLayout(this.launchJungLayout);
         subgen.setLaunchRotate(this.launchRotate);
         subgen.setLaunchOrigin(this.launchOrigin);
         subgen.setLaunchPushBack(this.launchPushBack);
@@ -1084,12 +1360,12 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         subgen.setLaunchAlignNodes(this.launchAlignNodes);
         subgen.setMaxiterations(this.maxiterations);
         // apply layout to each subflow
-        Collection<VFlow> subconts = this.workflow.getSubControllers();
-        Iterator<VFlow> it = subconts.iterator();
-        while(it.hasNext()) {
-            VFlow subflow = it.next();
-            subgen.setWorkflow(subflow);
-            subgen.generateLayout();
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            if(this.nodes[i] instanceof VFlowModel) {
+                subgen.setWorkflow((VFlowModel) this.nodes[i]);
+                subgen.generateLayout();
+            }
         }
     }
     
@@ -1097,13 +1373,13 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      * Scales subflow-nodes according to their contents.
      */
     private void autoscaleNodes() {
-        Collection<VFlow> subconts = this.workflow.getSubControllers();
-        Iterator<VFlow> it = subconts.iterator();
-        // iterate over all subflows
-        while(it.hasNext()) {
-            VFlow subflow = it.next();
+        int i;
+        for(i = 0; i < this.nodecount; i++) {
+            VFlowModel subflow;
+            if(!(this.nodes[i] instanceof VFlowModel)) continue;
+            subflow = (VFlowModel) this.nodes[i];
             // get node representation of the current subflow
-            VNode flownode = subflow.getModel();
+            VNode flownode = this.nodes[i];
             if(this.debug) System.out.println("Resizing subflow-node "
                     + flownode.getId());
             // get nodes from the subflow
@@ -1198,6 +1474,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 it = nodelist.iterator();
                 while(it.hasNext()) {
                     Integer currSucc = getNodeID(it.next());
+                    if(currSucc == -1) continue;
                     int tempFollowing = 1 + maxPathFollowing[currSucc];
                     // set maxPathFollowing of the current node to 
                     // 1 + the largest maxPathFollowing of all successors
@@ -1210,7 +1487,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             nodelist = this.jgraph.getPredecessors(this.nodes[currNode]);
             it = nodelist.iterator();
             while(it.hasNext()) {
-                fifo.add(getNodeID(it.next()));
+                Integer next = getNodeID(it.next());
+                if(next == -1) continue;
+                fifo.add(next);
             }
         }
         // find max path and its start node
@@ -1227,6 +1506,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         it = nodelist.iterator();
         while(it.hasNext()) {
             VNode currSucc = it.next();
+            if(getNodeID(currSucc) == -1) continue;
             if(maxPath == maxPathFollowing[getNodeID(currSucc)]) {
                 maxPathWidth += this.nodes[getNodeID(currSucc)].getWidth();
                 maxPath--;
@@ -1239,7 +1519,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     /**
      * Rotates the entire graph around its center point, so its new average 
-     * edge-direction is parallel to the horizontal axis from left to right.
+     * edge-direction is the direction specified.
      */
     private void stepRotate() {
         if(this.debug) System.out.println("--- starting rotation.");
@@ -1259,10 +1539,12 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         // iterate over all connections
         while(it.hasNext()) {
             Connection currConn = it.next();
-            Point2D sender = 
-                    this.layout.transform(currConn.getSender().getNode());
-            Point2D receiver = 
-                    this.layout.transform(currConn.getReceiver().getNode());
+            VNode senderNode = currConn.getSender().getNode();
+            VNode receiverNode = currConn.getReceiver().getNode();
+            Point2D sender = new Point2D.Double(senderNode.getX(), 
+                    senderNode.getY());
+            Point2D receiver = new Point2D.Double(receiverNode.getX(), 
+                    receiverNode.getY());
             // direction of connection as vector
             double dirx = receiver.getX() - sender.getX();
             double diry = receiver.getY() - sender.getY();
@@ -1282,36 +1564,27 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 + avgdirx);
         if(this.debug) System.out.println("original average edge direction: " 
                 + ((avgdiry / avgdirx) / this.conncount));
-        // mirror graph at vertical axis through center point
-        // if the horizontal component of the average edge direction 
-        // is negative.
-        if(avgdirx < 0) {
-            for(i = 0; i < this.nodecount; i++) {
-                Point2D currCoords = this.layout.transform(this.nodes[i]);
-                double newx;
-                newx = ((-1) * (currCoords.getX() - centerx)) + centerx;
-                Point2D newCoords = new Point2D.Double(newx, currCoords.getY());
-                this.nodes[i].setX(newx);
-                this.layout.setLocation(this.nodes[i], newCoords);
-            }
-            avgdirx *= -1;
-            if(this.debug) System.out.println("mirrored graph");
-            stepRotate();
-            return;
-        }
+        double dirSin = Math.sin(this.direction * 2 * Math.PI / 360);
+        double dirCos = Math.cos(this.direction * 2 * Math.PI / 360);
         // rotate graph around center so new average direction is 0
         // ( -> x-direction)
         for(i = 0; i < this.nodecount; i++) {
-            Point2D currCoords = this.layout.transform(this.nodes[i]);
+            Point2D currCoords = new Point2D.Double(this.nodes[i].getX(), 
+                    this.nodes[i].getY());
             if(this.debug) System.out.println("Rotated Vertex " 
                     + this.nodes[i].getId() + " from (" + currCoords.getX() 
                     + "|" + currCoords.getY() + ")");
             // move coordinates to point of origin
             double x = currCoords.getX() - centerx;
             double y = currCoords.getY() - centery;
-            // rotate coordinates around point of origin
+            // rotate coordinates around point of origin to average direction 0
             double newx = (x * avgdirx / avghyp) + (y * avgdiry / avghyp);
             double newy = (y * avgdirx / avghyp) - (x * avgdiry / avghyp);
+            // rotate coordinates to to the desired average direction
+            x = newx;
+            y = newy;
+            newx = (x * dirCos) - (y * dirSin);
+            newy = (x * dirSin) + (y * dirCos);
             // move coordinates back to their original place
             newx += centerx;
             newy += centery;
@@ -1338,10 +1611,12 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         // iterate over all connections
         while(it.hasNext()) {
             Connection currConn = it.next();
-            Point2D sender = 
-                    this.layout.transform(currConn.getSender().getNode());
-            Point2D receiver = 
-                    this.layout.transform(currConn.getReceiver().getNode());
+            VNode senderNode = currConn.getSender().getNode();
+            VNode receiverNode = currConn.getReceiver().getNode();
+            Point2D sender = new Point2D.Double(senderNode.getX(), 
+                    senderNode.getY());
+            Point2D receiver = new Point2D.Double(receiverNode.getX(), 
+                    receiverNode.getY());
             // direction of connection as vector
             double dirx = receiver.getX() - sender.getX();
             double diry = receiver.getY() - sender.getY();
@@ -1391,8 +1666,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Pushes all nodes to the right, if they were left of one of 
-     * their predecessors.
+     * Pushes all successor nodes past their predecessors in the direction 
+     * specified, so no edges have a direction inverse to the specified
+     * direction.
      */
     private void stepPushBack() {
         if(this.debug) System.out.println("--- starting push back.");
@@ -1411,12 +1687,48 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             Iterator<VNode> it = nodelist.iterator();
             while(it.hasNext()) {
                 VNode pred = it.next();
-                double minpos = pred.getX() + (pred.getWidth() * this.scaling);
-                if(this.nodes[i].getX() < minpos) {
-                    this.nodes[i].setX(minpos);
-                    Point2D coords = new Point2D.Double(this.nodes[i].getX(),
-                            this.nodes[i].getY());
-                    this.layout.setLocation(this.nodes[i], coords);
+                if(this.debug) System.out.println("handling connection from " 
+                        + pred.getId() + " to " + this.nodes[i].getId());
+                double preDiag = Math.sqrt(Math.pow((pred.getWidth() / 2), 2) 
+                        + Math.pow((pred.getHeight() / 2), 2));
+                double desDist = preDiag * this.scaling;
+                // predecessor:
+                double xa = pred.getX() + pred.getWidth()/2;
+                double ya = pred.getY() + pred.getHeight()/2;
+                // current node:
+                double xb = this.nodes[i].getX() + this.nodes[i].getWidth()/2;
+                double yb = this.nodes[i].getY() + this.nodes[i].getHeight()/2;
+                // direction
+                double xd = Math.cos(this.direction);
+                double yd = Math.sin(this.direction);
+                // projection
+                double xp = ((xd*(xb - xa)) + (yd*(yb - ya)))*xd 
+                        / (Math.pow(xd, 2) + Math.pow(yd, 2));
+                double yp = ((xd*(xb - xa)) + (yd*(yb - ya)))*yd 
+                        / (Math.pow(xd, 2) + Math.pow(yd, 2));
+                double projectionlen = Math.sqrt(Math.pow(xp, 2) 
+                        + Math.pow(yp, 2));
+                double projtestlen = Math.sqrt(Math.pow((xp + xd), 2) 
+                        + Math.pow((yp + yd), 2));
+                if((projectionlen < desDist) || (projtestlen < projectionlen)) {
+                    // parameter:
+                    double phi1 = (-(xd*xp + yd*yp) + Math.sqrt(2*xd*xp*yd*yp 
+                            - Math.pow(xp*yd, 2) - Math.pow(yp*xd, 2) 
+                            + Math.pow(desDist*xd, 2) 
+                            + Math.pow(desDist*yd, 2))) / (Math.pow(xd, 2) 
+                            + Math.pow(yd, 2));
+                    double phi2 = (-(xd*xp + yd*yp) - Math.sqrt(2*xd*xp*yd*yp 
+                            - Math.pow(xp*yd, 2) - Math.pow(yp*xd, 2) 
+                            + Math.pow(desDist*xd, 2) 
+                            + Math.pow(desDist*yd, 2))) / (Math.pow(xd, 2) 
+                            + Math.pow(yd, 2));
+                    double phi = Math.max(phi1, phi2);
+                    if(this.debug) System.out.println("phi1: " + phi1 
+                            + " phi2: " + phi2 + " chosen: " + phi);
+                    xb = xb + phi*xd;
+                    yb = yb + phi*yd;
+                    this.nodes[i].setX(xb);
+                    this.nodes[i].setY(yb);
                 }
             }
             if(this.debug) System.out.println("position of Node " 
@@ -1426,7 +1738,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             nodelist = this.jgraph.getSuccessors(this.nodes[i]);
             it = nodelist.iterator();
             while(it.hasNext()) {
-                fifo.add(getNodeID(it.next()));
+                Integer next = getNodeID(it.next());
+                if(next == -1) continue;
+                fifo.add(next);
             }
         }
     }
@@ -1436,6 +1750,15 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
      */
     private void displaceIdents() {
         // iterate over all pairs of nodes
+        if(this.debug) System.out.println("- Displacing nodes with identical " 
+                + "positions.");
+        double displacement;
+        if(this.scaling < 0) {
+            displacement = this.scaling * (-1);
+        }
+        else {
+            displacement = this.scaling;
+        }
         int i;
         for(i = 0; i < this.nodecount; i++) {
             int j;
@@ -1443,24 +1766,36 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 if(i == j) continue;
                 // if distance between nodes is 0
                 if(getRealNodeDist(this.nodes[i], this.nodes[j]) == 0) {
+                    if(this.debug) System.out.println(this.nodes[i].getId() 
+                            + " and " + this.nodes[j].getId() 
+                            + " have the same position.");
                     Collection<VNode> succs = 
                             this.jgraph.getSuccessors(this.nodes[i]);
                     if(succs.contains(this.nodes[j])) {
                         // if j is successor to i, move j to the right
-                        this.nodes[j].setX(this.nodes[j].getX() + this.scaling);
+                        this.nodes[j].setX(this.nodes[j].getX() + displacement);
+                        if(this.debug) System.out.print(" Moving " 
+                                + this.nodes[j].getId() + " by " 
+                                + displacement);
                     }
                     else {
                         succs = this.jgraph.getSuccessors(this.nodes[j]);
                         if(succs.contains(this.nodes[i])) {
                             // if i is successor to j, move i to the right
                             this.nodes[i].setX(this.nodes[i].getX() 
-                                    + this.scaling);
+                                    + displacement);
+                            if(this.debug) System.out.print(" Moving " 
+                                    + this.nodes[i].getId() + " by " 
+                                    + displacement);
                         }
                         else {
                             // if the nodes are not successors to each other,
                             // displace them vertically
                             this.nodes[i].setY(this.nodes[i].getY() 
-                                    + this.scaling);
+                                    + displacement);
+                            if(this.debug) System.out.print(" Moving " 
+                                    + this.nodes[i].getId() + " by " 
+                                    + displacement);
                         }
                     }
                 }
@@ -1491,7 +1826,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                             this.nodes[j]);
                     double desDist = getDesiredNodeDist(this.nodes[i],
                             this.nodes[j]);
-                    // if the desired distance is larger than the existing distance
+                    // if the desired distance is larger than the existing 
+                    // distance
                     if((realDist < desDist) && (realDist != 0)) {
                         change = true;
                         // midpoints of both nodes:
@@ -1535,11 +1871,12 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                     }
                 }
             }
+            displaceIdents();
         }
     }
     
     /**
-     * Returns distance between center points of two nodes.
+     * Returns the distance between the center points of two nodes.
      * @param node1 VNode
      * @param node2 VNode
      * @return double
@@ -1601,82 +1938,122 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Aligns nodes pairwise with each other.
+     * Aligns nodes either pairwise to each other or to a global grid, 
+     * depending on the alignmentThreshold parameter.
      */
     private void alignNodes() {
-        if(this.debug) System.out.println("aligning nodes with similar "
-                + "coordinates.");
         int i;
         int j;
         boolean change;
         // iterate through all pairs of nodes
-        for(i = 0; i < this.nodecount; i++) {
-            VNode n1 = this.nodes[i];
-            double x1 = n1.getX();
-            double y1 = n1.getY();
-            double w1 = n1.getWidth();
-            double h1 = n1.getHeight();
-            for(j = 0; j < this.nodecount; j++) {
-                if(i != j) {
-                    VNode n2 = this.nodes[j];
-                    double x2 = n2.getX();
-                    double y2 = n2.getY();
-                    double w2 = n2.getWidth();
-                    double h2 = n2.getHeight();
-                    double threshold;
-                    // horizontal alignment
-                    if(x1 != x2) {
-                        threshold = (w1 + w2) * (this.scaling - 1) / 2;
-                        change = false;
-                        // align by left side
-                        if(Math.abs(x1 - x2) < threshold) {
-                            change = true;
-                            n1.setX((x1 + x2) / 2);
-                            n2.setX((x1 + x2) / 2);
+        if(this.alignmentThreshold <= 0) {
+            if(this.debug) System.out.println("aligning nodes with similar "
+                + "coordinates.");
+            for(i = 0; i < this.nodecount; i++) {
+                VNode n1 = this.nodes[i];
+                double x1 = n1.getX();
+                double y1 = n1.getY();
+                double w1 = n1.getWidth();
+                double h1 = n1.getHeight();
+                for(j = 0; j < this.nodecount; j++) {
+                    if(i != j) {
+                        VNode n2 = this.nodes[j];
+                        double x2 = n2.getX();
+                        double y2 = n2.getY();
+                        double w2 = n2.getWidth();
+                        double h2 = n2.getHeight();
+                        double threshold;
+                        // horizontal alignment
+                        if(x1 != x2) {
+                            threshold = (-1) * this.alignmentThreshold 
+                                    * (w1 + w2) / 2;
+                            change = false;
+                            // align by left side
+                            if(Math.abs(x1 - x2) < threshold) {
+                                change = true;
+                                n1.setX((x1 + x2) / 2);
+                                n2.setX((x1 + x2) / 2);
+                            }
+                            // align by right side
+                            else if(Math.abs((x1 + w1) - (x2 + w2)) 
+                                    < threshold) {
+                                change = true;
+                                n1.setX(((x1 + w1 + x2 + w2) / 2) - w1);
+                                n2.setX(((x1 + w1 + x2 + w2) / 2) - w2);
+                            }
+                            // align by center
+                            else if(Math.abs((x1 + (w1 / 2)) - (x2 + (w2 / 2))) 
+                                    < threshold) {
+                                change = true;
+                                n1.setX((((2 * x1) + w1 + (2 * x2) + w2) / 4) 
+                                        - (w1 / 2));
+                                n2.setX((((2 * x1) + w1 + (2 * x2) + w2) / 4) 
+                                        - (w2 / 2));
+                            }
+                            if((this.debug) && (change)) {
+                                System.out.println(n1.getId() 
+                                        + " and " + n2.getId() 
+                                        + " have been aligned at x coordinate " 
+                                        + n1.getX());
+                            }
                         }
-                        // align by right side
-                        else if(Math.abs((x1 + w1) - (x2 + w2)) < threshold) {
-                            change = true;
-                            n1.setX(((x1 + w1 + x2 + w2) / 2) - w1);
-                            n2.setX(((x1 + w1 + x2 + w2) / 2) - w2);
+                        // vertical alignment
+                        if(y1 != y2) {
+                            threshold = (h1 + h2) * (this.scaling - 1) / 2;
+                            change = false;
+                            // align by top side
+                            if(Math.abs(y1 - y2) < threshold) {
+                                change = true;
+                                n1.setY((y1 + y2) / 2);
+                                n2.setY((y1 + y2) / 2);
+                            }
+                            // align by bottom side
+                            else if(Math.abs((y1 + h1) - (y2 + h2)) 
+                                    < threshold) {
+                                change = true;
+                                n1.setY(((y1 + h1 + y2 + h2) / 2) - h1);
+                                n2.setY(((y1 + h1 + y2 + h2) / 2) - h2);
+                            }
+                            // align by center
+                            else if(Math.abs((y1 + (h1 / 2)) - (y2 - (h2 / 2))) 
+                                    < threshold) {
+                                change = true;
+                                n1.setY((((2 * y1) + h1 + (2 * y2) + h2) / 4) 
+                                        - (h1 / 2));
+                                n2.setY((((2 * y1) + h1 + (2 * y2) + h2) / 4) 
+                                        - (h2 / 2));
+                            }
+                            if((this.debug) && (change)) {
+                                System.out.println(n1.getId() 
+                                        + " and " + n2.getId() 
+                                        + " have been aligned at y coordinate " 
+                                        + n1.getY());
+                            }
                         }
-                        // align by center
-                        else if(Math.abs((x1 + (w1 / 2)) - (x2 + (w2 / 2))) < threshold) {
-                            change = true;
-                            n1.setX((((2 * x1) + w1 + (2 * x2) + w2) / 4) - (w1 / 2));
-                            n2.setX((((2 * x1) + w1 + (2 * x2) + w2) / 4) - (w2 / 2));
-                        }
-                        if((this.debug) && (change)) System.out.println(n1.getId() 
-                                + " and " + n2.getId() + " have been aligned at"
-                                + " x coordinate " + n1.getX());
-                    }
-                    // vertical alignment
-                    if(y1 != y2) {
-                        threshold = (h1 + h2) * (this.scaling - 1) / 2;
-                        change = false;
-                        // align by top side
-                        if(Math.abs(y1 - y2) < threshold) {
-                            change = true;
-                            n1.setY((y1 + y2) / 2);
-                            n2.setY((y1 + y2) / 2);
-                        }
-                        // align by bottom side
-                        else if(Math.abs((y1 + h1) - (y2 + h2)) < threshold) {
-                            change = true;
-                            n1.setY(((y1 + h1 + y2 + h2) / 2) - h1);
-                            n2.setY(((y1 + h1 + y2 + h2) / 2) - h2);
-                        }
-                        // align by center
-                        else if(Math.abs((y1 + (h1 / 2)) - (y2 - (h2 / 2))) < threshold) {
-                            change = true;
-                            n1.setY((((2 * y1) + h1 + (2 * y2) + h2) / 4) - (h1 / 2));
-                            n2.setY((((2 * y1) + h1 + (2 * y2) + h2) / 4) - (h2 / 2));
-                        }
-                        if((this.debug) && (change)) System.out.println(n1.getId() 
-                                + " and " + n2.getId() + " have been aligned at"
-                                + " y coordinate " + n1.getY());
                     }
                 }
+            }
+        }
+        else {
+            if(this.debug) System.out.println("aligning nodes on grid of size " 
+                    + this.alignmentThreshold);
+            for(i = 0; i < this.nodecount; i++) {
+                double posX = this.nodes[i].getX();
+                double posY = this.nodes[i].getY();
+                // horizontal alignment
+                double pos = Math.rint(posX / this.alignmentThreshold);
+                if(this.debug) System.out.println((posX 
+                        / this.alignmentThreshold) + " is rounded: " + pos);
+                this.nodes[i].setX(this.alignmentThreshold * pos);
+                // vertical alignment
+                pos = Math.rint(posY / this.alignmentThreshold);
+                if(this.debug) System.out.println((posY 
+                        / this.alignmentThreshold) + " is rounded: " + pos);
+                this.nodes[i].setY(this.alignmentThreshold * pos);
+                if(this.debug) System.out.println(this.nodes[i].getId() 
+                        + " aligned from (" + posX + "|" + posY + ") to (" 
+                        + this.nodes[i].getX() + "|" + this.nodes[i].getY() 
+                        + ")");
             }
         }
     }

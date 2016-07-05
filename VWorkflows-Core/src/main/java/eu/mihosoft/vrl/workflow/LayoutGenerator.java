@@ -43,9 +43,9 @@ public interface LayoutGenerator {
     
     /**
      * Returns the workflow to be laid out.
-     * @return VFlow
+     * @return VFlowModel
      */
-    public VFlow getWorkflow();
+    public VFlowModel getWorkflow();
     
     /**
      * If set to true, the layout is applied to all subflows of the given 
@@ -62,17 +62,16 @@ public interface LayoutGenerator {
     public boolean getAutoscaleNodes();
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * If set to true, debugging output will be printed in the command line.
      * @return 
      */
     public boolean getDebug();
     
     /**
-     * Set the workflow to be laid out.
-     * @param pworkflow VFlow
+     * Sets the workflow to be laid out.
+     * @param pworkflow VFlowModel
      */
-    public void setWorkflow(VFlow pworkflow);
+    public void setWorkflow(VFlowModel pworkflow);
     
     /**
      * If set to true, the layout is applied to all subflows of the given 
@@ -89,8 +88,7 @@ public interface LayoutGenerator {
     public void setAutoscaleNodes(boolean pautoscaleNodes);
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * If set to true, debugging output will be printed in the command line.
      * @param pdebug boolean
      */
     public void setDebug(boolean pdebug);

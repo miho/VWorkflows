@@ -35,7 +35,7 @@ package eu.mihosoft.vrl.workflow.demo;
 
 import edu.uci.ics.jung.graph.DirectedGraph;
 import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.LayoutGeneratorSmart;
+import eu.mihosoft.vrl.workflow.incubating.LayoutGeneratorSmart;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import javafx.collections.ObservableList;

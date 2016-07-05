@@ -31,7 +31,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.incubating;
 
 import cern.colt.Arrays;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
@@ -42,6 +42,10 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.Pair;
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Connections;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;

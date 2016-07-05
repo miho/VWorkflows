@@ -31,7 +31,9 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.incubating;
+
+import eu.mihosoft.vrl.workflow.VFlowModel;
 
 /**
  * This interface describes a layout generator. A layout generator is used to 

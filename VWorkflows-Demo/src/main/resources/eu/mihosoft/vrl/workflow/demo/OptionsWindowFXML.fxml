@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 
     Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
@@ -36,10 +35,10 @@
 
 -->
 
+
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane fx:id="contentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.mihosoft.vrl.workflow.demo.OptionsWindowFXMLController">
    <children>
       <CheckBox fx:id="checkRecursive" layoutX="201.0" layoutY="14.0" mnemonicParsing="false" text="recursive" />

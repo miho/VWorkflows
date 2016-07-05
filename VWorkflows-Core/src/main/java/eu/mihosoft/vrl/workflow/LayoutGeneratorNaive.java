@@ -172,7 +172,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true a depth-first-search is performed and all back edges are 
+     * If set to true, a depth-first-search is performed and all back edges are 
      * removed from the model graph. The layout is then applied without these 
      * edges.
      * Is only run if the graph contains cycles.
@@ -184,7 +184,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true a new layering for the given graph is created.
+     * If set to true, a new layering for the given graph is created.
      * default: true
      * @return boolean
      */
@@ -193,7 +193,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true the vertical position for each node is calculated and 
+     * If set to true, the vertical position for each node is calculated and 
      * changed.
      * Does not change the order of nodes on each layer.
      * default: true
@@ -204,7 +204,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true the horizontal position for each layer is calculated and 
+     * If set to true, the horizontal position for each layer is calculated and 
      * changed.
      * default: true
      * @return boolean
@@ -214,9 +214,9 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Get the scaling parameter of the algorithm. 
+     * Returns the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
-     * default: 1.5
+     * default: -1.5
      * @return double
      */
     public double getScaling() {
@@ -224,7 +224,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Get the scaling factor that is used to scale subflow-nodes in the 
+     * Returns the scaling factor that is used to scale subflow-nodes in the 
      * autoscaleNodes procedure.
      * default: 2.0
      * @return double
@@ -234,8 +234,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * If set to true, debugging output will be printed in the command line.
      * default: false
      * @return boolean
      */
@@ -263,7 +262,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     // <editor-fold defaultstate="collapsed" desc="setter">
     /**
-     * Set the workflow to be laid out.
+     * Sets the workflow to be laid out.
      * @param pworkflow VFlowModel
      */
     @Override
@@ -272,7 +271,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Set the list of nodes to be laid out.
+     * Sets the list of nodes to be laid out.
      * default: the nodelist is gathered from the given workflow.
      * @param pnodelist Collection<VNode>
      */
@@ -309,7 +308,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Set the input type.
+     * Sets the input type.
      * 0 - VFlow (setWorkflow)
      * 2 - nodelist (setNodelist)
      * The input must be delivered via the corresponding setter method before 
@@ -322,7 +321,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true a depth-first-search is performed and all back edges are 
+     * If set to true, a depth-first-search is performed and all back edges are 
      * removed from the model graph. The layout is then applied without these 
      * edges.
      * Is only run if the graph contains cycles.
@@ -335,7 +334,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     
     /**
-     * If set to true a new layering for the given graph is created.
+     * If set to true, a new layering for the given graph is created.
      * default: true
      * @param plaunchCreateLayering boolean
      */
@@ -344,7 +343,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true the vertical position for each node is calculated and 
+     * If set to true, the vertical position for each node is calculated and 
      * changed.
      * Does not change the order of nodes on each layer.
      * default: true
@@ -357,7 +356,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true the horizontal position for each layer is calculated and 
+     * If set to true, the horizontal position for each layer is calculated and 
      * changed.
      * default: true
      * @param plaunchCalculateHorizontalPositions boolean
@@ -369,9 +368,9 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Set the scaling parameter of the algorithm. 
+     * Sets the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
-     * default: 1.5
+     * default: -1.5
      * @param pscaling double
      */
     public void setScaling(double pscaling) {
@@ -379,7 +378,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Set the scaling factor that is used to scale subflow-nodes in the 
+     * Sets the scaling factor that is used to scale subflow-nodes in the 
      * autoscaleNodes procedure.
      * default: 2.0
      * @param psubflowscale double
@@ -389,8 +388,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * If set to true, debugging output will be printed in the command line.
      * default: false
      * @param pdebug boolean
      */
@@ -400,7 +398,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Set the model graph.
+     * Sets the model graph.
      * @param pconnectionList LinkedList<Tuple<Integer, Integer>>
      */
     public void setModelGraph(LinkedList<Pair<Integer>> pconnectionList) {
@@ -408,7 +406,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Set the layering of the current graph as an array of layer indices.
+     * Sets the layering of the current graph as an array of layer indices.
      * @param playering int[]
      */
     public void setLayering(int[] playering) {
@@ -419,6 +417,8 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     /**
      * Sets up the model-fields. This includes nodearray, nodecount and the 
      * model graph.
+     * Uses either a VFlowModel or a nodelist depending on the graphmode
+     * parameter.
      * @return boolean
      */
     public boolean setUp() {
@@ -612,7 +612,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     }
     
     /**
-     * Generates a Layout for the workflow given.
+     * Applies all steps of the layout, whose launch-parameters are set to true.
      */
     @Override
     public void generateLayout() {
@@ -750,7 +750,6 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
             this.layering[i] = 0;
             locked[i] = false;
         }
-        
         while(!allLocked(locked)) {
             Iterator<Pair<Integer>> it = this.connectionList.iterator();
             // iterate over all connections
@@ -802,6 +801,8 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         int i;
         int currlayer;
         int[] layer;
+        if(this.layering == null) return;
+        if(this.layercount == 0) return;
         for(currlayer = 0; currlayer < this.layercount; currlayer++) {
             // create array of the layer
             int nodeson = 0;
@@ -847,6 +848,8 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         int currlayer;
         int[] layer;
         double posx = 0.;
+        if(this.layering == null) return;
+        if(this.layercount == 0) return;
         for(currlayer = 0; currlayer < this.layercount; currlayer++) {
             // create array of layer
             int nodeson = 0;

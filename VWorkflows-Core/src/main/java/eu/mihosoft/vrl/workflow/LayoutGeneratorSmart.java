@@ -199,7 +199,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the Jung layout that is used in the first step of the algorithm.
+     * Returns the Jung layout that is used in the first step of the algorithm.
      * 0 - ISOM Layout
      * 1 - FR Layout
      * 2 - KK Layout
@@ -212,7 +212,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the aspect ratio of the initial drawing space of the graph.
+     * Returns the aspect ratio of the initial drawing area of the graph.
      * Width is determined via the longest path in the graph.
      * Height is determined by dividing the width by the aspect ratio.
      * default: 16:9
@@ -237,7 +237,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true a depth-first-search is performed and all back edges are 
+     * If set to true, a depth-first-search is performed and all back edges are 
      * removed from the model graph. The layout is then applied without these 
      * edges.
      * Is only run if the graph contains cycles.
@@ -249,7 +249,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true disjunct parts of the model graph will be laid out 
+     * If set to true, disjunct parts of the model graph will be laid out 
      * separately and then arranged over each other to create the cumulative 
      * layout.
      * Is never run if launchRemoveCycles is false and the graph contains 
@@ -262,7 +262,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true edge types will be separated and a layout generated that 
+     * If set to true, edge types will be separated and a layout generated that 
      * follows edge type priorities.
      * There is no working implementation for this feature yet.
      * default: false
@@ -273,9 +273,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true the specified algorithm from the JUNG-library is applied 
+     * If set to true, the specified algorithm from the JUNG-library is applied 
      * to the graph.
-     * The algorithm is specified using setLayoutselector().
+     * The algorithm is specified using setLayoutSelector().
      * default: true
      * @return boolean
      */
@@ -285,7 +285,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     /**
      * If set to true, the graph is rotated to reach an average flow direction 
-     * parallel to the horizontal axis.
+     * that is the direction specified.
      * default: true
      * @return boolean
      */
@@ -307,8 +307,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, all nodes will be pushed to the right of their 
-     * predecessors so no edge has a direction with a negative x-component.
+     * If set to true, all nodes will be pushed past their predecessors, so no 
+     * edges have a direction inverse to the specified direction.
      * Is never run if launchRemoveCycles is false and the graph contains 
      * cycles, because it does not terminate in this case.
      * default: true
@@ -339,8 +339,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, node-pairs that have coordinates in close proximity to 
-     * each other, will be aligned ad the mean coordinate between them.
+     * If set to true, nodes will be aligned either with each other or on a 
+     * global grid.
      * default: true
      * @return boolean
      */
@@ -349,8 +349,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the maximum amount of iterations used by the force push step of the 
-     * algorithm.
+     * Returns the maximum amount of iterations used by the force push step 
+     * of the algorithm.
      * default: 500
      * @return boolean
      */
@@ -359,7 +359,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the scaling parameter of the algorithm. 
+     * Returns the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
      * default: 1.2
      * @return double
@@ -369,7 +369,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Get the scaling factor that is used to scale subflow-nodes in the 
+     * Returns the scaling factor that is used to scale subflow-nodes in the 
      * autoscaleNodes procedure.
      * default: 2.0
      * @return double
@@ -389,7 +389,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the alignment parameter used to align nodes with each other.
+     * Sets the alignment parameter used to align nodes with each other.
      * If the value is positive it describes the size of a grid which nodes 
      * will be aligned on.
      * If the value is negative its absolute value will be used as multiplier 
@@ -404,8 +404,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * If set to true, debugging output will be printed in the command line.
      * default: false
      * @return boolean
      */
@@ -417,7 +416,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     // <editor-fold desc="setter" defaultstate="collapsed">
     /**
-     * Set the workflow to be laid out.
+     * Sets the workflow to be laid out.
      * @param pworkflow VFlowModel
      */
     @Override
@@ -426,7 +425,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the model graph to be laid out.
+     * Sets the model graph to be laid out.
      * default: a graph is generated automatically from the workflow given.
      * @param pjgraph DirectedGraph<VNode, Connection>
      */
@@ -435,7 +434,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the list of nodes to be laid out.
+     * Sets the list of nodes to be laid out.
      * default: the nodelist is gathered from the given workflow.
      * @param pnodelist Collection<VNode>
      */
@@ -487,7 +486,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the aspect ratio of the initial drawing space of the graph.
+     * Sets the aspect ratio of the initial drawing area of the graph.
      * Width of the drawing space is determined via the longest path in the 
      * graph.
      * Height is determined by dividing the width by the aspect ratio.
@@ -499,7 +498,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the input type.
+     * Sets the input type.
      * 0 - VFlow (setWorkflow)
      * 1 - jgraph (setModelGraph)
      * 2 - nodelist (setNodelist)
@@ -513,7 +512,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true a depth-first-search is performed and all back edges are 
+     * If set to true, a depth-first-search is performed and all back edges are 
      * removed from the model graph. The layout is then applied without these 
      * edges.
      * Is only run if the graph contains cycles.
@@ -525,7 +524,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true disjunct parts of the model graph will be laid out 
+     * If set to true, disjunct parts of the model graph will be laid out 
      * separately and then arranged over each other to create the cumulative 
      * layout.
      * Is never run if launchRemoveCycles is false and the graph contains 
@@ -539,7 +538,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true edge types will be separated and a layout generated that 
+     * If set to true, edge types will be separated and a layout generated that 
      * follows edge type priorities.
      * There is no working implementation for this feature yet.
      * default: false
@@ -550,9 +549,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true the specified algorithm from the JUNG-library is applied 
+     * If set to true, the specified algorithm from the JUNG-library is applied 
      * to the graph.
-     * The algorithm is specified using setLayoutselector().
+     * The algorithm is specified using setLayoutSelector().
      * default: true
      * @param plaunchJungLayout boolean
      */
@@ -562,7 +561,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     /**
      * If set to true, the graph is rotated to reach an average flow direction 
-     * parallel to the horizontal axis.
+     * that is the direction specified.
      * default: true
      * @param plaunchRotate boolean
      */
@@ -584,9 +583,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, all nodes will be pushed to the right of their 
-     * predecessors 
-     * so no edge has a direction with a negative x-component.
+     * If set to true, all nodes will be pushed past their predecessors, so no 
+     * edges have a direction inverse to the specified direction.
      * (Does not terminate if the graph contains cycles)
      * default: true
      * @param plaunchPushBack boolean
@@ -606,9 +604,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set true if all nodes shall be pushing each other away until no overlaps 
-     * between nodes remain or the maximum amount of iterations has been 
-     * reached.
+     * If set to true, all nodes will repel each other until no overlaps between 
+     * nodes are left or the maximum amount of iterations has been reached.
      * default: true
      * @param plaunchForcePush boolean
      */
@@ -617,8 +614,8 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, node-pairs that have coordinates in close proximity to 
-     * each other, will be aligned ad the mean coordinate between them.
+     * If set to true, nodes will be aligned either with each other or on a 
+     * global grid.
      * default: true
      * @param plaunchAlignNodes boolean
      */
@@ -627,7 +624,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the maximum amount of iterations for the force push step of the 
+     * Sets the maximum amount of iterations for the force push step of the 
      * algorithm.
      * default: 500
      * @param pmaxiterations int
@@ -637,7 +634,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the scaling parameter of the algorithm. 
+     * Sets the scaling parameter of the algorithm. 
      * Determines the distance between nodes.
      * default: 1.2
      * @param pscaling double
@@ -647,7 +644,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the scaling factor that is used to scale subflow-nodes in the 
+     * Sets the scaling factor that is used to scale subflow-nodes in the 
      * autoscaleNodes procedure.
      * default: 2.0
      * @param psubflowscale double
@@ -657,7 +654,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the desired average edge direction as an angle to the abscissa in 
+     * Sets the desired average edge direction as an angle to the abscissa in 
      * degrees.
      * default: 0.
      * @param pdirection double
@@ -667,7 +664,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Set the alignment parameter used to align nodes with each other.
+     * Sets the alignment parameter used to align nodes with each other.
      * If the value is positive it describes the size of a grid which nodes 
      * will be aligned on.
      * If the value is negative its absolute value will be used as multiplier 
@@ -682,8 +679,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * If set to true, debugging output will be printed in the command line and 
-     * a second representation of the graph will be shown.
+     * If set to true, debugging output will be printed in the command line.
      * default: false
      * @param pdebug boolean
      */
@@ -799,7 +795,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Gets all origin nodes of the graph.
+     * Returns all origin nodes of the graph.
      * Origin nodes are all nodes with an in-degree of 0.
      * @return Pair<Integer>[]: Array of Pairs. Each Pair contains the model-ID 
      * of the node and its successor count.
@@ -1041,7 +1037,6 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 if(graphs[j] > maxID) maxID = graphs[j];
             }
         }
-        
         if(this.debug) {
             for(i = 0; i < this.nodecount; i++) {
                 System.out.println(this.nodes[i].getId() + " belongs to graph " 
@@ -1215,7 +1210,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Applies all steps of the layout, which launch-parameters are set to true.
+     * Applies all steps of the layout, whose launch-parameters are set to true.
      */
     @Override
     public void generateLayout() {
@@ -1671,8 +1666,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Pushes all successor nodes in the direction specified, if they were on 
-     * the input-side of their predecessors previously.
+     * Pushes all successor nodes past their predecessors in the direction 
+     * specified, so no edges have a direction inverse to the specified
+     * direction.
      */
     private void stepPushBack() {
         if(this.debug) System.out.println("--- starting push back.");
@@ -1880,7 +1876,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     }
     
     /**
-     * Returns distance between center points of two nodes.
+     * Returns the distance between the center points of two nodes.
      * @param node1 VNode
      * @param node2 VNode
      * @return double

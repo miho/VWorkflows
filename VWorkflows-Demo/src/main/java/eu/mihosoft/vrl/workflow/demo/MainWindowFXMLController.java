@@ -929,6 +929,8 @@ public class MainWindowFXMLController implements Initializable {
                 .getInputs().get(1));
         workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(1)
                 .getInputs().get(1));
+        workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(6)
+                .getInputs().get(1));
         workflow.connect(nodes.get(4).getOutputs().get(1), nodes.get(5)
                 .getInputs().get(1));
         workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(3)
@@ -944,6 +946,8 @@ public class MainWindowFXMLController implements Initializable {
         workflow.connect(nodes.get(8).getOutputs().get(1), nodes.get(4)
                 .getInputs().get(1));
         workflow.connect(nodes.get(8).getOutputs().get(1), nodes.get(0)
+                .getInputs().get(1));
+        workflow.connect(nodes.get(9).getOutputs().get(1), nodes.get(5)
                 .getInputs().get(1));
         nodes.get(0).setWidth(nodes.get(0).getWidth() * 3);
         nodes.get(1).setWidth(nodes.get(1).getWidth() * 0.5);

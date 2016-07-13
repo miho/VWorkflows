@@ -60,13 +60,14 @@ import java.util.Optional;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
+
     private final Connection connection;
     private Node lastNode;
     private boolean receiverDraggingStarted = false;
     private MapChangeListener<String, Object> vReqLister;
 
     public DefaultFXConnectionSkin(FXSkinFactory skinFactory,
-                                   Parent parent, Connection connection, VFlow flow, String type) {
+            Parent parent, Connection connection, VFlow flow, String type) {
         super(skinFactory, parent, flow, type);
         this.connection = connection;
         this.setModel(connection);
@@ -96,8 +97,8 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
         // find the sender skin via lookup
         // TODO: replace lookup by direct reference?
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().
-            getNodeSkinLookup().getById(skinFactory,
-            connection.getSender().getId());
+                getNodeSkinLookup().getById(skinFactory,
+                        connection.getSender().getId());
 
         // retrieve the sender node from its skin
         senderShape = senderSkin.getConnectorShape(connection.getSender());
@@ -105,8 +106,8 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
         // find the receiver skin via lookup
         // TODO: replace lookup by direct reference?
         FXFlowNodeSkin receiverSkin = (FXFlowNodeSkin) getController().
-            getNodeSkinLookup().getById(skinFactory,
-            connection.getReceiver().getId());
+                getNodeSkinLookup().getById(skinFactory,
+                        connection.getReceiver().getId());
 
         // retrieve the receiver node from its skin
         receiverShape = receiverSkin.getConnectorShape(connection.getReceiver());
@@ -118,9 +119,9 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
         }
 
         setSender(getController().getNodeLookup().getConnectorById(
-            connection.getSender().getId()));
+                connection.getSender().getId()));
         setReceiver(getController().getNodeLookup().getConnectorById(
-            connection.getReceiver().getId()));
+                connection.getReceiver().getId()));
     }
 
     protected void initMouseEventHandler() {
@@ -134,7 +135,7 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
             // TODO: is this check for MouseButton.SECONDARY really necessary?
             if (event.getButton() == MouseButton.SECONDARY) {
                 contextMenu.show(connectionPath,
-                    event.getScreenX(), event.getScreenY());
+                        event.getScreenX(), event.getScreenY());
             }
         };
     }
@@ -159,32 +160,37 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
         getModel().getVisualizationRequest().addListener(vReqLister);
     }
 
+    @Override
     protected void makeDraggable() {
         final DoubleBinding receiveXBinding = new DoubleBinding() {
             {
                 super.bind(getReceiverShape().getNode().layoutXProperty(),
-                    getReceiverShape().radiusProperty());
+                        getReceiverShape().getNode().translateXProperty(),
+                        getReceiverShape().radiusProperty());
             }
 
             @Override
             protected double computeValue() {
 
                 return getReceiverShape().getNode().layoutXProperty().get()
-                    + getReceiverShape().getRadius();
+                        + getReceiverShape().getNode().getTranslateX()
+                        + getReceiverShape().getRadius();
             }
         };
 
         final DoubleBinding receiveYBinding = new DoubleBinding() {
             {
                 super.bind(getReceiverShape().getNode().layoutYProperty(),
-                    getReceiverShape().radiusProperty());
+                        getReceiverShape().getNode().translateYProperty(),
+                        getReceiverShape().radiusProperty());
             }
 
             @Override
             protected double computeValue() {
 
                 return getReceiverShape().getNode().layoutYProperty().get()
-                    + getReceiverShape().getRadius();
+                        + getReceiverShape().getNode().getTranslateY()
+                        + getReceiverShape().getRadius();
             }
         };
 
@@ -319,7 +325,6 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
                             }
                         }
 
-
                     }
 
                     if (!isSameConnection) {
@@ -355,6 +360,7 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
     public final void setModel(Connection model) {
         modelProperty.set(model);
     }
+
     @Override
     public void add() {
         NodeUtil.addToParent(getParent(), connectionPath);

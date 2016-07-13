@@ -33,6 +33,41 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
+import jfxtras.scene.control.window.Window;
+import org.apache.commons.math3.geometry.euclidean.twod.Line;
+import org.apache.commons.math3.geometry.euclidean.twod.Segment;
+import org.apache.commons.math3.geometry.euclidean.twod.SubLine;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 /**
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
@@ -107,7 +142,7 @@ public class FXFlowNodeSkin
                 cShape.getNode().setCache(!flowNodeWindow.isResizing());
             });
         });
-        
+
         flowNodeWindow.resizingProperty().addListener((ov) -> {
             if (flowNodeWindow.isResizing()) {
                 flowNodeWindow.setCache(false);
@@ -141,7 +176,6 @@ public class FXFlowNodeSkin
             addConnector(connector);
         }
 
-
         getModel().getConnectors().addListener(
                 (ListChangeListener.Change<? extends Connector> change) -> {
                     boolean numConnectorsHasChanged = false;
@@ -156,7 +190,7 @@ public class FXFlowNodeSkin
 //                            // TODO update item
 //                        } 
 //                        else 
-                        
+
                         if (change.wasRemoved()) {
                             numConnectorsHasChanged = true;
                             // removed
@@ -299,11 +333,12 @@ public class FXFlowNodeSkin
 
         ConnectorShape connectorShape = connectors.get(c);
 
-        connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius() );
-        connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius() );
+        connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
 
         Collection<Connection> conns = getModel().getFlow().
                 getConnections(c.getType()).getAllWith(c);
+        //----------------------------B       
 
         Optional<Boolean> preferTD = c.getVisualizationRequest().
                 get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
@@ -314,8 +349,8 @@ public class FXFlowNodeSkin
 
             int newEdgeIndex = c.isInput() ? TOP : BOTTOM;
 
-            connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
-            connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
+            connectorShape.getNode().setLayoutX(computeConnectorXValue(c)- connectorShape.getRadius());
+            connectorShape.getNode().setLayoutY(computeConnectorYValue(c)- connectorShape.getRadius());
 
             if (newEdgeIndex != oldEdgeIndex) {
 
@@ -328,6 +363,7 @@ public class FXFlowNodeSkin
             }
         }
 
+        //----------------------------E
         if (conns.isEmpty()) {
             return;
         }
@@ -397,9 +433,12 @@ public class FXFlowNodeSkin
             }
         } // end if switchEdges
 
-        connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
-        connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutX(computeConnectorXValue(c)
+                - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutY(computeConnectorYValue(c)
+                - connectorShape.getRadius());
 
+//        System.out.println("c: " + c);
         if (updateOthers) {
             for (Connection connection : conns) {
 
@@ -521,13 +560,13 @@ public class FXFlowNodeSkin
         connectorNode.setManaged(false);
 
         connectors.put(connector, connectorShape);
-
+//--------------------B
         Optional<Boolean> preferTD = connector.getVisualizationRequest().
                 get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
         boolean preferTopDown = preferTD.orElse(false);
         int inputDefault = preferTopDown ? TOP : LEFT;
         int outputDefault = preferTopDown ? BOTTOM : RIGHT;
-
+//--------------------E
         if (connector.isInput()) {
 //            inputList.add(connectorNode);
             shapeLists.get(inputDefault).add(connectorShape);
@@ -956,11 +995,6 @@ public class FXFlowNodeSkin
 
         initVReqListeners();
 
-        if (flowNode instanceof VFlowModel) {
-            // 15.06.2015 TODO: #issue 26, maybe we need to register an 
-            // additional listener that updates the connector layout
-        }
-
     }
 
     /**
@@ -992,6 +1026,6 @@ public class FXFlowNodeSkin
     }
 
     public void configureCanvas(VCanvas content) {
-        return;
+        //
     }
 }

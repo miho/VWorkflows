@@ -433,8 +433,10 @@ public class FXFlowNodeSkin
             }
         } // end if switchEdges
 
-        connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
-        connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutX(computeConnectorXValue(c)
+                - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutY(computeConnectorYValue(c)
+                - connectorShape.getRadius());
 
 //        System.out.println("c: " + c);
         if (updateOthers) {

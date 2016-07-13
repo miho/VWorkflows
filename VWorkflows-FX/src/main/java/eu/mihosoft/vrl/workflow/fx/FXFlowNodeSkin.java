@@ -34,6 +34,7 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
@@ -341,6 +342,29 @@ public class FXFlowNodeSkin
         Collection<Connection> conns = getModel().getFlow().
                 getConnections(c.getType()).getAllWith(c);
 
+        Optional<Boolean> preferTD = c.getVisualizationRequest().
+                get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
+        boolean preferTopDown = preferTD.orElse(false);
+
+        if (preferTopDown && conns.isEmpty()) {
+            int oldEdgeIndex = connectorToIndexMap.get(c);
+
+            int newEdgeIndex = c.isInput() ? TOP : BOTTOM;
+
+            connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
+            connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
+
+            if (newEdgeIndex != oldEdgeIndex) {
+
+                shapeLists.get(oldEdgeIndex).remove(connectorShape);
+                shapeLists.get(newEdgeIndex).add(connectorShape);
+                connectorToIndexMap.put(c, newEdgeIndex);
+
+                // update all other connectors
+                layoutConnectors();
+            }
+        }
+
         if (conns.isEmpty()) {
             return;
         }
@@ -413,7 +437,6 @@ public class FXFlowNodeSkin
         connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
         connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
 
-//        System.out.println("c: " + c);
         if (updateOthers) {
             for (Connection connection : conns) {
 
@@ -536,14 +559,20 @@ public class FXFlowNodeSkin
 
         connectors.put(connector, connectorShape);
 
+        Optional<Boolean> preferTD = connector.getVisualizationRequest().
+                get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
+        boolean preferTopDown = preferTD.orElse(false);
+        int inputDefault = preferTopDown ? TOP : LEFT;
+        int outputDefault = preferTopDown ? BOTTOM : RIGHT;
+
         if (connector.isInput()) {
 //            inputList.add(connectorNode);
-            shapeLists.get(LEFT).add(connectorShape);
-            connectorToIndexMap.put(connector, LEFT);
+            shapeLists.get(inputDefault).add(connectorShape);
+            connectorToIndexMap.put(connector, inputDefault);
         } else if (connector.isOutput()) {
 //            outputList.add(connectorNode);
-            shapeLists.get(RIGHT).add(connectorShape);
-            connectorToIndexMap.put(connector, RIGHT);
+            shapeLists.get(outputDefault).add(connectorShape);
+            connectorToIndexMap.put(connector, outputDefault);
         }
 
         node.boundsInLocalProperty().addListener((ov, oldValue, newValue) -> {
@@ -963,6 +992,11 @@ public class FXFlowNodeSkin
         node.prefHeightProperty().addListener(nodeHeightListener);
 
         initVReqListeners();
+
+        if (flowNode instanceof VFlowModel) {
+            // 15.06.2015 TODO: #issue 26, maybe we need to register an 
+            // additional listener that updates the connector layout
+        }
 
     }
 

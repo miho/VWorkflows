@@ -52,6 +52,7 @@ import javafx.scene.shape.Shape;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
+
     // -- properties
     protected final ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
     protected final ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
@@ -85,7 +86,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
     @Override
     public final FXConnectionSkin init() {
         synchronized (this) {
-            if(!initialized) {
+            if (!initialized) {
                 initSenderAndReceiver();
                 initConnnectionPath();
                 initStyle();
@@ -108,16 +109,18 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
 
     protected void initConnnectionPath() {
         final Node senderNode = senderShape.getNode();
-        
+
         DoubleBinding startXBinding = new DoubleBinding() {
             {
                 super.bind(senderNode.layoutXProperty(),
-                    senderShape.radiusProperty());
+                        senderNode.translateXProperty(),
+                        senderShape.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
                 return senderNode.getLayoutX()
+                        + senderNode.getTranslateX()
                         + senderShape.getRadius();
             }
         };
@@ -125,12 +128,14 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         DoubleBinding startYBinding = new DoubleBinding() {
             {
                 super.bind(senderNode.layoutYProperty(),
-                    senderShape.radiusProperty());
+                        senderNode.translateYProperty(),
+                        senderShape.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
                 return senderNode.getLayoutY()
+                        + senderNode.getTranslateY()
                         + senderShape.getRadius();
             }
         };
@@ -138,13 +143,17 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         DoubleBinding controlX1Binding = new DoubleBinding() {
             {
                 super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutXProperty(), receiverConnectorUI.layoutXProperty());
+                        senderNode.layoutXProperty(),
+                        receiverConnectorUI.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
                 return senderNode.getLayoutX()
-                        + (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX()) / 2;
+                        + (receiverConnectorUI.getLayoutX()
+                        + receiverConnectorUI.getTranslateX()
+                        - senderNode.getLayoutX()
+                        - senderNode.getTranslateX()) / 2;
             }
         };
 
@@ -156,20 +165,25 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
 
             @Override
             protected double computeValue() {
-                return senderNode.getLayoutY();
+                return senderNode.getLayoutY() + senderNode.getTranslateX();
             }
         };
 
         DoubleBinding controlX2Binding = new DoubleBinding() {
             {
                 super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutXProperty(), receiverConnectorUI.layoutXProperty());
+                        senderNode.layoutXProperty(),
+                        receiverConnectorUI.layoutXProperty());
             }
 
             @Override
             protected double computeValue() {
                 return receiverConnectorUI.getLayoutX()
-                        - (receiverConnectorUI.getLayoutX() - senderNode.getLayoutX()) / 2;
+                        + receiverConnectorUI.getTranslateY()
+                        - (receiverConnectorUI.getLayoutX()
+                        + receiverConnectorUI.getTranslateY()
+                        - senderNode.getLayoutX()
+                        - senderNode.getTranslateY()) / 2;
             }
         };
 
@@ -181,7 +195,8 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
 
             @Override
             protected double computeValue() {
-                return receiverConnectorUI.getLayoutY();
+                return receiverConnectorUI.getLayoutY()
+                        + receiverConnectorUI.getTranslateY();
             }
         };
 
@@ -211,7 +226,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
     protected Path getConnectionPath() {
         return connectionPath;
     }
-    
+
     @Override
     public Connector getSender() {
         return senderProperty.get();
@@ -267,7 +282,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         return modelProperty;
     }
 
-    protected  final void setParent(Parent parent) {
+    protected final void setParent(Parent parent) {
         parentProperty.set(parent);
     }
 

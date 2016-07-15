@@ -500,7 +500,7 @@ public class FXFlowNodeSkin
         double startX = midPointOfNode - totalWidth / 2;
 
         double offsetX = +(connectorWidth + gap) * connectorIndex
-                + (connectorWidth + gap) / 2;
+                + connectorWidth / 2;
 
         double x = startX + offsetX;
 
@@ -545,7 +545,7 @@ public class FXFlowNodeSkin
         double y = startY;
 
         double offsetY = +(connectorHeight + gap) * connectorIndex
-                + (connectorHeight + gap) / 2;
+                + connectorHeight / 2;
 
         y += offsetY;
 

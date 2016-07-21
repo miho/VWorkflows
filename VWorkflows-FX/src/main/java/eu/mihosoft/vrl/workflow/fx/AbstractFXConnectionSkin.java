@@ -143,7 +143,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         DoubleBinding endXBinding = new DoubleBinding() {
             {
                 super.bind(receiverConnectorUI.layoutXProperty(),
-                		receiverConnectorUI.translateXProperty());
+                        receiverConnectorUI.translateXProperty());
             }
 
             @Override
@@ -155,7 +155,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         DoubleBinding endYBinding = new DoubleBinding() {
             {
                 super.bind(receiverConnectorUI.layoutYProperty(),
-                		receiverConnectorUI.translateYProperty());
+                        receiverConnectorUI.translateYProperty());
             }
 
             @Override

@@ -102,6 +102,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#onStableAction" text="Stable" />
             </Menu>
             <MenuItem mnemonicParsing="false" text="Delete" />
+            <MenuItem mnemonicParsing="false" onAction="#onLayoutSnapshotAction" text="snapshot" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

@@ -228,7 +228,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     /**
      * Returns the set input type.
-     * 0 - VFlow (setWorkflow)
+     * 0 - VFlowModel (setWorkflow)
      * 1 - jgraph (setModelGraph)
      * 2 - nodelist (setNodelist)
      * The input must be delivered via the corresponding setter method before 
@@ -503,7 +503,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     
     /**
      * Sets the input type.
-     * 0 - VFlow (setWorkflow)
+     * 0 - VFlowModel (setWorkflow)
      * 1 - jgraph (setModelGraph)
      * 2 - nodelist (setNodelist)
      * The input must be delivered via the corresponding setter method before 
@@ -1053,7 +1053,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         subgen.setAspectratio(this.aspectratio);
         subgen.setAutoscaleNodes(false);
         subgen.setDebug(this.debug);
-        // set graphmode to 1 in this case, to use jgraph instead of VFlow
+        // set graphmode to 1 in this case, to use jgraph instead of VFlowModel
         subgen.setGraphmode(1);
         subgen.setLaunchAlignNodes(this.launchAlignNodes);
         subgen.setLaunchDisplaceIdents(this.launchDisplaceIdents);
@@ -1582,13 +1582,13 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
             double x = currCoords.getX() - centerx;
             double y = currCoords.getY() - centery;
             // rotate coordinates around point of origin to average direction 0
-            double newx = (x * avgdirx / avghyp) + (y * avgdiry / avghyp);
-            double newy = (y * avgdirx / avghyp) - (x * avgdiry / avghyp);
+            double newx = (x * avgdirx / avghyp) - (y * avgdiry / avghyp);
+            double newy = (y * avgdirx / avghyp) + (x * avgdiry / avghyp);
             // rotate coordinates to to the desired average direction
             x = newx;
             y = newy;
-            newx = (x * dirCos) - (y * dirSin);
-            newy = (x * dirSin) + (y * dirCos);
+            newx = (x * dirCos) + (y * dirSin);
+            newy = (y * dirCos) - (x * dirSin);
             // move coordinates back to their original place
             newx += centerx;
             newy += centery;
@@ -1716,19 +1716,12 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                         + Math.pow((yp + yd), 2));
                 if((projectionlen < desDist) || (projtestlen < projectionlen)) {
                     // parameter:
-                    double phi1 = (-(xd*xp + yd*yp) + Math.sqrt(2*xd*xp*yd*yp 
+                    double phi = (-(xd*xp + yd*yp) + Math.sqrt(2*xd*xp*yd*yp 
                             - Math.pow(xp*yd, 2) - Math.pow(yp*xd, 2) 
                             + Math.pow(desDist*xd, 2) 
                             + Math.pow(desDist*yd, 2))) / (Math.pow(xd, 2) 
                             + Math.pow(yd, 2));
-                    double phi2 = (-(xd*xp + yd*yp) - Math.sqrt(2*xd*xp*yd*yp 
-                            - Math.pow(xp*yd, 2) - Math.pow(yp*xd, 2) 
-                            + Math.pow(desDist*xd, 2) 
-                            + Math.pow(desDist*yd, 2))) / (Math.pow(xd, 2) 
-                            + Math.pow(yd, 2));
-                    double phi = Math.max(phi1, phi2);
-                    if(this.debug) System.out.println("phi1: " + phi1 
-                            + " phi2: " + phi2 + " chosen: " + phi);
+                    if(this.debug) System.out.println("phi: " + phi);
                     xb = xb + phi*xd;
                     yb = yb + phi*yd;
                     this.nodes[i].setX(xb);

@@ -33,7 +33,7 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.workflow.LayoutGeneratorNaive;
+import eu.mihosoft.vrl.workflow.incubating.LayoutGeneratorNaive;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import javafx.collections.ObservableList;

@@ -57,6 +57,11 @@ public interface VisualizationRequest extends PropertyStorage{
      */
     static final String KEY_NODE_NOT_REMOVABLE = "visualization-request:skin:node-not-removable";
     
+    /**
+     * Defines whether connector prefers top-down layout.
+     */
+    static final String KEY_CONNECTOR_PREFER_TOP_DOWN = "visualization-request:connector:prefer-top-down";
+    
     public void setStyle(String style);
     public String getStyle();
 }

@@ -41,7 +41,6 @@ import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -143,7 +142,7 @@ public class FXFlowNodeSkin
                 cShape.getNode().setCache(!flowNodeWindow.isResizing());
             });
         });
-        
+
         flowNodeWindow.resizingProperty().addListener((ov) -> {
             if (flowNodeWindow.isResizing()) {
                 flowNodeWindow.setCache(false);
@@ -177,7 +176,6 @@ public class FXFlowNodeSkin
             addConnector(connector);
         }
 
-
         getModel().getConnectors().addListener(
                 (ListChangeListener.Change<? extends Connector> change) -> {
                     boolean numConnectorsHasChanged = false;
@@ -192,7 +190,7 @@ public class FXFlowNodeSkin
 //                            // TODO update item
 //                        } 
 //                        else 
-                        
+
                         if (change.wasRemoved()) {
                             numConnectorsHasChanged = true;
                             // removed
@@ -335,12 +333,37 @@ public class FXFlowNodeSkin
 
         ConnectorShape connectorShape = connectors.get(c);
 
-        connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius() );
-        connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius() );
+        connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
 
         Collection<Connection> conns = getModel().getFlow().
                 getConnections(c.getType()).getAllWith(c);
+        //----------------------------B       
 
+        Optional<Boolean> preferTD = c.getVisualizationRequest().
+                get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
+        boolean preferTopDown = preferTD.orElse(false);
+
+        if (preferTopDown && conns.isEmpty()) {
+            int oldEdgeIndex = connectorToIndexMap.get(c);
+
+            int newEdgeIndex = c.isInput() ? TOP : BOTTOM;
+
+            connectorShape.getNode().setLayoutX(computeConnectorXValue(c)- connectorShape.getRadius());
+            connectorShape.getNode().setLayoutY(computeConnectorYValue(c)- connectorShape.getRadius());
+
+            if (newEdgeIndex != oldEdgeIndex) {
+
+                shapeLists.get(oldEdgeIndex).remove(connectorShape);
+                shapeLists.get(newEdgeIndex).add(connectorShape);
+                connectorToIndexMap.put(c, newEdgeIndex);
+
+                // update all other connectors
+                layoutConnectors();
+            }
+        }
+
+        //----------------------------E
         if (conns.isEmpty()) {
             return;
         }
@@ -410,8 +433,10 @@ public class FXFlowNodeSkin
             }
         } // end if switchEdges
 
-        connectorShape.getNode().setLayoutX(computeConnectorXValue(c) - connectorShape.getRadius());
-        connectorShape.getNode().setLayoutY(computeConnectorYValue(c) - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutX(computeConnectorXValue(c)
+                - connectorShape.getRadius());
+        connectorShape.getNode().setLayoutY(computeConnectorYValue(c)
+                - connectorShape.getRadius());
 
 //        System.out.println("c: " + c);
         if (updateOthers) {
@@ -475,7 +500,7 @@ public class FXFlowNodeSkin
         double startX = midPointOfNode - totalWidth / 2;
 
         double offsetX = +(connectorWidth + gap) * connectorIndex
-                + (connectorWidth + gap) / 2;
+                + connectorWidth / 2;
 
         double x = startX + offsetX;
 
@@ -520,7 +545,7 @@ public class FXFlowNodeSkin
         double y = startY;
 
         double offsetY = +(connectorHeight + gap) * connectorIndex
-                + (connectorHeight + gap) / 2;
+                + connectorHeight / 2;
 
         y += offsetY;
 
@@ -535,15 +560,21 @@ public class FXFlowNodeSkin
         connectorNode.setManaged(false);
 
         connectors.put(connector, connectorShape);
-
+//--------------------B
+        Optional<Boolean> preferTD = connector.getVisualizationRequest().
+                get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
+        boolean preferTopDown = preferTD.orElse(false);
+        int inputDefault = preferTopDown ? TOP : LEFT;
+        int outputDefault = preferTopDown ? BOTTOM : RIGHT;
+//--------------------E
         if (connector.isInput()) {
 //            inputList.add(connectorNode);
-            shapeLists.get(LEFT).add(connectorShape);
-            connectorToIndexMap.put(connector, LEFT);
+            shapeLists.get(inputDefault).add(connectorShape);
+            connectorToIndexMap.put(connector, inputDefault);
         } else if (connector.isOutput()) {
 //            outputList.add(connectorNode);
-            shapeLists.get(RIGHT).add(connectorShape);
-            connectorToIndexMap.put(connector, RIGHT);
+            shapeLists.get(outputDefault).add(connectorShape);
+            connectorToIndexMap.put(connector, outputDefault);
         }
 
         node.boundsInLocalProperty().addListener((ov, oldValue, newValue) -> {

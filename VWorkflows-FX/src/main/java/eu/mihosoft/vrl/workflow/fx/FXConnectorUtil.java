@@ -228,8 +228,6 @@ public class FXConnectorUtil {
 
     public static void unconnectAnim(Node n) {
 
-        System.out.println("unconnect");
-
         if (timeline != null) {
             timeline.stop();
         }
@@ -260,8 +258,6 @@ public class FXConnectorUtil {
     }
 
     public static void connectAnim(Node n, Node target) {
-
-        System.out.println("connect");
 
         if (timeline != null) {
             timeline.stop();

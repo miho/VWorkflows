@@ -25,7 +25,7 @@ VWorkflows-Core:
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
       <artifactId>vworkflows-core</artifactId>
-      <version>0.2.2</version>
+      <version>0.2.3</version>
     </dependency>
 
 VWorkflows-FX:
@@ -37,7 +37,7 @@ Replace version with the desired version (see above for latest version).
     <dependency>
       <groupId>eu.mihosoft.vrl.workflow</groupId>
       <artifactId>vworkflows-fx</artifactId>
-      <version>0.2.2</version>
+      <version>0.2.3</version>
     </dependency>
 
 ## How To Build

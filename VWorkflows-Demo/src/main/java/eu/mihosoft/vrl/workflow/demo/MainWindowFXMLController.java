@@ -279,7 +279,7 @@ public class MainWindowFXMLController implements Initializable {
         optionsstageNaive.show();
     }
     
-        @FXML
+    @FXML
     public void onLayoutSnapshotAction(ActionEvent e) {
         String abspath = new File(".").getAbsolutePath();
         String path = abspath.substring(0, abspath.length()-1);
@@ -289,7 +289,7 @@ public class MainWindowFXMLController implements Initializable {
             dir.mkdir();
         }
         path += "snapshots/";
-        WritableImage wim = new WritableImage((int) Math.round(rootPane.getWidth()), (int) Math.round(rootPane.getHeight()));
+        WritableImage wim = new WritableImage((int) Math.round(contentPane.getWidth()), (int) Math.round(contentPane.getHeight()));
         SnapshotParameters param = new SnapshotParameters();
         param.setTransform(new Translate(0, 200));
         Calendar calendar = Calendar.getInstance();

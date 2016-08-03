@@ -128,7 +128,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         this.recursive = true;
         this.autoscaleNodes = true;
         this.layoutSelector = 0;
-        this.aspectratio = 16. / 9.;
+        this.aspectratio = 1.778;
         this.graphmode = 0;
         this.launchRemoveCycles = true;
         this.launchSeparateDisjunctGraphs = true;
@@ -1708,7 +1708,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                 // projection
                 double xp = ((xd*(xb - xa)) + (yd*(yb - ya)))*xd 
                         / (Math.pow(xd, 2) + Math.pow(yd, 2));
-                double yp = ((xd*(xb - xa)) + (yd*(yb - ya)))*yd 
+                double yp = ((xd*(xb - xa)) + (yd*(yb - ya)))*yd
                         / (Math.pow(xd, 2) + Math.pow(yd, 2));
                 double projectionlen = Math.sqrt(Math.pow(xp, 2) 
                         + Math.pow(yp, 2));

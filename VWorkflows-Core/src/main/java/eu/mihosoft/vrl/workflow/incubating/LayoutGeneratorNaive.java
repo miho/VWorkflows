@@ -113,7 +113,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
         this.launchCalculateVerticalPositions = true;
         this.launchCalculateHorizontalPositions = true;
         this.scaling = -1.5;
-        this.subflowscale = 2.;
+        this.subflowscale = 2.0;
     }
     
     // <editor-fold defaultstate="collapsed" desc="getter">
@@ -164,7 +164,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     /**
      * Returns the set input type.
-     * 0 - VFlow (setWorkflow)
+     * 0 - VFlowModel (setWorkflow)
      * 2 - nodelist (setNodelist)
      * The input must be delivered via the corresponding setter method before 
      * the call of generateLayout().
@@ -313,7 +313,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     /**
      * Sets the input type.
-     * 0 - VFlow (setWorkflow)
+     * 0 - VFlowModel (setWorkflow)
      * 2 - nodelist (setNodelist)
      * The input must be delivered via the corresponding setter method before 
      * the call of generateLayout().

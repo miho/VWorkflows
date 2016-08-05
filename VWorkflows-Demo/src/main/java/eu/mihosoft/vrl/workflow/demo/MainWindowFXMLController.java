@@ -46,7 +46,11 @@ import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import eu.mihosoft.vrl.workflow.fx.FlowNodeWindow;
+import eu.mihosoft.vrl.workflow.fx.FXFlowNodeSkin;
 import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
+import eu.mihosoft.vrl.workflow.fx.InnerCanvas;
+import eu.mihosoft.vrl.workflow.fx.NodeUtil;
 import eu.mihosoft.vrl.workflow.fx.OptimizableContentPane;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
 import eu.mihosoft.vrl.workflow.fx.VCanvas;
@@ -69,12 +73,17 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 import javafx.scene.transform.Translate;
@@ -189,24 +198,6 @@ public class MainWindowFXMLController implements Initializable {
     // <editor-fold defaultstate="collapsed" desc="Menu items">
     @FXML
     private CheckMenuItem checkDebugLayout;
-    
-    @FXML
-    private CheckMenuItem checkNaiveRecursive;
-    
-    @FXML
-    private CheckMenuItem checkNaiveAutoscaleNodes;
-    
-    @FXML
-    private CheckMenuItem checkNaiveLaunchRemoveCycles;
-    
-    @FXML
-    private CheckMenuItem checkCreateLayering;
-    
-    @FXML
-    private CheckMenuItem checkCalcVertPos;
-    
-    @FXML
-    private CheckMenuItem checkCalcHorPos;
     // </editor-fold>
     
     // <editor-fold desc="Development" defaultstate="collapsed">
@@ -286,6 +277,78 @@ public class MainWindowFXMLController implements Initializable {
         naiveLayout.setDebug(checkDebugLayout.isSelected());
         optionsNaive.set();
         optionsstageNaive.show();
+    }
+    
+    @FXML
+    public void onLayoutSnapshotAction(ActionEvent e) {
+        String abspath = new File(".").getAbsolutePath();
+        String path = abspath.substring(0, abspath.length()-1);
+        File dir = new File(path + "snapshots");
+        if(!dir.exists()) {
+            System.out.println("Creating directory: " + dir.getAbsolutePath());
+            dir.mkdir();
+        }
+        path += "snapshots/";
+        WritableImage wim = new WritableImage((int) Math.round(contentPane.getWidth()), (int) Math.round(contentPane.getHeight()));
+        SnapshotParameters param = new SnapshotParameters();
+        param.setTransform(new Translate(0, 200));
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String now = format.format(calendar.getTime());
+        try {
+            rootPane.snapshot(param, wim);
+            dir = new File(path + now + ".png");
+            ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", dir);
+            System.out.println("snapshot " + now + ".png saved.");
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        subSnaps((InnerCanvas) canvas.getContent(), path, now);
+    }
+    
+    private void subSnaps(InnerCanvas inner, String path, String now) {
+        ObservableList<Node> childnodes = inner.getChildrenUnmodifiable();
+        for(Node n : childnodes) {
+            if((n instanceof FlowNodeWindow) && (n.isManaged())) {
+                FlowNodeWindow w = (FlowNodeWindow) n;
+                List<String> style = NodeUtil.getStylesheetsOfAncestors(w);
+                FXFlowNodeSkin wskin = w.nodeSkinProperty().get();
+                VFlow cont = wskin.getController();
+                Collection<VFlow> subconts = cont.getSubControllers();
+                for(VFlow currsub : subconts) {
+                    if(currsub.getModel().equals(wskin.getModel())) {
+                        String title = currsub.getModel().getId().replace(':', '-');
+                        if((currsub.getNodes().size() > 0) && (currsub.isVisible())) {
+                            VCanvas subcanvas = new VCanvas();
+                            FlowNodeWindow.addResetViewMenu(subcanvas);
+                            subcanvas.setMinScaleX(0.1);
+                            subcanvas.setMinScaleY(0.1);
+                            subcanvas.setMaxScaleX(1);
+                            subcanvas.setMaxScaleY(1);
+                            subcanvas.setTranslateToMinNodePos(true);
+                            
+                            FXSkinFactory fxSkinFactory = w.nodeSkinProperty().get().getSkinFactory().newInstance(subcanvas.getContent(), null);
+                            currsub.addSkinFactories(fxSkinFactory);
+                            
+                            Scene subscene = new Scene(subcanvas, (int) Math.round(rootPane.getWidth()), (int) Math.round(rootPane.getHeight()));
+                            subscene.getStylesheets().setAll(style);
+                            WritableImage wim = new WritableImage((int) Math.round(subscene.getWidth()), (int) Math.round(subscene.getHeight()));
+                            try {
+                                subscene.snapshot(wim);
+                                File dir = new File(path + now + "_" + title + ".png");
+                                ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", dir);
+                                System.out.println("snapshot " + now + "_" + title + ".png saved");
+                            } catch (IOException ex) {
+                                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            if(w.getWorkflowContentPane() instanceof InnerCanvas) {
+                                subSnaps((InnerCanvas) w.getWorkflowContentPane(), path, now);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     // </editor-fold>
     
@@ -929,6 +992,8 @@ public class MainWindowFXMLController implements Initializable {
                 .getInputs().get(1));
         workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(1)
                 .getInputs().get(1));
+        workflow.connect(nodes.get(3).getOutputs().get(1), nodes.get(6)
+                .getInputs().get(1));
         workflow.connect(nodes.get(4).getOutputs().get(1), nodes.get(5)
                 .getInputs().get(1));
         workflow.connect(nodes.get(5).getOutputs().get(1), nodes.get(3)
@@ -944,6 +1009,8 @@ public class MainWindowFXMLController implements Initializable {
         workflow.connect(nodes.get(8).getOutputs().get(1), nodes.get(4)
                 .getInputs().get(1));
         workflow.connect(nodes.get(8).getOutputs().get(1), nodes.get(0)
+                .getInputs().get(1));
+        workflow.connect(nodes.get(9).getOutputs().get(1), nodes.get(5)
                 .getInputs().get(1));
         nodes.get(0).setWidth(nodes.get(0).getWidth() * 3);
         nodes.get(1).setWidth(nodes.get(1).getWidth() * 0.5);

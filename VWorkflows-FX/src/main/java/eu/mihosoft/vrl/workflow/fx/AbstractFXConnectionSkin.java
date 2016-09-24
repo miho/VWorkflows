@@ -140,63 +140,71 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
             }
         };
 
-        DoubleBinding controlX1Binding = new DoubleBinding() {
+        DoubleBinding endXBinding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutXProperty(),
-                        receiverConnectorUI.layoutXProperty());
+                super.bind(receiverConnectorUI.layoutXProperty(),
+                        receiverConnectorUI.translateXProperty());
             }
 
             @Override
             protected double computeValue() {
-                return senderNode.getLayoutX()
-                        + (receiverConnectorUI.getLayoutX()
-                        + receiverConnectorUI.getTranslateX()
-                        - senderNode.getLayoutX()
-                        - senderNode.getTranslateX()) / 2;
+                return receiverConnectorUI.getLayoutX() + receiverConnectorUI.getTranslateX();
+            }
+        };
+
+        DoubleBinding endYBinding = new DoubleBinding() {
+            {
+                super.bind(receiverConnectorUI.layoutYProperty(),
+                        receiverConnectorUI.translateYProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                return receiverConnectorUI.getLayoutY() + receiverConnectorUI.getTranslateY();
+            }
+        };
+
+        DoubleBinding controlX1Binding = new DoubleBinding() {
+            {
+                super.bind(startXBinding, endXBinding);
+            }
+
+            @Override
+            protected double computeValue() {
+                return ( startXBinding.get() + endXBinding.get() ) / 2;
             }
         };
 
         DoubleBinding controlY1Binding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutYProperty());
+                super.bind(startYBinding);
             }
 
             @Override
             protected double computeValue() {
-                return senderNode.getLayoutY() + senderNode.getTranslateX();
+                return startYBinding.get();
             }
         };
 
         DoubleBinding controlX2Binding = new DoubleBinding() {
             {
-                super.bind(senderNode.boundsInLocalProperty(),
-                        senderNode.layoutXProperty(),
-                        receiverConnectorUI.layoutXProperty());
+                super.bind(startXBinding, endXBinding);
             }
 
             @Override
             protected double computeValue() {
-                return receiverConnectorUI.getLayoutX()
-                        + receiverConnectorUI.getTranslateY()
-                        - (receiverConnectorUI.getLayoutX()
-                        + receiverConnectorUI.getTranslateY()
-                        - senderNode.getLayoutX()
-                        - senderNode.getTranslateY()) / 2;
+                return ( startXBinding.get() + endXBinding.get() ) / 2;
             }
         };
 
         DoubleBinding controlY2Binding = new DoubleBinding() {
             {
-                super.bind(receiverConnectorUI.boundsInLocalProperty(),
-                        receiverConnectorUI.layoutYProperty());
+                super.bind(endYBinding);
             }
 
             @Override
             protected double computeValue() {
-                return receiverConnectorUI.getLayoutY()
-                        + receiverConnectorUI.getTranslateY();
+                return endYBinding.get();
             }
         };
 
@@ -211,8 +219,8 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         curveTo.controlY1Property().bind(controlY1Binding);
         curveTo.controlX2Property().bind(controlX2Binding);
         curveTo.controlY2Property().bind(controlY2Binding);
-        curveTo.xProperty().bind(receiverConnectorUI.layoutXProperty());
-        curveTo.yProperty().bind(receiverConnectorUI.layoutYProperty());
+        curveTo.xProperty().bind(endXBinding);
+        curveTo.yProperty().bind(endYBinding);
     }
 
     protected void initConnectionListener() {

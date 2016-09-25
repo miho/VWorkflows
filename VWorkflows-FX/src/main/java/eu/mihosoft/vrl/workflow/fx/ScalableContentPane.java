@@ -33,23 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.layout.Pane;
-
-import javafx.scene.layout.Region;
-
-import javafx.scene.transform.Scale;
-
 /**
  * Scales content to always fit in the bounds of this pane. Useful for workflows
  * with lots of windows.

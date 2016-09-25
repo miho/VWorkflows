@@ -55,6 +55,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.scene.control.ContextMenu;
@@ -278,7 +279,7 @@ public final class FlowNodeWindow extends Window {
         // create skin factory for flow visualization
         FXSkinFactory fXSkinFactory
                 = nodeSkinProperty.get().getSkinFactory().
-                newInstance(canvas.getContent(), null);
+                newInstance((Parent) canvas.getContent(), null);
 
         // generate the ui for the flow
         flow.addSkinFactories(fXSkinFactory);
@@ -299,7 +300,7 @@ public final class FlowNodeWindow extends Window {
     }
 
     public Pane getWorkflowContentPane() {
-        return content.getContent();
+        return (Pane) content.getContent();
     }
 
     /**
@@ -569,7 +570,7 @@ public final class FlowNodeWindow extends Window {
                             if (c.wasAdded()) {
                                 for (VNode n : c.getAddedSubList()) {
                                     if (n.getId().equals(nodeId)) {
-                                        canvas.getContent().getChildren().clear();
+                                        ((Pane)canvas.getContent()).getChildren().clear();
                                         VFlow flow = (VFlow) rootFlow.getFlowById(n.getId());
                                         flow.addSkinFactories(new FXValueSkinFactory(null));
                                     }

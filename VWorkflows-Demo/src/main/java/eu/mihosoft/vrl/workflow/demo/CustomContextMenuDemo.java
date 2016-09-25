@@ -67,7 +67,7 @@ public class CustomContextMenuDemo extends Application {
         StackPane contentPane = new StackPane();
         VCanvas canvas = new VCanvas();
         contentPane.getChildren().add(canvas);
-        createFlow(canvas.getContent());
+        createFlow((Pane)canvas.getContent());
 
         Scene scene = new Scene(contentPane, 1024, 768);
 

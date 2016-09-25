@@ -36,6 +36,7 @@ package eu.mihosoft.vrl.workflow.fx;
 import javafx.beans.property.BooleanProperty;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import jfxtras.labs.util.event.MouseControlUtil;
@@ -58,7 +59,7 @@ public class VCanvas extends ScalableContentPane {
         contentProperty().addListener((ov, oldV, newV) -> {
             if (newV != null) {
                 MouseControlUtil.
-                        addSelectionRectangleGesture(newV, rect);
+                        addSelectionRectangleGesture((Parent) newV, rect);
             }
         });
 

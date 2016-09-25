@@ -117,7 +117,7 @@ public class MainWindowFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        canvas = new VCanvas();
 
-        Pane root = canvas.getContent();
+        Pane root = (Pane) canvas.getContent();
 
         contentPane.getChildren().add(canvas);
 
@@ -327,7 +327,7 @@ public class MainWindowFXMLController implements Initializable {
                             subcanvas.setMaxScaleY(1);
                             subcanvas.setTranslateToMinNodePos(true);
                             
-                            FXSkinFactory fxSkinFactory = w.nodeSkinProperty().get().getSkinFactory().newInstance(subcanvas.getContent(), null);
+                            FXSkinFactory fxSkinFactory = w.nodeSkinProperty().get().getSkinFactory().newInstance((Parent) subcanvas.getContent(), null);
                             currsub.addSkinFactories(fxSkinFactory);
                             
                             Scene subscene = new Scene(subcanvas, (int) Math.round(rootPane.getWidth()), (int) Math.round(rootPane.getHeight()));

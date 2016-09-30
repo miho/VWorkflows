@@ -16,8 +16,9 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 ## Demo
 
-<embed type="text/html" src="http://141.2.38.116:8080/test/fullscreen/default">
-
+<iframe src="http://141.2.38.116:8080/test/fullscreen/default" width="220" 
+        height="350" style="border: 0;">
+</iframe>
 
 ## Maven Coordinates
 

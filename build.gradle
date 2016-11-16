@@ -18,10 +18,6 @@ buildscript {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
-}
-
 Date buildTimeAndDate = new Date()
 ext {
     buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
@@ -63,35 +59,10 @@ allprojects {
 subprojects { subproj ->
     subproj.apply plugin: 'java'
 
-    configurations {
-        compileOnly
-        testCompileOnly
-    }
-
     subproj.tasks.withType(JavaCompile) {
         sourceCompatibility = subproj.sourceCompatibility
         targetCompatibility = subproj.targetCompatibility
         options*.encoding = 'UTF-8'
-    }
-
-    sourceSets {
-        main {
-            compileClasspath += [configurations.compileOnly]
-        }
-        test {
-            compileClasspath += [configurations.testCompileOnly]
-        }
-    }
-
-    javadoc {
-        classpath += [configurations.compileOnly]
-    }
-
-    idea {
-        module {
-            scopes.PROVIDED.plus += [configurations.compileOnly]
-            scopes.PROVIDED.plus += [configurations.testCompileOnly]
-        }
     }
 
     tasks.withType(AbstractCompile) {
@@ -108,7 +79,6 @@ subprojects { subproj ->
     subproj.apply plugin: 'org.kordamp.gradle.stats'
 
     if (subproj.publishJars.toBoolean()) {
-        
         task sourceJar(type: Jar) {
             group 'Build'
             description 'An archive of the source code'
@@ -125,15 +95,14 @@ subprojects { subproj ->
 
         dependencies {
             compileOnly project.files(project.jfxrtLocation)
-            testCompile 'junit:junit:4.+'
+            testCompile 'junit:junit:4.12'
         }
 
         test {
-            
             // set heap size for the test JVM(s)
             minHeapSize = "64m"
             maxHeapSize = "256m"
-            
+
             testLogging {
                 afterSuite { desc, result ->
                     if (!desc.parent) {

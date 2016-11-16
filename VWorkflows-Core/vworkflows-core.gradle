@@ -1,8 +1,8 @@
 dependencies {
-    compile 'com.thoughtworks.xstream:xstream:1.4.8'
-    compile 'net.sf.jung:jung-api:2.0.1'
-    compile 'net.sf.jung:jung-graph-impl:2.0.1'
-    compile 'net.sf.jung:jung-algorithms:2.0.1'
-    compile 'net.sf.jung:jung-visualization:2.0.1'
-    compile 'org.apache.commons:commons-collections4:4.1'
+    compile "com.thoughtworks.xstream:xstream:$xstreamVersion"
+    compile "net.sf.jung:jung-api:$jungVersion"
+    compile "net.sf.jung:jung-graph-impl:$jungVersion"
+    compile "net.sf.jung:jung-algorithms:$jungVersion"
+    compile "net.sf.jung:jung-visualization:$jungVersion"
+    compile "org.apache.commons:commons-collections4:$commonsCollections4Version"
 }

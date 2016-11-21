@@ -1,3 +1,37 @@
+/*
+ * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ *    1. Redistributions of source code must retain the above copyright notice, this list of
+ *       conditions and the following disclaimer.
+ *
+ *    2. Redistributions in binary form must reproduce the above copyright notice, this list
+ *       of conditions and the following disclaimer in the documentation and/or other materials
+ *       provided with the distribution.
+ *
+ * Please cite the following publication(s):
+ *
+ * M. Hoffer, C.Poliwoda, G.Wittum. Visual Reflection Library -
+ * A Framework for Declarative GUI Programming on the Java Platform.
+ * Computing and Visualization in Science, 2011, in press.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Michael Hoffer <info@michaelhoffer.de> "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Michael Hoffer <info@michaelhoffer.de> OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ * or implied, of Michael Hoffer <info@michaelhoffer.de>.
+ */
+
 import java.text.SimpleDateFormat
 
 apply from: 'gradle/idea.gradle'
@@ -9,32 +43,32 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.0'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.7.1'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.5'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
-        classpath 'net.nemerosa:versioning:1.7+'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+        classpath 'net.nemerosa:versioning:2.5.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
-}
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'net.nemerosa.versioning'
 
 Date buildTimeAndDate = new Date()
 ext {
+    buildBy = System.properties['user.name']
     buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
     buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    buildRevision = versioning.info.commit
+    buildCreatedBy = "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString()
     macosx = System.getProperty('os.name').contains('Mac OS')
     jacocoMergeExecFile  = "${buildDir}/jacoco/root.exec"
     jacocoRootReportPath = "${buildDir}/reports/jacoco/root/"
     projectsWithCoverage = []
     projectsToPublish = []
 }
-
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
 
 jacoco {
     toolVersion = jacocoVersion
@@ -63,35 +97,10 @@ allprojects {
 subprojects { subproj ->
     subproj.apply plugin: 'java'
 
-    configurations {
-        compileOnly
-        testCompileOnly
-    }
-
     subproj.tasks.withType(JavaCompile) {
         sourceCompatibility = subproj.sourceCompatibility
         targetCompatibility = subproj.targetCompatibility
         options*.encoding = 'UTF-8'
-    }
-
-    sourceSets {
-        main {
-            compileClasspath += [configurations.compileOnly]
-        }
-        test {
-            compileClasspath += [configurations.testCompileOnly]
-        }
-    }
-
-    javadoc {
-        classpath += [configurations.compileOnly]
-    }
-
-    idea {
-        module {
-            scopes.PROVIDED.plus += [configurations.compileOnly]
-            scopes.PROVIDED.plus += [configurations.testCompileOnly]
-        }
     }
 
     tasks.withType(AbstractCompile) {
@@ -102,13 +111,10 @@ subprojects { subproj ->
         }
     }
 
-    subproj.apply from: rootProject.file('gradle/jdkdetect.gradle')
-    subproj.apply from: rootProject.file('gradle/version-info.gradle')
     subproj.apply from: rootProject.file('gradle/code-quality.gradle')
     subproj.apply plugin: 'org.kordamp.gradle.stats'
 
     if (subproj.publishJars.toBoolean()) {
-        
         task sourceJar(type: Jar) {
             group 'Build'
             description 'An archive of the source code'
@@ -125,15 +131,14 @@ subprojects { subproj ->
 
         dependencies {
             compileOnly project.files(project.jfxrtLocation)
-            testCompile 'junit:junit:4.+'
+            testCompile 'junit:junit:4.12'
         }
 
         test {
-            
             // set heap size for the test JVM(s)
             minHeapSize = "64m"
             maxHeapSize = "256m"
-            
+
             testLogging {
                 afterSuite { desc, result ->
                     if (!desc.parent) {

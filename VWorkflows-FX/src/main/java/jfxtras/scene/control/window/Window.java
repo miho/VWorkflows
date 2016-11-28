@@ -84,7 +84,7 @@ import jfxtras.internal.scene.control.skin.window.DefaultWindowSkinSimplified;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class Window extends Control implements SelectableNode {
-	private static Timer timer = new Timer("jfxtras-Timer", true);
+    private static Timer timer = new Timer("jfxtras-Timer", true);
     /**
      * Default css style.
      */
@@ -358,7 +358,7 @@ public class Window extends Control implements SelectableNode {
 //                cancelledTasks[0] = 0;
 //            }
             if (!timerTaskSet[0]) {
-            	timerTaskSet[0] = true;
+                timerTaskSet[0] = true;
                 timer.scheduleAtFixedRate(new TimerTask() {
 
                     @Override
@@ -402,7 +402,7 @@ public class Window extends Control implements SelectableNode {
 //                cancelledTasks[0] = 0;
 //            }
             if (!timerTaskSet[0] && (getLayoutX() != 0 || getLayoutY() != 0)) {
-            	timerTaskSet[0] = true;
+                timerTaskSet[0] = true;
                 timer.scheduleAtFixedRate(new TimerTask() {
 
                     @Override

@@ -84,7 +84,7 @@ import jfxtras.internal.scene.control.skin.window.DefaultWindowSkinSimplified;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class Window extends Control implements SelectableNode {
-
+    private static Timer timer = new Timer("jfxtras-Timer", true);
     /**
      * Default css style.
      */
@@ -347,7 +347,7 @@ public class Window extends Control implements SelectableNode {
 
     private void initializeResizingPropertyMonitor() {
         // detects whether the window is currently moving
-        Timer[] timer = {null};
+        boolean[] timerTaskSet = {false};
         double[] wh = {0, 0};
 //        int[] cancelledTasks = {0};
         InvalidationListener resizingListener = (ov) -> {
@@ -357,9 +357,9 @@ public class Window extends Control implements SelectableNode {
 //                timer[0].purge();
 //                cancelledTasks[0] = 0;
 //            }
-            if (timer[0] == null) {
-                timer[0] = new Timer(true);
-                timer[0].scheduleAtFixedRate(new TimerTask() {
+            if (!timerTaskSet[0]) {
+                timerTaskSet[0] = true;
+                timer.scheduleAtFixedRate(new TimerTask() {
 
                     @Override
                     public void run() {
@@ -375,7 +375,7 @@ public class Window extends Control implements SelectableNode {
                                     if (!isResizing()) {
                                         cancel();
 //                                        cancelledTasks[0]++;
-                                        timer[0] = null;
+                                        timerTaskSet[0] = false;
                                     }
                                 }
                         );
@@ -390,7 +390,7 @@ public class Window extends Control implements SelectableNode {
 
     private void initializeMovingPropertyMonitor() {
         // detects whether the window is currently moving
-        Timer[] timer = {null};
+        boolean [] timerTaskSet = {false};
         double[] xy = {0, 0};
 //        boolean[] running = {false};
 //        int[] cancelledTasks = {0};
@@ -401,9 +401,9 @@ public class Window extends Control implements SelectableNode {
 //                timer[0].purge();
 //                cancelledTasks[0] = 0;
 //            }
-            if (timer[0] == null && (getLayoutX() != 0 || getLayoutY() != 0)) {
-                timer[0] = new Timer(true);
-                timer[0].scheduleAtFixedRate(new TimerTask() {
+            if (!timerTaskSet[0] && (getLayoutX() != 0 || getLayoutY() != 0)) {
+                timerTaskSet[0] = true;
+                timer.scheduleAtFixedRate(new TimerTask() {
 
                     @Override
                     public void run() {
@@ -420,7 +420,7 @@ public class Window extends Control implements SelectableNode {
                                     if (!isMoving()) {
                                         cancel();
 //                                        cancelledTasks[0]++;
-                                        timer[0] = null;
+                                        timerTaskSet[0] = false;
                                     }
                                 }
                         );

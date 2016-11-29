@@ -35,13 +35,12 @@ package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.DefaultValueObject;
-import eu.mihosoft.vrl.workflow.FlowFactory;
-import eu.mihosoft.vrl.workflow.IOConnector;
+import eu.mihosoft.vrl.workflow.impl.DefaultValueObject;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import eu.mihosoft.vrl.workflow.IdGenerator;
-import eu.mihosoft.vrl.workflow.NodeLookupImpl;
+import eu.mihosoft.vrl.workflow.impl.NodeLookupImpl;
 import eu.mihosoft.vrl.workflow.ThruConnector;
-import eu.mihosoft.vrl.workflow.ThruConnectorImpl;
+import eu.mihosoft.vrl.workflow.impl.ThruConnectorImpl;
 import eu.mihosoft.vrl.workflow.VConnections;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;

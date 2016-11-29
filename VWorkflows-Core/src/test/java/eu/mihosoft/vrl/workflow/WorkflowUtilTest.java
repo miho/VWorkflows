@@ -34,6 +34,8 @@
 package eu.mihosoft.vrl.workflow;
 
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
+import eu.mihosoft.vrl.workflow.util.WorkflowUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

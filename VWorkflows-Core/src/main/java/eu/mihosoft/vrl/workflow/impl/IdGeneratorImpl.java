@@ -31,45 +31,77 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.impl;
 
-import eu.mihosoft.vrl.workflow.impl.ConnectionBase;
-import eu.mihosoft.vrl.workflow.util.FlowFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import eu.mihosoft.vrl.workflow.IdGenerator;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
+ * This class generates ids for nodes and connectors
+ *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class ConnectionImplClassTest {
+public class IdGeneratorImpl implements IdGenerator {
 
-    @Test
-    public void testImplClassWithConformingConstructor() {
-        VFlow flow = FlowFactory.newFlow();
+    private Set<String> ids = new HashSet<>();
+    //    private int lastId = 0;
 
-        flow.getConnections("mytype").setConnectionClass(ConnectionBase.class);
+    public IdGeneratorImpl() {
+        //
     }
 
-    public void testImplClassWithNonConformingConstructor() {
-        VFlow flow = FlowFactory.newFlow();
+    @Override
+    public void addId(String id) {
+        ids.add(id);
+    }
 
-        boolean exceptionThrown = false;
+    @Override
+    public void addIds(IdGenerator generator) {
+        ids.addAll(generator.getIds());
+    }
 
-        try {
-            flow.getConnections("mytype").setConnectionClass(
-                ConnectionBaseWithoutConformingConstructor.class);
-        } catch (IllegalArgumentException ex) {
-            exceptionThrown = true;
+    @Override
+    public String newId(String prefix) {
+
+        // TODO improve id generation
+        // Question: do we really want strings as id?
+        int counter = 0;//lastId + 1;
+
+
+        if (prefix != null && !prefix.isEmpty() && !prefix.endsWith(":")) {
+            prefix = prefix + "-";
         }
 
-        Assert.assertTrue("IllegalArgumentException must be thrown!", exceptionThrown);
-    }
-}
+        String id = prefix + counter;
 
-class ConnectionBaseWithoutConformingConstructor extends ConnectionBase {
-    //
-    private ConnectionBaseWithoutConformingConstructor() {
+        while (ids.contains(id)) {
+            id = prefix + counter;
+            counter++;
+        }
+
+        ids.add(id);
+
+        //        lastId = counter;
+
+        return id;
     }
 
-    ;
+    @Override
+    public String newId() {
+        return newId("");
+    }
+
+    @Override
+    public Set<String> getIds() {
+        Set<String> result = new HashSet<>(ids);
+        return result;
+    }
+
+    @Override
+    public IdGenerator newChild() {
+        return this;
+    }
+
 }

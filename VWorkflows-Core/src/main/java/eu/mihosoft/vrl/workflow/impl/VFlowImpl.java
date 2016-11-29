@@ -31,8 +31,22 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.impl;
 
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.ConnectionEvent;
+import eu.mihosoft.vrl.workflow.ConnectionResult;
+import eu.mihosoft.vrl.workflow.Connections;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.FlowModel;
+import eu.mihosoft.vrl.workflow.IdGenerator;
+import eu.mihosoft.vrl.workflow.NodeLookup;
+import eu.mihosoft.vrl.workflow.ThruConnector;
+import eu.mihosoft.vrl.workflow.VConnections;
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
@@ -67,7 +81,7 @@ import java.util.logging.Logger;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class VFlowImpl implements VFlow {
+public class VFlowImpl implements VFlow {
 
     final ObjectProperty<VFlowModel> modelProperty = new SimpleObjectProperty<>();
     private ListChangeListener<VNode> nodesListener;

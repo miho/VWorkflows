@@ -31,75 +31,42 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.impl;
 
-import java.util.HashSet;
-import java.util.Set;
+import eu.mihosoft.vrl.workflow.CompatibilityResult;
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.ConnectionResult;
 
 /**
- * This class generates ids for nodes and connectors
+ * This class provides a default implementation of {@code  ConnectionResult}
+ * //TODO add documentation about the possible connection results.
  *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-class IdGeneratorImpl implements IdGenerator {
 
-    private Set<String> ids = new HashSet<>();
-    //    private int lastId = 0;
+public class ConnectionResultImpl implements ConnectionResult {
+    private final CompatibilityResult status;
+    private Connection connection;
 
-    public IdGeneratorImpl() {
-        //
+    public ConnectionResultImpl(CompatibilityResult status, Connection connection) {
+        this.status = status;
+
+        this.connection = connection;
     }
 
+    /**
+     * @return the status
+     */
     @Override
-    public void addId(String id) {
-        ids.add(id);
+    public CompatibilityResult getStatus() {
+        return status;
     }
 
+    /**
+     * @return the connection
+     */
     @Override
-    public void addIds(IdGenerator generator) {
-        ids.addAll(generator.getIds());
+    public Connection getConnection() {
+        return connection;
     }
-
-    @Override
-    public String newId(String prefix) {
-
-        // TODO improve id generation
-        // Question: do we really want strings as id?
-        int counter = 0;//lastId + 1;
-
-
-        if (prefix != null && !prefix.isEmpty() && !prefix.endsWith(":")) {
-            prefix = prefix + "-";
-        }
-
-        String id = prefix + counter;
-
-        while (ids.contains(id)) {
-            id = prefix + counter;
-            counter++;
-        }
-
-        ids.add(id);
-
-        //        lastId = counter;
-
-        return id;
-    }
-
-    @Override
-    public String newId() {
-        return newId("");
-    }
-
-    @Override
-    public Set<String> getIds() {
-        Set<String> result = new HashSet<>(ids);
-        return result;
-    }
-
-    @Override
-    public IdGenerator newChild() {
-        return this;
-    }
-
 }

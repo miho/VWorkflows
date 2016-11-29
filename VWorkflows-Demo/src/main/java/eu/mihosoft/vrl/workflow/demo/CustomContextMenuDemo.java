@@ -39,7 +39,7 @@
 package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.FlowFactory;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.fx.DefaultFXConnectionSkin;

@@ -31,45 +31,33 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package eu.mihosoft.vrl.workflow.impl;
 
-import eu.mihosoft.vrl.workflow.impl.ConnectionBase;
-import eu.mihosoft.vrl.workflow.util.FlowFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
 
 /**
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class ConnectionImplClassTest {
+public class VisualizationRequestImpl extends PropertyStorageImpl implements VisualizationRequest {
 
-    @Test
-    public void testImplClassWithConformingConstructor() {
-        VFlow flow = FlowFactory.newFlow();
+    @Override
+    public void setStyle(String style) {
 
-        flow.getConnections("mytype").setConnectionClass(ConnectionBase.class);
-    }
-
-    public void testImplClassWithNonConformingConstructor() {
-        VFlow flow = FlowFactory.newFlow();
-
-        boolean exceptionThrown = false;
-
-        try {
-            flow.getConnections("mytype").setConnectionClass(
-                ConnectionBaseWithoutConformingConstructor.class);
-        } catch (IllegalArgumentException ex) {
-            exceptionThrown = true;
+        if (style == null) {
+            style = "";
         }
 
-        Assert.assertTrue("IllegalArgumentException must be thrown!", exceptionThrown);
-    }
-}
-
-class ConnectionBaseWithoutConformingConstructor extends ConnectionBase {
-    //
-    private ConnectionBaseWithoutConformingConstructor() {
+        set(VisualizationRequest.KEY_STYLE, style);
     }
 
-    ;
+    @Override
+    public String getStyle() {
+        return get(VisualizationRequest.KEY_STYLE).get().toString();
+    }
+
 }

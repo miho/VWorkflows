@@ -31,67 +31,18 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.io;
 
-import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
-import eu.mihosoft.vrl.workflow.skin.SkinFactory;
-import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
+import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.impl.ConnectorImpl;
 
 /**
- * A factory class to create {@code VFlow}s.
- *
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class FlowFactory {
+public final class IOConnector extends ConnectorImpl {
 
-    /**
-     * Creates a new instance of a flow
-     *
-     * @return the newly created {@code VFlow}
-     */
-    public static VFlow newFlow() {
-
-        VFlowModel model = FlowFactory.newFlowModel();
-
-        VFlow flow = new VFlowImpl(null, model);
-
-        return flow;
+    public IOConnector(VNode node, String type, String localId, boolean input) {
+        super(node, type, localId, input);
     }
 
-    /**
-     * Creates a new instance of a flow and specify its skin
-     *
-     * @param skinFactory Defines the skin factory used to render the workflow
-     *
-     * @return the newly created {@code VFlow}
-     */
-    public static VFlow newFlow(
-        SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
-
-        VFlowModel model = FlowFactory.newFlowModel();
-
-        VFlow flow = new VFlowImpl(null, model, skinFactory);
-
-        return flow;
-    }
-
-    /**
-     * Creates a new flow model
-     *
-     * @return
-     */
-    public static VFlowModel newFlowModel() {
-        VFlowModel result = new VFlowModelImpl(null);
-        result.setId("ROOT");
-        return result;
-    }
-
-    /**
-     * Returns a new id generator.
-     *
-     * @return id generator
-     */
-    public static IdGenerator newIdGenerator() {
-        return new IdGeneratorImpl();
-    }
 }

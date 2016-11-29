@@ -33,9 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Transform;
@@ -139,70 +136,5 @@ public class OptimizableContentPane extends StackPane {
      */
     public void setOptimizationRule(OptimizationRule optimizationRule) {
         this.optimizationRule = optimizationRule;
-    }
-}
-
-class DefaultOptimizationRuleImpl implements OptimizationRule {
-
-    private final DoubleProperty minSceneArea = new SimpleDoubleProperty(2000);
-    private final DoubleProperty minSceneDimension = new SimpleDoubleProperty(50);
-
-    @Override
-    public boolean visible(OptimizableContentPane p, Transform t) {
-
-        Bounds bounds = p.getBoundsInLocal();
-
-        // if bounds are infinite we assume visibility
-        if (Double.isInfinite(bounds.getWidth())
-            || Double.isInfinite(bounds.getHeight())) {
-            return true;
-        }
-
-        bounds = p.localToScene(bounds);
-
-        // if bounds are NaN we assume visibility
-        if (Double.isNaN(bounds.getWidth())
-            || Double.isNaN(bounds.getHeight())) {
-            return true;
-        }
-
-        boolean visible = getMinSceneArea() <= bounds.getWidth() * bounds.getHeight();
-
-        if (visible) {
-            visible = Math.min(bounds.getWidth(), bounds.getHeight()) > getMinSceneDimension();
-        }
-
-        p.layout();
-
-        return visible;
-    }
-
-    @Override
-    public boolean attached(OptimizableContentPane p, Transform t) {
-        return visible(p, t);
-    }
-
-    public DoubleProperty minSceneAreaProperty() {
-        return minSceneArea;
-    }
-
-    public void setMinSceneArea(double s) {
-        minSceneArea.set(s);
-    }
-
-    public double getMinSceneArea() {
-        return minSceneArea.get();
-    }
-
-    public DoubleProperty minSceneDimensionProperty() {
-        return minSceneDimension;
-    }
-
-    public void setMinSceneDimension(double s) {
-        minSceneDimension.set(s);
-    }
-
-    public double getMinSceneDimension() {
-        return minSceneDimension.get();
     }
 }

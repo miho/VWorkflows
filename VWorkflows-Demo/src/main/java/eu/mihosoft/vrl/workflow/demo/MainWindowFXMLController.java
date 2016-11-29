@@ -37,7 +37,7 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 import eu.mihosoft.vrl.workflow.ClickEvent;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.FlowFactory;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import eu.mihosoft.vrl.workflow.MouseButton;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;

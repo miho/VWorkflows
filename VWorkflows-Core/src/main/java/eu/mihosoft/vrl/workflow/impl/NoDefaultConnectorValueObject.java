@@ -31,40 +31,42 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import eu.mihosoft.vrl.workflow.CompatibilityResult;
+import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.ValueObject;
 
 /**
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public class PathUtil {
+public class NoDefaultConnectorValueObject extends DefaultValueObject {
 
-    private PathUtil() {
-        throw new AssertionError("Instantiation not allowed.", null);
+    public NoDefaultConnectorValueObject() {
     }
 
-    private static List<Connector> computeSendersAndReceivers(Connector s, Connector r) {
-        List<Connector> result = new ArrayList<>();
-
-        Optional<VFlowModel> commonAncestorResult = WorkflowUtil.
-            getCommonAncestor(s.getNode(), r.getNode());
-
-        if (!commonAncestorResult.isPresent()) {
-            return result;
-        }
-
-        VFlowModel commonAncestor = commonAncestorResult.get();
-
-        List<VFlowModel> ancestorsOfS = WorkflowUtil.getAncestors(s.getNode());
-        List<VFlowModel> ancestorsOfR = WorkflowUtil.getAncestors(r.getNode());
-
-        int indexOfCommonAncestorInS = ancestorsOfS.indexOf(commonAncestor);
-        int indexOfCommonAncestorInR = ancestorsOfR.indexOf(commonAncestor);
+    public NoDefaultConnectorValueObject(VNode parent) {
+        super(parent);
+    }
 
 
-        return result;
+    @Override
+    public CompatibilityResult compatible(final ValueObject sender, final String flowType) {
+        return new CompatibilityResult() {
+            @Override
+            public boolean isCompatible() {
+                return false;
+            }
+
+            @Override
+            public String getMessage() {
+                return "No default connector has been specified for type: " + flowType + " in node" + getParent().getId();
+            }
+
+            @Override
+            public String getStatus() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
     }
 }

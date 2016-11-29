@@ -49,7 +49,7 @@ import javafx.scene.layout.Region;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class ConnectorCircle extends Region implements ConnectorShape {
+public class ConnectorCircle extends Region implements ConnectorShape {
 
     private Connector connector;
     private final VFlow flow;

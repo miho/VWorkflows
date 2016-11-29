@@ -33,6 +33,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;

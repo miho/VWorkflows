@@ -31,8 +31,12 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.impl;
 
+import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Connections;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -44,7 +48,7 @@ import java.util.Objects;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class ConnectionBase implements Connection {
+public class ConnectionBase implements Connection {
 
     private String senderId;
     private String receiverId;

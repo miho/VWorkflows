@@ -31,45 +31,43 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.impl;
 
-import eu.mihosoft.vrl.workflow.impl.ConnectionBase;
-import eu.mihosoft.vrl.workflow.util.FlowFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.ThruConnector;
+import eu.mihosoft.vrl.workflow.VNode;
 
 /**
+ * This class provides the default implementation of a {@code Connector} in
+ * VWorkflows
+ *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class ConnectionImplClassTest {
+public class ThruConnectorImpl extends ConnectorImpl implements ThruConnector {
 
-    @Test
-    public void testImplClassWithConformingConstructor() {
-        VFlow flow = FlowFactory.newFlow();
+    private VNode innerNode;
+    private Connector innerConnector;
 
-        flow.getConnections("mytype").setConnectionClass(ConnectionBase.class);
+    public ThruConnectorImpl(VNode node, String type, String localId, boolean input, VNode innerNode, Connector innerConnector) {
+        super(node, type, localId, input);
+
+        this.innerNode = innerNode;
+        this.innerConnector = innerConnector;
     }
-
-    public void testImplClassWithNonConformingConstructor() {
-        VFlow flow = FlowFactory.newFlow();
-
-        boolean exceptionThrown = false;
-
-        try {
-            flow.getConnections("mytype").setConnectionClass(
-                ConnectionBaseWithoutConformingConstructor.class);
-        } catch (IllegalArgumentException ex) {
-            exceptionThrown = true;
-        }
-
-        Assert.assertTrue("IllegalArgumentException must be thrown!", exceptionThrown);
-    }
-}
-
-class ConnectionBaseWithoutConformingConstructor extends ConnectionBase {
     //
-    private ConnectionBaseWithoutConformingConstructor() {
+    //    public ThruConnectorImpl(VNode node, Connector c) {
+    //        super(node, c);
+    //    }
+
+    @Override
+    public VNode getInnerNode() {
+        return this.innerNode;
     }
 
-    ;
+    @Override
+    public Connector getInnerConnector() {
+        return this.innerConnector;
+    }
+
+
 }

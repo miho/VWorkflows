@@ -39,6 +39,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import org.junit.Test;
 
 import java.io.IOException;

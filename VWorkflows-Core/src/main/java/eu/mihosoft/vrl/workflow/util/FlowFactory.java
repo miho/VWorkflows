@@ -31,82 +31,73 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.util;
 
-import java.util.Objects;
+import eu.mihosoft.vrl.workflow.IdGenerator;
+import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+import eu.mihosoft.vrl.workflow.impl.IdGeneratorImpl;
+import eu.mihosoft.vrl.workflow.impl.VFlowImpl;
+import eu.mihosoft.vrl.workflow.impl.VFlowModelImpl;
+import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.skin.SkinFactory;
+import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 
 /**
- * This class allows nodes to be looked up by id.
- * Ids have the format {@code <node id>:<connector id>}.
- * <p>
- * The class can also be used to look up connectors.
+ * A factory class to create {@code VFlow}s.
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public class NodeLookupImpl implements NodeLookup {
+public class FlowFactory {
 
-    private final VFlowModel root;
-    //    private final Map<String, VNode> cache = new HashMap<>();
+    /**
+     * Creates a new instance of a flow
+     *
+     * @return the newly created {@code VFlow}
+     */
+    public static VFlow newFlow() {
 
-    public NodeLookupImpl(VFlowModel root) {
-        this.root = root;
+        VFlowModel model = FlowFactory.newFlowModel();
+
+        VFlow flow = new VFlowImpl(null, model);
+
+        return flow;
     }
 
-    @Override
-    public Connector getConnectorById(String globalId) {
-        String[] ids = globalId.split(":c:");
+    /**
+     * Creates a new instance of a flow and specify its skin
+     *
+     * @param skinFactory Defines the skin factory used to render the workflow
+     *
+     * @return the newly created {@code VFlow}
+     */
+    public static VFlow newFlow(
+        SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin> skinFactory) {
 
-        if (ids.length < 2) {
-            throw new IllegalArgumentException("wrong connector id format: "
-                + globalId + ", correct format: node-id:c:connector-id");
-        }
+        VFlowModel model = FlowFactory.newFlowModel();
 
-        String nodeId = ids[0];
+        VFlow flow = new VFlowImpl(null, model, skinFactory);
 
-        VNode node = getById(nodeId);
-        String connectorId = ids[1];
-
-        if (node == null) {
-            return null;
-        }
-
-        return node.getConnector(connectorId);
+        return flow;
     }
 
-    @Override
-    public VNode getById(String globalId) {
-
-        //        VNode result = cache.get(globalId);
-
-        //        if (result!=null)return result;
-
-        VNode result = getNodeByGlobalId(root, globalId);
-
-        //        cache.put(globalId, result);
-
+    /**
+     * Creates a new flow model
+     *
+     * @return
+     */
+    public static VFlowModel newFlowModel() {
+        VFlowModel result = new VFlowModelImpl(null);
+        result.setId("ROOT");
         return result;
     }
 
-    private VNode getNodeByGlobalId(VFlowModel parent, String id) {
-
-        if (Objects.equals(parent.getId(), id)) {
-            return parent;
-        }
-
-        for (VNode n : parent.getNodes()) {
-            if (n.getId().equals(id)) {
-                return n;
-            }
-
-            if (n instanceof FlowModel) {
-                VNode result = getNodeByGlobalId((VFlowModel) n, id);
-                if (result != null) {
-                    return result;
-                }
-            }
-        }
-
-
-        return null;
+    /**
+     * Returns a new id generator.
+     *
+     * @return id generator
+     */
+    public static IdGenerator newIdGenerator() {
+        return new IdGeneratorImpl();
     }
 }

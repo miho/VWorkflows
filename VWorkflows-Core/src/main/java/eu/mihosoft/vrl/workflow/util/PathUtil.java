@@ -31,31 +31,43 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.util;
+
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.VFlowModel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class VisualizationRequestImpl extends PropertyStorageImpl implements VisualizationRequest {
+public class PathUtil {
 
-    @Override
-    public void setStyle(String style) {
+    private PathUtil() {
+        throw new AssertionError("Instantiation not allowed.", null);
+    }
 
-        if (style == null) {
-            style = "";
+    private static List<Connector> computeSendersAndReceivers(Connector s, Connector r) {
+        List<Connector> result = new ArrayList<>();
+
+        Optional<VFlowModel> commonAncestorResult = WorkflowUtil.
+            getCommonAncestor(s.getNode(), r.getNode());
+
+        if (!commonAncestorResult.isPresent()) {
+            return result;
         }
 
-        set(VisualizationRequest.KEY_STYLE, style);
-    }
+        VFlowModel commonAncestor = commonAncestorResult.get();
 
-    @Override
-    public String getStyle() {
-        return get(VisualizationRequest.KEY_STYLE).get().toString();
-    }
+        List<VFlowModel> ancestorsOfS = WorkflowUtil.getAncestors(s.getNode());
+        List<VFlowModel> ancestorsOfR = WorkflowUtil.getAncestors(r.getNode());
 
+        int indexOfCommonAncestorInS = ancestorsOfS.indexOf(commonAncestor);
+        int indexOfCommonAncestorInR = ancestorsOfR.indexOf(commonAncestor);
+
+
+        return result;
+    }
 }

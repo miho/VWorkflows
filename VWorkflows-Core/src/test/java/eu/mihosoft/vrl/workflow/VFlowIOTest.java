@@ -38,6 +38,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

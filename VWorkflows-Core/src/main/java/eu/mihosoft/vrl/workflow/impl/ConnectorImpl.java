@@ -31,8 +31,15 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
-package eu.mihosoft.vrl.workflow;
+package eu.mihosoft.vrl.workflow.impl;
 
+import eu.mihosoft.vrl.workflow.ClickEvent;
+import eu.mihosoft.vrl.workflow.ConnectionEvent;
+import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.MouseButton;
+import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.ValueObject;
+import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -47,7 +54,7 @@ import java.util.List;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-class ConnectorImpl implements Connector {
+public class ConnectorImpl implements Connector {
 
     private VNode node;
     private String type;

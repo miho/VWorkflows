@@ -33,6 +33,8 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.impl.ConnectionsImpl;
+
 /**
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */

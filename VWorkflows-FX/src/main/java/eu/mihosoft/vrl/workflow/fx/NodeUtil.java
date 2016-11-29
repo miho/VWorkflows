@@ -61,8 +61,8 @@ public class NodeUtil {
     }
 
     /**
-     *
      * @param node
+     *
      * @return The X screen coordinate of the node.
      */
     static public double screenX(Node node) {
@@ -71,8 +71,8 @@ public class NodeUtil {
     }
 
     /**
-     *
      * @param node
+     *
      * @return The Y screen coordinate of the node.
      */
     static public double screenY(Node node) {
@@ -87,14 +87,14 @@ public class NodeUtil {
 
         // from -> scene
         Point2D fromInSceneCoordinates = new Point2D(
-                (x) * from.localToSceneTransformProperty().get().getMxx(),
-                (y) * from.localToSceneTransformProperty().get().getMyy());
+            (x) * from.localToSceneTransformProperty().get().getMxx(),
+            (y) * from.localToSceneTransformProperty().get().getMyy());
 
         // scene -> to
         return new Point2D(
-                (fromInSceneCoordinates.getX() + from.localToSceneTransformProperty().get().getTx())
+            (fromInSceneCoordinates.getX() + from.localToSceneTransformProperty().get().getTx())
                 / to.getLocalToSceneTransform().getMxx(),
-                (fromInSceneCoordinates.getY() + from.localToSceneTransformProperty().get().getTy())
+            (fromInSceneCoordinates.getY() + from.localToSceneTransformProperty().get().getTy())
                 / to.getLocalToSceneTransform().getMyy());
 
     }
@@ -104,6 +104,7 @@ public class NodeUtil {
      *
      * @param n1 first scene graph node
      * @param n2 second scene graph node
+     *
      * @return a list that contains all common ancestors of the specified nodes
      */
     static public List<Parent> getCommonAncestors(Node n1, Node n2) {
@@ -121,6 +122,7 @@ public class NodeUtil {
      * Returns all ancestors of the specified node.
      *
      * @param n scene graph node
+     *
      * @return a list that contains all ancestors of the specified node
      */
     public static List<Parent> getAncestors(Node n) {
@@ -133,19 +135,20 @@ public class NodeUtil {
      * node.
      *
      * @param n scene graph node
+     *
      * @return a list that contains the stylesheets of the node and all
      * ancestors of the specified node
      */
     public static List<String> getStylesheetsOfAncestors(Node n) {
 
-//        System.out.println(">> searching stylesheets of ancestors of: " + n);
+        //        System.out.println(">> searching stylesheets of ancestors of: " + n);
         List<String> result = new ArrayList<>();
 
         if (n instanceof Parent) {
 
-//            for (String css : ((Parent) n).getStylesheets()) {
-//                System.out.println(" --> n-css: " + css);
-//            }
+            //            for (String css : ((Parent) n).getStylesheets()) {
+            //                System.out.println(" --> n-css: " + css);
+            //            }
             result.addAll(((Parent) n).getStylesheets());
         }
 
@@ -153,11 +156,11 @@ public class NodeUtil {
 
         for (Parent p : getAncestors(n)) {
 
-//            System.out.println(" --> parent: " + p);
-//
-//            for (String css : p.getStylesheets()) {
-//                System.out.println("  --> p-css: " + p + ": " + css);
-//            }
+            //            System.out.println(" --> parent: " + p);
+            //
+            //            for (String css : p.getStylesheets()) {
+            //                System.out.println("  --> p-css: " + p + ": " + css);
+            //            }
             result.addAll(p.getStylesheets());
 
             if (scene == null) {
@@ -167,14 +170,14 @@ public class NodeUtil {
 
         if (scene != null) {
 
-//            System.out.println(" --> scene: " + scene);
+            //            System.out.println(" --> scene: " + scene);
             result.addAll(scene.getStylesheets());
 
-//            for (String css : scene.getStylesheets()) {
-//                System.out.println("  --> scene-css: " + css);
-//            }
-//
-//            System.out.println(" --> done");
+            //            for (String css : scene.getStylesheets()) {
+            //                System.out.println("  --> scene-css: " + css);
+            //            }
+            //
+            //            System.out.println(" --> done");
         }
 
         return result;
@@ -184,8 +187,9 @@ public class NodeUtil {
      * Returns all ancestors of the specified node till the specified one is
      * reached.
      *
-     * @param n scene graph node
+     * @param n      scene graph node
      * @param parent scene graph parent
+     *
      * @return a list that contains all ancestors of the specified node
      */
     public static List<Parent> getAncestors(Node n, Parent parent) {
@@ -207,7 +211,7 @@ public class NodeUtil {
      * @param n the node to remove
      *
      * @throws IllegalArgumentException if an unsupported parent class has been
-     * specified or the parent is <code>null</code>
+     *                                  specified or the parent is <code>null</code>
      */
     public static void removeFromParent(Node n) {
         if (n.getParent() instanceof Group) {
@@ -226,7 +230,7 @@ public class NodeUtil {
      * @param n node
      *
      * @throws IllegalArgumentException if an unsupported parent class has been
-     * specified or the parent is <code>null</code>
+     *                                  specified or the parent is <code>null</code>
      */
     public static void addToParent(Parent p, Node n) {
         if (p instanceof Group) {
@@ -234,7 +238,7 @@ public class NodeUtil {
         } else if (p instanceof Pane) {
             ((Pane) p).getChildren().add(n);
         } else if (p instanceof ScalableContentPane) {
-            ((Pane)((ScalableContentPane) p).getContent()).getChildren().add(n);
+            ((Pane) ((ScalableContentPane) p).getContent()).getChildren().add(n);
         } else {
             throw new IllegalArgumentException("Unsupported parent: " + p);
         }
@@ -243,11 +247,12 @@ public class NodeUtil {
     /**
      * Adds the given node to the specified parent.
      *
-     * @param p parent
-     * @param n node
+     * @param p     parent
+     * @param n     node
      * @param index child index (z buffer)
+     *
      * @throws IllegalArgumentException if an unsupported parent class has been
-     * specified or the parent is <code>null</code>
+     *                                  specified or the parent is <code>null</code>
      */
     public static void addToParent(Parent p, Node n, int index) {
         if (p instanceof Group) {
@@ -264,10 +269,11 @@ public class NodeUtil {
      * specified class object. The search is performed recursively until either
      * a node has been found or a leaf node is reached.
      *
-     * @param p parent node
-     * @param sceneX x coordinate
-     * @param sceneY y coordinate
+     * @param p         parent node
+     * @param sceneX    x coordinate
+     * @param sceneY    y coordinate
      * @param nodeClass node class to search for
+     *
      * @return a node that contains the specified screen coordinates and is an
      * instance of the specified class or <code>null</code> if no such node
      * exist
@@ -353,10 +359,11 @@ public class NodeUtil {
      * specified class object. The search is performed recursively until either
      * a node has been found or a leaf node is reached.
      *
-     * @param p parent node
-     * @param sceneX x coordinate
-     * @param sceneY y coordinate
+     * @param p           parent node
+     * @param sceneX      x coordinate
+     * @param sceneY      y coordinate
      * @param nodeClasses node classes to search for
+     *
      * @return a node that contains the specified screen coordinates and is an
      * instance of the specified class or <code>null</code> if no such node
      * exist

@@ -49,19 +49,21 @@ public interface FlowNodeSkinLookup extends Lookup<List<VNodeSkin>> {
      * Returns the skin of the specified node.
      *
      * @param skinFactory skin factory to search
-     * @param globalId global id of the requested node
+     * @param globalId    global id of the requested node
+     *
      * @return the skin of the specified node or <code>null</code> if no such
      * skin exists
      */
-    public VNodeSkin getById(SkinFactory skinFactory, String globalId);
+    VNodeSkin getById(SkinFactory skinFactory, String globalId);
 
     /**
      * Returns the skin of the specified connection.
      *
      * @param skinFactory skin factory to search
-     * @param c global id of the requested node
+     * @param c           global id of the requested node
+     *
      * @return the skin of the specified connection or <code>null</code> if no
      * such skin exists
      */
-    public ConnectionSkin<?> getById(SkinFactory skinFactory, Connection c);
+    ConnectionSkin<?> getById(SkinFactory skinFactory, Connection c);
 }

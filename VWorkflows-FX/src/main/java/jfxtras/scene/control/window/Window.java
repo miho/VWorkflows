@@ -33,11 +33,6 @@
  */
 package jfxtras.scene.control.window;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import javafx.animation.Animation;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
@@ -75,6 +70,12 @@ import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import jfxtras.internal.scene.control.skin.window.DefaultWindowSkinSimplified;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Window control. A window control is a window node as known from Swing, e.g
  * {@link javax.swing.JInternalFrame}. It can be used to realize MDI based
@@ -89,7 +90,7 @@ public class Window extends Control implements SelectableNode {
      * Default css style.
      */
     public static final String DEFAULT_STYLE
-            = "/jfxtras/scene/control/window/default.css";
+        = "/jfxtras/scene/control/window/default.css";
     /**
      * Default style class for css.
      */
@@ -126,7 +127,7 @@ public class Window extends Control implements SelectableNode {
      * generic position property?
      */
     private final ObservableList<WindowIcon> leftIcons
-            = FXCollections.observableArrayList();
+        = FXCollections.observableArrayList();
     /**
      * List of icons shown on the right. TODO replace left/right with more
      * generic position property?
@@ -142,23 +143,23 @@ public class Window extends Control implements SelectableNode {
      * properties specifically for the titlebar, e.g., background.
      */
     private final StringProperty titleBarStyleClassProperty
-            = new SimpleStringProperty("window-titlebar");
+        = new SimpleStringProperty("window-titlebar");
     /**
      * defines the action that shall be performed before the window is closed.
      */
     private final ObjectProperty<EventHandler<ActionEvent>> onCloseActionProperty
-            = new SimpleObjectProperty<>();
+        = new SimpleObjectProperty<>();
     /**
      * defines the action that shall be performed after the window has been
      * closed.
      */
     private final ObjectProperty<EventHandler<ActionEvent>> onClosedActionProperty
-            = new SimpleObjectProperty<>();
+        = new SimpleObjectProperty<>();
     /**
      * defines the transition that shall be played when closing the window.
      */
     private final ObjectProperty<Transition> closeTransitionProperty
-            = new SimpleObjectProperty<>();
+        = new SimpleObjectProperty<>();
     /**
      * Selected property (defines whether this window is selected.
      */
@@ -189,9 +190,9 @@ public class Window extends Control implements SelectableNode {
     public StyleableObjectProperty<Paint> selectionBorderColorProperty() {
         if (selectionBorderColor == null) {
             selectionBorderColor = new SimpleStyleableObjectProperty<>(
-                    StyleableProperties.SELECTION_BORDER_COLOR,
-                    Window.this, "selectionBorderColor",
-                    new Color(0.3, 0.7, 1.0, 1.0));
+                StyleableProperties.SELECTION_BORDER_COLOR,
+                Window.this, "selectionBorderColor",
+                new Color(0.3, 0.7, 1.0, 1.0));
         }
         return selectionBorderColor;
     }
@@ -209,22 +210,22 @@ public class Window extends Control implements SelectableNode {
     public StyleableBooleanProperty selectionEffectEnabledProperty() {
         if (selectionBorderColor == null) {
             selectionEffectEnabled = new SimpleStyleableBooleanProperty(
-                    StyleableProperties.SELECTION_EFFECT_ENABLED,
-                    Window.this, "selectionEffectEnabled",
-                    true);
+                StyleableProperties.SELECTION_EFFECT_ENABLED,
+                Window.this, "selectionEffectEnabled",
+                true);
         }
         return selectionEffectEnabled;
     }
 
     private static class StyleableProperties {
 
-        private static final CssMetaData< Window, Paint> SELECTION_BORDER_COLOR
-                = new CssMetaData< Window, Paint>("-fx-selection-border-color",
-                        StyleConverter.getPaintConverter(), Color.GRAY) {
+        private static final CssMetaData<Window, Paint> SELECTION_BORDER_COLOR
+            = new CssMetaData<Window, Paint>("-fx-selection-border-color",
+            StyleConverter.getPaintConverter(), Color.GRAY) {
             @Override
             public boolean isSettable(Window control) {
                 return control.selectionBorderColor == null
-                        || !control.selectionBorderColor.isBound();
+                    || !control.selectionBorderColor.isBound();
             }
 
             @Override
@@ -232,13 +233,13 @@ public class Window extends Control implements SelectableNode {
                 return control.selectionBorderColorProperty();
             }
         };
-        private static final CssMetaData< Window, Boolean> SELECTION_EFFECT_ENABLED
-                = new CssMetaData< Window, Boolean>("-fx-selection-effect-enabled",
-                        StyleConverter.getBooleanConverter(), true) {
+        private static final CssMetaData<Window, Boolean> SELECTION_EFFECT_ENABLED
+            = new CssMetaData<Window, Boolean>("-fx-selection-effect-enabled",
+            StyleConverter.getBooleanConverter(), true) {
             @Override
             public boolean isSettable(Window control) {
                 return control.selectionBorderColor == null
-                        || !control.selectionBorderColor.isBound();
+                    || !control.selectionBorderColor.isBound();
             }
 
             @Override
@@ -250,9 +251,9 @@ public class Window extends Control implements SelectableNode {
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables
-                    = new ArrayList<>(Control.getClassCssMetaData());
+                = new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                    SELECTION_BORDER_COLOR, SELECTION_EFFECT_ENABLED
+                SELECTION_BORDER_COLOR, SELECTION_EFFECT_ENABLED
             );
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
@@ -294,7 +295,7 @@ public class Window extends Control implements SelectableNode {
                 t1.statusProperty().addListener(new ChangeListener<Animation.Status>() {
                     @Override
                     public void changed(ObservableValue<? extends Animation.Status> observableValue,
-                            Animation.Status oldValue, Animation.Status newValue) {
+                                        Animation.Status oldValue, Animation.Status newValue) {
 
                         if (newValue == Animation.Status.STOPPED) {
 
@@ -340,8 +341,7 @@ public class Window extends Control implements SelectableNode {
 
         initializeMovingPropertyMonitor();
         initializeResizingPropertyMonitor();
-        
-        
+
 
     }
 
@@ -349,14 +349,14 @@ public class Window extends Control implements SelectableNode {
         // detects whether the window is currently moving
         boolean[] timerTaskSet = {false};
         double[] wh = {0, 0};
-//        int[] cancelledTasks = {0};
+        //        int[] cancelledTasks = {0};
         InvalidationListener resizingListener = (ov) -> {
 
-//            // purge cancelled tasks regularily to prevent memory leaks
-//            if (cancelledTasks[0] > 1000) {
-//                timer[0].purge();
-//                cancelledTasks[0] = 0;
-//            }
+            //            // purge cancelled tasks regularily to prevent memory leaks
+            //            if (cancelledTasks[0] > 1000) {
+            //                timer[0].purge();
+            //                cancelledTasks[0] = 0;
+            //            }
             if (!timerTaskSet[0]) {
                 timerTaskSet[0] = true;
                 timer.scheduleAtFixedRate(new TimerTask() {
@@ -366,18 +366,18 @@ public class Window extends Control implements SelectableNode {
                         double w = getWidth();
                         double h = getHeight();
                         Platform.runLater(
-                                () -> {
-                                    resizingProperty.set(
-                                            w != wh[0] || h != wh[1]);
+                            () -> {
+                                resizingProperty.set(
+                                    w != wh[0] || h != wh[1]);
 
-                                    wh[0] = w;
-                                    wh[1] = h;
-                                    if (!isResizing()) {
-                                        cancel();
-//                                        cancelledTasks[0]++;
-                                        timerTaskSet[0] = false;
-                                    }
+                                wh[0] = w;
+                                wh[1] = h;
+                                if (!isResizing()) {
+                                    cancel();
+                                    //                                        cancelledTasks[0]++;
+                                    timerTaskSet[0] = false;
                                 }
+                            }
                         );
                     }
                 }, 0, 250);
@@ -390,17 +390,17 @@ public class Window extends Control implements SelectableNode {
 
     private void initializeMovingPropertyMonitor() {
         // detects whether the window is currently moving
-        boolean [] timerTaskSet = {false};
+        boolean[] timerTaskSet = {false};
         double[] xy = {0, 0};
-//        boolean[] running = {false};
-//        int[] cancelledTasks = {0};
+        //        boolean[] running = {false};
+        //        int[] cancelledTasks = {0};
         InvalidationListener movingListener = (ov) -> {
 
-//            // purge cancelled tasks regularily to prevent memory leaks
-//            if (cancelledTasks[0] > 1000) {
-//                timer[0].purge();
-//                cancelledTasks[0] = 0;
-//            }
+            //            // purge cancelled tasks regularily to prevent memory leaks
+            //            if (cancelledTasks[0] > 1000) {
+            //                timer[0].purge();
+            //                cancelledTasks[0] = 0;
+            //            }
             if (!timerTaskSet[0] && (getLayoutX() != 0 || getLayoutY() != 0)) {
                 timerTaskSet[0] = true;
                 timer.scheduleAtFixedRate(new TimerTask() {
@@ -411,18 +411,18 @@ public class Window extends Control implements SelectableNode {
                         double x = getLayoutX();
                         double y = getLayoutY();
                         Platform.runLater(
-                                () -> {
-                                    movingProperty.set(
-                                            x != xy[0] || y != xy[1]);
+                            () -> {
+                                movingProperty.set(
+                                    x != xy[0] || y != xy[1]);
 
-                                    xy[0] = x;
-                                    xy[1] = y;
-                                    if (!isMoving()) {
-                                        cancel();
-//                                        cancelledTasks[0]++;
-                                        timerTaskSet[0] = false;
-                                    }
+                                xy[0] = x;
+                                xy[1] = y;
+                                if (!isMoving()) {
+                                    cancel();
+                                    //                                        cancelledTasks[0]++;
+                                    timerTaskSet[0] = false;
                                 }
+                            }
                         );
                     }
                 }, 0, 250);
@@ -436,10 +436,10 @@ public class Window extends Control implements SelectableNode {
     // TODO move from control to behavior class (a lot of other stuff here too)
     private void closeSelectedWindows() {
         for (SelectableNode sN : WindowUtil.
-                getDefaultClipboard().getSelectedItems()) {
+            getDefaultClipboard().getSelectedItems()) {
 
             if (sN == this
-                    || !(sN instanceof Window)) {
+                || !(sN instanceof Window)) {
                 continue;
             }
 
@@ -450,7 +450,7 @@ public class Window extends Control implements SelectableNode {
             }
 
             if (this.getParent().
-                    equals(selectedWindow.getParent())) {
+                equals(selectedWindow.getParent())) {
 
                 selectedWindow.close();
             }
@@ -460,7 +460,7 @@ public class Window extends Control implements SelectableNode {
     public double minWidthWithTitle() {
         if (getSkin() instanceof DefaultWindowSkinSimplified) {
             DefaultWindowSkinSimplified skin = (DefaultWindowSkinSimplified) getSkin();
-//            return skin.computeMinWidth();
+            //            return skin.computeMinWidth();
         }
 
         return minWidth(0);
@@ -475,10 +475,10 @@ public class Window extends Control implements SelectableNode {
     // TODO move from control to behavior class (a lot of other stuff here too)
     private void minimizeSelectedWindows(boolean state) {
         for (SelectableNode sN : WindowUtil.
-                getDefaultClipboard().getSelectedItems()) {
+            getDefaultClipboard().getSelectedItems()) {
 
             if (sN == this
-                    || !(sN instanceof Window)) {
+                || !(sN instanceof Window)) {
                 continue;
             }
 
@@ -489,7 +489,7 @@ public class Window extends Control implements SelectableNode {
             }
 
             if (this.getParent().
-                    equals(selectedWindow.getParent())) {
+                equals(selectedWindow.getParent())) {
 
                 selectedWindow.setMinimized(state);
             }
@@ -853,7 +853,7 @@ public class Window extends Control implements SelectableNode {
      * Defines the transition that shall be used to indicate window closing.
      *
      * @param t the transition that shall be used to indicate window closing or
-     * <code>null</code> if no transition shall be used.
+     *          <code>null</code> if no transition shall be used.
      */
     public void setCloseTransition(Transition t) {
         closeTransitionProperty.set(t);
@@ -918,7 +918,6 @@ public class Window extends Control implements SelectableNode {
     }
 
     /**
-     *
      * @return {@code true} if the window is selected; {@code false} otherwise
      */
     @Override

@@ -33,10 +33,7 @@
  */
 package jfxtras.scene.control.window;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.sun.javafx.collections.ImmutableObservableList;
 import javafx.beans.Observable;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableNumberValue;
@@ -47,7 +44,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
-import com.sun.javafx.collections.ImmutableObservableList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility class that provides methods to simplify node handling. Possible use
@@ -65,23 +64,23 @@ public class NodeUtil {
     }
 
     /**
-     *
      * @param node
+     *
      * @return The X screen coordinate of the node.
      */
     static public double screenX(Node node) {
         return node.localToScene(node.getBoundsInLocal()).getMinX()
-                + node.getScene().getX() + node.getScene().getWindow().getX();
+            + node.getScene().getX() + node.getScene().getWindow().getX();
     }
 
     /**
-     *
      * @param node
+     *
      * @return The Y screen coordinate of the node.
      */
     static public double screenY(Node node) {
         return node.localToScene(node.getBoundsInLocal()).getMinY()
-                + node.getScene().getY() + node.getScene().getWindow().getY();
+            + node.getScene().getY() + node.getScene().getWindow().getY();
     }
 
     /**
@@ -90,7 +89,7 @@ public class NodeUtil {
      * @param n the node to remove
      *
      * @throws IllegalArgumentException if an unsupported parent class has been
-     * specified or the parent is <code>null</code>
+     *                                  specified or the parent is <code>null</code>
      */
     public static void removeFromParent(Node n) {
         if (n.getParent() instanceof Group) {
@@ -99,7 +98,7 @@ public class NodeUtil {
             ((Pane) n.getParent()).getChildren().remove(n);
         } else {
             throw new IllegalArgumentException(
-                    "Unsupported parent: " + n.getParent());
+                "Unsupported parent: " + n.getParent());
         }
     }
 
@@ -110,7 +109,7 @@ public class NodeUtil {
      * @param n node
      *
      * @throws IllegalArgumentException if an unsupported parent class has been
-     * specified or the parent is <code>null</code>
+     *                                  specified or the parent is <code>null</code>
      */
     public static void addToParent(Parent p, Node n) {
         if (p instanceof Group) {
@@ -127,15 +126,16 @@ public class NodeUtil {
      * specified class object. The search is performed recursively until either
      * a node has been found or a leaf node is reached.
      *
-     * @param p parent node
-     * @param sceneX x coordinate
-     * @param sceneY y coordinate
+     * @param p         parent node
+     * @param sceneX    x coordinate
+     * @param sceneY    y coordinate
      * @param nodeClass node class to search for
+     *
      * @return a node that contains the specified screen coordinates and is an
      * instance of the specified class or {@code null} if no such node exist
      */
     public static Node getNode(Parent p, double sceneX,
-            double sceneY, Class<?> nodeClass) {
+                               double sceneY, Class<?> nodeClass) {
 
         // dammit! javafx uses "wrong" children order.
         List<Node> rightOrder = new ArrayList<>();
@@ -165,6 +165,7 @@ public class NodeUtil {
      * instead of x.
      *
      * @param position (x or y)
+     *
      * @return
      */
     public static double snapXY(double position) {
@@ -176,6 +177,7 @@ public class NodeUtil {
      * snapXY( p2.multiply(0.1) ));
      *
      * @param position (x or y)
+     *
      * @return
      */
     public static DoubleBinding snapXY(final ObservableNumberValue position) {
@@ -206,7 +208,8 @@ public class NodeUtil {
      * w) instead of w.
      *
      * @param position (x or y)
-     * @param offset (width or height)
+     * @param offset   (width or height)
+     *
      * @return
      */
     public static double snapWH(double position, double offset) {
@@ -217,14 +220,15 @@ public class NodeUtil {
      * This is the snapXY method for using in a binding, for example: p1.bind(
      * snapXY( p2.multiply(0.1) ));
      *
-     * @param position (x or y)
-     * @param offset (width or height)
+     * @param position     (x or y)
+     * @param offset       (width or height)
      * @param dependencies
+     *
      * @return
      */
     public static DoubleBinding snapWH(final ObservableNumberValue position,
-            final ObservableNumberValue offset,
-            final Observable... dependencies) {
+                                       final ObservableNumberValue offset,
+                                       final Observable... dependencies) {
         return new DoubleBinding() {
             {
                 super.bind(dependencies);
@@ -238,14 +242,14 @@ public class NodeUtil {
             @Override
             protected double computeValue() {
                 return NodeUtil.snapWH(position.doubleValue(),
-                        offset.doubleValue());
+                    offset.doubleValue());
             }
 
             @Override
             public ObservableList<?> getDependencies() {
                 return (dependencies.length == 1)
-                        ? FXCollections.singletonObservableList(dependencies[0])
-                        : new ImmutableObservableList<>(dependencies);
+                    ? FXCollections.singletonObservableList(dependencies[0])
+                    : new ImmutableObservableList<>(dependencies);
             }
         };
     }

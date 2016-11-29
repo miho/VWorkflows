@@ -34,34 +34,34 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface VisualizationRequest extends PropertyStorage{
-    
-    static final String KEY_STYLE = "visualization-request:style";
+public interface VisualizationRequest extends PropertyStorage {
+
+    String KEY_STYLE = "visualization-request:style";
     /**
      * Defines the maximum connector size.
      */
-    static final String KEY_MAX_CONNECTOR_SIZE = "visualization-request:connector:max-size";
+    String KEY_MAX_CONNECTOR_SIZE = "visualization-request:connector:max-size";
     /**
      * Defines whether connectors can change their layout position (switch edges).
      */
-    static final String KEY_CONNECTOR_AUTO_LAYOUT = "visualization-request:connector:auto-layout";
+    String KEY_CONNECTOR_AUTO_LAYOUT = "visualization-request:connector:auto-layout";
     /**
      * Defines whether to disable editing, i.e., changes to nodes and connections.
      */
-    static final String KEY_DISABLE_EDITING = "visualization-request:skin:disable-editing";
+    String KEY_DISABLE_EDITING = "visualization-request:skin:disable-editing";
     /**
      * Defines whether nodes can be removed.
      */
-    static final String KEY_NODE_NOT_REMOVABLE = "visualization-request:skin:node-not-removable";
-    
+    String KEY_NODE_NOT_REMOVABLE = "visualization-request:skin:node-not-removable";
+
     /**
      * Defines whether connector prefers top-down layout.
      */
-    static final String KEY_CONNECTOR_PREFER_TOP_DOWN = "visualization-request:connector:prefer-top-down";
-    
-    public void setStyle(String style);
-    public String getStyle();
+    String KEY_CONNECTOR_PREFER_TOP_DOWN = "visualization-request:connector:prefer-top-down";
+
+    void setStyle(String style);
+
+    String getStyle();
 }

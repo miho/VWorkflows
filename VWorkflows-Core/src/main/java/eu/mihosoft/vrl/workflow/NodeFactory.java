@@ -37,15 +37,18 @@ import eu.mihosoft.vrl.workflow.skin.Skin;
 
 /**
  * Node factory.
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
  * @param <T> node type
  * @param <V> skin type
+ *
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface NodeFactory<T extends VNode, V extends Skin<T>> {
-    
+
     /**
      * Creates a new node.
+     *
      * @return new node
      */
-    public T newNode();
+    T newNode();
 }

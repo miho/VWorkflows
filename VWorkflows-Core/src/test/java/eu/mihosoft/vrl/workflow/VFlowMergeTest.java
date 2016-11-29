@@ -41,7 +41,6 @@ package eu.mihosoft.vrl.workflow;
 import org.junit.Ignore;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class VFlowMergeTest {
@@ -52,7 +51,7 @@ public class VFlowMergeTest {
         addNodesToFlow(parent.newSubFlow(), 3, "control", "data");
         VFlow subflow = FlowFactory.newFlow();
         addNodesToFlow(subflow, 3, "control", "data");
-//        parent.add(subflow);
+        //        parent.add(subflow);
 
         VFlow expectedResult = FlowFactory.newFlow();
         addNodesToFlow(expectedResult, 3, "control", "data");

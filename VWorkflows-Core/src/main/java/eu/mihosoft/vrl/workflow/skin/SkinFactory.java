@@ -38,9 +38,10 @@ package eu.mihosoft.vrl.workflow.skin;
  * used by the corresponding flow controller {@link eu.mihosoft.vrl.workflow.VFlow#setSkinFactories(eu.mihosoft.vrl.workflow.skin.SkinFactory...)
  * }.
  *
- * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  * @param <T> Connection skin type
  * @param <V> Node skin type
+ *
+ * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface SkinFactory<T extends Skin, V extends Skin> extends ConnectionSkinFactory<T>, VNodeSkinFactory<V> {
 
@@ -49,6 +50,7 @@ public interface SkinFactory<T extends Skin, V extends Skin> extends ConnectionS
      * of the model.
      *
      * @param parent parent skin
+     *
      * @return child skin factory
      */
     SkinFactory<T, V> createChild(Skin parent);
@@ -59,6 +61,5 @@ public interface SkinFactory<T extends Skin, V extends Skin> extends ConnectionS
      * @return parent skin factory or <code>null</code> if no such skin factory
      * exists
      */
-    public SkinFactory<T, V> getParent();
-
+    SkinFactory<T, V> getParent();
 }

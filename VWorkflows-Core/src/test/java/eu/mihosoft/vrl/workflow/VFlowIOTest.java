@@ -56,7 +56,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class VFlowIOTest {
@@ -167,7 +166,7 @@ public class VFlowIOTest {
         // compare both flows (samples)
         compare(flow1, flow2);
     }
-    
+
     @Test
     public void saveAndLoadFlowStream() {
 
@@ -187,11 +186,11 @@ public class VFlowIOTest {
         assertTrue("saveToXML() must not throw an exception", couldSave);
 
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-        
+
         boolean couldLoad = true;
         VFlow flow2 = null;
         try {
-            flow2 = WorkflowIO.loadFromXML(is); 
+            flow2 = WorkflowIO.loadFromXML(is);
         } catch (Exception ex) {
             Logger.getLogger(VFlowIOTest.class.getName()).log(Level.SEVERE, null, ex);
             couldLoad = false;
@@ -218,29 +217,29 @@ public class VFlowIOTest {
     private void compare(VFlow flow1, VFlow flow2) {
 
         assertEquals("Both flows must have equal id",
-                flow1.getModel().getId(), flow2.getModel().getId());
+            flow1.getModel().getId(), flow2.getModel().getId());
 
         assertEquals("Both flows must have an equal number of subflows",
-                flow1.getSubControllers().size(), flow2.getSubControllers().size());
+            flow1.getSubControllers().size(), flow2.getSubControllers().size());
 
         assertEquals("Both flows must have an equal number of nodes",
-                flow1.getNodes().size(), flow2.getNodes().size());
+            flow1.getNodes().size(), flow2.getNodes().size());
 
         // Flows may have empty connection objects
         // (however, number of connections must be the same, see below)
-//        assertEquals("Both flows must have an equal number of connection types,",
-//                flow1.getAllConnections().values().size(), flow2.getAllConnections().values().size());
+        //        assertEquals("Both flows must have an equal number of connection types,",
+        //                flow1.getAllConnections().values().size(), flow2.getAllConnections().values().size());
         for (Connections connections1 : flow1.getAllConnections().values()) {
 
             Connections connections2 = flow2.getConnections(connections1.getType());
 
             assertNotNull("Second flows must have a connections object of type "
                     + connections1.getType(),
-                    connections2);
+                connections2);
 
             assertEquals("Both flows must have an equal number of connections,",
-                    connections1.getConnections().size(),
-                    connections2.getConnections().size());
+                connections1.getConnections().size(),
+                connections2.getConnections().size());
 
             for (int i = 0; i < connections1.getConnections().size(); i++) {
                 Connection c1 = connections1.getConnections().get(i);
@@ -256,16 +255,16 @@ public class VFlowIOTest {
             VNode n2 = flow2.getNodeLookup().getById(n1.getId());
 
             assertNotNull("Second flow must contain a node with same id as in flow1: "
-                    + n1.getId(), n2);
+                + n1.getId(), n2);
 
             assertEquals("Second node must contain the same number of connectors as node 1",
-                    n1.getConnectors().size(), n2.getConnectors().size());
+                n1.getConnectors().size(), n2.getConnectors().size());
 
             for (int i = 0; i < n1.getConnectors().size(); i++) {
 
                 assertEquals("Connectors must have equal id: ",
-                        n1.getConnectors().get(i).getId(),
-                        n2.getConnectors().get(i).getId());
+                    n1.getConnectors().get(i).getId(),
+                    n2.getConnectors().get(i).getId());
             }
 
             // TODO deep compare for valueobjects etc.
@@ -283,7 +282,7 @@ public class VFlowIOTest {
             }
 
             assertNotNull("Second flow must contain a subflow with same id as in flow1: "
-                    + subFlow1.getModel().getId(), subFlow2);
+                + subFlow1.getModel().getId(), subFlow2);
 
             compare(subFlow1, subFlow2);
         }

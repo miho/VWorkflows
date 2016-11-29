@@ -39,7 +39,6 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class RotateIcon extends WindowIcon {

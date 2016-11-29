@@ -36,9 +36,14 @@ package eu.mihosoft.vrl.workflow.skin;
 /**
  * This class defines constants used library. It is currently used to wrap
  * the default CSS.
+ *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public class Constants {
-        public static final String DEFAULT_STYLE =
-            "/eu/mihosoft/vrl/fxconnections/resources/default.css";
+public final class Constants {
+    private Constants() {
+        // prevent instantiation
+    }
+
+    public static final String DEFAULT_STYLE =
+        "/eu/mihosoft/vrl/fxconnections/resources/default.css";
 }

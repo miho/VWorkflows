@@ -34,15 +34,14 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class VConnections {
-    
+
     public static Connections newConnections(String type) {
         return new ConnectionsImpl(type);
     }
-    
+
     public static void printConnections(Connections connections) {
         for (Connection c : connections.getConnections()) {
             System.out.println(c.toString());

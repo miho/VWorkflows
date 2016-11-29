@@ -50,40 +50,43 @@ public interface IdGenerator {
      *
      * @param id id to add
      */
-    public void addId(String id);
+    void addId(String id);
 
     /**
      * Adds all ids from the specified id generator.
      *
      * @param generator id generator that contains the ids that shall be added
      */
-    public void addIds(IdGenerator generator);
+    void addIds(IdGenerator generator);
 
     /**
      * Generates a new id and adds it to this id generator.
      *
      * @return the generated id
      */
-    public String newId();
+    String newId();
 
     /**
      * Generates a new id with the specified prefix and adds it to rhis id
      * generator.
      *
      * @param prefix id prefix
+     *
      * @return the generated id
      */
-    public String newId(String prefix);
+    String newId(String prefix);
 
     /**
      * Returns the ids created/managed by this id generator
-     * @return 
+     *
+     * @return
      */
-    public Set<String> getIds();
+    Set<String> getIds();
 
     /**
      * Returns a new child id generator.
+     *
      * @return child id generator
      */
-    public IdGenerator newChild();
+    IdGenerator newChild();
 }

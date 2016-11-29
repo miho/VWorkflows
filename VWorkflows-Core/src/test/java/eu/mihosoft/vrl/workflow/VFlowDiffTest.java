@@ -49,7 +49,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class VFlowDiffTest {
@@ -57,11 +56,11 @@ public class VFlowDiffTest {
     @Test
     public void testSimpleDiff() {
         VFlow flow = createFlow(10, 5, 3, "control", "data", "event");
-        
-//        VFlow flow = FlowFactory.newFlow();
-//        
-//        FlowUtil.createFlow(flow, 5, 5);
-        
+
+        //        VFlow flow = FlowFactory.newFlow();
+        //
+        //        FlowUtil.createFlow(flow, 5, 5);
+
         try {
             WorkflowIO.saveToXML(Paths.get("flow01.xml"), flow.getModel());
         } catch (IOException ex) {
@@ -79,8 +78,8 @@ public class VFlowDiffTest {
             for (VFlow flow : flows) {
                 VNode prevNode = null;
                 for (int w = 0;
-                        w < Math.random() * (maxWidth / flows.size()) + 1;
-                        w++) {
+                     w < Math.random() * (maxWidth / flows.size()) + 1;
+                     w++) {
                     VNode n;
 
                     if (Math.random() < 0.5) {
@@ -95,8 +94,8 @@ public class VFlowDiffTest {
                     for (String type : types) {
 
                         for (int i = 0;
-                                i < Math.random() * maxNumConnectors + 1;
-                                i++) {
+                             i < Math.random() * maxNumConnectors + 1;
+                             i++) {
                             n.addInput(type);
                             n.addOutput(type);
                         }
@@ -106,14 +105,14 @@ public class VFlowDiffTest {
 
                         if (prevNode != null) {
                             List<Connector> outputs
-                                    = prevNode.getOutputs().
-                                    filtered(conn -> conn.getType().
-                                            equals(type));
+                                = prevNode.getOutputs().
+                                filtered(conn -> conn.getType().
+                                    equals(type));
 
                             List<Connector> inputs
-                                    = n.getInputs().
-                                    filtered(conn -> conn.getType().
-                                            equals(type));
+                                = n.getInputs().
+                                filtered(conn -> conn.getType().
+                                    equals(type));
 
                             for (Connector o : outputs) {
                                 for (Connector i : inputs) {

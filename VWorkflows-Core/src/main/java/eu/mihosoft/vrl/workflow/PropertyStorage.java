@@ -39,13 +39,12 @@
 
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Collection;
 import javafx.collections.MapChangeListener;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface PropertyStorage {
@@ -54,6 +53,7 @@ public interface PropertyStorage {
      * Indicates whether this storage contains the requested property.
      *
      * @param key key
+     *
      * @return {@code true} if this storage contains the requested property;
      * {@code false}
      */
@@ -71,6 +71,7 @@ public interface PropertyStorage {
      *
      * @param <T> property type
      * @param key key
+     *
      * @return the property; an empty {@link java.util.Optional} will be
      * returned if the property does not exist or the type does not match
      */
@@ -79,27 +80,30 @@ public interface PropertyStorage {
     /**
      * Sets a property. Existing properties are overwritten.
      *
-     * @param key key
+     * @param key      key
      * @param property property
      */
     <T> void set(String key, T property);
 
-     /**
-     * Adds the specified listener to the property map. 
+    /**
+     * Adds the specified listener to the property map.
+     *
      * @param l change listener
      */
-    public void addListener(MapChangeListener<String, Object> l);
-    
+    void addListener(MapChangeListener<String, Object> l);
+
     /**
      * Removes the specified listener from the property map.
+     *
      * @param l change listener
      */
-    public void removeListener(MapChangeListener<String, Object> l);
-    
+    void removeListener(MapChangeListener<String, Object> l);
+
     /**
      * Returns the keys that are currently used by the property storage.
+     *
      * @return keys used by the property storage
      */
-    public Collection<String> getKeys();
-    
+    Collection<String> getKeys();
+
 }

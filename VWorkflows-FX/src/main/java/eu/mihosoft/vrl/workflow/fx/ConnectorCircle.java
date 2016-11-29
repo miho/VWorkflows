@@ -50,34 +50,34 @@ import javafx.scene.layout.Region;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ConnectorCircle extends Region implements ConnectorShape {
-    
+
     private Connector connector;
     private final VFlow flow;
     private final FXSkinFactory skinFactory;
     private ConnectionSkin connectionSkin;
     private final DoubleProperty radiusProperty = new SimpleDoubleProperty();
-    
+
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector) {
         setConnector(connector);
         this.flow = flow;
         this.skinFactory = skinFactory;
     }
-    
+
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory, Connector connector, double radius) {
         radiusProperty.set(radius);
         setConnector(connector);
         this.flow = flow;
         this.skinFactory = skinFactory;
-        
+
         init();
     }
-    
+
     public ConnectorCircle(VFlow flow, FXSkinFactory skinFactory) {
         this.flow = flow;
         this.skinFactory = skinFactory;
         init();
     }
-    
+
     private void init() {
         this.getStyleClass().add("vnode-connector");
         this.setManaged(true);
@@ -85,9 +85,9 @@ class ConnectorCircle extends Region implements ConnectorShape {
         setCache(true);
         setCacheHint(CacheHint.SPEED);
         this.prefWidthProperty().bind(radiusProperty());
-        
-        radiusProperty().addListener((ov,oldV,newV)-> {
-            resize(newV.doubleValue()*2, newV.doubleValue()*2);
+
+        radiusProperty().addListener((ov, oldV, newV) -> {
+            resize(newV.doubleValue() * 2, newV.doubleValue() * 2);
         });
     }
 
@@ -98,19 +98,19 @@ class ConnectorCircle extends Region implements ConnectorShape {
 
     @Override
     public final void setConnector(Connector connector) {
-        
+
         if (getConnector() != null) {
             getStyleClass().remove("vnode-connector-" + getConnector().getType());
         }
-        
+
         this.connector = connector;
-        
+
         if (getConnector() != null) {
             getStyleClass().add("vnode-connector-" + getConnector().getType());
         }
-        
+
     }
-    
+
     private void moveConnectionReceiverToFront() {
         connectionSkin = null;
 
@@ -124,7 +124,7 @@ class ConnectorCircle extends Region implements ConnectorShape {
             }
         }
     }
-    
+
     @Override
     public void toFront() {
         super.toFront();
@@ -135,12 +135,12 @@ class ConnectorCircle extends Region implements ConnectorShape {
     public DoubleProperty radiusProperty() {
         return radiusProperty;
     }
-    
+
     @Override
     public void setRadius(double radius) {
         radiusProperty().set(radius);
     }
-    
+
     @Override
     public double getRadius() {
         return radiusProperty().get();

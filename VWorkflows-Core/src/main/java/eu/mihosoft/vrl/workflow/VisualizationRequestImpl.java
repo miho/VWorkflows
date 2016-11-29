@@ -39,7 +39,6 @@
 package eu.mihosoft.vrl.workflow;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class VisualizationRequestImpl extends PropertyStorageImpl implements VisualizationRequest {

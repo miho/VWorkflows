@@ -37,7 +37,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
- *  This class defines a value object you can assign a value.
+ * This class defines a value object you can assign a value.
+ *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultValueObject implements ValueObject {
@@ -79,8 +80,8 @@ public class DefaultValueObject implements ValueObject {
             @Override
             public boolean isCompatible() {
                 boolean differentObjects = sender != DefaultValueObject.this;
-//                boolean compatibleType = getParent().isInputOfType(flowType)
-//                        && sender.getParent().isOutputOfType(flowType);
+                //                boolean compatibleType = getParent().isInputOfType(flowType)
+                //                        && sender.getParent().isOutputOfType(flowType);
 
                 return differentObjects /*&& compatibleType*/;
             }
@@ -99,14 +100,14 @@ public class DefaultValueObject implements ValueObject {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        
+
         if (vReq == null) {
             vReq = new VisualizationRequestImpl();
         }
-        
+
         return vReq;
     }
-    
+
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
         this.vReq = vReq;

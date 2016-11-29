@@ -35,18 +35,16 @@
 package eu.mihosoft.vrl.workflow;
 
 
-
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.FlowNodeSkinLookup;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
@@ -78,7 +76,7 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
     private VNodeSkin getNodeByGlobalId(SkinFactory skinFactory, VFlow parent, String id) {
 
-//        System.out.println("id: " + id);
+        //        System.out.println("id: " + id);
         // find flow that contains the requested node
         VFlow flow;
 
@@ -91,8 +89,8 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
         if (flow == null) {
             return null;
         }
-//        
-//        System.out.println("found flow: " + flow.getModel().getId());
+        //
+        //        System.out.println("found flow: " + flow.getModel().getId());
 
         for (SkinFactory sF : flow.getSkinFactories()) {
             if (getRootSkinFactoryOf(skinFactory) == getRootSkinFactoryOf(sF)) {
@@ -100,8 +98,8 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
                 return getBySkinFactory(sF, s2);
             }
         }
-//
-//        System.out.println(" --> nothing found :(");
+        //
+        //        System.out.println(" --> nothing found :(");
 
         return null;
     }
@@ -164,11 +162,11 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         VNodeSkin result = getNodeByGlobalId(skinFactory, root, globalId);
 
-//        if (result != null) {
-//            System.out.println("getById(): " + result);
-//        } else {
-//            System.out.println("NOT FOUND: getById(): " + null);
-//        }
+        //        if (result != null) {
+        //            System.out.println("getById(): " + result);
+        //        } else {
+        //            System.out.println("NOT FOUND: getById(): " + null);
+        //        }
         return result;
     }
 
@@ -183,7 +181,7 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
 
         if (senderFlow != receiverFlow) {
             throw new UnsupportedOperationException(
-                    "Only skins for connections that share the same parent can be searched");
+                "Only skins for connections that share the same parent can be searched");
         }
 
         VFlow flow = root.getFlowById(senderFlow.getId());
@@ -191,7 +189,7 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
         if (!(flow instanceof VFlowImpl)) {
             System.err.println("flow: " + flow);
             throw new UnsupportedOperationException(
-                    "Unsupported flow class '"
+                "Unsupported flow class '"
                     + flow.getClass()
                     + "', should implement '" + VFlowImpl.class + "'");
         }
@@ -199,14 +197,14 @@ public class FlowNodeSkinLookupImpl implements FlowNodeSkinLookup {
         VFlowImpl flowImpl = (VFlowImpl) flow;
 
         ConnectionSkin<Connection> skin = flowImpl.getConnectionSkinMap(skinFactory).get(
-                VFlowImpl.connectionId(c));
+            VFlowImpl.connectionId(c));
 
-//        for (String key : flowImpl.getConnectionSkinMap(skinFactory).keySet()) {
-//            ConnectionSkin<Connection> skinI = flowImpl.getConnectionSkinMap(skinFactory).get(key);
-//            System.out.println(" --> skin  " + skinI + ": " + key + "==" + VFlowImpl.connectionId(c));
-//        }
-//        
-//        System.out.println("skin for connection " + c + ": " + skin);
+        //        for (String key : flowImpl.getConnectionSkinMap(skinFactory).keySet()) {
+        //            ConnectionSkin<Connection> skinI = flowImpl.getConnectionSkinMap(skinFactory).get(key);
+        //            System.out.println(" --> skin  " + skinI + ": " + key + "==" + VFlowImpl.connectionId(c));
+        //        }
+        //
+        //        System.out.println("skin for connection " + c + ": " + skin);
         return skin;
     }
 }

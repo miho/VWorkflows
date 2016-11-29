@@ -37,7 +37,7 @@ import javafx.collections.ObservableList;
 
 /**
  * Selection clipboard.
- * 
+ *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface Clipboard {
@@ -45,20 +45,22 @@ public interface Clipboard {
     /**
      * Selects/deselect the specified node.
      *
-     * @param n selectable node
+     * @param n        selectable node
      * @param selected selection state (selected/deselected)
+     *
      * @return {@code true} if selection state is accepted; {@code false}
      * otherwise
      */
-    public boolean select(SelectableNode n, boolean selected);
+    boolean select(SelectableNode n, boolean selected);
 
     /**
      * Deselects all nodes.
      */
-    public void deselectAll();
+    void deselectAll();
 
     /**
      * Returns all selected items.
+     *
      * @return selected items
      */
     ObservableList<SelectableNode> getSelectedItems();

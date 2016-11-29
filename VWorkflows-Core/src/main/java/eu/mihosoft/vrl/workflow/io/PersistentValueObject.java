@@ -45,7 +45,6 @@ import java.util.Map;
 
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class PersistentValueObject {

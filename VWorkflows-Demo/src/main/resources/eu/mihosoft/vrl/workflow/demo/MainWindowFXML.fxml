@@ -36,82 +36,85 @@
 -->
 
 
+<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.CheckMenuItem?>
-<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<VBox minHeight="400.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.mihosoft.vrl.workflow.demo.MainWindowFXMLController">
-   <children>
-    <MenuBar style="-fx-font-size: 13px">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <Menu mnemonicParsing="false" text="Testcases">
-                <MenuItem mnemonicParsing="false" onAction="#onOriginalAction" text="Original" />
-                <MenuItem mnemonicParsing="false" onAction="#onAdditionalEdgeAction" text="Additional Edge" />
-                <MenuItem mnemonicParsing="false" onAction="#onAdditionalGraphAction" text="Additional Graph" />
-                <MenuItem mnemonicParsing="false" onAction="#onTriLaneAction" text="Tri Lane" />
-                <MenuItem mnemonicParsing="false" onAction="#onDifferentSizesAction" text="Different Sizes" />
-                <MenuItem mnemonicParsing="false" onAction="#onCycleAction" text="Cycle" />
-                <Menu mnemonicParsing="false" text="final test">
-                    <Menu mnemonicParsing="false" text="Tree">
-                        <MenuItem mnemonicParsing="false" onAction="#onTestTree1" text="Case 1" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestTree2" text="Case 2" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestTree3" text="Case 3" />
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Nontree">
-                        <MenuItem mnemonicParsing="false" onAction="#onTestNontree1" text="Case 1" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestNontree2" text="Case 2" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestNontree3" text="Case 3" />
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Cyclic">
-                        <MenuItem mnemonicParsing="false" onAction="#onTestCyclic1" text="Case 1" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestCyclic2" text="Case 2" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestCyclic3" text="Case 3" />
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Different Sizes">
-                        <MenuItem mnemonicParsing="false" onAction="#onTestSizes1" text="Case 1" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestSizes2" text="Case 2" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTestSizes3" text="Case 3" />
-                    </Menu>
-                    <MenuItem mnemonicParsing="false" onAction="#onTestRunAll" text="Run All" />
+<VBox minHeight="400.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="eu.mihosoft.vrl.workflow.demo.MainWindowFXMLController">
+    <children>
+        <MenuBar style="-fx-font-size: 13px">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Testcases">
+                            <MenuItem mnemonicParsing="false" onAction="#onOriginalAction" text="Original"/>
+                            <MenuItem mnemonicParsing="false" onAction="#onAdditionalEdgeAction"
+                                      text="Additional Edge"/>
+                            <MenuItem mnemonicParsing="false" onAction="#onAdditionalGraphAction"
+                                      text="Additional Graph"/>
+                            <MenuItem mnemonicParsing="false" onAction="#onTriLaneAction" text="Tri Lane"/>
+                            <MenuItem mnemonicParsing="false" onAction="#onDifferentSizesAction"
+                                      text="Different Sizes"/>
+                            <MenuItem mnemonicParsing="false" onAction="#onCycleAction" text="Cycle"/>
+                            <Menu mnemonicParsing="false" text="final test">
+                                <Menu mnemonicParsing="false" text="Tree">
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestTree1" text="Case 1"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestTree2" text="Case 2"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestTree3" text="Case 3"/>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Nontree">
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestNontree1" text="Case 1"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestNontree2" text="Case 2"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestNontree3" text="Case 3"/>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Cyclic">
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestCyclic1" text="Case 1"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestCyclic2" text="Case 2"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestCyclic3" text="Case 3"/>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Different Sizes">
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestSizes1" text="Case 1"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestSizes2" text="Case 2"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onTestSizes3" text="Case 3"/>
+                                </Menu>
+                                <MenuItem mnemonicParsing="false" onAction="#onTestRunAll" text="Run All"/>
+                            </Menu>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#onGenerateAction" text="Generate"/>
+                        <MenuItem mnemonicParsing="false" onAction="#onLoadAction" text="Load"/>
+                        <MenuItem mnemonicParsing="false" onAction="#onSaveAction" text="Save"/>
+                    </items>
                 </Menu>
-            </Menu>
-            <MenuItem mnemonicParsing="false" onAction="#onGenerateAction" text="Generate" />
-            <MenuItem mnemonicParsing="false" onAction="#onLoadAction" text="Load" />
-            <MenuItem mnemonicParsing="false" onAction="#onSaveAction" text="Save" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <Menu mnemonicParsing="false" text="Layout">
-                <Menu mnemonicParsing="false" text="Development">
-                    <Menu mnemonicParsing="false" text="Naive Layout">
-                        <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="apply layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onNaiveOptionsAction" text="Options" />
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Smart Layout">
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartRunAction" text="apply layout" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSmartOptionsAction" text="Options" />
-                    </Menu>
-                    <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging" />
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Layout">
+                            <Menu mnemonicParsing="false" text="Development">
+                                <Menu mnemonicParsing="false" text="Naive Layout">
+                                    <MenuItem mnemonicParsing="false" onAction="#onNaiveAction" text="apply layout"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onNaiveOptionsAction" text="Options"/>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Smart Layout">
+                                    <MenuItem mnemonicParsing="false" onAction="#onSmartRunAction" text="apply layout"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#onSmartOptionsAction" text="Options"/>
+                                </Menu>
+                                <CheckMenuItem fx:id="checkDebugLayout" mnemonicParsing="false" text="Debugging"/>
+                            </Menu>
+                            <MenuItem mnemonicParsing="false" onAction="#onStableAction" text="Stable"/>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                        <MenuItem mnemonicParsing="false" onAction="#onLayoutSnapshotAction" text="snapshot"/>
+                    </items>
                 </Menu>
-                <MenuItem mnemonicParsing="false" onAction="#onStableAction" text="Stable" />
-            </Menu>
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <MenuItem mnemonicParsing="false" onAction="#onLayoutSnapshotAction" text="snapshot" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-    <StackPane fx:id="contentPane" stylesheets="@../fx/default.css" VBox.vgrow="ALWAYS" />
-   </children>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <StackPane fx:id="contentPane" stylesheets="@../fx/default.css" VBox.vgrow="ALWAYS"/>
+    </children>
 </VBox>

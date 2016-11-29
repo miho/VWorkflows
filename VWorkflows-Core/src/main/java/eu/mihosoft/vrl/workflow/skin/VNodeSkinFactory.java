@@ -38,18 +38,20 @@ import eu.mihosoft.vrl.workflow.VNode;
 
 /**
  * Node skin factory.
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
  * @param <T> node skin type
+ *
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VNodeSkinFactory<T extends Skin> {
 
     /**
      * Creates a node skin.
-     * @param n node that shall be skinned
+     *
+     * @param n          node that shall be skinned
      * @param controller flow controller
+     *
      * @return requested node skin
      */
     VNodeSkin createSkin(VNode n, VFlow controller);
-
-    
 }

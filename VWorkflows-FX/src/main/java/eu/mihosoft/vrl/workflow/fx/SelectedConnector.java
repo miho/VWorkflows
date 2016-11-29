@@ -37,7 +37,6 @@ import eu.mihosoft.vrl.workflow.Connector;
 import javafx.scene.Node;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class SelectedConnector {

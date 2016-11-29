@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class PersistentNode {
@@ -55,16 +54,16 @@ public class PersistentNode {
     private VisualizationRequest vReq;
     private String id;
     private List<PersistentConnector> connectors;
-    private Map<String,String> mainInputs = new HashMap<>();
-    private Map<String,String> mainOutputs = new HashMap<>();
+    private Map<String, String> mainInputs = new HashMap<>();
+    private Map<String, String> mainOutputs = new HashMap<>();
 
     public PersistentNode() {
     }
 
     public PersistentNode(String id, String title,
-            double x, double y, double width, double height,
-            ValueObject valueObject, VisualizationRequest vReq,
-            List<PersistentConnector> connectors) {
+                          double x, double y, double width, double height,
+                          ValueObject valueObject, VisualizationRequest vReq,
+                          List<PersistentConnector> connectors) {
 
         this.x = x;
         this.y = y;
@@ -76,8 +75,7 @@ public class PersistentNode {
         this.id = id;
         this.connectors = WorkflowIO.listToSerializableList(connectors);
     }
-    
-    
+
 
     /**
      * @return the x
@@ -202,47 +200,47 @@ public class PersistentNode {
      * @param connectors the inputTypes to set
      */
     public void setConnectors(List<PersistentConnector> connectors) {
-        
+
         for (PersistentConnector persistentConnector : connectors) {
             addConnector(persistentConnector);
         }
     }
-    
-        /**
+
+    /**
      * @param connector the inputTypes to set
      */
-    public void addConnector(PersistentConnector connector ) {
+    public void addConnector(PersistentConnector connector) {
 
-//            connector.setNode(this);
-            
-            connectors.add(connector);
+        //            connector.setNode(this);
+
+        connectors.add(connector);
     }
 
     /**
      * @return the mainInputs
      */
-    public Map<String,String> getMainInputs() {
+    public Map<String, String> getMainInputs() {
         return mainInputs;
     }
 
     /**
      * @param mainInputs the mainInputs to set
      */
-    public void setMainInputs(Map<String,String> mainInputs) {
+    public void setMainInputs(Map<String, String> mainInputs) {
         this.mainInputs = mainInputs;
     }
 
     /**
      * @return the mainOutputs
      */
-    public Map<String,String> getMainOutputs() {
+    public Map<String, String> getMainOutputs() {
         return mainOutputs;
     }
 
     /**
      * @param mainOutputs the mainOutputs to set
      */
-    public void setMainOutputs(Map<String,String> mainOutputs) {
+    public void setMainOutputs(Map<String, String> mainOutputs) {
         this.mainOutputs = mainOutputs;
     }
 }

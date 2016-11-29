@@ -50,7 +50,6 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class FXConnectorUtil {
@@ -68,11 +67,11 @@ public class FXConnectorUtil {
     }
 
     public static SelectedConnector getSelectedOutputConnector(
-            VNode receiverNode, Parent fxParent, String type, MouseEvent t) {
+        VNode receiverNode, Parent fxParent, String type, MouseEvent t) {
         Node myNode = NodeUtil.getNode(
-                fxParent,
-                t.getSceneX(), t.getSceneY(),
-                FlowNodeWindow.class, ConnectorShape.class);
+            fxParent,
+            t.getSceneX(), t.getSceneY(),
+            FlowNodeWindow.class, ConnectorShape.class);
         Connector connector = null;
 
         if (myNode != null) {
@@ -84,7 +83,7 @@ public class FXConnectorUtil {
                 final FlowNodeWindow w = (FlowNodeWindow) myNode;
 
                 connector = w.nodeSkinProperty().get().
-                        getModel().getMainOutput(type);
+                    getModel().getMainOutput(type);
             }
 
             // we don't accept our parent as target
@@ -101,12 +100,12 @@ public class FXConnectorUtil {
     }
 
     public static SelectedConnector getSelectedInputConnector(
-            VNode senderNode, Parent fxParent, String type, MouseEvent t) {
+        VNode senderNode, Parent fxParent, String type, MouseEvent t) {
         Node myNode = NodeUtil.getNode(
-                fxParent,
-                t.getSceneX(), t.getSceneY(),
-                ConnectorShape.class,
-                FlowNodeWindow.class);
+            fxParent,
+            t.getSceneX(), t.getSceneY(),
+            ConnectorShape.class,
+            FlowNodeWindow.class);
         Connector connector = null;
 
         if (myNode != null) {
@@ -118,7 +117,7 @@ public class FXConnectorUtil {
                 final FlowNodeWindow w = (FlowNodeWindow) myNode;
 
                 connector = w.nodeSkinProperty().get().
-                        getModel().getMainInput(type);
+                    getModel().getMainInput(type);
             }
 
             // we don't accept our parent as target
@@ -143,8 +142,8 @@ public class FXConnectorUtil {
         }
 
         Timeline timeline = new Timeline();
-//        timeline.setAutoReverse(true);
-//        timeline.setCycleCount(Timeline.INDEFINITE);
+        //        timeline.setAutoReverse(true);
+        //        timeline.setCycleCount(Timeline.INDEFINITE);
 
         final Circle connectedShape = new Circle();
         connectedShape.setStrokeWidth(15);
@@ -168,11 +167,11 @@ public class FXConnectorUtil {
         timeline.getKeyFrames().add(kf1);
 
         final KeyValue kv2 = new KeyValue(connectedShape.strokeProperty(),
-                new Color(0, 1, 0, 1.0));
+            new Color(0, 1, 0, 1.0));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(0), kv2);
         timeline.getKeyFrames().add(kf2);
         final KeyValue kv3 = new KeyValue(connectedShape.strokeProperty(),
-                new Color(0, 1, 0, 0.0));
+            new Color(0, 1, 0, 0.0));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(400), kv3);
         timeline.getKeyFrames().add(kf3);
 
@@ -185,8 +184,8 @@ public class FXConnectorUtil {
 
     public static void connnectionIncompatibleAnim(Node receiverUI) {
         Timeline timeline = new Timeline();
-//        timeline.setAutoReverse(true);
-//        timeline.setCycleCount(Timeline.INDEFINITE);
+        //        timeline.setAutoReverse(true);
+        //        timeline.setCycleCount(Timeline.INDEFINITE);
 
         final Circle connectedShape = new Circle();
         connectedShape.setStrokeWidth(15);
@@ -245,11 +244,11 @@ public class FXConnectorUtil {
         final KeyFrame kf1 = new KeyFrame(Duration.millis(250), kv1);
         timeline.getKeyFrames().add(kf1);
         final KeyValue kv2 = new KeyValue(circle.fillProperty(),
-                new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
+            new Color(120.0 / 255.0, 140.0 / 255.0, 1, 0.5));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(50), kv2);
         timeline.getKeyFrames().add(kf2);
         final KeyValue kv3 = new KeyValue(circle.strokeProperty(),
-                new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
+            new Color(120 / 255.0, 140 / 255.0, 1, 0.42));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(50), kv3);
         timeline.getKeyFrames().add(kf3);
 
@@ -288,17 +287,17 @@ public class FXConnectorUtil {
             Circle nCircle = (Circle) shape;
 
             final KeyValue kv1 = new KeyValue(nCircle.radiusProperty(),
-                    targetRadius);
+                targetRadius);
             final KeyFrame kf1 = new KeyFrame(Duration.millis(250), kv1);
             timeline.getKeyFrames().add(kf1);
         }
 
         final KeyValue kv2 = new KeyValue(shape.fillProperty(),
-                new Color(0, 1, 0, 0.80));
+            new Color(0, 1, 0, 0.80));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(300), kv2);
         timeline.getKeyFrames().add(kf2);
         final KeyValue kv3 = new KeyValue(shape.strokeProperty(),
-                new Color(0, 1, 0, 0.90));
+            new Color(0, 1, 0, 0.90));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(300), kv3);
         timeline.getKeyFrames().add(kf3);
 
@@ -310,7 +309,7 @@ public class FXConnectorUtil {
 
         if (!(receiverConnector instanceof Circle)) {
             throw new IllegalArgumentException(
-                    "only" + Circle.class
+                "only" + Circle.class
                     + "nodes are supported. Specified: " + receiverConnector);
         }
 
@@ -323,11 +322,11 @@ public class FXConnectorUtil {
         timeline = new Timeline();
 
         final KeyValue kv2 = new KeyValue(circleConnector.fillProperty(),
-                new Color(1, 0, 0, 0.80));
+            new Color(1, 0, 0, 0.80));
         final KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
         timeline.getKeyFrames().add(kf2);
         final KeyValue kv3 = new KeyValue(circleConnector.strokeProperty(),
-                new Color(1, 0, 0, 0.90));
+            new Color(1, 0, 0, 0.90));
         final KeyFrame kf3 = new KeyFrame(Duration.millis(500), kv3);
         timeline.getKeyFrames().add(kf3);
         timeline.play();

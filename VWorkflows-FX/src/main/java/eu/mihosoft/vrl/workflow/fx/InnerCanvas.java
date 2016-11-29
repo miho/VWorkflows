@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class InnerCanvas extends Pane {
@@ -72,7 +71,7 @@ public class InnerCanvas extends Pane {
 
         super.layoutChildren();
 
-//        setNeedsLayout(true);
+        //        setNeedsLayout(true);
         if (!translateToMinNodePosProperty.get()) {
 
             // window coordinates < 0 are not allowed
@@ -119,10 +118,10 @@ public class InnerCanvas extends Pane {
         }
 
         if (translateBehaviorProperty().get() == TranslateBehavior.ALWAYS
-                || manualReset) {
+            || manualReset) {
             translateAllWindowsXY(minX, minY, nodeList);
         } else if (translateBehaviorProperty().get()
-                == TranslateBehavior.IF_NECESSARY) {
+            == TranslateBehavior.IF_NECESSARY) {
             if (minX < 0 && getLayoutBounds().getWidth() > 0 && partOfSceneGraph) {
                 translateAllWindowsX(minX, nodeList);
             }

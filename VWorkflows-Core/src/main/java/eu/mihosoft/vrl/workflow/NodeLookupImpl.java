@@ -38,7 +38,7 @@ import java.util.Objects;
 /**
  * This class allows nodes to be looked up by id.
  * Ids have the format {@code <node id>:<connector id>}.
- * 
+ * <p>
  * The class can also be used to look up connectors.
  *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
@@ -46,7 +46,7 @@ import java.util.Objects;
 public class NodeLookupImpl implements NodeLookup {
 
     private final VFlowModel root;
-//    private final Map<String, VNode> cache = new HashMap<>();
+    //    private final Map<String, VNode> cache = new HashMap<>();
 
     public NodeLookupImpl(VFlowModel root) {
         this.root = root;
@@ -58,7 +58,7 @@ public class NodeLookupImpl implements NodeLookup {
 
         if (ids.length < 2) {
             throw new IllegalArgumentException("wrong connector id format: "
-                    + globalId + ", correct format: node-id:c:connector-id");
+                + globalId + ", correct format: node-id:c:connector-id");
         }
 
         String nodeId = ids[0];
@@ -75,21 +75,21 @@ public class NodeLookupImpl implements NodeLookup {
 
     @Override
     public VNode getById(String globalId) {
-        
-//        VNode result = cache.get(globalId);
-        
-//        if (result!=null)return result;
+
+        //        VNode result = cache.get(globalId);
+
+        //        if (result!=null)return result;
 
         VNode result = getNodeByGlobalId(root, globalId);
-        
-//        cache.put(globalId, result);
+
+        //        cache.put(globalId, result);
 
         return result;
     }
 
     private VNode getNodeByGlobalId(VFlowModel parent, String id) {
-        
-        if (Objects.equals(parent.getId(),id)) {
+
+        if (Objects.equals(parent.getId(), id)) {
             return parent;
         }
 

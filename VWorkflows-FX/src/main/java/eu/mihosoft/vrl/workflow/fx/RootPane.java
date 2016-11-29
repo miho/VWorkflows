@@ -38,7 +38,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class RootPane extends Pane {
@@ -46,7 +45,7 @@ public class RootPane extends Pane {
     public RootPane() {
         setPrefWidth(USE_COMPUTED_SIZE);
         setPrefHeight(USE_COMPUTED_SIZE);
-        
+
         setMinWidth(USE_COMPUTED_SIZE);
         setMinHeight(USE_COMPUTED_SIZE);
     }
@@ -84,7 +83,7 @@ public class RootPane extends Pane {
             minX = Math.min(minX, n.getBoundsInParent().getMinX());
             maxX = Math.max(maxX, n.getBoundsInParent().getMaxX());
         }
-        
+
         return maxX;
     }
 

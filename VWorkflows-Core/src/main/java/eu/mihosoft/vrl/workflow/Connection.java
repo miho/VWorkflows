@@ -35,27 +35,33 @@ package eu.mihosoft.vrl.workflow;
 
 /**
  * This interface defines a connection between two connectors.
+ *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public interface Connection extends Model{
-//    public String getSenderId();
-//    public void setSenderId(String id);
-//    public String getReceiverId();
-//    public void setReceiverId(String id);
-    public void setSender(Connector s);
-    public void setReceiver(Connector r);
-    public Connector getReceiver();
-    public Connector getSender();
-    
-    public String getId();
-    public void setId(String id);
-    
-    public String getType();
-    
-    public Connections getConnections();
+public interface Connection extends Model {
+    //    String getSenderId();
+    //    void setSenderId(String id);
+    //    String getReceiverId();
+    //    void setReceiverId(String id);
+    void setSender(Connector s);
+
+    void setReceiver(Connector r);
+
+    Connector getReceiver();
+
+    Connector getSender();
+
+    String getId();
+
+    void setId(String id);
+
+    String getType();
+
+    Connections getConnections();
 
     @Override
-    public void setVisualizationRequest(VisualizationRequest vReq);
+    void setVisualizationRequest(VisualizationRequest vReq);
+
     @Override
-    public VisualizationRequest getVisualizationRequest();
+    VisualizationRequest getVisualizationRequest();
 }

@@ -66,6 +66,7 @@ public interface Selectable {
      * Requests (de-)selection of this object.
      *
      * @param b selection state (true or false)
+     *
      * @return <code>true</code> if this object has been selected;
      * <code>false</code> otherwise
      */

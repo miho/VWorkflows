@@ -55,11 +55,11 @@ class ConnectorImpl implements Connector {
     private ObjectProperty<VisualizationRequest> vReqProperty;
     private boolean input;
     private boolean output;
-    private final ObjectProperty<ValueObject> valueObjectProperty = 
-            new SimpleObjectProperty<>();
+    private final ObjectProperty<ValueObject> valueObjectProperty =
+        new SimpleObjectProperty<>();
     private transient List<EventHandler<ConnectionEvent>> connectionEventHandlers;
     private transient List<EventHandler<ClickEvent>> clickEventHandlers;
-    
+
     private final int maxNumberOfConnectionsDefault = Integer.MAX_VALUE;
     private ObjectProperty<Integer> maxNumberOfConnectionsProperty;
 
@@ -245,7 +245,7 @@ class ConnectorImpl implements Connector {
 
     @Override
     public int getMaxNumberOfConnections() {
-        if (maxNumberOfConnectionsProperty==null) {
+        if (maxNumberOfConnectionsProperty == null) {
             return maxNumberOfConnectionsDefault;
         } else {
             return maxNumberOfConnectionsProperty().get();
@@ -256,9 +256,9 @@ class ConnectorImpl implements Connector {
     public ObjectProperty<Integer> maxNumberOfConnectionsProperty() {
         if (maxNumberOfConnectionsProperty == null) {
             maxNumberOfConnectionsProperty = new SimpleObjectProperty<>(
-                    maxNumberOfConnectionsDefault);
+                maxNumberOfConnectionsDefault);
         }
-        
+
         return maxNumberOfConnectionsProperty;
     }
 }

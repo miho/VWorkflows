@@ -40,67 +40,67 @@
 */
 
 .vflow-background {
-    -fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));
+    -fx-background-color: linear-gradient(to bottom, rgb(10, 32, 60), rgb(42, 52, 120));
 }
 
 .window {
-    -fx-background-color: rgba(120,140,255,0.2);
-    -fx-border-color: rgba(120,140,255,0.42);
+    -fx-background-color: rgba(120, 140, 255, 0.2);
+    -fx-border-color: rgba(120, 140, 255, 0.42);
     -fx-border-width: 2;
 }
 
 .vnode-connector {
-    -fx-background-color: rgba(0,0,0,0.75);
+    -fx-background-color: rgba(0, 0, 0, 0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
-    -fx-border-width: 2px; 
+    -fx-border-width: 2px;
     -fx-border-color: rgba(120, 140, 255, 0.72);
     -fx-shape: "m 187.92089,378.88528 a 12.94066,12.94066 0 0 1 -12.94067,12.94066 12.94066,12.94066 0 0 1 -12.94066,-12.94066 12.94066,12.94066 0 0 1 12.94066,-12.94066 12.94066,12.94066 0 0 1 12.94067,12.94066 z"
 }
 
 .vnode-connector-control {
-    -fx-background-color: rgba(255,255,0,0.75);
+    -fx-background-color: rgba(255, 255, 0, 0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
-/*    -fx-border-color: rgba(255,255,0,0.75);*/
+    /*    -fx-border-color: rgba(255,255,0,0.75);*/
 }
 
 .vnode-connector-event {
-    -fx-background-color: rgba(255,100,255,0.75);
+    -fx-background-color: rgba(255, 100, 255, 0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
     /*-fx-border-color: rgba(255,100,255,0.75);*/
 }
 
 .vnode-connector-data {
-    -fx-background-color: rgba(10,10,10,0.75);
+    -fx-background-color: rgba(10, 10, 10, 0.75);
     -fx-stroke: rgba(120, 140, 255, 0.42);
     /*-fx-border-color: rgba(10,10,10,0.75);*/
 }
 
 .vnode-connection {
-    -fx-stroke: rgba(120,140,255,0.2);
+    -fx-stroke: rgba(120, 140, 255, 0.2);
     -fx-stroke-width: 5px;
 }
 
 .vnode-new-connection {
-    -fx-stroke: rgba(120,140,255,0.2);
+    -fx-stroke: rgba(120, 140, 255, 0.2);
     -fx-stroke-width: 5px;
 }
 
 .window-titlebar {
 
-    -fx-background-color: rgba(20,20,45,0.4);
-    -fx-border-color: rgba(120,140,255,0.42);
+    -fx-background-color: rgba(20, 20, 45, 0.4);
+    -fx-border-color: rgba(120, 140, 255, 0.42);
     -fx-border-width: 0;
     -fx-padding: 6 4 3 4;
     -fx-background-insets: 2 2 -2 2;
 
     -fx-alignment: center;
-    -fx-fill: rgba(255,255,255,50);
+    -fx-fill: rgba(255, 255, 255, 50);
 }
 
 .scroll-pane .viewport {
-   -fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .scroll-pane {
-   -fx-background-color: transparent;
+    -fx-background-color: transparent;
 }

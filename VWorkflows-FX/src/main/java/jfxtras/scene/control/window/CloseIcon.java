@@ -36,7 +36,6 @@ package jfxtras.scene.control.window;
 import javafx.event.ActionEvent;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class CloseIcon extends WindowIcon {

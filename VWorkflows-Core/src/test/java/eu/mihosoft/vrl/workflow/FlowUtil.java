@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class FlowUtil {
@@ -51,8 +50,8 @@ public class FlowUtil {
      * Creates a flow with specified width and depth.
      *
      * @param workflow parent workflow
-     * @param depth flow depth (number of nested nodes)
-     * @param width flow width (number of nodes per layer)
+     * @param depth    flow depth (number of nested nodes)
+     * @param width    flow width (number of nodes per layer)
      */
     public static void createFlow(VFlow workflow, int depth, int width) {
 
@@ -107,7 +106,7 @@ public class FlowUtil {
             if (i >= connectionTypes.length) {
 
                 workflow.connect(prevNodes.get(0).getOutputs().get(0),
-                        n.getInputs().get(0));
+                    n.getInputs().get(0));
 
                 prevNodes.remove(0);
             }

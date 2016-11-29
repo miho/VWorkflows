@@ -33,8 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
@@ -42,8 +40,10 @@ import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Transform;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class OptimizableContentPane extends StackPane {
@@ -91,10 +91,10 @@ public class OptimizableContentPane extends StackPane {
 
         optimizing = true;
 
-//        if (transform == null) {
+        //        if (transform == null) {
         transform = OptimizableContentPane.this.
-                localToSceneTransformProperty().get();
-//        }
+            localToSceneTransformProperty().get();
+        //        }
 
         boolean visible = optimizationRule.visible(this, transform);
 
@@ -108,13 +108,13 @@ public class OptimizableContentPane extends StackPane {
             if (attachedReq) {
                 getChildren().addAll(detatched);
                 detatched.clear();
-                
-//                for (Node n : getChildren()) {
-//                    if (n instanceof Parent) {
-//                        Parent p = (Parent) n;
-//                        p.layout();
-//                    }
-//                }
+
+                //                for (Node n : getChildren()) {
+                //                    if (n instanceof Parent) {
+                //                        Parent p = (Parent) n;
+                //                        p.layout();
+                //                    }
+                //                }
 
 
             } else {
@@ -154,7 +154,7 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
 
         // if bounds are infinite we assume visibility
         if (Double.isInfinite(bounds.getWidth())
-                || Double.isInfinite(bounds.getHeight())) {
+            || Double.isInfinite(bounds.getHeight())) {
             return true;
         }
 
@@ -162,7 +162,7 @@ class DefaultOptimizationRuleImpl implements OptimizationRule {
 
         // if bounds are NaN we assume visibility
         if (Double.isNaN(bounds.getWidth())
-                || Double.isNaN(bounds.getHeight())) {
+            || Double.isNaN(bounds.getHeight())) {
             return true;
         }
 

@@ -43,6 +43,7 @@ import javafx.event.EventType;
 /**
  * This class defines a connection event. A connection event is fired when a
  * connection is made between two connectors.
+ *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class ConnectionEvent extends Event {
@@ -76,7 +77,6 @@ public class ConnectionEvent extends Event {
     }
 
     /**
-     *
      * @return the connection
      */
     public Connection getConnection() {

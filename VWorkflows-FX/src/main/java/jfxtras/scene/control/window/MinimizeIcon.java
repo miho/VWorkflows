@@ -36,17 +36,16 @@ package jfxtras.scene.control.window;
 import javafx.event.ActionEvent;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class MinimizeIcon extends WindowIcon {
 
     public static final String DEFAULT_STYLE_CLASS = "window-minimize-icon";
-    
+
     private Window w;
 
     public MinimizeIcon(final Window w) {
-        
+
         this.w = w;
 
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);

@@ -45,7 +45,6 @@ import javafx.beans.property.ReadOnlyProperty;
 import javafx.event.EventHandler;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 class ConnectorIOImpl implements Connector {
@@ -65,7 +64,7 @@ class ConnectorIOImpl implements Connector {
         this.input = input;
         this.output = output;
     }
-    
+
     public ConnectorIOImpl(Connector c) {
         this(c.getNode(), c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
         this.vObj = c.getValueObject();

@@ -44,14 +44,14 @@ import javafx.scene.Parent;
 
 /**
  * JavaFX skin factory.
- * 
+ *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSkin> {
-    
+
     private final Parent fxParent;
     private final FXSkinFactory parentFactory;
-    
+
 
     public FXSkinFactory(Parent parent) {
         this.fxParent = parent;
@@ -80,7 +80,7 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
 
         return result;
     }
-    
+
     public FXSkinFactory newInstance(Parent parent, FXSkinFactory parentFactory) {
 
         FXSkinFactory result = new FXSkinFactory(parent, parentFactory);
@@ -99,5 +99,5 @@ public class FXSkinFactory implements SkinFactory<FXConnectionSkin, FXFlowNodeSk
     public Parent getFxParent() {
         return fxParent;
     }
-    
+
 }

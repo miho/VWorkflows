@@ -35,9 +35,9 @@ package eu.mihosoft.vrl.workflow.demo;
 
 import edu.uci.ics.jung.graph.DirectedGraph;
 import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.incubating.LayoutGeneratorSmart;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.incubating.LayoutGeneratorSmart;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,15 +56,14 @@ import java.util.logging.Logger;
 
 /**
  * FXML Controller Class
- * 
- * 
+ *
  * @author Tobias Mertz
  */
 public class OptionsWindowFXMLController implements Initializable {
 
     @FXML
     public Pane contentPane;
-    
+
     private LayoutGeneratorSmart generator;
     private Stage optionsstage;
     private VFlow workflow;
@@ -73,8 +72,9 @@ public class OptionsWindowFXMLController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url URL
-     * @param rb ResourceBundle
+     * @param rb  ResourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -95,65 +95,65 @@ public class OptionsWindowFXMLController implements Initializable {
         graphmodelist.add(this.graphmodes[1]);
         graphmodelist.add(this.graphmodes[2]);
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Menu items">
     @FXML
     private CheckBox checkForcePush;
-    
+
     @FXML
     private CheckBox checkSeparateDisjunctGraphs;
-    
+
     @FXML
     private CheckBox checkSeparateEdgeTypes;
-    
+
     @FXML
     private CheckBox checkDisplaceIdents;
-    
+
     @FXML
     private TextField tfMaxiterations;
-    
+
     @FXML
     private CheckBox checkRecursive;
-    
+
     @FXML
     private TextField tfAspectratio;
-    
+
     @FXML
     private TextField tfScaling;
-    
+
     @FXML
     private ComboBox<String> selLayout;
-    
+
     @FXML
     private CheckBox checkAlignNodes;
-    
+
     @FXML
     private CheckBox checkRemoveCycles;
-    
+
     @FXML
     private CheckBox checkOrigin;
-    
+
     @FXML
     private TextField tfSubflowscale;
-    
+
     @FXML
     private CheckBox checkRotate;
-    
+
     @FXML
     private CheckBox checkPushBack;
-    
+
     @FXML
     private CheckBox checkAutoscaleNodes;
-    
+
     @FXML
     private CheckBox checkJungLayout;
-    
+
     @FXML
     private ComboBox<String> selGraphmode;
-    
+
     @FXML
     private TextField tfDirection;
-    
+
     @FXML
     private TextField tfAlignmentThreshold;
     // </editor-fold>
@@ -162,25 +162,25 @@ public class OptionsWindowFXMLController implements Initializable {
     public void setGenerator(LayoutGeneratorSmart pgenerator) {
         this.generator = pgenerator;
     }
-    
+
     public void setStage(Stage poptionsstage) {
         this.optionsstage = poptionsstage;
     }
-    
+
     public void setWorkflow(VFlow pworkflow) {
         this.workflow = pworkflow;
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Getter">
     public LayoutGeneratorSmart getGenerator() {
         return this.generator;
     }
-    
+
     public Stage getStage() {
         return this.optionsstage;
     }
-    
+
     public VFlow getWorkflow() {
         return this.workflow;
     }
@@ -197,12 +197,12 @@ public class OptionsWindowFXMLController implements Initializable {
         set();
         this.optionsstage.close();
     }
-    
+
     @FXML
     void onShowPress(ActionEvent e) {
         int i;
         accept();
-        switch(this.generator.getGraphmode()) {
+        switch (this.generator.getGraphmode()) {
             case 0:
                 this.generator.setWorkflow(this.workflow.getModel());
                 this.generator.generateLayout();
@@ -211,69 +211,69 @@ public class OptionsWindowFXMLController implements Initializable {
                 LayoutGeneratorSmart altlay = new LayoutGeneratorSmart();
                 altlay.setWorkflow(this.workflow.getModel());
                 altlay.generateLayout();
-                DirectedGraph<VNode, Connection> jgraph = 
-                        altlay.getModelGraph();
+                DirectedGraph<VNode, Connection> jgraph =
+                    altlay.getModelGraph();
                 this.generator.setModelGraph(jgraph);
                 this.generator.generateLayout();
                 break;
             case 2:
                 ObservableList<VNode> obsnodes = workflow.getNodes();
                 LinkedList<VNode> nodelist = new LinkedList<>();
-                for(i = 0; i < obsnodes.size(); i++) {
+                for (i = 0; i < obsnodes.size(); i++) {
                     VNode curr = obsnodes.get(i);
-                    if(curr.isSelected()) {
+                    if (curr.isSelected()) {
                         nodelist.add(curr);
                     }
                 }
-                if(!nodelist.isEmpty()) {
+                if (!nodelist.isEmpty()) {
                     this.generator.setNodelist(nodelist);
                     this.generator.generateLayout();
                 }
                 break;
         }
     }
-    
+
     /**
-     * Sets the values of all menu items to the current values of the layout 
+     * Sets the values of all menu items to the current values of the layout
      * generator.
      */
     public void set() {
         this.checkForcePush.setSelected(this.generator.getLaunchForcePush());
         this.checkSeparateDisjunctGraphs.setSelected(this.generator
-                .getLaunchSeparateDisjunctGraphs());
+            .getLaunchSeparateDisjunctGraphs());
         this.checkSeparateEdgeTypes.setSelected(this.generator
-                .getLaunchSeparateEdgeTypes());
+            .getLaunchSeparateEdgeTypes());
         this.checkDisplaceIdents.setSelected(this.generator
-                .getLaunchDisplaceIdents());
+            .getLaunchDisplaceIdents());
         this.tfMaxiterations.setText(Integer.toString(this.generator
-                .getMaxiterations()));
+            .getMaxiterations()));
         this.checkRecursive.setSelected(this.generator.getRecursive());
         this.tfAspectratio.setText(Double.toString(this.generator
-                .getAspectratio()));
+            .getAspectratio()));
         this.tfScaling.setText(Double.toString(this.generator.getScaling()));
         this.selLayout.setValue(this.layouts[this.generator
-                .getLayoutSelector()]);
+            .getLayoutSelector()]);
         this.checkAlignNodes.setSelected(this.generator.getLaunchAlignNodes());
         this.checkRemoveCycles.setSelected(this.generator
-                .getLaunchRemoveCycles());
+            .getLaunchRemoveCycles());
         this.checkOrigin.setSelected(this.generator.getLaunchOrigin());
         this.tfSubflowscale.setText(Double.toString(this.generator
-                .getSubflowscale()));
+            .getSubflowscale()));
         this.checkRotate.setSelected(this.generator.getLaunchRotate());
         this.checkPushBack.setSelected(this.generator.getLaunchPushBack());
         this.checkAutoscaleNodes.setSelected(this.generator
-                .getAutoscaleNodes());
+            .getAutoscaleNodes());
         this.checkJungLayout.setSelected(this.generator.getLaunchJungLayout());
         this.selGraphmode.setValue(this.graphmodes[this.generator
-                .getGraphmode()]);
+            .getGraphmode()]);
         this.tfDirection.setText(Double.toString(this.generator
-                .getDirection()));
+            .getDirection()));
         this.tfAlignmentThreshold.setText(Double.toString(this.generator
-                .getAlignmentThreshold()));
+            .getAlignmentThreshold()));
     }
 
     /**
-     * Sets the values of all parameters of the layout generator to the current 
+     * Sets the values of all parameters of the layout generator to the current
      * values of the menu items.
      */
     private void accept() {
@@ -282,11 +282,11 @@ public class OptionsWindowFXMLController implements Initializable {
         String temp;
         this.generator.setLaunchForcePush(this.checkForcePush.isSelected());
         this.generator.setLaunchSeparateDisjunctGraphs(this
-                .checkSeparateDisjunctGraphs.isSelected());
+            .checkSeparateDisjunctGraphs.isSelected());
         this.generator.setLaunchSeparateEdgeTypes(this.checkSeparateEdgeTypes
-                .isSelected());
+            .isSelected());
         this.generator.setLaunchDisplaceIdents(this.checkDisplaceIdents
-                .isSelected());
+            .isSelected());
         i = this.generator.getMaxiterations();
         temp = this.tfMaxiterations.getText();
         try {
@@ -313,14 +313,14 @@ public class OptionsWindowFXMLController implements Initializable {
         }
         this.generator.setScaling(j);
         temp = this.selLayout.getValue();
-        for(i = 0; i < this.layouts.length; i++) {
-            if(this.layouts[i].equals(temp)) {
+        for (i = 0; i < this.layouts.length; i++) {
+            if (this.layouts[i].equals(temp)) {
                 this.generator.setLayoutSelector(i);
             }
         }
         this.generator.setLaunchAlignNodes(this.checkAlignNodes.isSelected());
         this.generator.setLaunchRemoveCycles(this.checkRemoveCycles
-                .isSelected());
+            .isSelected());
         this.generator.setLaunchOrigin(this.checkOrigin.isSelected());
         j = this.generator.getSubflowscale();
         temp = this.tfSubflowscale.getText();
@@ -335,8 +335,8 @@ public class OptionsWindowFXMLController implements Initializable {
         this.generator.setAutoscaleNodes(this.checkAutoscaleNodes.isSelected());
         this.generator.setLaunchJungLayout(this.checkJungLayout.isSelected());
         temp = this.selGraphmode.getValue();
-        for(i = 0; i < this.graphmodes.length; i++) {
-            if(this.graphmodes[i].equals(temp)) {
+        for (i = 0; i < this.graphmodes.length; i++) {
+            if (this.graphmodes[i].equals(temp)) {
                 this.generator.setGraphmode(i);
             }
         }

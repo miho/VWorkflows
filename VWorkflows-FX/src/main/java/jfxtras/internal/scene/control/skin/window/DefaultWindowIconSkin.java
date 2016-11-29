@@ -43,7 +43,6 @@ import jfxtras.scene.control.window.WindowIcon;
 
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultWindowIconSkin extends SkinBase<WindowIcon> {
@@ -55,7 +54,7 @@ public class DefaultWindowIconSkin extends SkinBase<WindowIcon> {
 
 
         getNode().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent t) -> {
-            if (c.getOnAction()!=null) {
+            if (c.getOnAction() != null) {
                 c.getOnAction().handle(new ActionEvent(t, c));
             }
         });

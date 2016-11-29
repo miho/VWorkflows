@@ -41,32 +41,34 @@ import javafx.collections.ObservableMap;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-interface FlowModel extends Model, VisibleState {
+public interface FlowModel extends Model, VisibleState {
 
     /**
      * Attempts to create the specified connection. This method never creates an
      * actual connection. It only checks whether the requested connection is
      * valid.
      *
-     * @param s sender node (uses main output connector of this node if
-     * specified)
-     * @param r receiver node (uses main input connector of this node if
-     * specified)
+     * @param s        sender node (uses main output connector of this node if
+     *                 specified)
+     * @param r        receiver node (uses main input connector of this node if
+     *                 specified)
      * @param flowType connection type
+     *
      * @return connection result
      */
-    public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
+    ConnectionResult tryConnect(VNode s, VNode r, String flowType);
 
     /**
      * Requests the specified connection. If the specified connection can be
      * established it will be created.
      *
-     * @param s sender node
-     * @param r receiver node
+     * @param s        sender node
+     * @param r        receiver node
      * @param flowType connection type
+     *
      * @return connection result
      */
-    public ConnectionResult connect(VNode s, VNode r, String flowType);
+    ConnectionResult connect(VNode s, VNode r, String flowType);
 
     /**
      * Attempts to create the specified connection. This method never creates an
@@ -75,9 +77,10 @@ interface FlowModel extends Model, VisibleState {
      *
      * @param s sender connector
      * @param r receiver connector
+     *
      * @return connection result
      */
-    public ConnectionResult tryConnect(Connector s, Connector r);
+    ConnectionResult tryConnect(Connector s, Connector r);
 
     /**
      * Requests the specified connection. If the specified connection can be
@@ -85,102 +88,116 @@ interface FlowModel extends Model, VisibleState {
      *
      * @param s sender node
      * @param r receiver node
+     *
      * @return connection result
      */
-    public ConnectionResult connect(Connector s, Connector r);
+    ConnectionResult connect(Connector s, Connector r);
 
     /**
      * Removes the specified node from this flow.
      *
      * @param n the node to remove
+     *
      * @return the removed node or <code>null</code> if no node has been removed
      */
-    public VNode remove(VNode n);
+    VNode remove(VNode n);
 
     /**
      * Clears this flow, i.e., removes all nodes and connections.
      */
-    public void clear();
+    void clear();
 
     /**
      * Returns the nodes of this flow.
      *
      * @return nodes of this flow
      */
-    public ObservableList<VNode> getNodes();
+    ObservableList<VNode> getNodes();
 
     /**
      * Returns the sender of the specified connection.
      *
      * @param c connection
+     *
      * @return the sender of the specified connection or <code>null</code> if
      * the node does not exist
      */
-    public VNode getSender(Connection c);
+    VNode getSender(Connection c);
 
     /**
      * Returns the receiver of the specified connection.
      *
      * @param c connection
+     *
      * @return the receiver of the specified connection or <code>null</code> if
      * the node does not exist
      */
-    public VNode getReceiver(Connection c);
+    VNode getReceiver(Connection c);
 
     /**
      * Adds the specified connections to this flow.
+     *
      * @param connections connections to add
-     * @param flowType connection type
+     * @param flowType    connection type
      */
-    public void addConnections(Connections connections, String flowType);
+    void addConnections(Connections connections, String flowType);
 
     /**
      * Returns the all connections of the specified flow/connection type
+     *
      * @param flowType connection type
+     *
      * @return all connections of the specified flow/connection type
      */
-    public Connections getConnections(String flowType);
+    Connections getConnections(String flowType);
 
     /**
      * Returns all connections of this flow.
+     *
      * @return all connections of this flow
      */
-    public ObservableMap<String, Connections> getAllConnections();
+    ObservableMap<String, Connections> getAllConnections();
 
     /**
      * Defines the flow node implementation class used by this flow model.
+     *
      * @param cls flow node implementation class
      */
-    public void setFlowNodeClass(Class<? extends VNode> cls);
+    void setFlowNodeClass(Class<? extends VNode> cls);
 
     /**
      * Returns the flow node implementation class used by this flow.
+     *
      * @return the flow node implementation class used by this flow
      */
-    public Class<? extends VNode> getFlowNodeClass();
+    Class<? extends VNode> getFlowNodeClass();
 
     /**
      * Defines the id generator that shall be used by this flow.
+     *
      * @param generator id generator
      */
-    public void setIdGenerator(IdGenerator generator);
+    void setIdGenerator(IdGenerator generator);
 
     /**
      * Returns the id generator used by this flow.
+     *
      * @return id generator
      */
-    public IdGenerator getIdGenerator();
+    IdGenerator getIdGenerator();
 
     /**
      * Defines the node lookup that shall be used by this flow.
+     *
      * @param nodeLookup node lookup
      */
-    public void setNodeLookup(NodeLookup nodeLookup);
+    void setNodeLookup(NodeLookup nodeLookup);
 
     /**
      * Returns the node lookup that is used by this flow.
+     *
      * @return node lookup
      */
-    public NodeLookup getNodeLookup();
+    NodeLookup getNodeLookup();
 
 }

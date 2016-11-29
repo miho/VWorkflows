@@ -51,7 +51,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class VFlowModelImpl implements VFlowModel {
@@ -60,13 +59,13 @@ class VFlowModelImpl implements VFlowModel {
     private final FlowModelImpl flow;
 
     private ObservableList<ThruConnector> thruInputs
-            = FXCollections.observableArrayList();
+        = FXCollections.observableArrayList();
     private ObservableList<ThruConnector> thruOutputs
-            = FXCollections.observableArrayList();
+        = FXCollections.observableArrayList();
     private final ObservableList<ThruConnector> unmodifiableThruInputs
-            = FXCollections.unmodifiableObservableList(thruInputs);
+        = FXCollections.unmodifiableObservableList(thruInputs);
     private final ObservableList<ThruConnector> unmodifiableThruOutputs
-            = FXCollections.unmodifiableObservableList(thruOutputs);
+        = FXCollections.unmodifiableObservableList(thruOutputs);
 
     @Override
     public BooleanProperty visibleProperty() {
@@ -106,25 +105,25 @@ class VFlowModelImpl implements VFlowModel {
         setTitle("Node");
 
         node.getConnectors().addListener(
-                (ListChangeListener.Change<? extends Connector> c) -> {
-                    while (c.next()) {
-                        for (Connector connector : c.getRemoved()) {
-                            if (connector instanceof ThruConnector) {
+            (ListChangeListener.Change<? extends Connector> c) -> {
+                while (c.next()) {
+                    for (Connector connector : c.getRemoved()) {
+                        if (connector instanceof ThruConnector) {
 
-                                ThruConnector tC = (ThruConnector) connector;
+                            ThruConnector tC = (ThruConnector) connector;
 
-                                if (tC.isInput()) {
-                                    thruInputs.remove(tC);
-                                } else if (tC.isOutput()) {
-                                    thruOutputs.remove(tC);
-                                }
-
-                                flow.remove(tC.getInnerNode());
+                            if (tC.isInput()) {
+                                thruInputs.remove(tC);
+                            } else if (tC.isOutput()) {
+                                thruOutputs.remove(tC);
                             }
-                        }
 
+                            flow.remove(tC.getInnerNode());
+                        }
                     }
-                });
+
+                }
+            });
 
     }
 
@@ -323,15 +322,15 @@ class VFlowModelImpl implements VFlowModel {
         return node.getFlow();
     }
 
-//    @Override
-//    public boolean isInput() {
-//        return node.isInput();
-//    }
-//
-//    @Override
-//    public boolean isOutput() {
-//        return node.isOutput();
-//    }
+    //    @Override
+    //    public boolean isInput() {
+    //        return node.isInput();
+    //    }
+    //
+    //    @Override
+    //    public boolean isOutput() {
+    //        return node.isOutput();
+    //    }
     @Override
     public VFlowModel newFlowNode(ValueObject obj) {
         VFlowModel flowNode = new VFlowModelImpl(this);
@@ -386,10 +385,10 @@ class VFlowModelImpl implements VFlowModel {
         return result;
     }
 
-//    @Override
-//    public String getGlobalId() {
-//        return node.getGlobalId();
-//    }
+    //    @Override
+    //    public String getGlobalId() {
+    //        return node.getGlobalId();
+    //    }
     @Override
     public final void setIdGenerator(IdGenerator generator) {
         flow.setIdGenerator(generator);
@@ -410,25 +409,25 @@ class VFlowModelImpl implements VFlowModel {
         return flow.getNodeLookup();
     }
 
-//    @Override
-//    public ObservableList<String> getInputTypes() {
-//        return node.getInputTypes();
-//    }
-//
-//    @Override
-//    public ObservableList<String> getOutputTypes() {
-//        return node.getOutputTypes();
-//    }
-//
-//    @Override
-//    public boolean isInputOfType(String type) {
-//        return node.isInputOfType(type);
-//    }
-//
-//    @Override
-//    public boolean isOutputOfType(String type) {
-//        return node.isOutputOfType(type);
-//    }
+    //    @Override
+    //    public ObservableList<String> getInputTypes() {
+    //        return node.getInputTypes();
+    //    }
+    //
+    //    @Override
+    //    public ObservableList<String> getOutputTypes() {
+    //        return node.getOutputTypes();
+    //    }
+    //
+    //    @Override
+    //    public boolean isInputOfType(String type) {
+    //        return node.isInputOfType(type);
+    //    }
+    //
+    //    @Override
+    //    public boolean isOutputOfType(String type) {
+    //        return node.isOutputOfType(type);
+    //    }
     @Override
     public Connector getMainInput(String type) {
         return this.node.getMainInput(type);
@@ -532,13 +531,13 @@ class VFlowModelImpl implements VFlowModel {
         VNode innerNode = newNode();
 
         innerNode.getVisualizationRequest().
-                set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
+            set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
 
         Connector innerConnector = innerNode.
-                setMainOutput(innerNode.addOutput(type));
+            setMainOutput(innerNode.addOutput(type));
 
         ThruConnector tC = node.addThruInput(
-                node, type, innerNode, innerConnector);
+            node, type, innerNode, innerConnector);
 
         thruInputs.add(tC);
 
@@ -551,13 +550,13 @@ class VFlowModelImpl implements VFlowModel {
         VNode innerNode = newNode();
 
         innerNode.getVisualizationRequest().
-                set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
+            set(VisualizationRequest.KEY_NODE_NOT_REMOVABLE, true);
 
         Connector innerConnector = innerNode.
-                setMainInput(innerNode.addInput(type));
+            setMainInput(innerNode.addInput(type));
 
         ThruConnector tC = node.addThruOutput(
-                node, type, innerNode, innerConnector);
+            node, type, innerNode, innerConnector);
 
         thruOutputs.add(tC);
 

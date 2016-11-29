@@ -40,7 +40,6 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
  * are selected via selection rectangle gesture.
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
- *
  */
 public interface SelectableNode {
 
@@ -48,22 +47,23 @@ public interface SelectableNode {
      * Requests selection/deselection.
      *
      * @param select defines whether to select or deselect the node
+     *
      * @return <code>true</code> if request is accepted;<code>false</code>
      * otherwise
      */
-    public boolean requestSelection(boolean select);
+    boolean requestSelection(boolean select);
 
     /**
      * Indicates whether this node is selected.
      *
      * @return {@code true} if this node is selected; {@code false} otherwise
      */
-    public boolean isSelected();
+    boolean isSelected();
 
     /**
      * Indicates whether this node is selected.
      *
      * @return {@code true} if this node is selected; {@code false} otherwise
      */
-    public ReadOnlyBooleanProperty selectedProperty();
+    ReadOnlyBooleanProperty selectedProperty();
 }

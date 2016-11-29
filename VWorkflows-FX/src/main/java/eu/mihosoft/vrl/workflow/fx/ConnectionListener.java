@@ -37,7 +37,6 @@ import eu.mihosoft.vrl.workflow.ConnectionResult;
 import javafx.scene.Node;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface ConnectionListener {

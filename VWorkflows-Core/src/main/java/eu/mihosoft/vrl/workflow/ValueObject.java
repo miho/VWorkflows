@@ -36,17 +36,23 @@ package eu.mihosoft.vrl.workflow;
 import javafx.beans.property.ObjectProperty;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface ValueObject {
-    public VNode getParent();
-    public void setParent(VNode p);
-    public Object getValue();
-    public void setValue(Object o);
-    public ObjectProperty<Object> valueProperty();
+    VNode getParent();
+
+    void setParent(VNode p);
+
+    Object getValue();
+
+    void setValue(Object o);
+
+    ObjectProperty<Object> valueProperty();
+
     // assumes we are receiver
-    public CompatibilityResult compatible(ValueObject sender, String flowTpe);
-    public VisualizationRequest getVisualizationRequest();
-    public void setVisualizationRequest(VisualizationRequest vReq);
+    CompatibilityResult compatible(ValueObject sender, String flowTpe);
+
+    VisualizationRequest getVisualizationRequest();
+
+    void setVisualizationRequest(VisualizationRequest vReq);
 }

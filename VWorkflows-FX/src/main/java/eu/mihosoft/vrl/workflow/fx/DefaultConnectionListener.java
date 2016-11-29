@@ -95,13 +95,13 @@ public class DefaultConnectionListener implements ConnectionListener {
             VNode receiverNode = connection.getReceiver().getNode();
 
             List<VNodeSkin> senderSkins = flowController.getNodeSkinLookup().
-                    getById(senderNode.getId());
+                getById(senderNode.getId());
             for (VNodeSkin skin : senderSkins) {
                 FXFlowNodeSkin fxSkin = (FXFlowNodeSkin) skin;
                 fxSkin.layoutConnectors();
             }
             List<VNodeSkin> receiverSkins = flowController.getNodeSkinLookup().
-                    getById(receiverNode.getId());
+                getById(receiverNode.getId());
             for (VNodeSkin skin : receiverSkins) {
                 FXFlowNodeSkin fxSkin = (FXFlowNodeSkin) skin;
                 fxSkin.layoutConnectors();
@@ -124,8 +124,8 @@ public class DefaultConnectionListener implements ConnectionListener {
     private void newConnectionAnim(ConnectionResult connResult) {
         if (connResult.getConnection() != null) {
             FXConnectionSkin connectionSkin
-                    = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
-                            skinFactory, connResult.getConnection());
+                = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
+                skinFactory, connResult.getConnection());
             FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getReceiverUI());
         }
     }
@@ -134,8 +134,8 @@ public class DefaultConnectionListener implements ConnectionListener {
         // System.out.println("new-connection anim (reverse)");
         if (connResult.getConnection() != null) {
             FXConnectionSkin connectionSkin
-                    = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
-                            skinFactory, connResult.getConnection());
+                = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(
+                skinFactory, connResult.getConnection());
 
             FXConnectorUtil.connnectionEstablishedAnim(connectionSkin.getSenderShape().getNode());
         }

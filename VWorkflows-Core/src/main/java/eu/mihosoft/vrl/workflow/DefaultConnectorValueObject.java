@@ -88,13 +88,13 @@ public class DefaultConnectorValueObject implements ValueObject {
     public CompatibilityResult compatible(final ValueObject sender, final String flowType) {
 
         return new CompatibilityResult() {
-            
+
             private boolean compatible;
 
             {
                 compatible = computeCompatibility();
             }
-            
+
             private boolean computeCompatibility() {
                 //                System.out.println(" -> isCompatible: ");
                 boolean differentObjects = sender != DefaultConnectorValueObject.this;
@@ -102,7 +102,7 @@ public class DefaultConnectorValueObject implements ValueObject {
                 boolean compatibleType = false;
 
                 int numConnectionsOfReceiver = getParent().getFlow().
-                        getConnections(flowType).getAllWith(c).size();
+                    getConnections(flowType).getAllWith(c).size();
 
                 boolean lessThanMaxNumberOfConnections = true;
 
@@ -110,35 +110,35 @@ public class DefaultConnectorValueObject implements ValueObject {
 
                 if (sender instanceof DefaultConnectorValueObject) {
 
-                    DefaultConnectorValueObject senderConnectorVObj = 
-                            (DefaultConnectorValueObject) sender;
+                    DefaultConnectorValueObject senderConnectorVObj =
+                        (DefaultConnectorValueObject) sender;
                     compatibleType = getConnector().getType().
-                            equals(senderConnectorVObj.getConnector().getType())
-                            && getConnector().isInput() && senderConnectorVObj.
-                                    getConnector().isOutput();
+                        equals(senderConnectorVObj.getConnector().getType())
+                        && getConnector().isInput() && senderConnectorVObj.
+                        getConnector().isOutput();
 
                     int numConnectionsOfSender = senderConnectorVObj.parent.
-                            getFlow().getConnections(flowType).
-                            getAllWith(senderConnectorVObj.c).size();
+                        getFlow().getConnections(flowType).
+                        getAllWith(senderConnectorVObj.c).size();
 
                     maxNumConnections = Math.min(c.getMaxNumberOfConnections(),
-                            senderConnectorVObj.c.getMaxNumberOfConnections());
+                        senderConnectorVObj.c.getMaxNumberOfConnections());
 
                     lessThanMaxNumberOfConnections
-                            = numConnectionsOfReceiver < maxNumConnections
-                            && numConnectionsOfSender < maxNumConnections;
+                        = numConnectionsOfReceiver < maxNumConnections
+                        && numConnectionsOfSender < maxNumConnections;
 
                 }
 
                 if (!differentObjects) {
                     errorMessage = "Connections can only established between different nodes."
-                            + " Sender node cannot be equal to receiver node.";
+                        + " Sender node cannot be equal to receiver node.";
                 } else if (!compatibleType) {
                     errorMessage = "Connections can only established between"
-                            + " connectors of the same connection/flow type.";
+                        + " connectors of the same connection/flow type.";
                 } else if (!lessThanMaxNumberOfConnections) {
                     errorMessage = "Trying to creating more than " + maxNumConnections
-                            + " number of connections is not allowed.";
+                        + " number of connections is not allowed.";
                 }
 
                 return differentObjects && compatibleType && lessThanMaxNumberOfConnections;

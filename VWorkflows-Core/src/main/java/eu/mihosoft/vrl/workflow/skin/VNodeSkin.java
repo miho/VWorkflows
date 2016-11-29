@@ -37,9 +37,10 @@ import eu.mihosoft.vrl.workflow.VNode;
 
 /**
  * Node skin.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
  * @param <T> node model type
+ *
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VNodeSkin<T extends VNode> extends Skin<T> {
 

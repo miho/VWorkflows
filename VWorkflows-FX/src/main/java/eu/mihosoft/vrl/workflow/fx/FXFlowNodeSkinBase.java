@@ -55,11 +55,11 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
      * Constructor.
      *
      * @param skinFactory skin factory that created this skin
-     * @param model node model that shall be visualized
-     * @param controller parent flow controller
+     * @param model       node model that shall be visualized
+     * @param controller  parent flow controller
      */
     public FXFlowNodeSkinBase(FXSkinFactory skinFactory,
-            VNode model, VFlow controller) {
+                              VNode model, VFlow controller) {
         super(skinFactory, skinFactory.getFxParent(), model, controller);
 
         init();
@@ -71,15 +71,15 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
     private void init() {
 
         // update the view (uses value object of the model)
-//        updateView();
+        //        updateView();
         valueChangeListener = (
-                ObservableValue<? extends Object> ov, Object t, Object t1) -> {
-                    updateView();
-                };
+            ObservableValue<? extends Object> ov, Object t, Object t1) -> {
+            updateView();
+        };
 
         // registers listener to update view if new value object has been defined
         getModel().getValueObject().valueProperty().
-                addListener(valueChangeListener);
+            addListener(valueChangeListener);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
         StackPane nodePane = new StackPane();
 
         nodePane.getChildren().add(new Button(getModel().getValueObject().
-                getValue().toString()));
+            getValue().toString()));
 
         getNode().setContentPane(nodePane);
     }

@@ -36,7 +36,6 @@ package eu.mihosoft.vrl.workflow.fx;
 import javafx.scene.transform.Transform;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface OptimizationRule {
@@ -46,14 +45,15 @@ public interface OptimizationRule {
      *
      * @param p pane
      * @param t transform
+     *
      * @return {@code true} if the content shall be visible; {@code false}
      * otherwise
      */
-    public boolean visible(OptimizableContentPane p, Transform t);
+    boolean visible(OptimizableContentPane p, Transform t);
 
     /**
      * Determines whether the content pane shall be attached or not.
-     *
+     * <p>
      * <p>
      * <b>NOTE:</b> attaching/detaching nodes from the scene graph is an
      * expensive operation.
@@ -61,9 +61,10 @@ public interface OptimizationRule {
      *
      * @param p pane
      * @param t transform
+     *
      * @return {@code true} if the content shall be attached; {@code false}
      * otherwise
      */
-    public boolean attached(OptimizableContentPane p, Transform t);
+    boolean attached(OptimizableContentPane p, Transform t);
 }
 

@@ -34,7 +34,6 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public enum TranslateBehavior {

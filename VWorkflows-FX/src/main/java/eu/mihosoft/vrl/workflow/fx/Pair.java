@@ -42,10 +42,9 @@ package eu.mihosoft.vrl.workflow.fx;
 import java.util.Objects;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class Pair<T,V> {
+public class Pair<T, V> {
     private final T first;
     private final V second;
 
@@ -53,18 +52,18 @@ public class Pair<T,V> {
         this.first = first;
         this.second = second;
     }
-    
+
     public T getFirst() {
         return first;
     }
-    
+
     public V getSecond() {
         return second;
     }
-    
+
     @Override
     public String toString() {
-        return "[" + first +", " + second+ "]"; 
+        return "[" + first + ", " + second + "]";
     }
 
     @Override
@@ -92,6 +91,6 @@ public class Pair<T,V> {
         hash = 53 * hash + Objects.hashCode(this.second);
         return hash;
     }
-    
-    
+
+
 }

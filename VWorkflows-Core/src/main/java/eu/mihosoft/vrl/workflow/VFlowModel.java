@@ -36,24 +36,24 @@ package eu.mihosoft.vrl.workflow;
 import javafx.collections.ObservableList;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VFlowModel extends FlowModel, VNode {
 
-    public VFlowModel newFlowNode(ValueObject obj);
+    VFlowModel newFlowNode(ValueObject obj);
 
-    public VFlowModel newFlowNode();
+    VFlowModel newFlowNode();
 
-    public VNode newNode(ValueObject obj);
+    VNode newNode(ValueObject obj);
 
-    public VNode newNode();
+    VNode newNode();
 
-    public ThruConnector addThruInput(String type);
+    ThruConnector addThruInput(String type);
 
-    public ThruConnector addThruOutput(String type);
-    
-    public ObservableList<ThruConnector> getThruInputs();
-    public ObservableList<ThruConnector> getThruOutputs();
+    ThruConnector addThruOutput(String type);
+
+    ObservableList<ThruConnector> getThruInputs();
+
+    ObservableList<ThruConnector> getThruOutputs();
 }
 

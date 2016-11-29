@@ -58,13 +58,13 @@ import java.util.logging.Logger;
 public class FlowModelImpl implements FlowModel {
 
     private final ObservableMap<String, Connections> connections
-            = FXCollections.observableHashMap();
+        = FXCollections.observableHashMap();
     private final ObservableMap<String, Connections> readOnlyObservableConnections
-            = FXCollections.unmodifiableObservableMap(connections);
+        = FXCollections.unmodifiableObservableMap(connections);
     private final ObservableList<VNode> observableNodes
-            = FXCollections.observableArrayList();
+        = FXCollections.observableArrayList();
     private final ObservableList<VNode> readOnlyObservableNodes
-            = FXCollections.unmodifiableObservableList(observableNodes);
+        = FXCollections.unmodifiableObservableList(observableNodes);
     private final Map<String, VNode> nodes = new HashMap<>();
     private Class<? extends VNode> flowNodeClass = VNodeImpl.class;
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
@@ -111,7 +111,7 @@ public class FlowModelImpl implements FlowModel {
         }
 
         CompatibilityResult result = receiverValObj.
-                compatible(senderValObj, type);
+            compatible(senderValObj, type);
 
         return new ConnectionResultImpl(result, null);
     }
@@ -136,10 +136,9 @@ public class FlowModelImpl implements FlowModel {
             receiver = r.getMainInput(type);
         }
 
-//        System.out.println("ADD: " + sender + ", " + receiver);
+        //        System.out.println("ADD: " + sender + ", " + receiver);
         Connection connection = getConnections(type).add(sender, receiver);
-        
-        
+
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -147,7 +146,7 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public ConnectionResult tryConnect(Connector s, Connector r) {
         CompatibilityResult result = r.getValueObject().
-                compatible(s.getValueObject(), s.getType());
+            compatible(s.getValueObject(), s.getType());
 
         return new ConnectionResultImpl(result, null);
     }
@@ -183,21 +182,21 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public VNode remove(VNode n) {
 
-//        if (n instanceof FlowModel) {
-//            ((FlowModel)n).clear();
-//        }
+        //        if (n instanceof FlowModel) {
+        //            ((FlowModel)n).clear();
+        //        }
         VNode result = nodes.remove(n.getId());
         observableNodes.remove(n);
 
-//        removeNodeSkin(n);
+        //        removeNodeSkin(n);
         for (Connections cns : getAllConnections().values()) {
 
             Collection<Connection> connectionsToRemove
-                    = cns.getAllWithNode(n);
+                = cns.getAllWithNode(n);
 
             for (Connection c : connectionsToRemove) {
                 cns.remove(c);
-//                removeConnectionSkin(c);
+                //                removeConnectionSkin(c);
             }
         }
 
@@ -257,7 +256,7 @@ public class FlowModelImpl implements FlowModel {
             throw new IllegalStateException("Please define an idgenerator before creating nodes!");
         }
 
-        String id = getIdGenerator().newId(parentId+":");
+        String id = getIdGenerator().newId(parentId + ":");
 
         result.setId(id);
 

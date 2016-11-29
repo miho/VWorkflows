@@ -41,5 +41,5 @@ package eu.mihosoft.vrl.workflow.fx;
  */
 public class ScalableContentPane extends eu.mihosoft.scaledfx.ScalableContentPane {
 
-  
+
 }

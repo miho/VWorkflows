@@ -33,12 +33,11 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import java.util.Collection;
-
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -60,7 +59,7 @@ class PropertyStorageImpl implements PropertyStorage {
     /**
      * Sets a property. Existing properties are overwritten.
      *
-     * @param key key
+     * @param key      key
      * @param property property
      */
     @Override
@@ -73,6 +72,7 @@ class PropertyStorageImpl implements PropertyStorage {
      *
      * @param <T> property type
      * @param key key
+     *
      * @return the property; an empty {@link java.util.Optional} will be
      * returned if the property does not exist or the type does not match
      */
@@ -102,6 +102,7 @@ class PropertyStorageImpl implements PropertyStorage {
      * Indicates whether this storage contains the requested property.
      *
      * @param key key
+     *
      * @return {@code true} if this storage contains the requested property;
      * {@code false}
      */
@@ -109,18 +110,20 @@ class PropertyStorageImpl implements PropertyStorage {
     public boolean contains(String key) {
         return map.containsKey(key);
     }
-    
+
     /**
-     * Adds the specified listener to the property map. 
+     * Adds the specified listener to the property map.
+     *
      * @param l change listener
      */
     @Override
     public void addListener(MapChangeListener<String, Object> l) {
         map.addListener(l);
     }
-    
+
     /**
      * Removes the specified listener from the property map.
+     *
      * @param l change listener
      */
     @Override

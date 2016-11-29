@@ -59,10 +59,10 @@ class ConnectionsImpl implements Connections {
     private String type;
     private Map<String, Connection> connections = new HashMap<>();
     private Class<? extends Connection> connectionClass = ConnectionBase.class;
-//    Map<String, Integer> senders = new HashMap<>();
-//    Map<String, Integer> receivers = new HashMap<>();
+    //    Map<String, Integer> senders = new HashMap<>();
+    //    Map<String, Integer> receivers = new HashMap<>();
     private ObservableList<Connection> observableConnections
-            = FXCollections.observableArrayList();
+        = FXCollections.observableArrayList();
     private ObjectProperty<VisualizationRequest> vReqProperty;
 
     //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
@@ -120,8 +120,8 @@ class ConnectionsImpl implements Connections {
 
         observableConnections.remove(c);
 
-//        decSenderCounter(c.getSenderId());
-//        decReceiverCounter(c.getReceiverId());
+        //        decSenderCounter(c.getSenderId());
+        //        decReceiverCounter(c.getReceiverId());
     }
 
     @Override
@@ -136,15 +136,15 @@ class ConnectionsImpl implements Connections {
 
         connections.remove(connectionId(id, s.getId(), r.getId()));
 
-//        decSenderCounter(s);
-//        decReceiverCounter(r);
+        //        decSenderCounter(s);
+        //        decReceiverCounter(r);
     }
 
     @Override
     public void setConnectionClass(Class<? extends Connection> cls) {
         try {
             Constructor constructor = cls.getConstructor(Connections.class, String.class, Connector.class, Connector.class, String.class);
-            
+
         } catch (NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(ConnectionsImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new IllegalArgumentException("constructor missing: (Connections, String, Connector, Connector, String)");
@@ -159,11 +159,11 @@ class ConnectionsImpl implements Connections {
     }
 
     private Connection createConnection(String id, Connector s, Connector r) {
-        
+
         if (s == null) {
             throw new IllegalArgumentException("Sender must not be null.");
         }
-        
+
         if (r == null) {
             throw new IllegalArgumentException("Receiver must not be null.");
         }
@@ -196,7 +196,7 @@ class ConnectionsImpl implements Connections {
 
         for (Connection conn : getConnections()) {
             if (conn.getSender().getId().equals(c.getId())
-                    || conn.getReceiver().getId().equals(c.getId())) {
+                || conn.getReceiver().getId().equals(c.getId())) {
                 result.add(conn);
             }
         }
@@ -223,7 +223,7 @@ class ConnectionsImpl implements Connections {
 
         if (connections.containsKey(connectionId(c))) {
             throw new IllegalStateException(
-                    "Cannot add connection: a connection with equal id already added!");
+                "Cannot add connection: a connection with equal id already added!");
         }
     }
 
@@ -235,7 +235,7 @@ class ConnectionsImpl implements Connections {
 
         for (Connection c : connections.values()) {
             if (c.getSender().getId().equals(s.getId())
-                    && c.getReceiver().getId().equals(r.getId())) {
+                && c.getReceiver().getId().equals(r.getId())) {
                 result.add(c);
             }
         }
@@ -250,7 +250,7 @@ class ConnectionsImpl implements Connections {
 
         for (Connection c : connections.values()) {
             if (c.getSender().getId().equals(s.getId())
-                    && c.getReceiver().getId().equals(r.getId())) {
+                && c.getReceiver().getId().equals(r.getId())) {
                 delList.add(c);
             }
         }

@@ -44,8 +44,9 @@ public interface NodeLookup extends Lookup<VNode> {
      * Returns the connector with the specified id.
      *
      * @param id global connector id
+     *
      * @return connector with the specified global id or <code>null</code> if no
      * such connector exists
      */
-    public Connector getConnectorById(String id);
+    Connector getConnectorById(String id);
 }

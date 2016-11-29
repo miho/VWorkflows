@@ -36,7 +36,7 @@ package eu.mihosoft.vrl.workflow;
 /**
  * This class provides a default implementation of {@code  ConnectionResult}
  * //TODO add documentation about the possible connection results.
- * 
+ *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 
@@ -46,7 +46,7 @@ class ConnectionResultImpl implements ConnectionResult {
 
     public ConnectionResultImpl(CompatibilityResult status, Connection connection) {
         this.status = status;
-        
+
         this.connection = connection;
     }
 

@@ -36,16 +36,15 @@ package eu.mihosoft.vrl.workflow.io;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class PersistentConnection {
-    
+
     private String id;
     private String senderId;
     private String receiverId;
     private String type;
-    
+
     private VisualizationRequest vReq;
 
     public PersistentConnection() {
@@ -58,7 +57,7 @@ public class PersistentConnection {
         this.type = type;
         this.vReq = vReq;
     }
-    
+
 
     /**
      * @return the id

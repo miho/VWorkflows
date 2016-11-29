@@ -41,7 +41,6 @@ import javafx.event.Event;
 import javafx.event.EventType;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class ClickEvent extends Event {
@@ -80,6 +79,5 @@ public class ClickEvent extends Event {
         return event;
     }
 
-    
 
 }

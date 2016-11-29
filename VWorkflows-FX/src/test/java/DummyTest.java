@@ -31,6 +31,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

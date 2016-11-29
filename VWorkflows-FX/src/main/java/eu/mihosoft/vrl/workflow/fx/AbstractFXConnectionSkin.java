@@ -48,7 +48,6 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
@@ -113,37 +112,37 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         DoubleBinding startXBinding = new DoubleBinding() {
             {
                 super.bind(senderNode.layoutXProperty(),
-                        senderNode.translateXProperty(),
-                        senderShape.radiusProperty());
+                    senderNode.translateXProperty(),
+                    senderShape.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
                 return senderNode.getLayoutX()
-                        + senderNode.getTranslateX()
-                        + senderShape.getRadius();
+                    + senderNode.getTranslateX()
+                    + senderShape.getRadius();
             }
         };
 
         DoubleBinding startYBinding = new DoubleBinding() {
             {
                 super.bind(senderNode.layoutYProperty(),
-                        senderNode.translateYProperty(),
-                        senderShape.radiusProperty());
+                    senderNode.translateYProperty(),
+                    senderShape.radiusProperty());
             }
 
             @Override
             protected double computeValue() {
                 return senderNode.getLayoutY()
-                        + senderNode.getTranslateY()
-                        + senderShape.getRadius();
+                    + senderNode.getTranslateY()
+                    + senderShape.getRadius();
             }
         };
 
         DoubleBinding endXBinding = new DoubleBinding() {
             {
                 super.bind(receiverConnectorUI.layoutXProperty(),
-                        receiverConnectorUI.translateXProperty());
+                    receiverConnectorUI.translateXProperty());
             }
 
             @Override
@@ -155,7 +154,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
         DoubleBinding endYBinding = new DoubleBinding() {
             {
                 super.bind(receiverConnectorUI.layoutYProperty(),
-                        receiverConnectorUI.translateYProperty());
+                    receiverConnectorUI.translateYProperty());
             }
 
             @Override
@@ -171,7 +170,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
 
             @Override
             protected double computeValue() {
-                return ( startXBinding.get() + endXBinding.get() ) / 2;
+                return (startXBinding.get() + endXBinding.get()) / 2;
             }
         };
 
@@ -193,7 +192,7 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
 
             @Override
             protected double computeValue() {
-                return ( startXBinding.get() + endXBinding.get() ) / 2;
+                return (startXBinding.get() + endXBinding.get()) / 2;
             }
         };
 
@@ -225,8 +224,8 @@ public abstract class AbstractFXConnectionSkin implements FXConnectionSkin {
 
     protected void initConnectionListener() {
         connectionListener
-                = new DefaultConnectionListener(
-                        skinFactory, controller, receiverConnectorUI);
+            = new DefaultConnectionListener(
+            skinFactory, controller, receiverConnectorUI);
     }
 
     protected abstract void makeDraggable();

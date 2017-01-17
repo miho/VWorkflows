@@ -35,17 +35,17 @@ package eu.mihosoft.vrl.workflow.io;
 
 import com.thoughtworks.xstream.XStream;
 import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.impl.DefaultValueObject;
-import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import eu.mihosoft.vrl.workflow.IdGenerator;
-import eu.mihosoft.vrl.workflow.impl.DefaultNodeLookup;
 import eu.mihosoft.vrl.workflow.ThruConnector;
-import eu.mihosoft.vrl.workflow.impl.DefaultThruConnector;
-import eu.mihosoft.vrl.workflow.util.VConnections;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.ValueObject;
+import eu.mihosoft.vrl.workflow.impl.DefaultNodeLookup;
+import eu.mihosoft.vrl.workflow.impl.DefaultThruConnector;
+import eu.mihosoft.vrl.workflow.impl.DefaultValueObject;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
+import eu.mihosoft.vrl.workflow.util.VConnections;
 
 import java.io.IOException;
 import java.io.InputStream;

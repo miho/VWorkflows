@@ -39,13 +39,13 @@
 package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.fx.skin.impl.DefaultFXConnectionSkin;
-import eu.mihosoft.vrl.workflow.fx.skin.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.scene.layout.VCanvas;
+import eu.mihosoft.vrl.workflow.fx.skin.FXSkinFactory;
+import eu.mihosoft.vrl.workflow.fx.skin.impl.DefaultFXConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;

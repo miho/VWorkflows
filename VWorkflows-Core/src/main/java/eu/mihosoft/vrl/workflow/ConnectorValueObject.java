@@ -33,9 +33,6 @@
  */
 package eu.mihosoft.vrl.workflow;
 
-import eu.mihosoft.vrl.workflow.Connector;
-import eu.mihosoft.vrl.workflow.ValueObject;
-
 /**
  * @author Andres Almiray
  */

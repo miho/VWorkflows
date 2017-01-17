@@ -41,14 +41,12 @@ import eu.mihosoft.vrl.workflow.ValueObject;
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class NoDefaultConnectorValueObject extends DefaultValueObject {
-
     public NoDefaultConnectorValueObject() {
     }
 
     public NoDefaultConnectorValueObject(VNode parent) {
         super(parent);
     }
-
 
     @Override
     public CompatibilityResult compatible(final ValueObject sender, final String flowType) {

@@ -49,48 +49,23 @@ import java.util.Objects;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class ConnectionBase implements Connection {
+    protected String id;
+    protected String type;
+    protected ObjectProperty<VisualizationRequest> visualizationRequest;
+    protected Connections connections;
+    protected Connector sender;
+    protected Connector receiver;
 
-    private String senderId;
-    private String receiverId;
-    private String id;
-    private String type;
-    private ObjectProperty<VisualizationRequest> vReqProperty;
-    private Connections connections;
-    private Connector sender;
-    private Connector receiver;
-
-    //    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
-    public ConnectionBase() {
-    }
-
-    //    public ConnectionBase(Connections connections, String id, String senderId, String receiverId, String type) {
-    //        this.connections = connections;
-    //        this.id = id;
-    //        this.senderId = senderId;
-    //        this.receiverId = receiverId;
-    //        this.type = type;
-    //    }
     public ConnectionBase(Connections connections, String id, Connector sender, Connector receiver, String type) {
         this.connections = connections;
         this.id = id;
-        setSender(sender);
-        setReceiver(receiver);
+        this.sender = sender;
+        this.receiver = receiver;
         this.type = type;
-    }
-
-    //    @Override
-    //    public String getSenderId() {
-    //        return senderId;
-    //    }
-    @Override
-    public void setSender(Connector s) {
-        this.senderId = s.getId();
-        this.sender = s;
-
         updateConnection();
     }
 
-    private void updateConnection() {
+    protected void updateConnection() {
         if (getSender() != null && getReceiver() != null) {
             if (connections.get(getId(), getSender(), getReceiver()) != null) {
                 connections.remove(this);
@@ -99,15 +74,21 @@ public class ConnectionBase implements Connection {
         }
     }
 
-    //    @Override
-    //    public String getReceiverId() {
-    //        return receiverId;
-    //    }
+    @Override
+    public void setSender(Connector s) {
+        this.sender = s;
+        updateConnection();
+    }
+
     @Override
     public void setReceiver(Connector r) {
-        this.receiverId = r.getId();
         this.receiver = r;
+        updateConnection();
+    }
 
+    @Override
+    public void setId(String id) {
+        this.id = id;
         updateConnection();
     }
 
@@ -122,67 +103,33 @@ public class ConnectionBase implements Connection {
     }
 
     @Override
-    public void setId(String id) {
-        this.id = id;
-
-        updateConnection();
-    }
-
-    /**
-     * @return the vReq
-     */
-    @Override
     public VisualizationRequest getVisualizationRequest() {
         return visualizationRequestProperty().getValue();
     }
 
-    /**
-     * @param vReq the vReq to set
-     */
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
-        _visualizationRequestProperty().set(vReq);
+        writableVisualizationRequestProperty().set(vReq);
     }
 
-    private ObjectProperty<VisualizationRequest> _visualizationRequestProperty() {
-        if (vReqProperty == null) {
-            vReqProperty = new SimpleObjectProperty<>();
-            setVisualizationRequest(new VisualizationRequestImpl());
+    private ObjectProperty<VisualizationRequest> writableVisualizationRequestProperty() {
+        if (visualizationRequest == null) {
+            visualizationRequest = new SimpleObjectProperty<>(this, "visualizationRequest", new DefaultVisualizationRequest());
         }
 
-        return vReqProperty;
+        return visualizationRequest;
     }
 
     @Override
     public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
-        return _visualizationRequestProperty();
+        return writableVisualizationRequestProperty();
     }
-    //    @Override
-    //    public void setSkin(Skin<?> skin) {
-    //        skinProperty.set(skin);
-    //    }
-    //
-    //    @Override
-    //    public Skin<?> getSkin() {
-    //        return skinProperty.get();
-    //    }
-    //
-    //    @Override
-    //    public ObjectProperty<?> skinProperty() {
-    //        return skinProperty;
-    //    }
 
-    /**
-     * @return the connections
-     */
     @Override
     public Connections getConnections() {
         return connections;
     }
 
-    /**
-     * @return the type
-     */
     @Override
     public String getType() {
         return type;
@@ -191,8 +138,12 @@ public class ConnectionBase implements Connection {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.senderId);
-        hash = 37 * hash + Objects.hashCode(this.receiverId);
+        if (getSender() != null) {
+            hash = 37 * hash + Objects.hashCode(getSender().getId());
+        }
+        if (getReceiver() != null) {
+            hash = 37 * hash + Objects.hashCode(getReceiver().getId());
+        }
         hash = 37 * hash + Objects.hashCode(this.id);
         hash = 37 * hash + Objects.hashCode(this.type);
         return hash;
@@ -203,36 +154,35 @@ public class ConnectionBase implements Connection {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass() || !(obj instanceof Connection)) {
             return false;
         }
-        final ConnectionBase other = (ConnectionBase) obj;
-        if (!Objects.equals(this.senderId, other.senderId)) {
+
+        Connection other = (Connection) obj;
+        if (connectorIdsAreDifferent(sender, other.getSender())) {
             return false;
         }
-        if (!Objects.equals(this.receiverId, other.receiverId)) {
+        if (connectorIdsAreDifferent(receiver, other.getReceiver())) {
             return false;
         }
-        if (!Objects.equals(this.id, other.id)) {
+        if (!Objects.equals(this.id, other.getId())) {
             return false;
         }
-        if (!Objects.equals(this.type, other.type)) {
+        if (!Objects.equals(this.type, other.getType())) {
             return false;
         }
         return true;
     }
 
-    /**
-     * @return the sender
-     */
+    protected boolean connectorIdsAreDifferent(Connector a, Connector b) {
+        return a != null && b != null && !Objects.equals(a.getId(), b.getId());
+    }
+
     @Override
     public Connector getSender() {
         return sender;
     }
 
-    /**
-     * @return the receiver
-     */
     @Override
     public Connector getReceiver() {
         return receiver;
@@ -240,7 +190,6 @@ public class ConnectionBase implements Connection {
 
     @Override
     public boolean isVisualizationRequestInitialized() {
-        return vReqProperty != null;
+        return visualizationRequest != null;
     }
-
 }

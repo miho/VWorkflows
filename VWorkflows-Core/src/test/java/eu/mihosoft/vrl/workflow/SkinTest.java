@@ -323,8 +323,7 @@ final class VNodeSkinStub implements VNodeSkin<VNode> {
     }
 }
 
-final class ConnectionSkinStub implements ConnectionSkin<Connection> {
-
+final class ConnectionSkinStub implements ConnectionSkin {
     private final ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();

@@ -33,6 +33,7 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.fx.scene.layout.OptimizableContentPane;
 import javafx.scene.transform.Transform;
 
 /**

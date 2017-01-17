@@ -38,10 +38,10 @@ import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.impl.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import eu.mihosoft.vrl.workflow.IdGenerator;
-import eu.mihosoft.vrl.workflow.impl.NodeLookupImpl;
+import eu.mihosoft.vrl.workflow.impl.DefaultNodeLookup;
 import eu.mihosoft.vrl.workflow.ThruConnector;
-import eu.mihosoft.vrl.workflow.impl.ThruConnectorImpl;
-import eu.mihosoft.vrl.workflow.VConnections;
+import eu.mihosoft.vrl.workflow.impl.DefaultThruConnector;
+import eu.mihosoft.vrl.workflow.util.VConnections;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
@@ -292,7 +292,7 @@ public class WorkflowIO {
         if (parent == null) {
             result = FlowFactory.newFlowModel();
             result.setIdGenerator(generator);
-            result.setNodeLookup(new NodeLookupImpl(result));
+            result.setNodeLookup(new DefaultNodeLookup(result));
         } else {
             result = parent.newFlowNode();
         }
@@ -403,13 +403,13 @@ public class WorkflowIO {
                 VNode innerNode = flowModel.newNode();
                 Connector innerConnector = innerNode.setMainInput(
                     innerNode.addInput(pC.getType()));
-                c = new ThruConnectorImpl(n, pC.getType(),
+                c = new DefaultThruConnector(n, pC.getType(),
                     pC.getLocalId(), true, innerNode, innerConnector);
             } else {
                 VNode innerNode = flowModel.newNode();
                 Connector innerConnector = innerNode.setMainOutput(
                     innerNode.addOutput(pC.getType()));
-                c = new ThruConnectorImpl(n, pC.getType(),
+                c = new DefaultThruConnector(n, pC.getType(),
                     pC.getLocalId(), false, innerNode, innerConnector);
             }
 

@@ -45,6 +45,7 @@ import javafx.collections.ObservableMap;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The {@code VFlow} interface describes a workflow controller. A workflow is a
@@ -218,20 +219,6 @@ public interface VFlow {
     ObservableMap<String, Connections> getAllConnections();
 
     /**
-     * Defines the flow node implementation class used by this flow controller.
-     *
-     * @param cls flow node implementation class
-     */
-    void setFlowNodeClass(Class<? extends VNode> cls);
-
-    /**
-     * Returns the flow node implementation class used by this flow controller.
-     *
-     * @return the flow node implementation class used by this flow controller
-     */
-    Class<? extends VNode> getFlowNodeClass();
-
-    /**
      * Adds a new node to this flow.
      *
      * @param obj value object that shall be used for the requested node
@@ -387,4 +374,6 @@ public interface VFlow {
     ObservableList<ThruConnector> getThruInputs();
 
     ObservableList<ThruConnector> getThruOutputs();
+
+    Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory);
 }

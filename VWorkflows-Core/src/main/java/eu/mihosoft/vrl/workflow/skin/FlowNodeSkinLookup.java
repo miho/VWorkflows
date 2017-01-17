@@ -65,5 +65,5 @@ public interface FlowNodeSkinLookup extends Lookup<List<VNodeSkin>> {
      * @return the skin of the specified connection or <code>null</code> if no
      * such skin exists
      */
-    ConnectionSkin<?> getById(SkinFactory skinFactory, Connection c);
+    ConnectionSkin getById(SkinFactory skinFactory, Connection c);
 }

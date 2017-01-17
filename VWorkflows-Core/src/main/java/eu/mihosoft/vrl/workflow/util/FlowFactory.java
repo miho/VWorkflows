@@ -36,9 +36,9 @@ package eu.mihosoft.vrl.workflow.util;
 import eu.mihosoft.vrl.workflow.IdGenerator;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
-import eu.mihosoft.vrl.workflow.impl.IdGeneratorImpl;
-import eu.mihosoft.vrl.workflow.impl.VFlowImpl;
-import eu.mihosoft.vrl.workflow.impl.VFlowModelImpl;
+import eu.mihosoft.vrl.workflow.impl.DefaultIdGenerator;
+import eu.mihosoft.vrl.workflow.impl.DefaultVFlow;
+import eu.mihosoft.vrl.workflow.impl.DefaultVFlowModel;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
@@ -59,7 +59,7 @@ public class FlowFactory {
 
         VFlowModel model = FlowFactory.newFlowModel();
 
-        VFlow flow = new VFlowImpl(null, model);
+        VFlow flow = new DefaultVFlow(model);
 
         return flow;
     }
@@ -76,7 +76,8 @@ public class FlowFactory {
 
         VFlowModel model = FlowFactory.newFlowModel();
 
-        VFlow flow = new VFlowImpl(null, model, skinFactory);
+        VFlow flow = new DefaultVFlow(model);
+        flow.setSkinFactories(skinFactory);
 
         return flow;
     }
@@ -87,7 +88,7 @@ public class FlowFactory {
      * @return
      */
     public static VFlowModel newFlowModel() {
-        VFlowModel result = new VFlowModelImpl(null);
+        VFlowModel result = new DefaultVFlowModel(null);
         result.setId("ROOT");
         return result;
     }
@@ -98,6 +99,6 @@ public class FlowFactory {
      * @return id generator
      */
     public static IdGenerator newIdGenerator() {
-        return new IdGeneratorImpl();
+        return new DefaultIdGenerator();
     }
 }

@@ -34,12 +34,12 @@
 package eu.mihosoft.vrl.workflow.io;
 
 import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.impl.ConnectorImpl;
+import eu.mihosoft.vrl.workflow.impl.DefaultConnector;
 
 /**
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public final class IOConnector extends ConnectorImpl {
+public final class IOConnector extends DefaultConnector {
 
     public IOConnector(VNode node, String type, String localId, boolean input) {
         super(node, type, localId, input);

@@ -152,7 +152,6 @@ public interface VNode extends Model, Selectable {
 
     boolean isSelectable();
 
-
     /**
      * Returns the distance to the root element.
      */
@@ -165,4 +164,13 @@ public interface VNode extends Model, Selectable {
      */
     FlowModel getRoot();
 
+    Connector addInput(VNode node, String type);
+
+    Connector addOutput(VNode node, String type);
+
+    ThruConnector addThruInput(VNode node, String type, VNode innerNode, Connector innerConnector);
+
+    ThruConnector addThruOutput(VNode node, String type, VNode innerNode, Connector innerConnector);
+
+    Connector addConnector(VNode node, Connector c);
 }

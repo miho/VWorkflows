@@ -36,6 +36,8 @@ package eu.mihosoft.vrl.workflow;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.EventHandler;
 
+import java.util.List;
+
 /**
  * This interface describes a connector. A connector is used to link nodes
  * together. It serves as the input or output for the node. Methods allow you to
@@ -176,4 +178,6 @@ public interface Connector extends Model {
      * @return maximum allowed number of connections ({@code [0,MAX_INT]})
      */
     ObjectProperty<Integer> maxNumberOfConnectionsProperty();
+
+    List<EventHandler<ConnectionEvent>> getConnectionEventHandlers();
 }

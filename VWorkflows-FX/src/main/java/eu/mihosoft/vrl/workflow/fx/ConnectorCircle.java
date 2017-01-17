@@ -36,6 +36,8 @@ package eu.mihosoft.vrl.workflow.fx;
 import eu.mihosoft.vrl.workflow.Connection;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
+import eu.mihosoft.vrl.workflow.fx.skin.ConnectorShape;
+import eu.mihosoft.vrl.workflow.fx.skin.FXSkinFactory;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

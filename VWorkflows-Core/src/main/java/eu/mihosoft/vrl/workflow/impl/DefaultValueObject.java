@@ -36,46 +36,19 @@ package eu.mihosoft.vrl.workflow.impl;
 import eu.mihosoft.vrl.workflow.CompatibilityResult;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.ValueObject;
-import eu.mihosoft.vrl.workflow.VisualizationRequest;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import eu.mihosoft.vrl.workflow.base.AbstractValueObject;
 
 /**
  * This class defines a value object you can assign a value.
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public class DefaultValueObject implements ValueObject {
-
-    private VNode parent;
-    private final ObjectProperty valueProperty = new SimpleObjectProperty();
-    private VisualizationRequest vReq = null;
-
+public class DefaultValueObject extends AbstractValueObject {
     public DefaultValueObject() {
     }
 
     public DefaultValueObject(VNode parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public VNode getParent() {
-        return parent;
-    }
-
-    @Override
-    public Object getValue() {
-        return valueProperty().get();
-    }
-
-    @Override
-    public void setValue(Object o) {
-        this.valueProperty().set(o);
-    }
-
-    @Override
-    public ObjectProperty<Object> valueProperty() {
-        return valueProperty;
+        super(parent);
     }
 
     @Override
@@ -83,11 +56,7 @@ public class DefaultValueObject implements ValueObject {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {
-                boolean differentObjects = sender != DefaultValueObject.this;
-                //                boolean compatibleType = getParent().isInputOfType(flowType)
-                //                        && sender.getParent().isOutputOfType(flowType);
-
-                return differentObjects /*&& compatibleType*/;
+                return sender != DefaultValueObject.this;
             }
 
             @Override
@@ -100,28 +69,5 @@ public class DefaultValueObject implements ValueObject {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
-    }
-
-    @Override
-    public VisualizationRequest getVisualizationRequest() {
-
-        if (vReq == null) {
-            vReq = new VisualizationRequestImpl();
-        }
-
-        return vReq;
-    }
-
-    @Override
-    public void setVisualizationRequest(VisualizationRequest vReq) {
-        this.vReq = vReq;
-    }
-
-    /**
-     * @param parent the parent to set
-     */
-    @Override
-    public void setParent(VNode parent) {
-        this.parent = parent;
     }
 }

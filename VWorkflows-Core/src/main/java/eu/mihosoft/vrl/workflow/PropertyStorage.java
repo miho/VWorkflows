@@ -86,14 +86,14 @@ public interface PropertyStorage {
     <T> void set(String key, T property);
 
     /**
-     * Adds the specified listener to the property map.
+     * Adds the specified listener to the property storage.
      *
      * @param l change listener
      */
     void addListener(MapChangeListener<String, Object> l);
 
     /**
-     * Removes the specified listener from the property map.
+     * Removes the specified listener from the property storage.
      *
      * @param l change listener
      */
@@ -105,5 +105,4 @@ public interface PropertyStorage {
      * @return keys used by the property storage
      */
     Collection<String> getKeys();
-
 }

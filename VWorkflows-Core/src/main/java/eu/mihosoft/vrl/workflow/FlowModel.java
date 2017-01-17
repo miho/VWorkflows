@@ -159,20 +159,6 @@ public interface FlowModel extends Model, VisibleState {
     ObservableMap<String, Connections> getAllConnections();
 
     /**
-     * Defines the flow node implementation class used by this flow model.
-     *
-     * @param cls flow node implementation class
-     */
-    void setFlowNodeClass(Class<? extends VNode> cls);
-
-    /**
-     * Returns the flow node implementation class used by this flow.
-     *
-     * @return the flow node implementation class used by this flow
-     */
-    Class<? extends VNode> getFlowNodeClass();
-
-    /**
      * Defines the id generator that shall be used by this flow.
      *
      * @param generator id generator
@@ -200,4 +186,5 @@ public interface FlowModel extends Model, VisibleState {
      */
     NodeLookup getNodeLookup();
 
+    VNode registerNode(VNode result, ValueObject obj, String parentId);
 }

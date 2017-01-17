@@ -103,7 +103,7 @@ public class VFlowTest {
                     continue;
                 }
 
-                assertNotEquals("flow.newNode() must not return equal nodes!",
+                assertNotEquals("flow.registerNode() must not return equal nodes!",
                     flow.getNodes().get(i), flow.getNodes().get(j));
                 assertNotEquals("nodes must not have equal ids!",
                     flow.getNodes().get(i).getId(), flow.getNodes().get(j).getId());

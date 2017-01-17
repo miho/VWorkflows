@@ -121,20 +121,6 @@ public interface Connections extends Model {
     void removeAll(Connector s, Connector r);
 
     /**
-     * Defines the connection implementation class that shall be used.
-     *
-     * @param cls connection implementation class
-     */
-    void setConnectionClass(Class<? extends Connection> cls);
-
-    /**
-     * Returns the connection implementation class.
-     *
-     * @return the connection implementation class
-     */
-    Class<? extends Connection> getConnectionClass();
-
-    /**
      * Returns the connections defined by this collection.
      *
      * @return the connections defined by this collection

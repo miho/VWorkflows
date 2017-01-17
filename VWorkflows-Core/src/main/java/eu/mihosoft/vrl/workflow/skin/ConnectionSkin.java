@@ -44,7 +44,7 @@ import javafx.beans.property.ObjectProperty;
  *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
-public interface ConnectionSkin<T extends Connection> extends Skin<Connection> {
+public interface ConnectionSkin extends Skin<Connection> {
     /**
      * Returns the sender connector.
      *

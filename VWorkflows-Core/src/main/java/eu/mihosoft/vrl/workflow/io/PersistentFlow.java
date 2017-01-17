@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -39,14 +39,13 @@ import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import java.util.List;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class PersistentFlow extends PersistentNode {
 
     private List<PersistentConnection> connections;
     private List<PersistentNode> nodes;
-//    private List<String> connectionTypes;
+    //    private List<String> connectionTypes;
     private PersistentFlow parent;
     private boolean visible;
 
@@ -59,13 +58,13 @@ public class PersistentFlow extends PersistentNode {
     }
 
     public PersistentFlow(PersistentFlow parent, String id,
-            List<PersistentConnection> connections, List<PersistentNode> nodes, String title,
-            double x, double y, double width, double height,
-            ValueObject valueObject, boolean visible, VisualizationRequest vReq,
-            List<PersistentConnector> connectors) {
+                          List<PersistentConnection> connections, List<PersistentNode> nodes, String title,
+                          double x, double y, double width, double height,
+                          ValueObject valueObject, boolean visible, VisualizationRequest vReq,
+                          List<PersistentConnector> connectors) {
 
         super(id, title, x, y, width, height, valueObject, vReq,
-                connectors);
+            connectors);
         this.connections = connections;
         this.nodes = nodes;
         this.parent = parent;

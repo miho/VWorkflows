@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -49,63 +49,67 @@ public interface Connections extends Model {
      *
      * @param c the connection to add
      */
-    public void add(Connection c);
+    void add(Connection c);
 
     /**
      * Adds the connection defined by the specified connectors.
      *
      * @param s sender connector
      * @param r receiver connector
+     *
      * @return connection that has been added
      */
-    public Connection add(Connector s, Connector r);
+    Connection add(Connector s, Connector r);
 
     /**
      * Adds the connection defined by the specified connectors.
      *
-     * @param id the id of the connection that shall be added
-     * @param s the sender connector
-     * @param r the receiver connector
+     * @param id   the id of the connection that shall be added
+     * @param s    the sender connector
+     * @param r    the receiver connector
      * @param vReq the visualization request of the connection
+     *
      * @return connection that has been added
      */
-    public Connection add(String id, Connector s, Connector r, VisualizationRequest vReq);
+    Connection add(String id, Connector s, Connector r, VisualizationRequest vReq);
 
     /**
      * Removes the specified connection from this collection
      *
      * @param c connection to remove
      */
-    public void remove(Connection c);
+    void remove(Connection c);
 
     /**
      * Returns the specified connection.
      *
      * @param id id of the connection to be returned
-     * @param s sender connector
-     * @param r receiver connector
+     * @param s  sender connector
+     * @param r  receiver connector
+     *
      * @return the requested connection or <code>null</code> if no such
      * connection exists
      */
-    public Connection get(String id, Connector s, Connector r);
+    Connection get(String id, Connector s, Connector r);
 
     /**
      * Returns all connections betwenn the specified connectors.
      *
      * @param s sender connector
      * @param r receiver connector
+     *
      * @return all connections betwenn the specified connectors
      */
-    public Collection<Connection> getAll(Connector s, Connector r);
+    Collection<Connection> getAll(Connector s, Connector r);
 
     /**
      * Removes the specified connection from this collection.
      *
      * @param id connection id
-     * @param s sender connector
-     * @param r receiver connector
+     * @param s  sender connector
+     * @param r  receiver connector
      */
-    public void remove(String id, Connector s, Connector r);
+    void remove(String id, Connector s, Connector r);
 
     /**
      * Removes all connections between the specified connectors from this
@@ -114,72 +118,63 @@ public interface Connections extends Model {
      * @param s sender connector
      * @param r receiver connector
      */
-    public void removeAll(Connector s, Connector r);
-
-    /**
-     * Defines the connection implementation class that shall be used.
-     *
-     * @param cls connection implementation class
-     */
-    public void setConnectionClass(Class<? extends Connection> cls);
-
-    /**
-     * Returns the connection implementation class.
-     *
-     * @return the connection implementation class
-     */
-    public Class<? extends Connection> getConnectionClass();
+    void removeAll(Connector s, Connector r);
 
     /**
      * Returns the connections defined by this collection.
      *
      * @return the connections defined by this collection
      */
-    public ObservableList<Connection> getConnections();
+    ObservableList<Connection> getConnections();
 
     /**
      * Returns all connections that are connected to the specified connector.
      *
      * @param c connector
+     *
      * @return all connections that are connected to the specified connector
      */
-    public Collection<Connection> getAllWith(Connector c);
+    Collection<Connection> getAllWith(Connector c);
 
     /**
      * Returns all connections that are connected to the specified node.
      *
      * @param n node
+     *
      * @return all connections that are connected to the specified node
      */
-    public Collection<Connection> getAllWithNode(VNode n);
+    Collection<Connection> getAllWithNode(VNode n);
 
     /**
      * Determines whether the specified input connector is connected.
      *
      * @param id connector id
+     *
      * @return <code>true</code> if the specified input connector is connected;
      * <code>false</code> otherwise
      */
-    public boolean isInputConnected(Connector id);
+    boolean isInputConnected(Connector id);
 
     /**
      * Determines whether the specified output connector is connected.
      *
      * @param id connector id
+     *
      * @return <code>true</code> if the specified output connector is connected;
      * <code>false</code> otherwise
      */
-    public boolean isOutputConnected(Connector id);
+    boolean isOutputConnected(Connector id);
 
     /**
      * Determines if a connection exists between the specified connectors.
      *
      * @param s sender connector
      * @param r receiver connector
+     *
      * @return <code>true</code> if a connection between the specified
      * connectors exists; <code>false</code> otherwise
      */
-    public boolean contains(Connector s, Connector r);
+    boolean contains(Connector s, Connector r);
 
     /**
      * Returns the connection type of this collection.
@@ -187,5 +182,5 @@ public interface Connections extends Model {
      * @return connection type (e.g. <code>"control"</code> or
      * <code>"data"</code>)
      */
-    public String getType();
+    String getType();
 }

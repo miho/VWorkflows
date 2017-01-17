@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -36,6 +36,8 @@ package eu.mihosoft.vrl.workflow;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.EventHandler;
 
+import java.util.List;
+
 /**
  * This interface describes a connector. A connector is used to link nodes
  * together. It serves as the input or output for the node. Methods allow you to
@@ -52,7 +54,7 @@ public interface Connector extends Model {
      * @return connection type (e.g. <code>"control"</code> or
      * <code>"data"</code>)
      */
-    public String getType();
+    String getType();
 
     /**
      * Determines whether this connector is an input connector.
@@ -60,7 +62,7 @@ public interface Connector extends Model {
      * @return <code>true</code> if this connector is an input connector;
      * <code>false</code> otherwise
      */
-    public boolean isInput();
+    boolean isInput();
 
     /**
      * Determines whether this connector is an output connector.
@@ -68,42 +70,42 @@ public interface Connector extends Model {
      * @return <code>true</code> if this connector is an output connector;
      * <code>false</code> otherwise
      */
-    public boolean isOutput();
+    boolean isOutput();
 
     /**
      * Returns the global id of this connector.
      *
      * @return global connector id
      */
-    public String getId();
+    String getId();
 
     /**
      * Returns the local id of this connector.
      *
      * @return local connector id
      */
-    public String getLocalId();
+    String getLocalId();
 
     /**
      * Defines the local id of this connector.
      *
      * @param id the id to set
      */
-    public void setLocalId(String id);
+    void setLocalId(String id);
 
     /**
      * Returns the parent node of this connector.
      *
      * @return parent node of this connector
      */
-    public VNode getNode();
+    VNode getNode();
 
     /**
      * Defines the value object of this connector.
      *
      * @param obj value object to set
      */
-    public void setValueObject(ValueObject obj);
+    void setValueObject(ValueObject obj);
 
     /**
      * Returns the value object of this connector.
@@ -111,61 +113,71 @@ public interface Connector extends Model {
      * @return value object or <code>null</code> if no value object has been
      * defined
      */
-    public ValueObject getValueObject();
+    ValueObject getValueObject();
 
     /**
      * Returns the value object property (can be used to get notified if the value object changes).
+     *
      * @return value object property
      */
-    public ObjectProperty<ValueObject> valueObjectProperty();
+    ObjectProperty<ValueObject> valueObjectProperty();
 
     /**
      * Adds the specified connection-event listener to this connector.
-     * 
+     *
      * @param handler the listener to add
      */
-    public void addConnectionEventListener(EventHandler<ConnectionEvent> handler);
+    void addConnectionEventListener(EventHandler<ConnectionEvent> handler);
 
     /**
      * Removes the specified connection-event listener from this connector.
+     *
      * @param handler the listener to remove
      */
-    public void removeConnectionEventListener(EventHandler<ConnectionEvent> handler);
+    void removeConnectionEventListener(EventHandler<ConnectionEvent> handler);
 
     /**
      * Adds the specified click-event listener to this connector.
+     *
      * @param handler the listener to add
      */
-    public void addClickEventListener(EventHandler<ClickEvent> handler);
+    void addClickEventListener(EventHandler<ClickEvent> handler);
 
     /**
      * Removes the specified click-event listener from this connector.
+     *
      * @param handler the listener to remove
      */
-    public void removeClickEventListener(EventHandler<ClickEvent> handler);
+    void removeClickEventListener(EventHandler<ClickEvent> handler);
 
     /**
      * Perform a mouse click on this connector.
-     * @param btn the click button
+     *
+     * @param btn   the click button
      * @param event the event (e.g. javafx mouse-event)
      */
-    public void click(MouseButton btn, Object event);
-    
+    void click(MouseButton btn, Object event);
+
     /**
      * Defines the maximum allowed number of connections.
+     *
      * @param numConnections maximum allowed number of connections ({@code [0,MAX_INT]})
      */
-    public void setMaxNumberOfConnections(int numConnections);
-    
+    void setMaxNumberOfConnections(int numConnections);
+
     /**
-     * Returns the maximum allowed number of connections. 
+     * Returns the maximum allowed number of connections.
+     *
      * @return maximum allowed number of connections ({@code [0,MAX_INT]})
      */
-    public int getMaxNumberOfConnections();
-    
+    int getMaxNumberOfConnections();
+
     /**
-     * Returns the property of the maximum allowed number of connections. 
+     * Returns the property of the maximum allowed number of connections.
+     *
      * @return maximum allowed number of connections ({@code [0,MAX_INT]})
      */
-    public ObjectProperty<Integer> maxNumberOfConnectionsProperty();
+    ObjectProperty<Integer> maxNumberOfConnectionsProperty();
+
+    List<EventHandler<ConnectionEvent>> getConnectionEventHandlers();
 }

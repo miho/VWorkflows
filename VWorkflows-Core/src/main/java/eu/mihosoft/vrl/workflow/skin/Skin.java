@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -39,49 +39,61 @@ import javafx.beans.property.ObjectProperty;
 
 /**
  * A skin is a toolkit independent visual representation of a model.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
  * @param <T> model type that shall be skinned
+ *
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface Skin<T extends Model> {
     /**
      * Adds this skin to its view parent.
      */
-    public void add();
+    void add();
+
     /**
      * Removes this skin from its view parent.
      */
-    public void remove();
+    void remove();
+
     /**
      * Defines the model that shall be represented by this skin.
+     *
      * @param model model to set
      */
-    public void setModel(T model);
+    void setModel(T model);
+
     /**
      * Returns the model represented by this skin.
+     *
      * @return model represented by this skin
      */
-    public T getModel();
+    T getModel();
+
     /**
      * Returns the property the model represented by this skin.
+     *
      * @return model represented by this skin
      */
-    public ObjectProperty<T> modelProperty();
+    ObjectProperty<T> modelProperty();
+
     /**
      * Returns the flow controller that is used to manipulate the model.
+     *
      * @return the flow controller that is used to manipulate the model
      */
-    public VFlow getController();
-    
+    VFlow getController();
+
     /**
      * Defines the flow controller that shall be used to manipulate the model.
+     *
      * @param flow flow controller to set
      */
-    public void setController(VFlow flow);
-    
+    void setController(VFlow flow);
+
     /**
      * Returns the skin factory that created this skin.
+     *
      * @return the skin factory that created this skin
      */
-    public SkinFactory getSkinFactory();
+    SkinFactory getSkinFactory();
 }

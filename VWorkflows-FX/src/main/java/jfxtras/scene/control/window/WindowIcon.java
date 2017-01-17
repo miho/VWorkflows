@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -50,7 +50,7 @@ public class WindowIcon extends Control {
 
     public static final String DEFAULT_STYLE_CLASS = "window-icon";
     private final ObjectProperty<EventHandler<ActionEvent>> onActionProperty =
-            new SimpleObjectProperty<>();
+        new SimpleObjectProperty<>();
 
     /**
      * Constructor.
@@ -86,7 +86,7 @@ public class WindowIcon extends Control {
      * performed by/ is represented by this icon.
      *
      * @param handler action handler that defines the action that shall be
-     * performed by/ is represented by this icon
+     *                performed by/ is represented by this icon
      */
     public void setOnAction(EventHandler<ActionEvent> handler) {
         onActionProperty.set(handler);

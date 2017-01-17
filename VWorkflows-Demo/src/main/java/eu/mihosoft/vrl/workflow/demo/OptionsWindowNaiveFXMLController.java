@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -33,9 +33,9 @@
  */
 package eu.mihosoft.vrl.workflow.demo;
 
-import eu.mihosoft.vrl.workflow.incubating.LayoutGeneratorNaive;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.incubating.LayoutGeneratorNaive;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,14 +54,14 @@ import java.util.logging.Logger;
 
 /**
  * FXML Controller Class
- * 
+ *
  * @author Tobias Mertz
  */
 public class OptionsWindowNaiveFXMLController implements Initializable {
-    
+
     @FXML
     public Pane contentPane;
-    
+
     private LayoutGeneratorNaive generator;
     private Stage optionsstage;
     private VFlow workflow;
@@ -69,8 +69,9 @@ public class OptionsWindowNaiveFXMLController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url URL
-     * @param rb ResourceBundle
+     * @param rb  ResourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -82,7 +83,7 @@ public class OptionsWindowNaiveFXMLController implements Initializable {
         graphmodelist.add(this.graphmodes[1]);
         graphmodelist.add(this.graphmodes[2]);
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Menu items">
     @FXML
     private CheckBox checkCalcVertPos;
@@ -111,30 +112,30 @@ public class OptionsWindowNaiveFXMLController implements Initializable {
     @FXML
     private CheckBox checkCalcHorPos;
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Setter">
     public void setGenerator(LayoutGeneratorNaive pgenerator) {
         this.generator = pgenerator;
     }
-    
+
     public void setStage(Stage poptionsstage) {
         this.optionsstage = poptionsstage;
     }
-    
+
     public void setWorkflow(VFlow pworkflow) {
         this.workflow = pworkflow;
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Getter">
     public LayoutGeneratorNaive getGenerator() {
         return this.generator;
     }
-    
+
     public Stage getStage() {
         return this.optionsstage;
     }
-    
+
     public VFlow getWorkflow() {
         return this.workflow;
     }
@@ -156,7 +157,7 @@ public class OptionsWindowNaiveFXMLController implements Initializable {
     void onShowPress(ActionEvent event) {
         int i;
         accept();
-        switch(this.generator.getGraphmode()) {
+        switch (this.generator.getGraphmode()) {
             case 0:
                 this.generator.setWorkflow(this.workflow.getModel());
                 this.generator.generateLayout();
@@ -164,45 +165,45 @@ public class OptionsWindowNaiveFXMLController implements Initializable {
             case 2:
                 ObservableList<VNode> obsnodes = workflow.getNodes();
                 LinkedList<VNode> nodelist = new LinkedList<>();
-                for(i = 0; i < obsnodes.size(); i++) {
+                for (i = 0; i < obsnodes.size(); i++) {
                     VNode curr = obsnodes.get(i);
-                    if(curr.isSelected()) {
+                    if (curr.isSelected()) {
                         nodelist.add(curr);
                     }
                 }
-                if(!nodelist.isEmpty()) {
+                if (!nodelist.isEmpty()) {
                     this.generator.setNodelist(nodelist);
                     this.generator.generateLayout();
                 }
                 break;
         }
     }
-    
+
     /**
-     * Sets the values of all menu items to the current values of the layout 
+     * Sets the values of all menu items to the current values of the layout
      * generator.
      */
     public void set() {
         this.checkAutoscaleNodes.setSelected(this.generator
-                .getAutoscaleNodes());
+            .getAutoscaleNodes());
         this.checkCalcHorPos.setSelected(this.generator
-                .getLaunchCalculateHorizontalPositions());
+            .getLaunchCalculateHorizontalPositions());
         this.checkCalcVertPos.setSelected(this.generator
-                .getLaunchCalculateVerticalPositions());
+            .getLaunchCalculateVerticalPositions());
         this.checkCreateLayering.setSelected(this.generator
-                .getLaunchCreateLayering());
+            .getLaunchCreateLayering());
         this.checkRecursive.setSelected(this.generator.getRecursive());
         this.checkRemoveCycles.setSelected(this.generator
-                .getLaunchRemoveCycles());
+            .getLaunchRemoveCycles());
         this.selGraphmode.setValue(this.graphmodes[this.generator
-                .getGraphmode()]);
+            .getGraphmode()]);
         this.tfScaling.setText(Double.toString(this.generator.getScaling()));
         this.tfSubflowscale.setText(Double.toString(this.generator
-                .getSubflowscale()));
+            .getSubflowscale()));
     }
-    
+
     /**
-     * Sets the values of all parameters of the layout generator to the current 
+     * Sets the values of all parameters of the layout generator to the current
      * values of the menu items.
      */
     private void accept() {
@@ -211,18 +212,18 @@ public class OptionsWindowNaiveFXMLController implements Initializable {
         String temp;
         this.generator.setAutoscaleNodes(this.checkAutoscaleNodes.isSelected());
         this.generator.setLaunchCalculateHorizontalPositions(
-                this.checkCalcHorPos.isSelected());
+            this.checkCalcHorPos.isSelected());
         this.generator.setLaunchCalculateVerticalPositions(
-                this.checkCalcVertPos.isSelected());
+            this.checkCalcVertPos.isSelected());
         this.generator.setLaunchCreateLayering(this.checkCreateLayering
-                .isSelected());
+            .isSelected());
         this.generator.setRecursive(this.checkRecursive.isSelected());
         this.generator.setLaunchRemoveCycles(this.checkRemoveCycles
-                .isSelected());
+            .isSelected());
         temp = this.selGraphmode.getValue();
-        for(i = 0; i < this.graphmodes.length; i++) {
-            if(this.graphmodes[i].equals(temp)) {
-                if(i != 1) this.generator.setGraphmode(i);
+        for (i = 0; i < this.graphmodes.length; i++) {
+            if (this.graphmodes[i].equals(temp)) {
+                if (i != 1) { this.generator.setGraphmode(i); }
             }
         }
         j = this.generator.getScaling();

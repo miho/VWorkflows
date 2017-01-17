@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -36,68 +36,76 @@ package eu.mihosoft.vrl.workflow.incubating;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 
 /**
- * This interface describes a layout generator. A layout generator is used to 
+ * This interface describes a layout generator. A layout generator is used to
  * calculate an aesthetically pleasing arrangement of nodes.
- * 
+ *
  * @author Tobias Mertz
  */
 public interface LayoutGenerator {
-    
+
     /**
      * Returns the workflow to be laid out.
+     *
      * @return VFlowModel
      */
-    public VFlowModel getWorkflow();
-    
+    VFlowModel getWorkflow();
+
     /**
-     * If set to true, the layout is applied to all subflows of the given 
+     * If set to true, the layout is applied to all subflows of the given
      * workflow recursively.
+     *
      * @return boolean
      */
-    public boolean getRecursive();
-    
+    boolean getRecursive();
+
     /**
-     * If set to true, subflow nodes in the given workflow are automatically 
+     * If set to true, subflow nodes in the given workflow are automatically
      * scaled to fit their contents.
+     *
      * @return boolean
      */
-    public boolean getAutoscaleNodes();
-    
+    boolean getAutoscaleNodes();
+
     /**
      * If set to true, debugging output will be printed in the command line.
-     * @return 
+     *
+     * @return
      */
-    public boolean getDebug();
-    
+    boolean getDebug();
+
     /**
      * Sets the workflow to be laid out.
+     *
      * @param pworkflow VFlowModel
      */
-    public void setWorkflow(VFlowModel pworkflow);
-    
+    void setWorkflow(VFlowModel pworkflow);
+
     /**
-     * If set to true, the layout is applied to all subflows of the given 
+     * If set to true, the layout is applied to all subflows of the given
      * workflow recursively.
+     *
      * @param precursive boolean
      */
-    public void setRecursive(boolean precursive);
-    
+    void setRecursive(boolean precursive);
+
     /**
-     * If set to true, subflow nodes in the given workflow are automatically 
+     * If set to true, subflow nodes in the given workflow are automatically
      * scaled to fit their contents.
+     *
      * @param pautoscaleNodes boolean
      */
-    public void setAutoscaleNodes(boolean pautoscaleNodes);
-    
+    void setAutoscaleNodes(boolean pautoscaleNodes);
+
     /**
      * If set to true, debugging output will be printed in the command line.
+     *
      * @param pdebug boolean
      */
-    public void setDebug(boolean pdebug);
-    
+    void setDebug(boolean pdebug);
+
     /**
      * Generates the Layout.
      */
-    public void generateLayout() ;
-    
+    void generateLayout();
+
 }

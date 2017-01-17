@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -33,11 +33,11 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class ConnectorTest {
@@ -45,40 +45,40 @@ public class ConnectorTest {
     @Test
     public void maxNumberOfConnectionsTest() {
         VFlow flow = FlowFactory.newFlow();
-        
+
         VNode sender = flow.newNode();
         VNode receiver = flow.newNode();
-        
+
         Connector senderOut = sender.addOutput("mytype");
         Connector receiverIn = receiver.addInput("mytype");
-        
+
         int maxConn = 1;
-        
+
         senderOut.setMaxNumberOfConnections(maxConn);
         receiverIn.setMaxNumberOfConnections(maxConn);
-        
+
         int senderMax = senderOut.getMaxNumberOfConnections();
-        
+
         Assert.assertTrue("Sender: expected max number of connections = "
-                + maxConn + ", got " + senderMax, maxConn == senderMax);
-        
+            + maxConn + ", got " + senderMax, maxConn == senderMax);
+
         int receiverMax = receiverIn.getMaxNumberOfConnections();
-        
+
         Assert.assertTrue("Receiver: expected max number of connections = "
-                + maxConn + ", got " + receiverMax, maxConn == receiverMax);
-        
+            + maxConn + ", got " + receiverMax, maxConn == receiverMax);
+
         ConnectionResult result = flow.connect(senderOut, receiverIn);
-        
+
         Assert.assertTrue("Connection must be established. Connection-Msg: "
                 + result.getStatus().getMessage(),
-                result.getStatus().isCompatible());
-        
+            result.getStatus().isCompatible());
+
         ConnectionResult result2 = flow.connect(senderOut, receiverIn);
-        
+
         Assert.assertTrue("Connection must not be established as the max "
                 + "number of connections is already reached.",
-                !result2.getStatus().isCompatible());
-        
-        
+            !result2.getStatus().isCompatible());
+
+
     }
 }

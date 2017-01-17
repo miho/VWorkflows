@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -45,8 +45,9 @@ public interface Lookup<T> {
      * Returns the element with the specified id.
      *
      * @param id id of the requested element
+     *
      * @return the requested element or <code>null</code> if the requested
      * element does not exist
      */
-    public T getById(String id);
+    T getById(String id);
 }

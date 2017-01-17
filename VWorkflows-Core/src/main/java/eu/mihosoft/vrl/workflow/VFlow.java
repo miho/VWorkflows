@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -45,6 +45,7 @@ import javafx.collections.ObservableMap;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The {@code VFlow} interface describes a workflow controller. A workflow is a
@@ -60,35 +61,35 @@ public interface VFlow {
      *
      * @param flow flow model
      */
-    public void setModel(VFlowModel flow);
+    void setModel(VFlowModel flow);
 
     /**
      * Defines the node lookup that shall be used by this flow controller.
      *
      * @param nodeLookup
      */
-    public void setNodeLookup(NodeLookup nodeLookup);
+    void setNodeLookup(NodeLookup nodeLookup);
 
     /**
      * Returns the node lookup that is used by this flow controller.
      *
      * @return
      */
-    public NodeLookup getNodeLookup();
+    NodeLookup getNodeLookup();
 
     /**
      * Returns the model that is used by this flow controller.
      *
      * @return the model that is used by this flow controller
      */
-    public VFlowModel getModel();
+    VFlowModel getModel();
 
     /**
      * Returns the property of the model that is used by this flow controller.
      *
      * @return the property of the model that is used by this flow controller
      */
-    public ObjectProperty modelProperty();
+    ObjectProperty modelProperty();
 
     /**
      * Attempts to create the specified connection. This method never creates an
@@ -97,9 +98,10 @@ public interface VFlow {
      *
      * @param s sender connector
      * @param r receiver connector
+     *
      * @return connection result
      */
-    public ConnectionResult tryConnect(Connector s, Connector r);
+    ConnectionResult tryConnect(Connector s, Connector r);
 
     /**
      * Requests the specified connection. If the specified connection can be
@@ -107,151 +109,146 @@ public interface VFlow {
      *
      * @param s sender node
      * @param r receiver node
+     *
      * @return connection result
      */
-    public ConnectionResult connect(Connector s, Connector r);
+    ConnectionResult connect(Connector s, Connector r);
 
     /**
      * Attempts to create the specified connection. This method never creates an
      * actual connection. It only checks whether the requested connection is
      * valid.
      *
-     * @param s sender node (uses main output connector of this node if
-     * specified)
-     * @param r receiver node (uses main input connector of this node if
-     * specified)
+     * @param s        sender node (uses main output connector of this node if
+     *                 specified)
+     * @param r        receiver node (uses main input connector of this node if
+     *                 specified)
      * @param flowType connection type
+     *
      * @return connection result
      */
-    public ConnectionResult tryConnect(VNode s, VNode r, String flowType);
+    ConnectionResult tryConnect(VNode s, VNode r, String flowType);
 
     /**
      * Requests the specified connection. If the specified connection can be
      * established it will be created.
      *
-     * @param s sender node
-     * @param r receiver node
+     * @param s        sender node
+     * @param r        receiver node
      * @param flowType connection type
+     *
      * @return connection result
      */
-    public ConnectionResult connect(VNode s, VNode r, String flowType);
+    ConnectionResult connect(VNode s, VNode r, String flowType);
 
-    public ConnectionResult tryConnect(VFlow s, VNode r, String flowType);
+    ConnectionResult tryConnect(VFlow s, VNode r, String flowType);
 
-    public ConnectionResult tryConnect(VNode s, VFlow r, String flowType);
+    ConnectionResult tryConnect(VNode s, VFlow r, String flowType);
 
-    public ConnectionResult tryConnect(VFlow s, VFlow r, String flowType);
+    ConnectionResult tryConnect(VFlow s, VFlow r, String flowType);
 
-    public ConnectionResult connect(VFlow s, VNode r, String flowType);
+    ConnectionResult connect(VFlow s, VNode r, String flowType);
 
-    public ConnectionResult connect(VNode s, VFlow r, String flowType);
+    ConnectionResult connect(VNode s, VFlow r, String flowType);
 
-    public ConnectionResult connect(VFlow s, VFlow r, String flowType);
+    ConnectionResult connect(VFlow s, VFlow r, String flowType);
 
     /**
      * Removes the specified node from this flow.
      *
      * @param n the node to remove
+     *
      * @return the removed node or <code>null</code> if no node has been removed
      */
-    public VNode remove(VNode n);
+    VNode remove(VNode n);
 
     /**
      * Returns the nodes of this flow.
      *
      * @return nodes of this flow
      */
-    public ObservableList<VNode> getNodes();
+    ObservableList<VNode> getNodes();
 
     /**
      * Clears this flow, i.e., removes all nodes and connections.
      */
-    public void clear();
+    void clear();
 
     /**
      * Returns the sender of the specified connection.
      *
      * @param c connection
+     *
      * @return the sender of the specified connection or <code>null</code> if
      * the node does not exist
      */
-    public VNode getSender(Connection c);
+    VNode getSender(Connection c);
 
     /**
      * Returns the receiver of the specified connection.
      *
      * @param c connection
+     *
      * @return the receiver of the specified connection or <code>null</code> if
      * the node does not exist
      */
-    public VNode getReceiver(Connection c);
+    VNode getReceiver(Connection c);
 
     /**
      * Adds the specified connections to this flow controller.
      *
      * @param connections connections to add
-     * @param flowType connection type
+     * @param flowType    connection type
      */
-    public void addConnections(Connections connections, String flowType);
+    void addConnections(Connections connections, String flowType);
 
     /**
      * Returns the all connections of the specified flow/connection type
      *
      * @param flowType connection type
+     *
      * @return all connections of the specified flow/connection type
      */
-    public Connections getConnections(String flowType);
+    Connections getConnections(String flowType);
 
     /**
      * Returns all connections of this flow controller.
      *
      * @return all connections of this flow controller
      */
-    public ObservableMap<String, Connections> getAllConnections();
-
-    /**
-     * Defines the flow node implementation class used by this flow controller.
-     *
-     * @param cls flow node implementation class
-     */
-    public void setFlowNodeClass(Class<? extends VNode> cls);
-
-    /**
-     * Returns the flow node implementation class used by this flow controller.
-     *
-     * @return the flow node implementation class used by this flow controller
-     */
-    public Class<? extends VNode> getFlowNodeClass();
+    ObservableMap<String, Connections> getAllConnections();
 
     /**
      * Adds a new node to this flow.
      *
      * @param obj value object that shall be used for the requested node
+     *
      * @return new node
      */
-    public VNode newNode(ValueObject obj);
+    VNode newNode(ValueObject obj);
 
     /**
      * Adds a new node to this flow.
      *
      * @return new node
      */
-    public VNode newNode();
+    VNode newNode();
 
     /**
      * Adds a new subflow to this flow.
      *
      * @param obj value object that shall be used for the requested subflow
+     *
      * @return new subflow
      */
-    public VFlow newSubFlow(ValueObject obj);
+    VFlow newSubFlow(ValueObject obj);
 
     /**
      * Adds a new subflow to this flow.
      *
      * @return new subflow
      */
-    public VFlow newSubFlow();
+    VFlow newSubFlow();
 
     /**
      * Returns all direct subcontrollers of this flow controller. Subcontrollers
@@ -260,97 +257,95 @@ public interface VFlow {
      *
      * @return all direct subcontrollers of this flow controller
      */
-    public Collection<VFlow> getSubControllers();
+    Collection<VFlow> getSubControllers();
 
     /**
      * Defines the skin factories for this flow controller.
      *
      * @param skinFactories skin factories that shall be used by this flow
-     * controller
-     *
-     * Doesn't use Generics because generic arrays are not supported. GENERICS
-     * ARE CRAPPY!
-     * {@link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971}
-     *
+     *                      controller
+     *                      <p>
+     *                      Doesn't use Generics because generic arrays are not supported. GENERICS
+     *                      ARE CRAPPY!
+     *                      {@link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971}
      */
-    public void setSkinFactories(SkinFactory... skinFactories);
+    void setSkinFactories(SkinFactory... skinFactories);
 
     /**
      * Defines the skin factories for this flow controller.
      *
      * @param skinFactories skin factories that shall be used by this flow
-     * controller
+     *                      controller
      */
-    public void setSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
+    void setSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
 
     /**
      * Returns the skin factories that are used by this flow controller.
      *
      * @return the skin factories that are used by this flow controller
      */
-    public Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> getSkinFactories();
+    Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> getSkinFactories();
 
     /**
      * Adds the specified skin factories to this flow controller.
      *
      * @param skinFactories skin factories that shall be added to this flow
-     * controller
-     *
-     * Doesn't use Generics because generic arrays are not supported. GENERICS
-     * ARE CRAPPY!
-     * {@link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971}
-     *
+     *                      controller
+     *                      <p>
+     *                      Doesn't use Generics because generic arrays are not supported. GENERICS
+     *                      ARE CRAPPY!
+     *                      {@link http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971}
      */
-    public void addSkinFactories(SkinFactory... skinFactories);
+    void addSkinFactories(SkinFactory... skinFactories);
 
     /**
      * Adds the specified skin factories to this flow controller.
      *
      * @param skinFactories skin factories that shall be added to this flow
-     * controller
+     *                      controller
      */
-    public void addSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
+    void addSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
 
     /**
      * Removes the specified skin factories from this flow controller.
      *
      * @param skinFactories skin factories to be removed
      */
-    public void removeSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories);
+    void removeSkinFactories(SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>... skinFactories);
 
     /**
      * Removes the specified skin factories from this flow controller.
      *
      * @param skinFactories skin factories to be removed
      */
-    public void removeSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
+    void removeSkinFactories(Collection<SkinFactory<? extends ConnectionSkin, ? extends VNodeSkin>> skinFactories);
 
     /**
      * Defines the id generator that shall be used by this flow controller.
      *
      * @param generator id generator
      */
-    public void setIdGenerator(IdGenerator generator);
+    void setIdGenerator(IdGenerator generator);
 
     /**
      * Returns the id generator used by this flow controller.
      *
      * @return id generator
      */
-    public IdGenerator getIdGenerator();
+    IdGenerator getIdGenerator();
 
 
-    public List<VNodeSkin> getNodeSkinsById(String id);
+    List<VNodeSkin> getNodeSkinsById(String id);
 
-    public FlowNodeSkinLookup getNodeSkinLookup();
+    FlowNodeSkinLookup getNodeSkinLookup();
 
-    public void setNodeSkinLookup(FlowNodeSkinLookup skinLookup);
+    void setNodeSkinLookup(FlowNodeSkinLookup skinLookup);
 
-    public void setVisible(boolean state);
+    void setVisible(boolean state);
 
-    public boolean isVisible();
+    boolean isVisible();
 
-    public BooleanProperty visibleState();
+    BooleanProperty visibleState();
 
     Connector addInput(String type);
 
@@ -360,10 +355,11 @@ public interface VFlow {
      * Returns child flow by id.
      *
      * @param id the id that specifies the requested flow
+     *
      * @return the requested child flow or <code>null</code> if no such flow
      * exists
      */
-    public VFlow getFlowById(String id);
+    VFlow getFlowById(String id);
 
     VFlow getParent();
 
@@ -371,11 +367,13 @@ public interface VFlow {
 
     VFlow getRootFlow();
 
-    public ThruConnector addThruInput(String type);
+    ThruConnector addThruInput(String type);
 
-    public ThruConnector addThruOutput(String type);
+    ThruConnector addThruOutput(String type);
 
-    public ObservableList<ThruConnector> getThruInputs();
+    ObservableList<ThruConnector> getThruInputs();
 
-    public ObservableList<ThruConnector> getThruOutputs();
+    ObservableList<ThruConnector> getThruOutputs();
+
+    Map<String, ConnectionSkin> getConnectionSkinMap(SkinFactory skinFactory);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,6 +37,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -53,7 +54,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Michael Hoffer <info@michaelhoffer.de>
  */
 public class VFlowTest {
@@ -103,10 +103,10 @@ public class VFlowTest {
                     continue;
                 }
 
-                assertNotEquals("flow.newNode() must not return equal nodes!",
-                        flow.getNodes().get(i), flow.getNodes().get(j));
+                assertNotEquals("flow.registerNode() must not return equal nodes!",
+                    flow.getNodes().get(i), flow.getNodes().get(j));
                 assertNotEquals("nodes must not have equal ids!",
-                        flow.getNodes().get(i).getId(), flow.getNodes().get(j).getId());
+                    flow.getNodes().get(i).getId(), flow.getNodes().get(j).getId());
             }
         }
     }
@@ -137,11 +137,11 @@ public class VFlowTest {
 
             if (prevNodes.size() >= connectionTypes.length) {
 
-//                System.out.print(" >> prevNodes: ");
-//                for (VNode vNode : prevNodes) {
-//                    System.out.print(" " + vNode.getOutputs().get(0).getType());
-//                }
-//                System.out.println("");
+                //                System.out.print(" >> prevNodes: ");
+                //                for (VNode vNode : prevNodes) {
+                //                    System.out.print(" " + vNode.getOutputs().get(0).getType());
+                //                }
+                //                System.out.println("");
                 for (int j = 0; j < prevNodes.size(); j++) {
 
                     ConnectionResult[] results = new ConnectionResult[connectionTypes.length];
@@ -155,22 +155,22 @@ public class VFlowTest {
                         Connector outputReceiver = receiverNode.getOutputs().get(0);
 
                         results[j] = flow.connect(outputSender, inputReceiver);
-                        
+
                         if (k == 0) {
                             assertTrue("Connection between compatible types failed: "
                                     + outputSender.getType() + " -> " + inputReceiver.getType(),
-                                    results[j].getStatus().isCompatible());
+                                results[j].getStatus().isCompatible());
                         } else {
                             assertFalse("Connection between incompatible types must fail: "
                                     + outputSender.getType() + " -> " + inputReceiver.getType(),
-                                    results[j].getStatus().isCompatible());
+                                results[j].getStatus().isCompatible());
                         }
 
                         assertFalse("Connection between two outputs must fail",
-                                flow.connect(outputSender, outputReceiver).getStatus().isCompatible());
+                            flow.connect(outputSender, outputReceiver).getStatus().isCompatible());
 
                         assertFalse("Connection between two inputs must fail",
-                                flow.connect(inputSender, inputReceiver).getStatus().isCompatible());
+                            flow.connect(inputSender, inputReceiver).getStatus().isCompatible());
 
                     } // end for k
                 } // end for j
@@ -198,7 +198,7 @@ public class VFlowTest {
         System.out.println(" --> subnode class: " + subNode.getClass());
 
         assertTrue("Node that represent flows must implement VFlowModel interface",
-                (subNode instanceof VFlowModel));
+            (subNode instanceof VFlowModel));
     }
 
     @Test
@@ -218,6 +218,6 @@ public class VFlowTest {
         System.out.println(" --> subnode class (as referenced by connector): " + connector.getNode().getClass());
 
         assertTrue("Node that represent flows must implement VFlowModel interface",
-                (connector.getNode() instanceof VFlowModel));
+            (connector.getNode() instanceof VFlowModel));
     }
 }

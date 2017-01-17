@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -35,20 +35,23 @@ package eu.mihosoft.vrl.workflow;
 
 /**
  * This interface defines the result of an attempt to connect two {@code Connector}s
+ *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface ConnectionResult {
 
     /**
      * Get the connection object for the connection being attempted
+     *
      * @return the connection
      */
     Connection getConnection();
-    
-//    List<Connection> getPath();
+
+    //    List<Connection> getPath();
 
     /**
-     * Get the status of the connection. 
+     * Get the status of the connection.
+     *
      * @return the status of the connection
      */
     CompatibilityResult getStatus();

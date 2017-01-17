@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -47,7 +47,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public class Main extends Application {
@@ -63,12 +62,13 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
     private MainWindowFXMLController controller;
 
     @Override
     public void start(Stage primaryStage) {
 
-//        connectionTest();
+        //        connectionTest();
 
         StackPane canvas = new StackPane();
 
@@ -80,7 +80,7 @@ public class Main extends Application {
             fxmlLoader.load();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                log(Level.SEVERE, null, ex);
         }
 
         controller = fxmlLoader.getController();
@@ -94,17 +94,17 @@ public class Main extends Application {
         Rectangle rect = new Rectangle();
         rect.setStroke(new Color(1, 1, 1, 1));
         rect.setFill(new Color(0, 0, 0, 0.5));
-        
-//        MouseControlUtil.
-//                addSelectionRectangleGesture(controller.getRootPane(), rect);
 
-//        Playground.search01();
-//        
-//        VRLShell shell = VShell.showInteractivScenicView(canvas);
-//        
-//        controller.registerShell(shell);
+        //        MouseControlUtil.
+        //                addSelectionRectangleGesture(controller.getRootPane(), rect);
+
+        //        Playground.search01();
+        //
+        //        VRLShell shell = VShell.showInteractivScenicView(canvas);
+        //
+        //        controller.registerShell(shell);
 
     }
 
-   
+
 }

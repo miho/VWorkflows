@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -33,10 +33,10 @@
  */
 package eu.mihosoft.vrl.workflow.fx;
 
+import eu.mihosoft.vrl.workflow.fx.scene.layout.OptimizableContentPane;
 import javafx.scene.transform.Transform;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public interface OptimizationRule {
@@ -46,14 +46,15 @@ public interface OptimizationRule {
      *
      * @param p pane
      * @param t transform
+     *
      * @return {@code true} if the content shall be visible; {@code false}
      * otherwise
      */
-    public boolean visible(OptimizableContentPane p, Transform t);
+    boolean visible(OptimizableContentPane p, Transform t);
 
     /**
      * Determines whether the content pane shall be attached or not.
-     *
+     * <p>
      * <p>
      * <b>NOTE:</b> attaching/detaching nodes from the scene graph is an
      * expensive operation.
@@ -61,9 +62,10 @@ public interface OptimizationRule {
      *
      * @param p pane
      * @param t transform
+     *
      * @return {@code true} if the content shall be attached; {@code false}
      * otherwise
      */
-    public boolean attached(OptimizableContentPane p, Transform t);
+    boolean attached(OptimizableContentPane p, Transform t);
 }
 

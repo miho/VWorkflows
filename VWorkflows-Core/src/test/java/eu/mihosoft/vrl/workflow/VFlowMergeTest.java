@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -38,10 +38,10 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import org.junit.Ignore;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class VFlowMergeTest {
@@ -52,7 +52,7 @@ public class VFlowMergeTest {
         addNodesToFlow(parent.newSubFlow(), 3, "control", "data");
         VFlow subflow = FlowFactory.newFlow();
         addNodesToFlow(subflow, 3, "control", "data");
-//        parent.add(subflow);
+        //        parent.add(subflow);
 
         VFlow expectedResult = FlowFactory.newFlow();
         addNodesToFlow(expectedResult, 3, "control", "data");

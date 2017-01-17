@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -44,11 +44,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.event.EventHandler;
 
+import java.util.List;
+
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-class ConnectorIOImpl implements Connector {
+public class ConnectorIOImpl implements Connector {
 
     private VNode node;
     private String type;
@@ -65,7 +66,7 @@ class ConnectorIOImpl implements Connector {
         this.input = input;
         this.output = output;
     }
-    
+
     public ConnectorIOImpl(Connector c) {
         this(c.getNode(), c.getType(), c.getLocalId(), c.isInput(), c.isOutput());
         this.vObj = c.getValueObject();
@@ -134,56 +135,61 @@ class ConnectorIOImpl implements Connector {
 
     @Override
     public ObjectProperty<ValueObject> valueObjectProperty() {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void addConnectionEventListener(EventHandler<ConnectionEvent> handler) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void removeConnectionEventListener(EventHandler<ConnectionEvent> handler) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void addClickEventListener(EventHandler<ClickEvent> handler) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void removeClickEventListener(EventHandler<ClickEvent> handler) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void click(MouseButton btn, Object event) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO NB-AUTOGEN
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public boolean isVisualizationRequestInitialized() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void setMaxNumberOfConnections(int numConnections) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public int getMaxNumberOfConnections() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public ObjectProperty<Integer> maxNumberOfConnectionsProperty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<EventHandler<ConnectionEvent>> getConnectionEventHandlers() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

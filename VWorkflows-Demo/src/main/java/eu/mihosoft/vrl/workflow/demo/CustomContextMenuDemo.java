@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -39,13 +39,13 @@
 package eu.mihosoft.vrl.workflow.demo;
 
 import eu.mihosoft.vrl.workflow.Connection;
-import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
-import eu.mihosoft.vrl.workflow.fx.DefaultFXConnectionSkin;
-import eu.mihosoft.vrl.workflow.fx.FXSkinFactory;
-import eu.mihosoft.vrl.workflow.fx.VCanvas;
+import eu.mihosoft.vrl.workflow.fx.scene.layout.VCanvas;
+import eu.mihosoft.vrl.workflow.fx.skin.FXSkinFactory;
+import eu.mihosoft.vrl.workflow.fx.skin.impl.DefaultFXConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -67,7 +67,7 @@ public class CustomContextMenuDemo extends Application {
         StackPane contentPane = new StackPane();
         VCanvas canvas = new VCanvas();
         contentPane.getChildren().add(canvas);
-        createFlow((Pane)canvas.getContent());
+        createFlow((Pane) canvas.getContent());
 
         Scene scene = new Scene(contentPane, 1024, 768);
 

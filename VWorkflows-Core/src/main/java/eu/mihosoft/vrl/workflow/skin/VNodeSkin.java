@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,9 +37,10 @@ import eu.mihosoft.vrl.workflow.VNode;
 
 /**
  * Node skin.
- * 
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
  * @param <T> node model type
+ *
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VNodeSkin<T extends VNode> extends Skin<T> {
 

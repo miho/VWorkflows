@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -35,10 +35,13 @@ package eu.mihosoft.vrl.workflow;
 
 /**
  * This interface describes whether two connectors are compatible for a connection.
+ *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface CompatibilityResult {
     boolean isCompatible();
+
     String getMessage();
+
     String getStatus();
 }

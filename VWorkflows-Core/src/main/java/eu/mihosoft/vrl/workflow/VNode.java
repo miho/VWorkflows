@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -42,126 +42,135 @@ import javafx.collections.ObservableList;
 import java.util.Collection;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VNode extends Model, Selectable {
 
-    public StringProperty titleProperty();
+    StringProperty titleProperty();
 
-    public void setTitle(String title);
+    void setTitle(String title);
 
-    public String getTitle();
+    String getTitle();
 
-    public StringProperty idProperty();
+    StringProperty idProperty();
 
     /**
      * Defines the local id of this node.
      *
      * @param id id to set
      */
-    public void setId(String id);
+    void setId(String id);
 
     /**
      * Returns the local id of this node.
      *
      * @return
      */
-    public String getId();
+    String getId();
 
     /**
      * Returns the global id of this node
      *
      * @return global id of this node
      */
-//    public String getGlobalId();
-    public DoubleProperty xProperty();
+    //    String getGlobalId();
+    DoubleProperty xProperty();
 
-    public DoubleProperty yProperty();
+    DoubleProperty yProperty();
 
-    public void setX(double x);
+    void setX(double x);
 
-    public void setY(double x);
+    void setY(double x);
 
-    public double getX();
+    double getX();
 
-    public double getY();
+    double getY();
 
-    public DoubleProperty widthProperty();
+    DoubleProperty widthProperty();
 
-    public DoubleProperty heightProperty();
+    DoubleProperty heightProperty();
 
-    public void setWidth(double w);
+    void setWidth(double w);
 
-    public void setHeight(double h);
+    void setHeight(double h);
 
-    public double getWidth();
+    double getWidth();
 
-    public double getHeight();
+    double getHeight();
 
-//    public ObservableList<VNode> getChildren();
-//    public ObservableList<Connector<FlowNode>> getInputs();
-//    public ObservableList<Connector<FlowNode>> getOutputs();
-    public void setValueObject(ValueObject obj);
+    //    ObservableList<VNode> getChildren();
+    //    ObservableList<Connector<FlowNode>> getInputs();
+    //    ObservableList<Connector<FlowNode>> getOutputs();
+    void setValueObject(ValueObject obj);
 
-    public ValueObject getValueObject();
+    ValueObject getValueObject();
 
-    public ObjectProperty<ValueObject> valueObjectProperty();
+    ObjectProperty<ValueObject> valueObjectProperty();
 
-    public VFlowModel getFlow();
+    VFlowModel getFlow();
 
-//    boolean isInputOfType(String type);
-//
-//    boolean isOutputOfType(String type);
-//    boolean isInput();
-//
-//    boolean isOutput();
-//    void setInput(boolean state, String type);
-//    void setOutput(boolean state, String type);
-    public Connector addInput(String type);
+    //    boolean isInputOfType(String type);
+    //
+    //    boolean isOutputOfType(String type);
+    //    boolean isInput();
+    //
+    //    boolean isOutput();
+    //    void setInput(boolean state, String type);
+    //    void setOutput(boolean state, String type);
+    Connector addInput(String type);
 
-    public Connector addOutput(String type);
+    Connector addOutput(String type);
 
-    public Connector addConnector(Connector c);
-    
-    public boolean removeConnector(Connector c);
+    Connector addConnector(Connector c);
 
-//    ObservableList<String> getInputTypes();
-//
-//    ObservableList<String> getOutputTypes();
-    public Collection<String> getMainInputTypes();
+    boolean removeConnector(Connector c);
 
-    public Collection<String> getMainOutputTypes();
+    //    ObservableList<String> getInputTypes();
+    //
+    //    ObservableList<String> getOutputTypes();
+    Collection<String> getMainInputTypes();
 
-    public Connector getMainInput(String type);
+    Collection<String> getMainOutputTypes();
 
-    public Connector getMainOutput(String type);
+    Connector getMainInput(String type);
 
-    public Connector setMainInput(Connector connector);
+    Connector getMainOutput(String type);
 
-    public Connector setMainOutput(Connector connector);
+    Connector setMainInput(Connector connector);
 
-    public Connector getConnector(String localId);
+    Connector setMainOutput(Connector connector);
 
-    public ObservableList<Connector> getConnectors();
+    Connector getConnector(String localId);
 
-    public ObservableList<Connector> getInputs();
+    ObservableList<Connector> getConnectors();
 
-    public ObservableList<Connector> getOutputs();
-    
-    public BooleanProperty selectableProperty();
-    public boolean isSelectable();
-    
-        
+    ObservableList<Connector> getInputs();
+
+    ObservableList<Connector> getOutputs();
+
+    BooleanProperty selectableProperty();
+
+    boolean isSelectable();
+
     /**
      * Returns the distance to the root element.
      */
-    public int getDepth();
-    
+    int getDepth();
+
     /**
      * Returns the root element of this flow.
+     *
      * @return root element
      */
-    public FlowModel getRoot();
-    
+    FlowModel getRoot();
+
+    Connector addInput(VNode node, String type);
+
+    Connector addOutput(VNode node, String type);
+
+    ThruConnector addThruInput(VNode node, String type, VNode innerNode, Connector innerConnector);
+
+    ThruConnector addThruOutput(VNode node, String type, VNode innerNode, Connector innerConnector);
+
+    Connector addConnector(VNode node, Connector c);
 }

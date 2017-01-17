@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,12 +37,11 @@ import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 
 /**
- *
  * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
-public class PersistentConnector{
+public class PersistentConnector {
 
-//    private PersistentNode node;
+    //    private PersistentNode node;
     private String type;
     private String localId;
     private VisualizationRequest vRequest;
@@ -55,7 +54,7 @@ public class PersistentConnector{
     public PersistentConnector(String type, String localId, boolean input, boolean output, boolean passthru) {
         this.type = type;
         this.localId = localId;
-//        this.node = node;
+        //        this.node = node;
         this.input = input;
         this.output = output;
         this.passthru = passthru;
@@ -73,9 +72,9 @@ public class PersistentConnector{
         this.localId = id;
     }
 
-//    public PersistentNode getNode() {
-//        return this.node;
-//    }
+    //    public PersistentNode getNode() {
+    //        return this.node;
+    //    }
 
 
     public VisualizationRequest getVisualizationRequest() {
@@ -101,12 +100,12 @@ public class PersistentConnector{
         return output;
     }
 
-//    /**
-//     * @param node the node to set
-//     */
-//    public void setNode(PersistentNode node) {
-//        this.node = node;
-//    }
+    //    /**
+    //     * @param node the node to set
+    //     */
+    //    public void setNode(PersistentNode node) {
+    //        this.node = node;
+    //    }
 
     /**
      * @return the valueObject
@@ -119,7 +118,7 @@ public class PersistentConnector{
      * @param valueObject the valueObject to set
      */
     public void setValueObject(ValueObject valueObject) {
-         this.valueObject = valueObject;
+        this.valueObject = valueObject;
     }
 
     /**

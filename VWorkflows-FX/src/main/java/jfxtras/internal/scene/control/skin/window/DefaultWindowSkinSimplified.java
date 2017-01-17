@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -68,7 +68,6 @@ import jfxtras.scene.control.window.WindowIcon;
 import jfxtras.scene.control.window.WindowUtil;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class DefaultWindowSkinSimplified extends SkinBase<Window> {
@@ -125,101 +124,101 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
         }
 
         control.getLeftIcons().addListener(
-                (ListChangeListener.Change<? extends WindowIcon> change) -> {
-                    while (change.next()) {
-                        // TODO handle permutation
-//                        if (change.wasPermutated()) {
-//                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
-//                                //permutate
-//                            }
-//                        } else if (change.wasUpdated()) {
-//                            //update item
-//                        } else {
-                        if (change.wasRemoved()) {
-                            for (WindowIcon i : change.getRemoved()) {
-                                titleBar.removeLeftIcon(i);
-                            }
-                        } else if (change.wasAdded()) {
-                            for (WindowIcon i : change.getAddedSubList()) {
-                                titleBar.addLeftIcon(i);
-                            }
+            (ListChangeListener.Change<? extends WindowIcon> change) -> {
+                while (change.next()) {
+                    // TODO handle permutation
+                    //                        if (change.wasPermutated()) {
+                    //                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                    //                                //permutate
+                    //                            }
+                    //                        } else if (change.wasUpdated()) {
+                    //                            //update item
+                    //                        } else {
+                    if (change.wasRemoved()) {
+                        for (WindowIcon i : change.getRemoved()) {
+                            titleBar.removeLeftIcon(i);
                         }
-
+                    } else if (change.wasAdded()) {
+                        for (WindowIcon i : change.getAddedSubList()) {
+                            titleBar.addLeftIcon(i);
+                        }
                     }
-                });
+
+                }
+            });
 
         control.getRightIcons().addListener(
-                (ListChangeListener.Change<? extends WindowIcon> change) -> {
-                    while (change.next()) {
-                        // TODO handle permutation
-//                        if (change.wasPermutated()) {
-//                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
-//                                //permutate
-//                            }
-//                        } else if (change.wasUpdated()) {
-//                            //update item
-//                        } else {
-                        if (change.wasRemoved()) {
-                            for (WindowIcon i : change.getRemoved()) {
-                                titleBar.removeRightIcon(i);
-                            }
-                        } else if (change.wasAdded()) {
-                            for (WindowIcon i : change.getAddedSubList()) {
-                                titleBar.addRightIcon(i);
-                            }
+            (ListChangeListener.Change<? extends WindowIcon> change) -> {
+                while (change.next()) {
+                    // TODO handle permutation
+                    //                        if (change.wasPermutated()) {
+                    //                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                    //                                //permutate
+                    //                            }
+                    //                        } else if (change.wasUpdated()) {
+                    //                            //update item
+                    //                        } else {
+                    if (change.wasRemoved()) {
+                        for (WindowIcon i : change.getRemoved()) {
+                            titleBar.removeRightIcon(i);
+                        }
+                    } else if (change.wasAdded()) {
+                        for (WindowIcon i : change.getAddedSubList()) {
+                            titleBar.addRightIcon(i);
                         }
                     }
-                });
+                }
+            });
 
         control.minimizedProperty().addListener(
-                (ov, oldValue, newValue) -> {
+            (ov, oldValue, newValue) -> {
 
-                    boolean storeOldHeight = minimizeTimeLine == null && newValue;
+                boolean storeOldHeight = minimizeTimeLine == null && newValue;
 
-                    if (minimizeTimeLine != null) {
-                        minimizeTimeLine.stop();
-                        minimizeTimeLine = null;
-                    }
+                if (minimizeTimeLine != null) {
+                    minimizeTimeLine.stop();
+                    minimizeTimeLine = null;
+                }
 
-                    double newHeight;
+                double newHeight;
 
-                    if (newValue) {
-                        newHeight = titleBar.getHeight();
-                    } else {
-                        newHeight = oldHeight;
-                    }
+                if (newValue) {
+                    newHeight = titleBar.getHeight();
+                } else {
+                    newHeight = oldHeight;
+                }
 
-                    if (storeOldHeight) {
-                        oldHeight = control.getPrefHeight();
-                    }
+                if (storeOldHeight) {
+                    oldHeight = control.getPrefHeight();
+                }
 
-                    minimizeTimeLine = new Timeline(
-                            new KeyFrame(Duration.ZERO,
-                                    new KeyValue(control.prefHeightProperty(), control.getPrefHeight())),
-                            new KeyFrame(Duration.seconds(0.1),
-                                    new KeyValue(control.prefHeightProperty(), newHeight)));
+                minimizeTimeLine = new Timeline(
+                    new KeyFrame(Duration.ZERO,
+                        new KeyValue(control.prefHeightProperty(), control.getPrefHeight())),
+                    new KeyFrame(Duration.seconds(0.1),
+                        new KeyValue(control.prefHeightProperty(), newHeight)));
 
-                    minimizeTimeLine.statusProperty().addListener(
-                            (ObservableValue<? extends Status> ov2, Status oldStatus, Status newStatus) -> {
-                                if (newStatus == Status.STOPPED) {
+                minimizeTimeLine.statusProperty().addListener(
+                    (ObservableValue<? extends Status> ov2, Status oldStatus, Status newStatus) -> {
+                        if (newStatus == Status.STOPPED) {
 
-                                    // restore cache hint
-                                    getSkinnable().setCache(true);
-                                    getSkinnable().setCacheHint(CacheHint.SPEED);
+                            // restore cache hint
+                            getSkinnable().setCache(true);
+                            getSkinnable().setCacheHint(CacheHint.SPEED);
 
-                                    minimizeTimeLine = null;
-                                    if (newValue) {
-                                        control.getContentPane().setVisible(false);
-                                    }
-                                }
-                            });
+                            minimizeTimeLine = null;
+                            if (newValue) {
+                                control.getContentPane().setVisible(false);
+                            }
+                        }
+                    });
 
-                    // temporarily disable cache hint due to rendering bugs
-                    getSkinnable().setCache(false);
-                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+                // temporarily disable cache hint due to rendering bugs
+                getSkinnable().setCache(false);
+                getSkinnable().setCacheHint(CacheHint.DEFAULT);
 
-                    minimizeTimeLine.play();
-                });
+                minimizeTimeLine.play();
+            });
 
         control.prefHeightProperty().addListener(new MinimizeHeightListener(control, titleBar));
 
@@ -260,13 +259,13 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
         control.getStylesheets().addListener((Change<? extends String> change) -> {
             while (change.next()) {
                 // TODO handle permutation
-//                if (change.wasPermutated()) {
-//                    for (int i = change.getFrom(); i < change.getTo(); ++i) {
-//                        //permutate
-//                    }
-//                } else if (change.wasUpdated()) {
-//                    //update item
-//                } else 
+                //                if (change.wasPermutated()) {
+                //                    for (int i = change.getFrom(); i < change.getTo(); ++i) {
+                //                        //permutate
+                //                    }
+                //                } else if (change.wasUpdated()) {
+                //                    //update item
+                //                } else
 
                 if (change.wasRemoved()) {
                     for (String i : change.getRemoved()) {
@@ -283,24 +282,24 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
         Border prevBorder = control.getBorder();
 
         control.selectedProperty().addListener(
-                (ov, oldValue, newValue) -> {
-                    if (newValue) {
-                        control.setBorder(new Border(
-                                new BorderStroke(control.getSelectionBorderColor(),
-                                        BorderStrokeStyle.SOLID,
-                                        new CornerRadii(3), new BorderWidths(2))));
-                        if (control.isSelectionEffectEnabled()) {
-                            ColorAdjust effect
+            (ov, oldValue, newValue) -> {
+                if (newValue) {
+                    control.setBorder(new Border(
+                        new BorderStroke(control.getSelectionBorderColor(),
+                            BorderStrokeStyle.SOLID,
+                            new CornerRadii(3), new BorderWidths(2))));
+                    if (control.isSelectionEffectEnabled()) {
+                        ColorAdjust effect
                             = new ColorAdjust(-0.25, 0.2, 0.8, 0);
-                            Glow glow = new Glow(0.5);
-                            glow.setInput(effect);
-                            control.setEffect(glow);
-                        }
-                    } else {
-                        control.setBorder(prevBorder);
-                        control.setEffect(null);
+                        Glow glow = new Glow(0.5);
+                        glow.setInput(effect);
+                        control.setEffect(glow);
                     }
-                });
+                } else {
+                    control.setBorder(prevBorder);
+                    control.setEffect(null);
+                }
+            });
 
         // we enable node caching for the whole window
         getSkinnable().setCache(true);
@@ -315,9 +314,9 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
             final Node n = control;
 
             final double parentScaleX = n.getParent().
-                    localToSceneTransformProperty().getValue().getMxx();
+                localToSceneTransformProperty().getValue().getMxx();
             final double parentScaleY = n.getParent().
-                    localToSceneTransformProperty().getValue().getMyy();
+                localToSceneTransformProperty().getValue().getMyy();
 
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
@@ -339,17 +338,17 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
             final Node n = control;
 
             final double parentScaleX = n.getParent().
-                    localToSceneTransformProperty().getValue().getMxx();
+                localToSceneTransformProperty().getValue().getMxx();
             final double parentScaleY = n.getParent().
-                    localToSceneTransformProperty().getValue().getMyy();
+                localToSceneTransformProperty().getValue().getMyy();
 
             final double scaleX = n.localToSceneTransformProperty().
-                    getValue().getMxx();
+                getValue().getMxx();
             final double scaleY = n.localToSceneTransformProperty().
-                    getValue().getMyy();
+                getValue().getMyy();
 
             Bounds boundsInScene
-                    = control.localToScene(control.getBoundsInLocal());
+                = control.localToScene(control.getBoundsInLocal());
 
             double sceneX = boundsInScene.getMinX();
             double sceneY = boundsInScene.getMinY();
@@ -381,19 +380,19 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
             } else {
 
                 double width = n.getBoundsInLocal().getMaxX()
-                        - n.getBoundsInLocal().getMinX();
+                    - n.getBoundsInLocal().getMinX();
                 double height = n.getBoundsInLocal().getMaxY()
-                        - n.getBoundsInLocal().getMinY();
+                    - n.getBoundsInLocal().getMinY();
 
                 if (resizeTop) {
-//                        System.out.println("TOP");
+                    //                        System.out.println("TOP");
 
                     double insetOffset = getSkinnable().getInsets().getTop() / 2;
 
                     double yDiff
-                            = sceneY / parentScaleY
-                            + insetOffset
-                            - event.getSceneY() / parentScaleY;
+                        = sceneY / parentScaleY
+                        + insetOffset
+                        - event.getSceneY() / parentScaleY;
 
                     double newHeight = control.getPrefHeight() + yDiff;
 
@@ -403,35 +402,35 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
                     }
                 }
                 if (resizeLeft) {
-//                        System.out.println("LEFT");
+                    //                        System.out.println("LEFT");
 
                     double insetOffset = getSkinnable().getInsets().getLeft() / 2;
 
                     double xDiff = sceneX / parentScaleX
-                            + insetOffset
-                            - event.getSceneX() / parentScaleX;
+                        + insetOffset
+                        - event.getSceneX() / parentScaleX;
 
                     double newWidth = control.getPrefWidth() + xDiff;
 
                     if (newWidth > Math.max(control.minWidth(0),
-                            control.getContentPane().minWidth(0))) {
+                        control.getContentPane().minWidth(0))) {
                         control.setLayoutX(control.getLayoutX() - xDiff);
                         control.setPrefWidth(newWidth);
                     }
                 }
 
                 if (resizeBottom) {
-//                        System.out.println("BOTTOM");
+                    //                        System.out.println("BOTTOM");
 
                     double insetOffset = getSkinnable().getInsets().getBottom() / 2;
 
                     double yDiff = event.getSceneY() / parentScaleY
-                            - sceneY / parentScaleY - insetOffset;
+                        - sceneY / parentScaleY - insetOffset;
 
                     double newHeight = yDiff;
 
                     newHeight = Math.max(
-                            newHeight, control.minHeight(0));
+                        newHeight, control.minHeight(0));
 
                     if (newHeight < control.maxHeight(0)) {
                         control.setPrefHeight(newHeight);
@@ -442,14 +441,14 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
                     double insetOffset = getSkinnable().getInsets().getRight() / 2;
 
                     double xDiff = event.getSceneX() / parentScaleX
-                            - sceneX / parentScaleY - insetOffset;
+                        - sceneX / parentScaleY - insetOffset;
 
                     double newWidth = xDiff;
 
                     newWidth = Math.max(
-                            newWidth,
-                            Math.max(control.getContentPane().minWidth(0),
-                                    control.minWidth(0)));
+                        newWidth,
+                        Math.max(control.getContentPane().minWidth(0),
+                            control.minWidth(0)));
 
                     if (newWidth < control.maxWidth(0)) {
                         control.setPrefWidth(newWidth);
@@ -555,26 +554,26 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
             control.autosize();
         });
 
-//        setOnScroll(new EventHandler<ScrollEvent>() {
-//            @Override
-//            public void handle(ScrollEvent event) {
-//
-//                if (!isZoomable()) {
-//                    return;
-//                }
-//
-//                double scaleValue =
-//                        control.getScaleY() + event.getDeltaY() * getScaleIncrement();
-//
-//                scaleValue = Math.max(scaleValue, getMinScale());
-//                scaleValue = Math.min(scaleValue, getMaxScale());
-//
-//                control.setScaleX(scaleValue);
-//                control.setScaleY(scaleValue);
-//
-//                event.consume();
-//            }
-//        });
+        //        setOnScroll(new EventHandler<ScrollEvent>() {
+        //            @Override
+        //            public void handle(ScrollEvent event) {
+        //
+        //                if (!isZoomable()) {
+        //                    return;
+        //                }
+        //
+        //                double scaleValue =
+        //                        control.getScaleY() + event.getDeltaY() * getScaleIncrement();
+        //
+        //                scaleValue = Math.max(scaleValue, getMinScale());
+        //                scaleValue = Math.min(scaleValue, getMaxScale());
+        //
+        //                control.setScaleX(scaleValue);
+        //                control.setScaleY(scaleValue);
+        //
+        //                event.consume();
+        //            }
+        //        });
     }
 
     /**
@@ -655,23 +654,23 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
     // TODO move from skin to behavior class (a lot of other stuff here too)
     private void dragSelectedWindows(double offsetForAllX, double offsetForAllY) {
         for (SelectableNode sN : WindowUtil.
-                getDefaultClipboard().getSelectedItems()) {
+            getDefaultClipboard().getSelectedItems()) {
 
             if (sN == control
-                    || !(sN instanceof Window)) {
+                || !(sN instanceof Window)) {
                 continue;
             }
 
             Window selectedWindow = (Window) sN;
 
             if (control.getParent().
-                    equals(selectedWindow.getParent())) {
+                equals(selectedWindow.getParent())) {
 
                 selectedWindow.setLayoutX(
-                        selectedWindow.getLayoutX()
+                    selectedWindow.getLayoutX()
                         + offsetForAllX);
                 selectedWindow.setLayoutY(
-                        selectedWindow.getLayoutY()
+                    selectedWindow.getLayoutY()
                         + offsetForAllY);
             }
         } // end for sN
@@ -680,18 +679,18 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
     // TODO move from skin to behavior class (a lot of other stuff here too)
     private void selectedWindowsToFront() {
         for (SelectableNode sN : WindowUtil.
-                getDefaultClipboard().getSelectedItems()) {
+            getDefaultClipboard().getSelectedItems()) {
 
             if (sN == control
-                    || !(sN instanceof Window)) {
+                || !(sN instanceof Window)) {
                 continue;
             }
 
             Window selectedWindow = (Window) sN;
 
             if (control.getParent().
-                    equals(selectedWindow.getParent())
-                    && selectedWindow.isMoveToFront()) {
+                equals(selectedWindow.getParent())
+                && selectedWindow.isMoveToFront()) {
 
                 selectedWindow.toFront();
             }
@@ -711,15 +710,15 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
         @Override
         public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
             if (control.isMinimized()
-                    && control.getPrefHeight()
-                    < titleBar.minHeight(0) + control.getContentPane().minHeight(0)) {
+                && control.getPrefHeight()
+                < titleBar.minHeight(0) + control.getContentPane().minHeight(0)) {
                 control.getContentPane().setVisible(false);
-//                System.out.println("v: false");
+                //                System.out.println("v: false");
             } else if (!control.isMinimized()
-                    && control.getPrefHeight()
-                    >= titleBar.minHeight(0) + control.getContentPane().minHeight(0)) {
+                && control.getPrefHeight()
+                >= titleBar.minHeight(0) + control.getContentPane().minHeight(0)) {
                 control.getContentPane().setVisible(true);
-//                System.out.println("v: true");
+                //                System.out.println("v: true");
             }
         }
     }
@@ -749,40 +748,40 @@ class TitleBarSimplified extends HBox {
 
         setSpacing(8);
 
-//        label.setTextAlignment(TextAlignment.CENTER);
-//        label.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+        //        label.setTextAlignment(TextAlignment.CENTER);
+        //        label.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
         leftIconPane = new IconPane();
         rightIconPane = new IconPane();
 
         getChildren().add(leftIconPane);
-//        getChildren().add(VFXLayoutUtil.createHBoxFiller());
+        //        getChildren().add(VFXLayoutUtil.createHBoxFiller());
         getChildren().add(label);
-//        getChildren().add(VFXLayoutUtil.createHBoxFiller());
+        //        getChildren().add(VFXLayoutUtil.createHBoxFiller());
         getChildren().add(rightIconPane);
 
         control.boundsInParentProperty().addListener(
-                (ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) -> {
-                    if (control.getTitle() == null
+            (ObservableValue<? extends Bounds> ov, Bounds t, Bounds t1) -> {
+                if (control.getTitle() == null
                     || getLabel().getText() == null
                     || getLabel().getText().isEmpty()) {
-                        return;
-                    }
+                    return;
+                }
 
-                    double maxIconWidth = Math.max(
-                            leftIconPane.getWidth(), rightIconPane.getWidth());
+                double maxIconWidth = Math.max(
+                    leftIconPane.getWidth(), rightIconPane.getWidth());
 
-                    if (!control.getTitle().equals(getLabel().getText())) {
-                        if (originalTitleWidth
+                if (!control.getTitle().equals(getLabel().getText())) {
+                    if (originalTitleWidth
                         + maxIconWidth * 2 + offset < getWidth()) {
-                            getLabel().setText(control.getTitle());
-                        }
-                    } else if (!"...".equals(getLabel().getText())) {
-                        if (originalTitleWidth
-                        + maxIconWidth * 2 + offset >= getWidth()) {
-                            getLabel().setText("...");
-                        }
+                        getLabel().setText(control.getTitle());
                     }
-                });
+                } else if (!"...".equals(getLabel().getText())) {
+                    if (originalTitleWidth
+                        + maxIconWidth * 2 + offset >= getWidth()) {
+                        getLabel().setText("...");
+                    }
+                }
+            });
 
     }
 
@@ -792,15 +791,15 @@ class TitleBarSimplified extends HBox {
         originalTitleWidth = getLabel().getBoundsInParent().getWidth();
 
         double maxIconWidth = Math.max(
-                leftIconPane.getWidth(), rightIconPane.getWidth());
+            leftIconPane.getWidth(), rightIconPane.getWidth());
 
         if (originalTitleWidth
-                + maxIconWidth * 2 + offset >= getWidth()) {
+            + maxIconWidth * 2 + offset >= getWidth()) {
             getLabel().setText("...");
         }
 
         labelWidth = com.sun.javafx.tk.Toolkit.getToolkit().getFontLoader().
-                computeStringWidth(title, label.getFont());
+            computeStringWidth(title, label.getFont());
 
         control.layout();
         layout();
@@ -831,12 +830,12 @@ class TitleBarSimplified extends HBox {
         double result = super.computeMinWidth(h);
 
         double iconWidth
-                = Math.max(
-                        leftIconPane.minWidth(h),
-                        rightIconPane.minWidth(h)) * 2;
+            = Math.max(
+            leftIconPane.minWidth(h),
+            rightIconPane.minWidth(h)) * 2;
 
         result = Math.max(result,
-                iconWidth
+            iconWidth
                 + labelWidth
                 + getInsets().getLeft()
                 + getInsets().getRight());
@@ -854,13 +853,13 @@ class TitleBarSimplified extends HBox {
         super.layoutChildren();
 
         leftIconPane.resizeRelocate(getInsets().getLeft(), getInsets().getTop(),
-                leftIconPane.prefWidth(USE_PREF_SIZE),
-                getHeight() - getInsets().getTop() - getInsets().getBottom());
+            leftIconPane.prefWidth(USE_PREF_SIZE),
+            getHeight() - getInsets().getTop() - getInsets().getBottom());
 
         rightIconPane.resize(rightIconPane.prefWidth(USE_PREF_SIZE),
-                getHeight() - getInsets().getTop() - getInsets().getBottom());
+            getHeight() - getInsets().getTop() - getInsets().getBottom());
         rightIconPane.relocate(getWidth() - rightIconPane.getWidth() - getInsets().getRight(),
-                getInsets().getTop());
+            getInsets().getTop());
     }
 
     /**
@@ -902,7 +901,7 @@ class TitleBarSimplified extends HBox {
         @Override
         protected double computeMinWidth(double h) {
             return getHeight() * getChildren().size()
-                    + spacing * (getChildren().size() - 1);
+                + spacing * (getChildren().size() - 1);
         }
 
         @Override

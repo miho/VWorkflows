@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -36,17 +36,16 @@ package jfxtras.scene.control.window;
 import javafx.event.ActionEvent;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class MinimizeIcon extends WindowIcon {
 
     public static final String DEFAULT_STYLE_CLASS = "window-minimize-icon";
-    
+
     private Window w;
 
     public MinimizeIcon(final Window w) {
-        
+
         this.w = w;
 
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);

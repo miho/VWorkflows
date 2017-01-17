@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -34,6 +34,11 @@
 package eu.mihosoft.vrl.workflow;
 
 import eu.mihosoft.vrl.workflow.io.WorkflowIO;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
+import eu.mihosoft.vrl.workflow.util.WorkflowUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,11 +46,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class WorkflowUtilTest {
@@ -64,12 +66,12 @@ public class WorkflowUtilTest {
 
         if (destDepth < 0 || destDepth > depth) {
             throw new IllegalArgumentException("Illegal destDepth specified: "
-                    + destDepth + ". Must be between 1 and " + depth + ".");
+                + destDepth + ". Must be between 1 and " + depth + ".");
         }
 
         if (destWidth < 0 || destWidth >= width) {
             throw new IllegalArgumentException("Illegal destDepth specified: "
-                    + destDepth + ". Must be between 0 and " + (width - 1) + ".");
+                + destDepth + ". Must be between 0 and " + (width - 1) + ".");
         }
 
         VFlow flow = FlowFactory.newFlow();
@@ -90,7 +92,7 @@ public class WorkflowUtilTest {
 
         Assert.assertTrue("Number of Ancestors must be equal to dest depth. "
                 + "Expected " + destDepth + ", got " + numAncestors,
-                numAncestors == destDepth);
+            numAncestors == destDepth);
 
     }
 
@@ -151,51 +153,51 @@ public class WorkflowUtilTest {
 
             Assert.assertTrue("Wrong common ancestor. "
                     + "Expected " + commonAncestorId + ", got " + ancestor.getId(),
-                    commonAncestorId.equals(ancestor.getId())
+                commonAncestorId.equals(ancestor.getId())
             );
 
         }
     }
-    
+
     @Test
     public void pathInLayerTest() {
         createPathInLayerTest(3, 6);
         createPathInLayerTest(1, 1);
         createPathInLayerTest(32, 32);
         createPathInLayerTest(2, 100);
-        
+
 
     }
-    
+
     private void createPathInLayerTest(int pathLength, int numNodes) {
-        
+
         if (numNodes == 0 || pathLength == 0) {
             return;
         }
-        
+
         if (numNodes < pathLength) {
             throw new IllegalArgumentException(
-                    "path length must be less than number of nodes!");
+                "path length must be less than number of nodes!");
         }
-        
+
         VFlow flow = FlowFactory.newFlow();
-        
-        for(int i = 0; i < numNodes;i++) {
+
+        for (int i = 0; i < numNodes; i++) {
             VNode n = flow.newNode();
             n.setMainOutput(n.addOutput("mytype"));
             n.setMainInput(n.addInput("mytype"));
         }
-        
-        for(int i = 0; i < pathLength-1;i++) {
+
+        for (int i = 0; i < pathLength - 1; i++) {
             VNode sender = flow.getNodes().get(i);
-            VNode receiver = flow.getNodes().get(i+1);
+            VNode receiver = flow.getNodes().get(i + 1);
             flow.connect(sender, receiver, "mytype");
         }
-        
-        List<VNode> path= WorkflowUtil.getPathInLayerFromRoot(
-                flow.getNodes().get(0), "mytype");
-        
-        Assert.assertTrue("Expected number of nodes in path = "+pathLength
-                +", got " + path.size(), path.size()==pathLength);
+
+        List<VNode> path = WorkflowUtil.getPathInLayerFromRoot(
+            flow.getNodes().get(0), "mytype");
+
+        Assert.assertTrue("Expected number of nodes in path = " + pathLength
+            + ", got " + path.size(), path.size() == pathLength);
     }
 }

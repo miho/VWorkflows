@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -37,16 +37,17 @@ import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.Skin;
 import eu.mihosoft.vrl.workflow.skin.SkinFactory;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import eu.mihosoft.vrl.workflow.util.FlowFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 /**
- *
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class SkinTest {
@@ -61,18 +62,18 @@ public class SkinTest {
         VNode n1 = flow.newNode();
 
         Assert.assertTrue("Skin for n1 must be present.",
-                skinFactory.getNodeSkins().get(n1) != null);
+            skinFactory.getNodeSkins().get(n1) != null);
 
         Assert.assertTrue("Skin must be skin of n1.",
-                skinFactory.getNodeSkins().get(n1).getModel() == n1);
+            skinFactory.getNodeSkins().get(n1).getModel() == n1);
 
         VFlow sf1 = flow.newSubFlow();
 
         Assert.assertTrue("Skin for sf1 must be present.",
-                skinFactory.getNodeSkins().get(sf1.getModel()) != null);
+            skinFactory.getNodeSkins().get(sf1.getModel()) != null);
 
         Optional<VNodeSkinFactoryStub> sfSkinFactry
-                = skinFactory.getChildFactories().values().stream().findFirst();
+            = skinFactory.getChildFactories().values().stream().findFirst();
 
         Assert.assertTrue("Child factory must exist.", sfSkinFactry.isPresent());
 
@@ -80,10 +81,10 @@ public class SkinTest {
 
         sf1.setVisible(true);
         Assert.assertTrue("Skin for sn1 must be present.",
-                sfSkinFactry.get().getNodeSkins().get(sn1) != null);
+            sfSkinFactry.get().getNodeSkins().get(sn1) != null);
 
         Assert.assertTrue("Skin must be skin of n1.",
-                sfSkinFactry.get().getNodeSkins().get(sn1).getModel() == sn1);
+            sfSkinFactry.get().getNodeSkins().get(sn1).getModel() == sn1);
 
     }
 
@@ -97,13 +98,13 @@ public class SkinTest {
         VNode n1 = flow.newNode();
 
         VNodeSkin lookupN1 = flow.getNodeSkinLookup().
-                getById(skinFactory, n1.getId());
+            getById(skinFactory, n1.getId());
 
         Assert.assertTrue("Skin for n1 must be present.",
-                lookupN1 != null);
+            lookupN1 != null);
 
         Assert.assertTrue("Skin must be skin of n1.",
-                lookupN1.getModel() == n1);
+            lookupN1.getModel() == n1);
     }
 
     @Test
@@ -117,30 +118,30 @@ public class SkinTest {
         VNode n2 = flow.newNode();
 
         VNodeSkin lookupN1 = flow.getNodeSkinLookup().
-                getById(skinFactory, n1.getId());
+            getById(skinFactory, n1.getId());
 
         VNodeSkin lookupN2 = flow.getNodeSkinLookup().
-                getById(skinFactory, n2.getId());
+            getById(skinFactory, n2.getId());
 
         Assert.assertTrue("Skin for n1 must be present.",
-                lookupN1 != null);
+            lookupN1 != null);
 
         Assert.assertTrue("Skin must be skin of n1.",
-                lookupN1.getModel() == n1);
+            lookupN1.getModel() == n1);
 
         Assert.assertTrue("Skin for n2 must be present.",
-                lookupN2 != null);
+            lookupN2 != null);
 
         Assert.assertTrue("Skin must be skin of n2.",
-                lookupN2.getModel() == n2);
+            lookupN2.getModel() == n2);
 
         flow.remove(n2);
 
         VNodeSkin lookupN2AfterRemoval = flow.getNodeSkinLookup().
-                getById(skinFactory, n2.getId());
+            getById(skinFactory, n2.getId());
 
         Assert.assertTrue("Skin for n2 must be removed after node removal.",
-                lookupN2AfterRemoval == null);
+            lookupN2AfterRemoval == null);
 
     }
 
@@ -155,37 +156,37 @@ public class SkinTest {
         sf.setVisible(true);
 
         VNodeSkin lookupN1 = flow.getNodeSkinLookup().
-                getById(skinFactory, sf.getModel().getId());
+            getById(skinFactory, sf.getModel().getId());
 
         Assert.assertTrue("Skin for sf must be present.",
-                lookupN1 != null);
+            lookupN1 != null);
 
         Assert.assertTrue("Skin must be skin of n1.",
-                lookupN1.getModel() == sf.getModel());
+            lookupN1.getModel() == sf.getModel());
 
         VNode n1 = sf.newNode();
         VFlow sf1 = sf.newSubFlow();
 
         boolean n1IsChildNode = sf.getNodes().stream().filter(n -> n == n1).
-                findFirst().isPresent();
+            findFirst().isPresent();
 
         boolean sf1IsChildNode = sf.getNodes().stream().filter(n -> sf1.getModel() == n).
-                findFirst().isPresent();
+            findFirst().isPresent();
 
         Assert.assertTrue("n1 must be child of sf",
-                n1IsChildNode);
+            n1IsChildNode);
 
         Assert.assertTrue("sf1 must be child of sf",
-                sf1IsChildNode);
-        
-//        flow.remove(sf.getModel());
-//
-//        VNodeSkinFactoryStub skinFactoryOfSF = (VNodeSkinFactoryStub)
-//                sf.getSkinFactories().iterator().next();
-//        
-//        skinFactoryOfSF.getNodeSkins().values().forEach(ns -> {
-//            System.out.println("ns: " + ns.getModel().getId());
-//        });
+            sf1IsChildNode);
+
+        //        flow.remove(sf.getModel());
+        //
+        //        VNodeSkinFactoryStub skinFactoryOfSF = (VNodeSkinFactoryStub)
+        //                sf.getSkinFactories().iterator().next();
+        //
+        //        skinFactoryOfSF.getNodeSkins().values().forEach(ns -> {
+        //            System.out.println("ns: " + ns.getModel().getId());
+        //        });
     }
 
     @Test
@@ -203,13 +204,13 @@ public class SkinTest {
         Connection connection = flow.connect(s, r).getConnection();
 
         ConnectionSkin lookupC1 = flow.getNodeSkinLookup().
-                getById(skinFactory, connection);
+            getById(skinFactory, connection);
 
         Assert.assertTrue("Skin for connection must be present.",
-                lookupC1 != null);
+            lookupC1 != null);
 
         Assert.assertTrue("Skin must be skin of connection.",
-                lookupC1.getModel() == connection);
+            lookupC1.getModel() == connection);
     }
 
     @Test
@@ -229,33 +230,33 @@ public class SkinTest {
         Connection connection2 = flow.connect(s1, r2).getConnection();
 
         ConnectionSkin lookupC1 = flow.getNodeSkinLookup().
-                getById(skinFactory, connection1);
+            getById(skinFactory, connection1);
 
         Assert.assertTrue("Skin for connection must be present.",
-                lookupC1 != null);
+            lookupC1 != null);
 
         Assert.assertTrue("Skin must be skin of connection.",
-                lookupC1.getModel() == connection1);
+            lookupC1.getModel() == connection1);
 
         ConnectionSkinStub lookupC2 = (ConnectionSkinStub) flow.getNodeSkinLookup().
-                getById(skinFactory, connection2);
+            getById(skinFactory, connection2);
 
         Assert.assertTrue("Skin for connection must be present.",
-                lookupC2 != null);
+            lookupC2 != null);
 
         Assert.assertTrue("Skin must be skin of connection.",
-                lookupC2.getModel() == connection2);
+            lookupC2.getModel() == connection2);
 
         flow.getConnections("mytype").remove(connection2);
 
         Assert.assertTrue("Skin has to be removed after connection removal.",
-                lookupC2.isRemoved());
+            lookupC2.isRemoved());
 
         ConnectionSkinStub lookupC2AfterRemoval = (ConnectionSkinStub) flow.getNodeSkinLookup().
-                getById(skinFactory, connection2);
+            getById(skinFactory, connection2);
 
         Assert.assertTrue("Skin has to be removed after connection removal.",
-                lookupC2AfterRemoval == null);
+            lookupC2AfterRemoval == null);
 
     }
 }
@@ -322,8 +323,7 @@ final class VNodeSkinStub implements VNodeSkin<VNode> {
     }
 }
 
-final class ConnectionSkinStub implements ConnectionSkin<Connection> {
-
+final class ConnectionSkinStub implements ConnectionSkin {
     private final ObjectProperty<Connector> senderProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Connector> receiverProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Connection> modelProperty = new SimpleObjectProperty<>();

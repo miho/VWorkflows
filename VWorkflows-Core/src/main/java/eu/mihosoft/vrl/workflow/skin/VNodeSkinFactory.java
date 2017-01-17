@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
+ * Copyright 2012-2017 Michael Hoffer <info@michaelhoffer.de>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -38,18 +38,20 @@ import eu.mihosoft.vrl.workflow.VNode;
 
 /**
  * Node skin factory.
- * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
+ *
  * @param <T> node skin type
+ *
+ * @author Michael Hoffer  &lt;info@michaelhoffer.de&gt;
  */
 public interface VNodeSkinFactory<T extends Skin> {
 
     /**
      * Creates a node skin.
-     * @param n node that shall be skinned
+     *
+     * @param n          node that shall be skinned
      * @param controller flow controller
+     *
      * @return requested node skin
      */
     VNodeSkin createSkin(VNode n, VFlow controller);
-
-    
 }

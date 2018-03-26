@@ -2,7 +2,7 @@ sudo: false
 addons:
   apt:
     packages:
-      - oracle-java10-installer
+      #- oracle-java10-installer
 
 language: java
 install: true

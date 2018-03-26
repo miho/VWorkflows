@@ -2,11 +2,11 @@ sudo: false
 addons:
   apt:
     packages:
-      - oracle-java8-installer
+      - oracle-java9-installer
 
 language: java
 install: true
-jdk: oraclejdk8
+jdk: oraclejdk9
 
 env:
   matrix:
@@ -20,7 +20,7 @@ before_script:
   - ./gradlew --version
   
 script:
-    - TERM=dumb ./gradlew clean build -S -x :vworkflows-demo:jfxJar
+    - TERM=dumb ./gradlew clean build -S #-x :vworkflows-demo:jfxJar
 
 after_success:
   - TERM=dumb ./gradlew test jacocoTestReport jacocoRootReport coveralls -S

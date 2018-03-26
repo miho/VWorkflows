@@ -33,13 +33,13 @@
  */
 
 apply plugin: 'application'
-apply from: rootProject.file('gradle/javafx-plugin.gradle')
+//apply from: rootProject.file('gradle/javafx-plugin.gradle')
 
 mainClassName= 'eu.mihosoft.vrl.workflow.demo.Main'
 
-javafx {
-    mainClass = mainClassName
-}
+//javafx {
+//    mainClass = mainClassName
+//}
 
 dependencies {
     compile project(':vworkflows-fx') 

@@ -33,6 +33,7 @@
  */
 package jfxtras.internal.scene.control.skin.window;
 
+import eu.mihosoft.vrl.workflow.fx.FontUtil;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -955,9 +956,11 @@ class TitleBar extends HBox {
             getLabel().setText("...");
         }
 
-        // TODO replace with official API
-        labelWidth = com.sun.javafx.tk.Toolkit.getToolkit().getFontLoader().
-                computeStringWidth(title, label.getFont());
+        labelWidth = (float) FontUtil.computeStringWidth(label.getFont(), title);
+
+        // Fixed ? TODO replace with official API
+        //labelWidth = com.sun.javafx.tk.Toolkit.getToolkit().getFontLoader().
+        //        computeStringWidth(title, label.getFont());
 
         requestLayout();
         requestParentLayout();

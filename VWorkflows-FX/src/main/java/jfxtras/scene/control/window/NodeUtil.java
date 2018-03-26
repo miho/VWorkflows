@@ -47,7 +47,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
-import com.sun.javafx.collections.ImmutableObservableList;
 
 /**
  * Utility class that provides methods to simplify node handling. Possible use
@@ -245,7 +244,7 @@ public class NodeUtil {
             public ObservableList<?> getDependencies() {
                 return (dependencies.length == 1)
                         ? FXCollections.singletonObservableList(dependencies[0])
-                        : new ImmutableObservableList<>(dependencies);
+                        : FXCollections.unmodifiableObservableList(FXCollections.observableArrayList(dependencies));
             }
         };
     }

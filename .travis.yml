@@ -2,11 +2,11 @@ sudo: false
 addons:
   apt:
     packages:
-      #- oracle-java10-installer
+      - oracle-java9-installer
 
 language: java
 install: true
-jdk: oraclejdk10
+jdk: oraclejdk9
 
 env:
   matrix:

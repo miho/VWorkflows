@@ -33,6 +33,7 @@
  */
 package eu.mihosoft.vrl.workflow;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -46,7 +47,7 @@ import java.util.Objects;
 public class NodeLookupImpl implements NodeLookup {
 
     private final VFlowModel root;
-//    private final Map<String, VNode> cache = new HashMap<>();
+    private HashMap<String, VNode> cache = new HashMap<String, VNode>();
 
     public NodeLookupImpl(VFlowModel root) {
         this.root = root;
@@ -75,16 +76,19 @@ public class NodeLookupImpl implements NodeLookup {
 
     @Override
     public VNode getById(String globalId) {
+        VNode result = cache.get(globalId);
         
-//        VNode result = cache.get(globalId);
-        
-//        if (result!=null)return result;
-
-        VNode result = getNodeByGlobalId(root, globalId);
-        
-//        cache.put(globalId, result);
-
+        if (result == null) {
+            result = getNodeByGlobalId(root, globalId);
+            cache.put(globalId, result);
+        }
         return result;
+    }
+
+    @Override
+    public void invalidateCache() {
+        System.out.println("Cache invalidated");
+        cache.clear();
     }
 
     private VNode getNodeByGlobalId(VFlowModel parent, String id) {
@@ -97,7 +101,7 @@ public class NodeLookupImpl implements NodeLookup {
             if (n.getId().equals(id)) {
                 return n;
             }
-
+            cache.put(n.getId(), n);
             if (n instanceof FlowModel) {
                 VNode result = getNodeByGlobalId((VFlowModel) n, id);
                 if (result != null) {

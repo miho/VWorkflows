@@ -87,7 +87,6 @@ public class NodeLookupImpl implements NodeLookup {
 
     @Override
     public void invalidateCache() {
-        System.out.println("Cache invalidated");
         cache.clear();
     }
 

@@ -34,6 +34,7 @@
 package eu.mihosoft.vrl.workflow;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -47,7 +48,7 @@ import java.util.Objects;
 public class NodeLookupImpl implements NodeLookup {
 
     private final VFlowModel root;
-    private HashMap<String, VNode> cache = new HashMap<String, VNode>();
+    private final Map<String, VNode> cache = new HashMap<>();
 
     public NodeLookupImpl(VFlowModel root) {
         this.root = root;

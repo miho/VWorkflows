@@ -97,10 +97,10 @@ public class NodeLookupImpl implements NodeLookup {
         }
 
         for (VNode n : parent.getNodes()) {
+            cache.put(n.getId(), n);
             if (n.getId().equals(id)) {
                 return n;
             }
-            cache.put(n.getId(), n);
             if (n instanceof FlowModel) {
                 VNode result = getNodeByGlobalId((VFlowModel) n, id);
                 if (result != null) {

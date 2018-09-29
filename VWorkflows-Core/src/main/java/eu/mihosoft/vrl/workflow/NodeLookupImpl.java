@@ -81,7 +81,6 @@ public class NodeLookupImpl implements NodeLookup {
         
         if (result == null) {
             result = getNodeByGlobalId(root, globalId);
-            cache.put(globalId, result);
         }
         return result;
     }

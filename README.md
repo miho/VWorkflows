@@ -18,7 +18,8 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 VWorkflows-Core:
 
-[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-core/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-core/_latestVersion) 
+[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-core/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-core/_latestVersion) [![Javadocs](https://www.javadoc.io/badge/eu.mihosoft.vrl.workflow/vworkflows-core.svg?label=javadoc-core)](https://www.javadoc.io/doc/eu.mihosoft.vrl.workflow/vworkflows-core)
+
 
 
 
@@ -30,7 +31,8 @@ VWorkflows-Core:
 
 VWorkflows-FX:
 
-[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-fx/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-fx/_latestVersion) 
+[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-fx/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-fx/_latestVersion) [![Javadocs](https://www.javadoc.io/badge/eu.mihosoft.vrl.workflow/vworkflows-fx.svg?label=javadoc-fx)](https://www.javadoc.io/doc/eu.mihosoft.vrl.workflow/vworkflows-fx)
+
 
 Replace version with the desired version (see above for latest version).
 

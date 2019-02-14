@@ -46,7 +46,7 @@ Replace version with the desired version (see above for latest version).
 
 ### Reqirements
 
-- Java >= 1.8.0_60
+- Java >= 1.8.0_60 && < 11
 - Internet connection (other dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 

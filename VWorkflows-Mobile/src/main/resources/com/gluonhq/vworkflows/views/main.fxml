@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.BottomNavigation?>
+<?import com.gluonhq.charm.glisten.control.BottomNavigationButton?>
+<?import com.gluonhq.charm.glisten.control.Icon?>
+<?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.layout.BorderPane?>
+
+<View fx:id="main" prefHeight="600.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gluonhq.vworkflows.views.MainPresenter">
+   <bottom>
+      <BottomNavigation BorderPane.alignment="CENTER">
+          <actionItems>
+              <BottomNavigationButton fx:id="blockFor" selected="true" text="%bottom.block.for">
+                  <graphic>
+                      <Icon content="REFRESH" />
+                  </graphic>
+              </BottomNavigationButton>
+              <BottomNavigationButton fx:id="blockIf" text="%bottom.block.if">
+                  <graphic>
+                      <Icon content="CALL_SPLIT" />
+                  </graphic>
+              </BottomNavigationButton>
+              <BottomNavigationButton fx:id="blockVar" text="%bottom.block.var">
+                  <graphic>
+                      <Icon content="CHAT_BUBBLE" />
+                  </graphic>
+              </BottomNavigationButton>
+            <BottomNavigationButton fx:id="blockMAth" layoutX="243.0" layoutY="10.0" text="%bottom.block.math">
+               <graphic>
+                  <Icon content="PLUS_ONE" />
+               </graphic>
+            </BottomNavigationButton>
+          </actionItems>
+      </BottomNavigation>
+   </bottom>
+</View>

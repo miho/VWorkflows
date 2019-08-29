@@ -1,6 +1,7 @@
 include 'VWorkflows-Core'
 include 'VWorkflows-FX'
 include 'VWorkflows-Demo'
+include 'VWorkflows-Mobile'
 
 rootProject.name = 'vworkflows'
 rootProject.children.each { project ->

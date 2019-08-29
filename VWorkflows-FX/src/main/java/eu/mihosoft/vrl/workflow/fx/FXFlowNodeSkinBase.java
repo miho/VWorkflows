@@ -74,6 +74,10 @@ public class FXFlowNodeSkinBase extends FXFlowNodeSkin {
 //        updateView();
         valueChangeListener = (
                 ObservableValue<? extends Object> ov, Object t, Object t1) -> {
+            // Related to https://github.com/miho/VWorkflows/issues/28
+            // This call doesn't work: updateView will call the old skin.
+            // I.e: if the initial value was null, the skin applied is the default
+            // FXFlowNodeSkinBase, and updateView just does nothing.
                     updateView();
                 };
 

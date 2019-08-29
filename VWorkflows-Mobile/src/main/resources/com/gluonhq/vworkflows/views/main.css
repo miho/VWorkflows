@@ -1,4 +1,4 @@
-.vflow-background {
+.view {
     -fx-background-color: linear-gradient(to bottom, rgb(10,32,60), rgb(42,52,120));
 }
 
@@ -56,4 +56,9 @@
 .vnode-new-connection {
     -fx-stroke: rgba(120,140,255,0.2);
     -fx-stroke-width: 5px;
+}
+
+.dropdown-button > .container {
+    /* TODO */
+    -fx-background-color: rgba(255,255,255,50);
 }

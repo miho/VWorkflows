@@ -8,10 +8,16 @@ import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import com.gluonhq.vworkflows.VWMobileApp;
 import java.util.ResourceBundle;
 
+import com.gluonhq.vworkflows.views.helper.DoubleFlowNodeSkin;
+import com.gluonhq.vworkflows.views.helper.DoubleValue;
+import com.gluonhq.vworkflows.views.helper.OperatorFlowNodeSkin;
+import com.gluonhq.vworkflows.views.helper.OperatorValue;
 import eu.mihosoft.vrl.workflow.Connector;
+import eu.mihosoft.vrl.workflow.DefaultValueObject;
 import eu.mihosoft.vrl.workflow.FlowFactory;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VNode;
+import eu.mihosoft.vrl.workflow.ValueObject;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
 import eu.mihosoft.vrl.workflow.fx.FXValueSkinFactory;
 import eu.mihosoft.vrl.workflow.fx.ScalableContentPane;
@@ -41,7 +47,6 @@ public class MainPresenter extends GluonPresenter<VWMobileApp> {
 
         // create scalable root pane
         ScalableContentPane canvas = new ScalableContentPane();
-        canvas.widthProperty().addListener((o, ov, nv) -> System.out.println("nv = " + nv));
         canvas.getStyleClass().setAll("vflow-background");
         canvas.setMinScaleX(0.5);
         canvas.setMinScaleY(0.5);
@@ -52,6 +57,8 @@ public class MainPresenter extends GluonPresenter<VWMobileApp> {
         flow.setVisible(true);
 
         FXValueSkinFactory fXSkinFactory = new FXValueSkinFactory(canvas);
+        fXSkinFactory.addSkinClassForValueType(OperatorValue.class, OperatorFlowNodeSkin.class);
+        fXSkinFactory.addSkinClassForValueType(DoubleValue.class, DoubleFlowNodeSkin.class);
         flow.setSkinFactories(fXSkinFactory);
 
         main.setCenter(canvas);
@@ -77,6 +84,24 @@ public class MainPresenter extends GluonPresenter<VWMobileApp> {
             c1i.getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
             n1.setMainInput(c1i);
             Connector c1o = n1.addOutput("control");
+            c1o.getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
+            n1.setMainOutput(c1o);
+        });
+
+        blockMath.setOnAction(e -> {
+            int size = flow.getNodes().size();
+            ValueObject valueObject = new DefaultValueObject();
+            valueObject.setValue(new OperatorValue("Operator"));
+            VNode n1 = flow.newNode(valueObject);
+            n1.setX(size * 10);
+            n1.setY(size * 10);
+            n1.setTitle("Math");
+            Connector c1i = n1.addInput("data");
+            c1i.getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
+            n1.setMainInput(c1i);
+            Connector c2i = n1.addInput("data");
+            c2i.getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
+            Connector c1o = n1.addOutput("data");
             c1o.getVisualizationRequest().set(VisualizationRequest.KEY_CONNECTOR_AUTO_LAYOUT, true);
             n1.setMainOutput(c1o);
         });

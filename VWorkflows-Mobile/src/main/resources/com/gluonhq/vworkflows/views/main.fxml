@@ -25,7 +25,7 @@
                       <Icon content="CHAT_BUBBLE" />
                   </graphic>
               </BottomNavigationButton>
-            <BottomNavigationButton fx:id="blockMAth" layoutX="243.0" layoutY="10.0" text="%bottom.block.math">
+            <BottomNavigationButton fx:id="blockMath" layoutX="243.0" layoutY="10.0" text="%bottom.block.math">
                <graphic>
                   <Icon content="PLUS_ONE" />
                </graphic>

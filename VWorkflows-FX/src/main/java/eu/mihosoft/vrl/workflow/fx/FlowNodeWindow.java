@@ -382,7 +382,9 @@ public final class FlowNodeWindow extends Window {
 
         StringBuilder sb = new StringBuilder();
 
-        names.forEach(n -> sb.append("/").append(n));
+        for (String n : names) {
+            sb.append("/").append(n);
+        }
 
         return sb.toString();
     }

@@ -34,11 +34,13 @@
 package eu.mihosoft.vrl.workflow.fx;
 
 import eu.mihosoft.vrl.workflow.Connection;
+import eu.mihosoft.vrl.workflow.Connections;
 import eu.mihosoft.vrl.workflow.Connector;
 import eu.mihosoft.vrl.workflow.VFlow;
 import eu.mihosoft.vrl.workflow.VFlowModel;
 import eu.mihosoft.vrl.workflow.VNode;
 import eu.mihosoft.vrl.workflow.VisualizationRequest;
+import eu.mihosoft.vrl.workflow.skin.ConnectionSkin;
 import eu.mihosoft.vrl.workflow.skin.VNodeSkin;
 
 import javafx.beans.property.IntegerProperty;
@@ -63,10 +65,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  *
@@ -137,10 +140,9 @@ public class FXFlowNodeSkin
 
         flowNodeWindow.resizingProperty().addListener((ov) -> {
 //            System.out.println("resizing: " + flowNodeWindow.isResizing());
-            connectors.values().forEach(cShape -> {
-
+            for (ConnectorShape cShape : connectors.values()) {
                 cShape.getNode().setCache(!flowNodeWindow.isResizing());
-            });
+            }
         });
 
         flowNodeWindow.resizingProperty().addListener((ov) -> {
@@ -283,14 +285,17 @@ public class FXFlowNodeSkin
 
             VFlowModel flowModel = (VFlowModel) this.getModel();
 
-            flowModel.getAllConnections().values().stream().flatMap(
-                    conns -> conns.getConnections().stream()).
-                    map(conn -> controller.
+            for (Connections conns : flowModel.getAllConnections().values()) {
+                for (Connection conn : conns.getConnections()) {
+                    ConnectionSkin<?> cSkin = controller.
                             getNodeSkinLookup().getById(skinFactory,
-                                    conn)).
-                    filter(cSkin -> cSkin instanceof DefaultFXConnectionSkin).
-                    map(cSkin -> (DefaultFXConnectionSkin) cSkin).
-                    forEach(cSkin -> cSkin.configureEditCapability(notEditable));
+                            conn);
+                    if (cSkin instanceof DefaultFXConnectionSkin) {
+                        DefaultFXConnectionSkin skin = (DefaultFXConnectionSkin) cSkin;
+                        skin.configureEditCapability(notEditable);
+                    }
+                }
+            }
 
             for (VNode vn : flowModel.getNodes()) {
 
@@ -304,14 +309,17 @@ public class FXFlowNodeSkin
         } else if (getModel().getFlow() != null) {
             VFlowModel parent = getModel().getFlow();
 
-            parent.getAllConnections().values().stream().flatMap(
-                    conns -> conns.getConnections().stream()).
-                    map(conn -> controller.
+            for (Connections conns : parent.getAllConnections().values()) {
+                for (Connection conn : conns.getConnections()) {
+                    ConnectionSkin<?> cSkin = controller.
                             getNodeSkinLookup().getById(skinFactory,
-                                    conn)).
-                    filter(cSkin -> cSkin instanceof DefaultFXConnectionSkin).
-                    map(cSkin -> (DefaultFXConnectionSkin) cSkin).
-                    forEach(cSkin -> cSkin.configureEditCapability(notEditable));
+                            conn);
+                    if (cSkin instanceof DefaultFXConnectionSkin) {
+                        DefaultFXConnectionSkin skin = (DefaultFXConnectionSkin) cSkin;
+                        skin.configureEditCapability(notEditable);
+                    }
+                }
+            }
         }
     }
 
@@ -380,9 +388,14 @@ public class FXFlowNodeSkin
                 edgesList.add(tmpEdges);
             }
 
-            List<Integer> frequencies = edgesList.stream().distinct().
-                    map(e -> Collections.frequency(edgesList, e)).
-                    collect(Collectors.toList());
+            List<Integer> frequencies = new ArrayList<>();
+            Set<Pair<Integer, Integer>> uniqueValues = new HashSet<>();
+            for (Pair<Integer, Integer> e : edgesList) {
+                if (uniqueValues.add(e)) {
+                    Integer frequency = Collections.frequency(edgesList, e);
+                    frequencies.add(frequency);
+                }
+            }
 
             int max = 0;
             int maxIndex = -1;
@@ -728,7 +741,15 @@ public class FXFlowNodeSkin
     }
 
     private double getMinConnectorSize() {
-        Optional<Double> minSize = connectorSizes.stream().min(Double::compare);
+        boolean seen = false;
+        Double best = null;
+        for (Double connectorSize : connectorSizes) {
+            if (!seen || Double.compare(connectorSize, best) < 0) {
+                seen = true;
+                best = connectorSize;
+            }
+        }
+        Optional<Double> minSize = seen ? Optional.of(best) : Optional.empty();
 
         if (minSize.isPresent()) {
             return minSize.get();

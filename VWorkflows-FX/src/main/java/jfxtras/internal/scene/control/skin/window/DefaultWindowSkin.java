@@ -81,7 +81,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
     private double minScale = 0.1;
     private double maxScale = 10;
     private double scaleIncrement = 0.001;
-    private ResizeMode resizeMode;
+    private ResizeMode resizeMode = ResizeMode.NONE;
     private boolean resizeTop;
     private boolean resizeLeft;
     private boolean resizeBottom;

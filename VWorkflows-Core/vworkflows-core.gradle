@@ -34,9 +34,17 @@
 
 dependencies {
     compile "com.thoughtworks.xstream:xstream:$xstreamVersion"
-    compile "net.sf.jung:jung-api:$jungVersion"
-    compile "net.sf.jung:jung-graph-impl:$jungVersion"
-    compile "net.sf.jung:jung-algorithms:$jungVersion"
-    compile "net.sf.jung:jung-visualization:$jungVersion"
+    compile ("net.sf.jung:jung-api:$jungVersion") {
+        exclude group: "concurrent", module: "concurrent"
+    }
+    compile ("net.sf.jung:jung-graph-impl:$jungVersion") {
+        exclude group: "concurrent", module: "concurrent"
+    }
+    compile ("net.sf.jung:jung-algorithms:$jungVersion") {
+        exclude group: "concurrent", module: "concurrent"
+    }
+    compile ("net.sf.jung:jung-visualization:$jungVersion") {
+        exclude group: "concurrent", module: "concurrent"
+    }
     compile "org.apache.commons:commons-collections4:$commonsCollections4Version"
 }

@@ -472,6 +472,7 @@ class VFlowImpl implements VFlow {
 
     @Override
     public VNode remove(VNode n) {
+        getNodeLookup().invalidateCache();
         return getModel().remove(n);
     }
 

@@ -48,4 +48,9 @@ public interface NodeLookup extends Lookup<VNode> {
      * such connector exists
      */
     public Connector getConnectorById(String id);
+
+    /**
+     * Invalidates the Lookup cache;
+     */
+    default void invalidateCache() {};
 }

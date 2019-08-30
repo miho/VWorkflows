@@ -187,6 +187,7 @@ public class FlowModelImpl implements FlowModel {
 //            ((FlowModel)n).clear();
 //        }
         VNode result = nodes.remove(n.getId());
+        nodeLookup.invalidateCache();
         observableNodes.remove(n);
 
 //        removeNodeSkin(n);

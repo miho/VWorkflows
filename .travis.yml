@@ -1,4 +1,5 @@
 sudo: false
+dist: trusty
 # addons:
 #  apt:
 #    packages:
@@ -8,7 +9,7 @@ language: java
 install: true
 jdk:
 #- openjdk8
-- oraclejdk9
+- oraclejdk8
 
 env:
   matrix:

@@ -7,8 +7,8 @@ sudo: false
 language: java
 install: true
 jdk:
-- oraclejdk8
-- oraclejdk9
+- openjdk8
+- openjdk9
 
 env:
   matrix:

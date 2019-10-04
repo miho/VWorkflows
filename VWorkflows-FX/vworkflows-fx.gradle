@@ -32,6 +32,24 @@
  * or implied, of Michael Hoffer <info@michaelhoffer.de>.
  */
 
+buildscript {
+	repositories {
+		maven {
+			url 'https://plugins.gradle.org/m2/'
+		}
+	}
+	dependencies {
+		classpath 'org.openjfx:javafx-plugin:0.0.8'
+	}
+}
+
+if (JavaVersion.current().java11Compatible) {
+	apply plugin: 'org.openjfx.javafxplugin'
+
+	  javafx { modules = [ 'javafx.controls' ] }
+}
+
+
 dependencies {
     compile project(':vworkflows-core')
 

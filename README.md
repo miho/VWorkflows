@@ -1,3 +1,4 @@
+
 VWorkflows
 ==============
 
@@ -46,7 +47,7 @@ Replace version with the desired version (see above for latest version).
 
 ### Reqirements
 
-- Java >= 1.8.0_60 && < 11
+- Java >= 1.8.0_60
 - Internet connection (other dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 
@@ -70,4 +71,4 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/VWorkfl
 ## Test It
 
 Besides the tests defined in `VWorkflows-Core` (`test` task) it is also possible to run a graphical demo that comes with 
-`VWorkflows-Deemo` subproject. To run it call the `run` task.
+`VWorkflows-Demo` subproject. To run it call the `run` task.

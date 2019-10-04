@@ -181,10 +181,10 @@ task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
     destinationFile = file(jacocoMergeExecFile)
 }
 
-task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport, overwrite: true) {
+task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
     executionData files(projectsWithCoverage.jacocoTestReport.executionData)
-    sourceDirectories = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
-    classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+    sourceDirectories.from = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+    classDirectories.from = files(projectsWithCoverage.sourceSets.main.output)
     reports {
         xml.enabled = true
         csv.enabled = false

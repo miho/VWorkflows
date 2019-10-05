@@ -59,7 +59,7 @@ public class WindowUtil {
      * @see
      * jfxtras.labs.util.event.MouseControlUtil#addSelectionRectangleGesture(javafx.scene.Parent,
      * javafx.scene.shape.Rectangle)
-     * @see jfxtras.labs.scene.control.window.SelectableNode
+     * @see jfxtras.scene.control.window.SelectableNode
      */
     public static Clipboard getDefaultClipboard() {
         

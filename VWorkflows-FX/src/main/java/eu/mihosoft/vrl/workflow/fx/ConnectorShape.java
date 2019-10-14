@@ -68,7 +68,7 @@ public interface ConnectorShape {
     /**
      * Set the radius of the connector shape.
      *
-     * @param radius the radius to use. Should be > 0.
+     * @param radius the radius to use. Should be &#62; 0.
      */
     void setRadius(double radius);
 

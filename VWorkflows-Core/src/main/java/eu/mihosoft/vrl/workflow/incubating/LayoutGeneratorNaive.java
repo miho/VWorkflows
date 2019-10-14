@@ -249,7 +249,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     /**
      * Returns the Graph modeled after the workflow.
-     * @return LinkedList<Pair<Integer>>
+     * @return {@code LinkedList<Pair<Integer>>}
      */
     public LinkedList<Pair<Integer>> getModelGraph() {
         return this.connectionList;
@@ -403,7 +403,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     /**
      * Sets the model graph.
-     * @param pconnectionList LinkedList<Tuple<Integer, Integer>>
+     * @param {@code pconnectionList LinkedList<Tuple<Integer, Integer>>}
      */
     public void setModelGraph(LinkedList<Pair<Integer>> pconnectionList) {
         this.connectionList = pconnectionList;

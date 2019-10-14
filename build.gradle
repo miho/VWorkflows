@@ -34,27 +34,27 @@
 
 import java.text.SimpleDateFormat
 
-apply from: 'gradle/idea.gradle'
-apply from: 'gradle/jdkdetect.gradle'
-
 buildscript {
     repositories {
         jcenter()
     }
 
     dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.7.1'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-        classpath 'net.nemerosa:versioning:2.5.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'net.nemerosa.versioning'
+plugins {
+    id 'jacoco'
+    id 'com.github.hierynomus.license' version '0.15.0'
+    id 'net.nemerosa.versioning' version '2.8.2'
+    id 'com.github.kt3k.coveralls' version '2.8.4'
+}
+
+apply from: 'gradle/idea.gradle'
+apply from: 'gradle/jdkdetect.gradle'
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -74,8 +74,8 @@ jacoco {
     toolVersion = jacocoVersion
 }
 
-task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '4.6'
+wrapper {
+    gradleVersion = '5.2.1'
 }
 
 println("Gradle uses JDK " + project.jdk)
@@ -181,16 +181,16 @@ task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
     destinationFile = file(jacocoMergeExecFile)
 }
 
-task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport, overwrite: true) {
+task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
     executionData files(projectsWithCoverage.jacocoTestReport.executionData)
-    sourceDirectories = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
-    classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+    sourceDirectories.from = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+    classDirectories.from = files(projectsWithCoverage.sourceSets.main.output)
     reports {
         xml.enabled = true
         csv.enabled = false
         html.enabled = true
-        html.destination = "${jacocoRootReportPath}/html"
-        xml.destination  = "${jacocoRootReportPath}/root.xml"
+        html.destination = file("${jacocoRootReportPath}/html")
+        xml.destination  = file("${jacocoRootReportPath}/root.xml")
     }
 }
 

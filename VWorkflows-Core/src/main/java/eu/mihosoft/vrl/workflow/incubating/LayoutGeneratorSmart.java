@@ -160,7 +160,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * Returns the model graph to be laid out.
      * default: a graph is generated automatically from the workflow given.
-     * @return DirectedGraph<VNode, Connection>
+     * @return {@code DirectedGraph<VNode, Connection>}
      */
     public DirectedGraph<VNode, Connection> getModelGraph() {
         return this.jgraph;
@@ -431,7 +431,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * Sets the model graph to be laid out.
      * default: a graph is generated automatically from the workflow given.
-     * @param pjgraph DirectedGraph<VNode, Connection>
+     * @param {@code pjgraph DirectedGraph<VNode, Connection>}
      */
     public void setModelGraph(DirectedGraph<VNode, Connection> pjgraph) {
         this.jgraph = pjgraph;

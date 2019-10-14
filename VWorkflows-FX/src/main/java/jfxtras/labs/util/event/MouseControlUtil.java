@@ -94,13 +94,13 @@ public class MouseControlUtil {
      * <b>Note:</b></p>
      *
      * To support selection a node must implement the
-     * {@link jfxtras.labs.scene.control.window.SelectableNode} interface.
+     * {@link jfxtras.scene.control.window.SelectableNode} interface.
      *
      * @param root parent node
      * @param rect selectionn rectangle
      *
-     * @see jfxtras.labs.scene.control.window.Clipboard
-     * @see jfxtras.labs.util.WindowUtil#getDefaultClipboard()
+     * @see jfxtras.scene.control.window.Clipboard
+     * @see jfxtras.scene.control.window.WindowUtil#getDefaultClipboard()
      */
     public static void addSelectionRectangleGesture(final Parent root,
             final Rectangle rect) {
@@ -117,10 +117,10 @@ public class MouseControlUtil {
      * <b>Note:</b></p>
      *
      * To support selection a node must implement the
-     * {@link jfxtras.labs.scene.control.window.SelectableNode} interface.
+     * {@link jfxtras.scene.control.window.SelectableNode} interface.
      *
      * @param root parent node
-     * @param rect selectionn rectangle
+     * @param rect selection rectangle
      * @param dragHandler additional drag handler (optional, may be
      * <code>null</code>)
      * @param pressHandler additional press handler (optional, may be
@@ -128,8 +128,8 @@ public class MouseControlUtil {
      * @param releaseHandler additional release handler (optional, may be
      * <code>null</code>)
      *
-     * @see jfxtras.labs.scene.control.window.Clipboard
-     * @see jfxtras.labs.util.WindowUtil#getDefaultClipboard()
+     * @see jfxtras.scene.control.window.Clipboard
+     * @see jfxtras.scene.control.window.WindowUtil#getDefaultClipboard()
      */
     public static void addSelectionRectangleGesture(
             final Parent root,

@@ -162,12 +162,13 @@ subprojects { subproj ->
             options.encoding    = 'UTF-8'
             options.author      = true
             options.version     = true
+            options.source      = 1.8
             options.windowTitle = "$subproj.name $version"
             options.docTitle    = "$subproj.name $version"
             options.footer      = rootProject.javadocFooter
-            options.links       = ['http://junit.org/javadoc/latest/',
-                                   'http://docs.oracle.com/javase/8/docs/api/',
-                                   'http://docs.oracle.com/javase/8/javafx/api/']
+            options.links       = ['https://junit.org/junit4/javadoc/latest/',
+                                   'https://docs.oracle.com/javase/8/docs/api/',
+                                   'https://docs.oracle.com/javase/8/javafx/api/']
         }
     }
 }

@@ -169,7 +169,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * Returns a list of the nodes to be laid out.
      * default: the nodelist is gathered from the given workflow.
-     * @return Collection<VNode>
+     * @return {@code Collection<VNode>}
      */
     public Collection<VNode> getNodelist() {
         Collection<VNode> nodelist = new ArrayList<>();
@@ -431,7 +431,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * Sets the model graph to be laid out.
      * default: a graph is generated automatically from the workflow given.
-     * @param {@code pjgraph DirectedGraph<VNode, Connection>}
+     * @param pjgraph {@code DirectedGraph<VNode, Connection>}
      */
     public void setModelGraph(DirectedGraph<VNode, Connection> pjgraph) {
         this.jgraph = pjgraph;
@@ -440,7 +440,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
     /**
      * Sets the list of nodes to be laid out.
      * default: the nodelist is gathered from the given workflow.
-     * @param pnodelist Collection<VNode>
+     * @param pnodelist {@code Collection<VNode>}
      */
     public void setNodelist(Collection<VNode> pnodelist) {
         this.nodes = new VNode[pnodelist.size()];

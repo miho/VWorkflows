@@ -129,7 +129,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     /**
      * Returns a list of the nodes to be laid out.
      * default: the nodelist is gathered from the given workflow.
-     * @return Collection<VNode>
+     * @return {@code Collection<VNode>}
      */
     public Collection<VNode> getNodelist() {
         Collection<VNode> nodelist = new ArrayList<>();
@@ -277,7 +277,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     /**
      * Sets the list of nodes to be laid out.
      * default: the nodelist is gathered from the given workflow.
-     * @param pnodelist Collection<VNode>
+     * @param pnodelist {@code Collection<VNode>}
      */
     public void setNodelist(Collection<VNode> pnodelist) {
         this.nodes = new VNode[pnodelist.size()];
@@ -403,7 +403,7 @@ public class LayoutGeneratorNaive implements LayoutGenerator {
     
     /**
      * Sets the model graph.
-     * @param {@code pconnectionList LinkedList<Tuple<Integer, Integer>>}
+     * @param pconnectionList {@code LinkedList<Tuple<Integer, Integer>>}
      */
     public void setModelGraph(LinkedList<Pair<Integer>> pconnectionList) {
         this.connectionList = pconnectionList;

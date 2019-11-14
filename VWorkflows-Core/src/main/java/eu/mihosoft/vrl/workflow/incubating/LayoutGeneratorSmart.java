@@ -1440,7 +1440,7 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
         int i;
         for(i = 0; i < this.nodecount; i++) {
             Point2D coords;
-            coords = this.layout.transform(this.nodes[i]);
+            coords = this.layout.apply(this.nodes[i]);
             this.nodes[i].setX(coords.getX() - this.nodes[i].getWidth() / 2);
             this.nodes[i].setY(coords.getY() - this.nodes[i].getHeight() / 2);
             if(this.debug) System.out.println(this.nodes[i].getId() + " | X: " 

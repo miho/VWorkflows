@@ -41,7 +41,7 @@ buildscript {
 
     dependencies {
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.25.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.27.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
@@ -49,7 +49,7 @@ buildscript {
 plugins {
     id 'jacoco'
     id 'com.github.hierynomus.license' version '0.15.0'
-    id 'net.nemerosa.versioning' version '2.8.2'
+    id 'net.nemerosa.versioning' version '2.9.0'
     id 'com.github.kt3k.coveralls' version '2.8.4'
 }
 
@@ -75,7 +75,7 @@ jacoco {
 }
 
 wrapper {
-    gradleVersion = '5.2.1'
+    gradleVersion = '6.0.0'
 }
 
 println("Gradle uses JDK " + project.jdk)
@@ -135,7 +135,7 @@ subprojects { subproj ->
 
         dependencies {
             //compileOnly project.files(project.jfxrtLocation)
-            testCompile 'junit:junit:4.12'
+            testImplementation 'junit:junit:4.12'
         }
 
         test {

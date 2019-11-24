@@ -65,7 +65,7 @@ public interface LayoutGenerator {
     
     /**
      * If set to true, debugging output will be printed in the command line.
-     * @return 
+     * @return boolean
      */
     public boolean getDebug();
     

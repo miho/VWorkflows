@@ -270,7 +270,7 @@ public interface VFlow {
      *
      * Doesn't use Generics because generic arrays are not supported. GENERICS
      * ARE CRAPPY!
-     * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971"">JDK-6227971</a>
+     * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971">JDK-6227971</a>
      *
      */
     public void setSkinFactories(SkinFactory... skinFactories);
@@ -298,7 +298,7 @@ public interface VFlow {
      *
      * Doesn't use Generics because generic arrays are not supported. GENERICS
      * ARE CRAPPY!
-     * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971"">JDK-6227971</a>
+     * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6227971">JDK-6227971</a>
      *
      */
     public void addSkinFactories(SkinFactory... skinFactories);

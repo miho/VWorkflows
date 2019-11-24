@@ -39,14 +39,16 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'org.openjfx:javafx-plugin:0.0.8'
+		classpath "org.openjfx:javafx-plugin:$javafxPluginVersion"
 	}
 }
 
 if (JavaVersion.current().java11Compatible) {
 	apply plugin: 'org.openjfx.javafxplugin'
 
-	  javafx { modules = [ 'javafx.controls' ] }
+	  javafx {
+        version = "$javafxVersion"
+        modules = [ 'javafx.controls' ] }
 }
 
 

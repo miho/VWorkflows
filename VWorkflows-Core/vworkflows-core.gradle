@@ -39,21 +39,24 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'org.openjfx:javafx-plugin:0.0.8'
+		classpath "org.openjfx:javafx-plugin:$javafxPluginVersion"
 	}
 }
 
 if (JavaVersion.current().java11Compatible) {
 	apply plugin: 'org.openjfx.javafxplugin'
 
-	  javafx { modules = [ 'javafx.controls' ] }
+	  javafx {
+        version = "$javafxVersion"
+        modules = [ 'javafx.controls' ] }
 }
 
 dependencies {
-    compile "com.thoughtworks.xstream:xstream:$xstreamVersion"
+    implementation "com.thoughtworks.xstream:xstream:$xstreamVersion"
     compile "net.sf.jung:jung-api:$jungVersion"
     compile "net.sf.jung:jung-graph-impl:$jungVersion"
     compile "net.sf.jung:jung-algorithms:$jungVersion"
     compile "net.sf.jung:jung-visualization:$jungVersion"
-    compile "org.apache.commons:commons-collections4:$commonsCollections4Version"
+    implementation "colt:colt:$coltVersion"
+    implementation "org.apache.commons:commons-collections4:$commonsCollections4Version"
 }

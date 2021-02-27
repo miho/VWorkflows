@@ -437,8 +437,8 @@ class RectangleSelectionControllerImpl {
 
         rectangle.setX(x / parentScaleX + translateX / parentScaleX);
         rectangle.setY(y / parentScaleY + translateY / parentScaleY);
-        rectangle.setWidth(width / parentScaleX);
-        rectangle.setHeight(height / parentScaleY);
+        rectangle.setWidth( Math.max(1,width / parentScaleX));
+        rectangle.setHeight(Math.max(1,height / parentScaleY));
 
         selectIntersectingNodes(root, !event.isControlDown());
 

@@ -42,7 +42,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
@@ -52,15 +51,7 @@ import javafx.scene.control.SkinBase;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import jfxtras.scene.control.window.SelectableNode;
@@ -126,7 +117,7 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
         }
 
         control.getLeftIcons().addListener(
-                (ListChangeListener.Change<? extends WindowIcon> change) -> {
+                (Change<? extends WindowIcon> change) -> {
                     while (change.next()) {
                         // TODO handle permutation
 //                        if (change.wasPermutated()) {
@@ -150,7 +141,7 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
                 });
 
         control.getRightIcons().addListener(
-                (ListChangeListener.Change<? extends WindowIcon> change) -> {
+                (Change<? extends WindowIcon> change) -> {
                     while (change.next()) {
                         // TODO handle permutation
 //                        if (change.wasPermutated()) {

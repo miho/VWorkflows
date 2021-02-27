@@ -73,7 +73,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
-import jfxtras.internal.scene.control.skin.window.DefaultWindowSkinSimplified;
+import jfxtras.internal.scene.control.skin.window.DefaultWindowSkin;
 
 /**
  * Window control. A window control is a window node as known from Swing, e.g
@@ -458,8 +458,8 @@ public class Window extends Control implements SelectableNode {
     }
 
     public double minWidthWithTitle() {
-        if (getSkin() instanceof DefaultWindowSkinSimplified) {
-            DefaultWindowSkinSimplified skin = (DefaultWindowSkinSimplified) getSkin();
+        if (getSkin() instanceof DefaultWindowSkin) {
+            DefaultWindowSkin skin = (DefaultWindowSkin) getSkin();
 //            return skin.computeMinWidth();
         }
 

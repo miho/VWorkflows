@@ -75,7 +75,7 @@ jacoco {
 }
 
 wrapper {
-    gradleVersion = '6.0.0'
+    gradleVersion = '6.8.2'
 }
 
 println("Gradle uses JDK " + project.jdk)

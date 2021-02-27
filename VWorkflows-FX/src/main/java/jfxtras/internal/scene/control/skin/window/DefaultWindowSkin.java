@@ -50,6 +50,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -58,7 +59,8 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import jfxtras.scene.control.window.SelectableNode;
@@ -88,7 +90,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
     private boolean resizeRight;
     private TitleBar titleBar;
     private Window control;
-    private Pane root = new Pane();
+    private VBox root = new VBox();
     private double contentScale = 1.0;
     private double oldHeight;
     private Timeline minimizeTimeLine;
@@ -96,20 +98,29 @@ public class DefaultWindowSkin extends SkinBase<Window> {
     public DefaultWindowSkin(Window w) {
         super(w);
         this.control = w;
-        titleBar = new TitleBar(control);
-        titleBar.setTitle("");
+
         init();
+    }
+
+    @Override
+    protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
+        super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
     }
 
     private void init() {
 
-        titleBar.widthProperty().addListener((ov) -> {
-            titleBar.setPrefWidth(titleBar.minWidth(-1));
-            this.layoutChildren(0, 0, control.getWidth(), control.getHeight());
-        });
+        titleBar = new TitleBar(control);
+        titleBar.setTitle("");
+
+        control.minWidthProperty().bind(titleBar.minWidthProperty());
+
+        titleBar.minWidthProperty().addListener((ov) -> System.out.println("mmw- " + titleBar.getMinWidth()));
+
+        root.setMinWidth(Pane.USE_PREF_SIZE);
 
         getChildren().add(root);
         root.getChildren().add(titleBar);
+        VBox.setVgrow(titleBar, Priority.NEVER);
 
         for (WindowIcon i : control.getLeftIcons()) {
             titleBar.addLeftIcon(i);
@@ -129,8 +140,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 //                            }
 //                        } else if (change.wasUpdated()) {
 //                            //update item
-//                        } else 
-                            
+//                        } else {
                         if (change.wasRemoved()) {
                             for (WindowIcon i : change.getRemoved()) {
                                 titleBar.removeLeftIcon(i);
@@ -140,6 +150,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                                 titleBar.addLeftIcon(i);
                             }
                         }
+
                     }
                 });
 
@@ -153,9 +164,8 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 //                            }
 //                        } else if (change.wasUpdated()) {
 //                            //update item
-//                        } else 
-                            
-                            if (change.wasRemoved()) {
+//                        } else {
+                        if (change.wasRemoved()) {
                             for (WindowIcon i : change.getRemoved()) {
                                 titleBar.removeRightIcon(i);
                             }
@@ -191,20 +201,18 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 
                     minimizeTimeLine = new Timeline(
                             new KeyFrame(Duration.ZERO,
-                                    new KeyValue(control.prefHeightProperty(),
-                                            control.getPrefHeight())),
+                                    new KeyValue(control.prefHeightProperty(), control.getPrefHeight())),
                             new KeyFrame(Duration.seconds(0.1),
-                                    new KeyValue(control.prefHeightProperty(),
-                                            newHeight)));
+                                    new KeyValue(control.prefHeightProperty(), newHeight)));
 
                     minimizeTimeLine.statusProperty().addListener(
-                            (ObservableValue<? extends Status> ov2,
-                                    Status oldStatus, Status newStatus) -> {
+                            (ObservableValue<? extends Status> ov2, Status oldStatus, Status newStatus) -> {
                                 if (newStatus == Status.STOPPED) {
 
-//                                    // restore cache hint
-//                                    getSkinnable().setCache(true);
-//                                    getSkinnable().setCacheHint(CacheHint.SPEED);
+                                    // restore cache hint
+                                    getSkinnable().setCache(true);
+                                    getSkinnable().setCacheHint(CacheHint.SPEED);
+
                                     minimizeTimeLine = null;
                                     if (newValue) {
                                         control.getContentPane().setVisible(false);
@@ -213,86 +221,70 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                             });
 
                     // temporarily disable cache hint due to rendering bugs
-//                    getSkinnable().setCache(false);
-//                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+                    getSkinnable().setCache(false);
+                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+
                     minimizeTimeLine.play();
                 });
 
-        control.prefHeightProperty().addListener(
-                new MinimizeHeightListener(control, titleBar));
+        control.prefHeightProperty().addListener(new MinimizeHeightListener(control, titleBar));
 
         initMouseEventHandlers();
 
         titleBar.setTitle(control.getTitle());
 
-        control.titleProperty().addListener(
-                (ObservableValue<? extends String> ov,
-                        String oldValue, String newValue) -> {
-                    titleBar.setTitle(newValue);
-                    control.requestLayout();
-                });
+        control.titleProperty().addListener((ObservableValue<? extends String> ov, String oldValue, String newValue) -> {
+            titleBar.setTitle(newValue);
+            control.requestLayout();
+        });
 
         root.getChildren().add(control.getContentPane());
+        VBox.setVgrow(control.getContentPane(), Priority.ALWAYS);
 
-        control.getContentPane().setManaged(false);
+        control.contentPaneProperty().addListener((ObservableValue<? extends Pane> ov, Pane oldValue, Pane newValue) -> {
+            root.getChildren().remove(oldValue);
+            root.getChildren().add(newValue);
+            VBox.setVgrow(newValue, Priority.ALWAYS);
+        });
 
-//        InvalidationListener contentLayoutListener = (ov) -> {
-//            
-//            control.autosize();
-//            root.autosize();
-//        };
-//
-//        control.getContentPane().needsLayoutProperty().addListener(contentLayoutListener);
-//
-//        control.contentPaneProperty().addListener(
-//                (ObservableValue<? extends Pane> ov,
-//                        Pane oldValue, Pane newValue) -> {
-//                    root.getChildren().remove(oldValue);
-//                    root.getChildren().add(newValue);
-//                    newValue.setManaged(false);
-//                    newValue.needsLayoutProperty().
-//                    addListener(contentLayoutListener);
-//                });
         titleBar.setStyle(control.getStyle());
 
-        control.styleProperty().addListener(
-                (ObservableValue<? extends String> ov, String t, String t1) -> {
-                    titleBar.setStyle(t1);
-                });
+        control.styleProperty().addListener((ObservableValue<? extends String> ov, String t, String t1) -> {
+            titleBar.setStyle(t1);
+        });
 
         titleBar.getStyleClass().setAll(control.getTitleBarStyleClass());
         titleBar.getLabel().getStyleClass().setAll(control.getTitleBarStyleClass());
 
-        control.titleBarStyleClassProperty().addListener(
-                (ObservableValue<? extends String> ov, String t, String t1) -> {
-                    titleBar.getStyleClass().setAll(t1);
-                    titleBar.getLabel().getStyleClass().setAll(t1);
-                });
+        control.titleBarStyleClassProperty().addListener((ObservableValue<? extends String> ov, String t, String t1) -> {
+            titleBar.getStyleClass().setAll(t1);
+            titleBar.getLabel().getStyleClass().setAll(t1);
+        });
 
         titleBar.getStylesheets().setAll(control.getStylesheets());
 
-        control.getStylesheets().addListener(
-                (Change<? extends String> change) -> {
-                    while (change.next()) {
-                        // TODO handle permutation
-//                        if (change.wasPermutated()) {
-//                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
-//                                //permutate
-//                            }
-//                        } else if (change.wasUpdated()) {
-//                            //update item
-//                        } else 
-                            if (change.wasRemoved()) {
-                            for (String i : change.getRemoved()) {
-                                titleBar.getStylesheets().remove(i);
-                            }
-                        } else if (change.wasAdded()) {
-                            for (String i : change.getAddedSubList()) {
-                                titleBar.getStylesheets().add(i);
-                            }
-                        }
+        control.getStylesheets().addListener((Change<? extends String> change) -> {
+            while (change.next()) {
+                // TODO handle permutation
+//                if (change.wasPermutated()) {
+//                    for (int i = change.getFrom(); i < change.getTo(); ++i) {
+//                        //permutate
+//                    }
+//                } else if (change.wasUpdated()) {
+//                    //update item
+//                } else 
+
+                if (change.wasRemoved()) {
+                    for (String i : change.getRemoved()) {
+                        titleBar.getStylesheets().remove(i);
                     }
-                });
+                } else if (change.wasAdded()) {
+                    for (String i : change.getAddedSubList()) {
+                        titleBar.getStylesheets().add(i);
+                    }
+                }
+            }
+        });
 
         Border prevBorder = control.getBorder();
 
@@ -300,17 +292,15 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 (ov, oldValue, newValue) -> {
                     if (newValue) {
                         control.setBorder(new Border(
-                                new BorderStroke(
-                                        control.getSelectionBorderColor(),
+                                new BorderStroke(control.getSelectionBorderColor(),
                                         BorderStrokeStyle.SOLID,
-                                        new CornerRadii(3),
-                                        new BorderWidths(2))));
+                                        new CornerRadii(3), new BorderWidths(2))));
                         if (control.isSelectionEffectEnabled()) {
                             ColorAdjust effect
                             = new ColorAdjust(-0.25, 0.2, 0.8, 0);
-//                            Glow glow = new Glow(0.5);
-//                            glow.setInput(effect);
-                            control.setEffect(effect);
+                            Glow glow = new Glow(0.5);
+                            glow.setInput(effect);
+                            control.setEffect(glow);
                         }
                     } else {
                         control.setBorder(prevBorder);
@@ -318,47 +308,9 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                     }
                 });
 
+        // we enable node caching for the whole window
+        getSkinnable().setCache(true);
         getSkinnable().setCacheHint(CacheHint.SPEED);
-
-//        control.resizingProperty().addListener((ov) -> {
-//            control.setCache(control.isResizing());
-//        });
-        // counter intuitive caching (see http://bit.ly/1MemgLz why)
-//        control.resizingProperty().addListener((ov) -> {
-//            control.setCache(!control.isResizing());
-//        });
-//
-//        InvalidationListener cacheListener = (ov) -> {
-//            if (!control.isResizing()) {
-//                control.setCache(
-//                        !control.isResizing()
-//                        && !control.getParent().isCache()
-//                );
-//            } else {
-//                control.setCache(false);
-//            }
-//        };
-//        Parent p = control.getParent();
-//        if (p != null) {
-//            p.cacheProperty().addListener(cacheListener);
-//        }
-//        control.parentProperty().addListener((ov, oldV, newV) -> {
-//            if (oldV != null) {
-//                oldV.cacheProperty().removeListener(cacheListener);
-//            }
-//            if (newV != null) {
-//                newV.cacheProperty().addListener(cacheListener);
-//            }
-//        });
-
-        Rectangle clipRectangle = new Rectangle();
-        control.getContentPane().setClip(clipRectangle);
-        control.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
-            clipRectangle.setX(2);
-            clipRectangle.setY(2);
-            clipRectangle.setWidth(newValue.getWidth()-1);
-            clipRectangle.setHeight(newValue.getHeight()-1);
-        });
 
     }
 
@@ -442,7 +394,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 if (resizeTop) {
 //                        System.out.println("TOP");
 
-                    double insetOffset = getSkinnable().getInsets().getTop() * 0.5;
+                    double insetOffset = getSkinnable().getInsets().getTop() / 2;
 
                     double yDiff
                             = sceneY / parentScaleY
@@ -459,7 +411,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 if (resizeLeft) {
 //                        System.out.println("LEFT");
 
-                    double insetOffset = getSkinnable().getInsets().getLeft() * 0.5;
+                    double insetOffset = getSkinnable().getInsets().getLeft() / 2;
 
                     double xDiff = sceneX / parentScaleX
                             + insetOffset
@@ -477,7 +429,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 if (resizeBottom) {
 //                        System.out.println("BOTTOM");
 
-                    double insetOffset = getSkinnable().getInsets().getBottom() * 0.5;
+                    double insetOffset = getSkinnable().getInsets().getBottom() / 2;
 
                     double yDiff = event.getSceneY() / parentScaleY
                             - sceneY / parentScaleY - insetOffset;
@@ -493,7 +445,7 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                 }
                 if (resizeRight) {
 
-                    double insetOffset = getSkinnable().getInsets().getRight() * 0.5;
+                    double insetOffset = getSkinnable().getInsets().getRight() / 2;
 
                     double xDiff = event.getSceneX() / parentScaleX
                             - sceneX / parentScaleY - insetOffset;
@@ -510,13 +462,13 @@ public class DefaultWindowSkin extends SkinBase<Window> {
                     }
                 }
 
-//                if (RESIZE_BOTTOM || RESIZE_TOP || RESIZE_LEFT || RESIZE_RIGHT) {
-//                    getSkinnable().setCache(false);
-//
-//                } else {
-//                    getSkinnable().setCache(true);
-//                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
-//                }
+                if (resizeBottom || resizeTop || resizeLeft || resizeRight) {
+                    getSkinnable().setCache(false);
+
+                } else {
+                    getSkinnable().setCache(true);
+                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
+                }
             }
 
             mouseX = event.getSceneX();
@@ -528,7 +480,6 @@ public class DefaultWindowSkin extends SkinBase<Window> {
         });
 
         getSkinnable().onMouseMovedProperty().set((MouseEvent t) -> {
-
             if (control.isMinimized() || !control.isResizableWindow()) {
 
                 resizeTop = false;
@@ -543,10 +494,8 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 
             final Node n = control;
 
-            final double parentScaleX = n.getParent().
-                    localToSceneTransformProperty().getValue().getMxx();
-            final double parentScaleY = n.getParent().
-                    localToSceneTransformProperty().getValue().getMyy();
+            final double parentScaleX = n.getParent().localToSceneTransformProperty().getValue().getMxx();
+            final double parentScaleY = n.getParent().localToSceneTransformProperty().getValue().getMyy();
 
             final double scaleX = n.localToSceneTransformProperty().getValue().getMxx();
             final double scaleY = n.localToSceneTransformProperty().getValue().getMyy();
@@ -611,6 +560,27 @@ public class DefaultWindowSkin extends SkinBase<Window> {
 
             control.autosize();
         });
+
+//        setOnScroll(new EventHandler<ScrollEvent>() {
+//            @Override
+//            public void handle(ScrollEvent event) {
+//
+//                if (!isZoomable()) {
+//                    return;
+//                }
+//
+//                double scaleValue =
+//                        control.getScaleY() + event.getDeltaY() * getScaleIncrement();
+//
+//                scaleValue = Math.max(scaleValue, getMinScale());
+//                scaleValue = Math.min(scaleValue, getMaxScale());
+//
+//                control.setScaleX(scaleValue);
+//                control.setScaleY(scaleValue);
+//
+//                event.consume();
+//            }
+//        });
     }
 
     /**
@@ -678,125 +648,6 @@ public class DefaultWindowSkin extends SkinBase<Window> {
      */
     public void setScaleIncrement(double scaleIncrement) {
         this.scaleIncrement = scaleIncrement;
-    }
-
-    @Override
-    protected void layoutChildren(double x, double y, double w, double h) {
-
-        super.layoutChildren(x, y, w, h);
-
-        root.relocate(0, 0);
-        root.resize(root.getWidth()
-                + getSkinnable().getInsets().getLeft()
-                + getSkinnable().getInsets().getRight(),
-                root.getHeight()
-                + getSkinnable().getInsets().getTop()
-                + getSkinnable().getInsets().getBottom());
-
-        titleBar.relocate(0, 0);
-
-        double titleBarWidth = titleBar.computeMinWidth(-1);
-
-        double windowWidth = root.getWidth();
-
-        titleBar.resize(windowWidth
-                - getSkinnable().getInsets().getLeft()
-                - getSkinnable().getInsets().getRight(),
-                titleBar.prefHeight(-1));
-
-        if (titleBarWidth > root.getWidth()) {
-            control.setPrefWidth(titleBarWidth
-                    + getSkinnable().getInsets().getLeft()
-                    + getSkinnable().getInsets().getRight());
-
-            control.autosize();
-            control.layout();
-
-            root.autosize();
-            root.layout();
-
-            titleBar.autosize();
-            titleBar.layout();
-        }
-        titleBar.layoutChildren();
-
-        double leftAndRight = getSkinnable().getInsets().getLeft()
-                + getSkinnable().getInsets().getRight();
-        double topAndBottom = getSkinnable().getInsets().getTop()
-                + getSkinnable().getInsets().getBottom();
-
-        control.getContentPane().relocate(
-                getSkinnable().getInsets().getLeft(),
-                titleBar.prefHeight(-1));
-
-        double rootW = root.getWidth(); //Math.max(root.getWidth(), root.getMinWidth());
-        double rootH = root.getHeight();//Math.max(root.getHeight(), root.getMinHeight());
-
-        double contentWidth = rootW - leftAndRight;
-        double contentHeight = rootH - getSkinnable().getInsets().
-                getBottom() - titleBar.prefHeight(-1);
-
-        control.getContentPane().resize(
-                contentWidth,
-                contentHeight);
-
-    }
-
-    @Override
-    protected double computeMinWidth(double width, double topInset,
-            double rightInset, double bottomInset, double leftInset) {
-
-        double result = root.minWidth(width);
-
-        double minWidth = Math.max(titleBar.minWidth(width),
-                control.getContentPane().minWidth(width)
-                + getSkinnable().getInsets().getLeft()
-                + getSkinnable().getInsets().getRight());
-
-        result = Math.max(result, minWidth);
-
-        return result;
-    }
-
-    public double computeMinWidth() {
-        double result = root.minWidth(-1);
-
-        double minWidth = Math.max(titleBar.minWidth(-1),
-                control.getContentPane().minWidth(-1)
-                + getSkinnable().getInsets().getLeft()
-                + getSkinnable().getInsets().getRight());
-
-        result = Math.max(result, minWidth);
-
-        return result;
-    }
-
-    @Override
-    protected double computePrefWidth(double width, double topInset,
-            double rightInset, double bottomInset, double leftInset) {
-
-        double result = computeMinWidth(
-                width, topInset, rightInset, bottomInset, leftInset);
-
-        return result;
-    }
-
-    @Override
-    protected double computeMinHeight(double height, double topInset,
-            double rightInset, double bottomInset, double leftInset) {
-
-        double result = root.minHeight(height);
-
-        double minHeight = titleBar.prefHeight(height);
-
-        if (!control.isMinimized() && control.getContentPane().isVisible()) {
-            minHeight += control.getContentPane().minHeight(height)
-                    + getSkinnable().getInsets().getBottom();
-        }
-
-        result = Math.max(result, minHeight);
-
-        return result;
     }
 
     private void setDragging(boolean b) {
@@ -899,8 +750,6 @@ class TitleBar extends HBox {
 
         this.control = w;
 
-        setManaged(false);
-
         getStylesheets().setAll(w.getStylesheets());
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 
@@ -928,17 +777,17 @@ class TitleBar extends HBox {
                     double maxIconWidth = Math.max(
                             leftIconPane.getWidth(), rightIconPane.getWidth());
 
-//                    if (!control.getTitle().equals(getLabel().getText())) {
-//                        if (originalTitleWidth
-//                        + maxIconWidth * 2 + offset < getWidth()) {
-                    getLabel().setText(control.getTitle());
-//                        }
-//                    } else if (!"...".equals(getLabel().getText())) {
-//                        if (originalTitleWidth
-//                        + maxIconWidth * 2 + offset >= getWidth()) {
-//                            getLabel().setText("...");
-//                        }
-//                    }
+                    if (!control.getTitle().equals(getLabel().getText())) {
+                        if (originalTitleWidth
+                        + maxIconWidth * 2 + offset < getWidth()) {
+                            getLabel().setText(control.getTitle());
+                        }
+                    } else if (!"...".equals(getLabel().getText())) {
+                        if (originalTitleWidth
+                        + maxIconWidth * 2 + offset >= getWidth()) {
+                            getLabel().setText("...");
+                        }
+                    }
                 });
 
     }
@@ -962,8 +811,8 @@ class TitleBar extends HBox {
         //labelWidth = com.sun.javafx.tk.Toolkit.getToolkit().getFontLoader().
         //        computeStringWidth(title, label.getFont());
 
-        requestLayout();
-        requestParentLayout();
+        control.layout();
+        layout();
     }
 
     public String getTitle() {
@@ -972,26 +821,18 @@ class TitleBar extends HBox {
 
     public void addLeftIcon(Node n) {
         leftIconPane.getChildren().add(n);
-        requestLayout();
-        requestParentLayout();
     }
 
     public void addRightIcon(Node n) {
         rightIconPane.getChildren().add(n);
-        requestLayout();
-        requestParentLayout();
     }
 
     public void removeLeftIcon(Node n) {
         leftIconPane.getChildren().remove(n);
-        requestLayout();
-        requestParentLayout();
     }
 
     public void removeRightIcon(Node n) {
         rightIconPane.getChildren().remove(n);
-        requestLayout();
-        requestParentLayout();
     }
 
     @Override
@@ -1000,8 +841,8 @@ class TitleBar extends HBox {
 
         double iconWidth
                 = Math.max(
-                        leftIconPane.prefWidth(h),
-                        rightIconPane.prefWidth(h)) * 2;
+                        leftIconPane.minWidth(h),
+                        rightIconPane.minWidth(h)) * 2;
 
         result = Math.max(result,
                 iconWidth

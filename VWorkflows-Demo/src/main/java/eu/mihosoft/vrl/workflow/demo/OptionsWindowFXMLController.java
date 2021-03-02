@@ -68,7 +68,7 @@ public class OptionsWindowFXMLController implements Initializable {
     private LayoutGeneratorSmart generator;
     private Stage optionsstage;
     private VFlow workflow;
-    private final String[] layouts = new String[4];
+    private final String[] layouts = new String[5];
     private final String[] graphmodes = new String[3];
 
     /**
@@ -82,6 +82,7 @@ public class OptionsWindowFXMLController implements Initializable {
         this.layouts[1] = "FR Layout";
         this.layouts[2] = "KK Layout";
         this.layouts[3] = "DAG Layout";
+        this.layouts[4] = "Sugiyama Layout";
         this.graphmodes[0] = "VFlowModel";
         this.graphmodes[1] = "jgraph";
         this.graphmodes[2] = "nodelist";
@@ -90,6 +91,7 @@ public class OptionsWindowFXMLController implements Initializable {
         layoutlist.add(this.layouts[1]);
         layoutlist.add(this.layouts[2]);
         layoutlist.add(this.layouts[3]);
+        layoutlist.add(this.layouts[4]);
         ObservableList<String> graphmodelist = this.selGraphmode.getItems();
         graphmodelist.add(this.graphmodes[0]);
         graphmodelist.add(this.graphmodes[1]);

@@ -1294,6 +1294,9 @@ public class LayoutGeneratorSmart implements LayoutGenerator {
                                 + " Layout.");
                     }
                     break;
+                case 4: // Sugiyama Layout
+                    this.layout = new JungSugiyama<>(this.jgraph);
+                    break;
                 default:
                     this.layout = new ISOMLayout<>(this.jgraph);
                     break;

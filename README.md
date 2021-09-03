@@ -3,6 +3,13 @@ VWorkflows
 ==============
 
 [![Build Status](https://travis-ci.org/miho/VWorkflows.svg?branch=master)](https://travis-ci.org/miho/VWorkflows) 
+<a href="https://foojay.io/today/works-with-openjdk">
+   <img align="right" 
+        src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png"   
+        width="100">
+</a>
+
+<br>
 
 Interactive flow/graph visualization for building domain specific visual programming environments. Provides UI bindings for JavaFX.
 
@@ -19,7 +26,7 @@ Join the [Developer Group](https://groups.google.com/forum/#!forum/vrl-developer
 
 VWorkflows-Core:
 
-[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-core/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-core/_latestVersion) [![Javadocs](https://www.javadoc.io/badge/eu.mihosoft.vrl.workflow/vworkflows-core.svg?label=javadoc-core)](https://www.javadoc.io/doc/eu.mihosoft.vrl.workflow/vworkflows-core)
+[![Javadocs](https://www.javadoc.io/badge/eu.mihosoft.vrl.workflow/vworkflows-core.svg?label=javadoc-core)](https://www.javadoc.io/doc/eu.mihosoft.vrl.workflow/vworkflows-core)
 
 
 
@@ -32,7 +39,7 @@ VWorkflows-Core:
 
 VWorkflows-FX:
 
-[ ![Download](https://api.bintray.com/packages/miho/VWorkflows/vworkflows-fx/images/download.svg) ](https://bintray.com/miho/VWorkflows/vworkflows-fx/_latestVersion) [![Javadocs](https://www.javadoc.io/badge/eu.mihosoft.vrl.workflow/vworkflows-fx.svg?label=javadoc-fx)](https://www.javadoc.io/doc/eu.mihosoft.vrl.workflow/vworkflows-fx)
+[![Javadocs](https://www.javadoc.io/badge/eu.mihosoft.vrl.workflow/vworkflows-fx.svg?label=javadoc-fx)](https://www.javadoc.io/doc/eu.mihosoft.vrl.workflow/vworkflows-fx)
 
 
 Replace version with the desired version (see above for latest version).

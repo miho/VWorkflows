@@ -60,7 +60,7 @@ Replace version with the desired version (see above for latest version).
 
 ### IDE
 
-Open the `VWorkflows` [Gradle](http://www.gradle.org/) project in your favourite IDE (tested with NetBeans 8.1) and build it
+Open the `VWorkflows` [Gradle](http://www.gradle.org/) project in your favourite IDE (tested with IntelliJ 2021) and build it
 by calling the `assemble` task.
 
 ### Command Line

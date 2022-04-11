@@ -1,0 +1,60 @@
+name: VMF CI
+
+on: [push, pull_request]
+
+jobs:
+  
+  build-linux:
+    strategy:
+      matrix:
+        jdkVersion: [11]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK ${{ matrix.jdkVersion }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.jdkVersion }}
+        architecture: x64 # (x64 or x86)
+    
+    - name: Build and test with Gradle/JUnit
+      run:  sh ./gradlew clean build -S #-x :vworkflows-demo:jfxJar
+    - name: Test with Gradle and Jacoco
+      run:  sh ./gradlew test jacocoTestReport jacocoRootReport coveralls -S     
+
+      
+  build-macos-latest:
+    strategy:
+      matrix:
+        jdkVersion: [11]
+    runs-on: [macos-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK ${{ matrix.jdkVersion }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.jdkVersion }}
+        architecture: x64 # (x64 or x86)
+        
+    - name: Build with Gradle/JUnit
+      run:  sh ./gradlew clean build -S #-x :vworkflows-demo:jfxJar
+    - name: Test with Gradle and Jacoco
+      run:  sh ./gradlew test jacocoTestReport jacocoRootReport coveralls -S
+   
+  build-windows-latest:
+    strategy:
+      matrix:
+        jdkVersion: [11, 17]
+    runs-on: [windows-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK ${{ matrix.jdkVersion }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.jdkVersion }}
+        architecture: x64 # (x64 or x86)
+   
+    - name: Build and test with Gradle/JUnit
+      run:  ./gradlew clean build -S #-x :vworkflows-demo:jfxJar
+    - name: Test with Gradle and Jacoco
+      run:  ./gradlew test jacocoTestReport jacocoRootReport coveralls -S      

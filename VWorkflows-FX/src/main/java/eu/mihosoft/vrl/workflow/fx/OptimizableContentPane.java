@@ -91,10 +91,8 @@ public class OptimizableContentPane extends StackPane {
 
         optimizing = true;
 
-//        if (transform == null) {
         transform = OptimizableContentPane.this.
                 localToSceneTransformProperty().get();
-//        }
 
         boolean visible = optimizationRule.visible(this, transform);
 
@@ -108,15 +106,6 @@ public class OptimizableContentPane extends StackPane {
             if (attachedReq) {
                 getChildren().addAll(detatched);
                 detatched.clear();
-                
-//                for (Node n : getChildren()) {
-//                    if (n instanceof Parent) {
-//                        Parent p = (Parent) n;
-//                        p.layout();
-//                    }
-//                }
-
-
             } else {
                 detatched.addAll(getChildren());
                 getChildren().removeAll(detatched);

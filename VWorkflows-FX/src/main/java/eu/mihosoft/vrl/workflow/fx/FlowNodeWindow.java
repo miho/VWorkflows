@@ -174,7 +174,7 @@ public final class FlowNodeWindow extends Window {
             };
         }
 
-        // 
+        //
         addCollapseIcon(skin);
         configureCanvas(skin);
     }
@@ -224,7 +224,7 @@ public final class FlowNodeWindow extends Window {
 //            model.visibleProperty().addListener(new ChangeListener<Boolean>() {
 //                @Override
 //                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                    
+//
 //                    for (Node n : content.getContentPane().getChildren()) {
 //                        if (n instanceof Window) {
 //                            Window w = (Window) n;
@@ -232,7 +232,7 @@ public final class FlowNodeWindow extends Window {
 //                            w.getContentPane().requestLayout();
 //                        }
 //                    }
-//                    
+//
 ////                    System.out.println("TEST");
 //////                    parentContent.requestOptimization();
 ////                    requestLayout();
@@ -423,14 +423,6 @@ public final class FlowNodeWindow extends Window {
     }
 
     private void configureCanvas(FXFlowNodeSkin skin) {
-
-//        if (skin == null) {
-//            return;
-//        }
-//
-//        if ((skin.getModel() instanceof VFlowModel)) {
-//            return;
-//        }
         if (content != null) {
             content.getStyleClass().setAll("vnode-content");
             skin.configureCanvas(content);
@@ -511,7 +503,7 @@ public final class FlowNodeWindow extends Window {
     }
 
     private void initCaching() {
-        
+
         localToSceneTransformProperty().addListener((ov)->{
              Bounds bounds = this.localToScene(getBoundsInLocal());
              if(bounds.getWidth()<10 || bounds.getHeight()<10) {
@@ -520,41 +512,6 @@ public final class FlowNodeWindow extends Window {
                  setCache(true);
              }
         });
-
-//
-//        boolean[] wasMoving = {false};
-//
-//        InvalidationListener cacheListener = (ov) -> {
-//            
-//            if (isMoving()) {
-//                setCache(true);
-//                Parent parent = getParent();
-//                if (parent != null) {
-//                    parent.getChildrenUnmodifiable().stream().
-//                            filter(n -> n instanceof FlowNodeWindow
-//                                    || n instanceof ConnectorCircle).
-//                            forEach(n -> n.setCache(true));
-//                }
-//            } else {
-//                setCache(false);
-//                System.out.println("was: " + wasMoving[0]);
-//                if (wasMoving[0]) {
-//                    Parent parent = getParent();
-//                    if (parent != null) {
-//                        parent.getChildrenUnmodifiable().stream().
-//                                filter(n -> n instanceof FlowNodeWindow
-//                                        || n instanceof ConnectorCircle).
-//                                forEach(n -> n.setCache(false));
-//                    }
-//                }
-//            }
-//            
-//            wasMoving[0] = isMoving();
-//        };
-//
-//        movingProperty().addListener(cacheListener);
-//
-//        cacheProperty().addListener(state -> setTitle("cache: " + isCache()));
     }
 
     static class FlowStage extends Stage {

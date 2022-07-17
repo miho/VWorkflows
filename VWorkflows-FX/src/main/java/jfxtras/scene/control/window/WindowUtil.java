@@ -48,7 +48,7 @@ import javafx.collections.ObservableList;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class WindowUtil {
-    
+
     private static Clipboard clipboard;
 
     /**
@@ -62,11 +62,11 @@ public class WindowUtil {
      * @see jfxtras.scene.control.window.SelectableNode
      */
     public static Clipboard getDefaultClipboard() {
-        
+
         if (clipboard == null) {
             clipboard = new ClipboardImpl();
         }
-        
+
         return clipboard;
     }
 }
@@ -77,10 +77,10 @@ public class WindowUtil {
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 class ClipboardImpl implements Clipboard {
-    
+
     private final ObservableList<SelectableNode> items
             = FXCollections.observableArrayList();
-    
+
     @Override
     public boolean select(SelectableNode n, boolean selected) {
         if (n.requestSelection(selected)) {
@@ -91,24 +91,23 @@ class ClipboardImpl implements Clipboard {
             } else {
                 items.remove(n);
             }
-            
+
             return true;
         } else {
             return false;
         }
     }
-    
+
     @Override
     public ObservableList<SelectableNode> getSelectedItems() {
         return items;
     }
-    
+
     @Override
     public void deselectAll() {
-        
-        List<SelectableNode> unselectList = new ArrayList<>();
-        unselectList.addAll(items);
-        
+
+        List<SelectableNode> unselectList = new ArrayList<>(items);
+
         for (SelectableNode sN : unselectList) {
             select(sN, false);
         }

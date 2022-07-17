@@ -50,10 +50,8 @@ public class FlowFactory {
     public static VFlow newFlow() {
 
         VFlowModel model = FlowFactory.newFlowModel();
-        
-        VFlow flow = new VFlowImpl(null,model);
 
-        return flow;
+        return new VFlowImpl(null,model);
     }
 
     /**
@@ -66,21 +64,19 @@ public class FlowFactory {
 
         VFlowModel model = FlowFactory.newFlowModel();
 
-        VFlow flow = new VFlowImpl(null,model, skinFactory);
-
-        return flow;
+        return new VFlowImpl(null,model, skinFactory);
     }
 
     /**
      * Creates a new flow model
-     * @return 
+     * @return
      */
     public static VFlowModel newFlowModel() {
         VFlowModel result = new VFlowModelImpl(null);
         result.setId("ROOT");
         return result;
     }
-    
+
     /**
      * Returns a new id generator.
      * @return id generator

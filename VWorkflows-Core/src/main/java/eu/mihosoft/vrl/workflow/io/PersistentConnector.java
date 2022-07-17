@@ -73,11 +73,6 @@ public class PersistentConnector{
         this.localId = id;
     }
 
-//    public PersistentNode getNode() {
-//        return this.node;
-//    }
-
-
     public VisualizationRequest getVisualizationRequest() {
         return this.vRequest;
     }
@@ -100,13 +95,6 @@ public class PersistentConnector{
     public boolean isOutput() {
         return output;
     }
-
-//    /**
-//     * @param node the node to set
-//     */
-//    public void setNode(PersistentNode node) {
-//        this.node = node;
-//    }
 
     /**
      * @return the valueObject

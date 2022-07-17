@@ -55,17 +55,9 @@ class ConnectionBase implements Connection {
     private Connector sender;
     private Connector receiver;
 
-//    private ObjectProperty<Skin> skinProperty = new SimpleObjectProperty<>();
     public ConnectionBase() {
     }
 
-//    public ConnectionBase(Connections connections, String id, String senderId, String receiverId, String type) {
-//        this.connections = connections;
-//        this.id = id;
-//        this.senderId = senderId;
-//        this.receiverId = receiverId;
-//        this.type = type;
-//    }
     public ConnectionBase(Connections connections, String id, Connector sender, Connector receiver, String type) {
         this.connections = connections;
         this.id = id;
@@ -74,10 +66,6 @@ class ConnectionBase implements Connection {
         this.type = type;
     }
 
-//    @Override
-//    public String getSenderId() {
-//        return senderId;
-//    }
     @Override
     public void setSender(Connector s) {
         this.senderId = s.getId();
@@ -95,10 +83,6 @@ class ConnectionBase implements Connection {
         }
     }
 
-//    @Override
-//    public String getReceiverId() {
-//        return receiverId;
-//    }
     @Override
     public void setReceiver(Connector r) {
         this.receiverId = r.getId();
@@ -153,20 +137,6 @@ class ConnectionBase implements Connection {
     public ReadOnlyProperty<VisualizationRequest> visualizationRequestProperty() {
         return _visualizationRequestProperty();
     }
-//    @Override
-//    public void setSkin(Skin<?> skin) {
-//        skinProperty.set(skin);
-//    }
-//
-//    @Override
-//    public Skin<?> getSkin() {
-//        return skinProperty.get();
-//    }
-//
-//    @Override
-//    public ObjectProperty<?> skinProperty() {
-//        return skinProperty;
-//    }
 
     /**
      * @return the connections
@@ -233,7 +203,7 @@ class ConnectionBase implements Connection {
     public Connector getReceiver() {
         return receiver;
     }
-    
+
     @Override
     public boolean isVisualizationRequestInitialized() {
         return vReqProperty != null;

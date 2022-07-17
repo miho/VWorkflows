@@ -78,11 +78,8 @@ public class DefaultValueObject implements ValueObject {
         return new CompatibilityResult() {
             @Override
             public boolean isCompatible() {
-                boolean differentObjects = sender != DefaultValueObject.this;
-//                boolean compatibleType = getParent().isInputOfType(flowType)
-//                        && sender.getParent().isOutputOfType(flowType);
 
-                return differentObjects /*&& compatibleType*/;
+                return sender != DefaultValueObject.this;
             }
 
             @Override
@@ -99,14 +96,14 @@ public class DefaultValueObject implements ValueObject {
 
     @Override
     public VisualizationRequest getVisualizationRequest() {
-        
+
         if (vReq == null) {
             vReq = new VisualizationRequestImpl();
         }
-        
+
         return vReq;
     }
-    
+
     @Override
     public void setVisualizationRequest(VisualizationRequest vReq) {
         this.vReq = vReq;

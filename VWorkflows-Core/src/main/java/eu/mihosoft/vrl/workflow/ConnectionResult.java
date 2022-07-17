@@ -44,11 +44,9 @@ public interface ConnectionResult {
      * @return the connection
      */
     Connection getConnection();
-    
-//    List<Connection> getPath();
 
     /**
-     * Get the status of the connection. 
+     * Get the status of the connection.
      * @return the status of the connection
      */
     CompatibilityResult getStatus();

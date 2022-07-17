@@ -136,7 +136,6 @@ public class FXFlowNodeSkin
                 });
 
         flowNodeWindow.resizingProperty().addListener((ov) -> {
-//            System.out.println("resizing: " + flowNodeWindow.isResizing());
             connectors.values().forEach(cShape -> {
 
                 cShape.getNode().setCache(!flowNodeWindow.isResizing());
@@ -150,10 +149,6 @@ public class FXFlowNodeSkin
                 flowNodeWindow.setCache(true);
             }
         });
-
-//        flowNodeWindow.cacheProperty().addListener((ov)->{
-//            System.out.println("w-cached: " + flowNodeWindow.isCache());
-//        });
         return flowNodeWindow;
     }
 
@@ -185,11 +180,11 @@ public class FXFlowNodeSkin
 //                            for (int i = change.getFrom(); i < change.getTo(); ++i) {
 //                                // TODO permutate
 //                            }
-//                        } 
+//                        }
 //                        else if (change.wasUpdated()) {
 //                            // TODO update item
-//                        } 
-//                        else 
+//                        }
+//                        else
 
                         if (change.wasRemoved()) {
                             numConnectorsHasChanged = true;
@@ -210,8 +205,6 @@ public class FXFlowNodeSkin
                     if (numConnectorsHasChanged) {
 
                         computeConnectorSizes();
-//                    computeInputConnectorSize();
-//                    computeOutputConnectorSize();
                         adjustConnectorSize();
 
                         numConnectorsProperty.set(getModel().getConnectors().size());
@@ -338,7 +331,7 @@ public class FXFlowNodeSkin
 
         Collection<Connection> conns = getModel().getFlow().
                 getConnections(c.getType()).getAllWith(c);
-        //----------------------------B       
+        //----------------------------B
 
         Optional<Boolean> preferTD = c.getVisualizationRequest().
                 get(VisualizationRequest.KEY_CONNECTOR_PREFER_TOP_DOWN);
@@ -568,11 +561,9 @@ public class FXFlowNodeSkin
         int outputDefault = preferTopDown ? BOTTOM : RIGHT;
 //--------------------E
         if (connector.isInput()) {
-//            inputList.add(connectorNode);
             shapeLists.get(inputDefault).add(connectorShape);
             connectorToIndexMap.put(connector, inputDefault);
         } else if (connector.isOutput()) {
-//            outputList.add(connectorNode);
             shapeLists.get(outputDefault).add(connectorShape);
             connectorToIndexMap.put(connector, outputDefault);
         }

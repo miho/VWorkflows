@@ -40,20 +40,16 @@ package eu.mihosoft.vrl.workflow;
  * @author Michael Hoffer &lt;info@michaelhoffer.de&gt;
  */
 public class ThruConnectorImpl extends ConnectorImpl implements ThruConnector{
-    
+
     private VNode innerNode;
     private Connector innerConnector;
 
     public ThruConnectorImpl(VNode node, String type, String localId, boolean input, VNode innerNode, Connector innerConnector) {
         super(node, type, localId, input);
-        
+
         this.innerNode = innerNode;
         this.innerConnector = innerConnector;
     }
-//
-//    public ThruConnectorImpl(VNode node, Connector c) {
-//        super(node, c);
-//    }
 
     @Override
     public VNode getInnerNode() {
@@ -65,5 +61,5 @@ public class ThruConnectorImpl extends ConnectorImpl implements ThruConnector{
         return this.innerConnector;
     }
 
-    
+
 }

@@ -258,7 +258,7 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
 //                    }
 //                } else if (change.wasUpdated()) {
 //                    //update item
-//                } else 
+//                } else
 
                 if (change.wasRemoved()) {
                     for (String i : change.getRemoved()) {
@@ -372,14 +372,7 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
 
             } else {
 
-                double width = n.getBoundsInLocal().getMaxX()
-                        - n.getBoundsInLocal().getMinX();
-                double height = n.getBoundsInLocal().getMaxY()
-                        - n.getBoundsInLocal().getMinY();
-
                 if (resizeTop) {
-//                        System.out.println("TOP");
-
                     double insetOffset = getSkinnable().getInsets().getTop() / 2;
 
                     double yDiff
@@ -395,8 +388,6 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
                     }
                 }
                 if (resizeLeft) {
-//                        System.out.println("LEFT");
-
                     double insetOffset = getSkinnable().getInsets().getLeft() / 2;
 
                     double xDiff = sceneX / parentScaleX
@@ -413,8 +404,6 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
                 }
 
                 if (resizeBottom) {
-//                        System.out.println("BOTTOM");
-
                     double insetOffset = getSkinnable().getInsets().getBottom() / 2;
 
                     double yDiff = event.getSceneY() / parentScaleY
@@ -480,9 +469,6 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
 
             final Node n = control;
 
-            final double parentScaleX = n.getParent().localToSceneTransformProperty().getValue().getMxx();
-            final double parentScaleY = n.getParent().localToSceneTransformProperty().getValue().getMyy();
-
             final double scaleX = n.localToSceneTransformProperty().getValue().getMxx();
             final double scaleY = n.localToSceneTransformProperty().getValue().getMyy();
 
@@ -547,26 +533,6 @@ public class DefaultWindowSkinSimplified extends SkinBase<Window> {
             control.autosize();
         });
 
-//        setOnScroll(new EventHandler<ScrollEvent>() {
-//            @Override
-//            public void handle(ScrollEvent event) {
-//
-//                if (!isZoomable()) {
-//                    return;
-//                }
-//
-//                double scaleValue =
-//                        control.getScaleY() + event.getDeltaY() * getScaleIncrement();
-//
-//                scaleValue = Math.max(scaleValue, getMinScale());
-//                scaleValue = Math.min(scaleValue, getMaxScale());
-//
-//                control.setScaleX(scaleValue);
-//                control.setScaleY(scaleValue);
-//
-//                event.consume();
-//            }
-//        });
     }
 
     /**
@@ -741,15 +707,11 @@ class TitleBarSimplified extends HBox {
 
         setSpacing(8);
 
-//        label.setTextAlignment(TextAlignment.CENTER);
-//        label.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
         leftIconPane = new IconPane();
         rightIconPane = new IconPane();
 
         getChildren().add(leftIconPane);
-//        getChildren().add(VFXLayoutUtil.createHBoxFiller());
         getChildren().add(label);
-//        getChildren().add(VFXLayoutUtil.createHBoxFiller());
         getChildren().add(rightIconPane);
 
         control.boundsInParentProperty().addListener(

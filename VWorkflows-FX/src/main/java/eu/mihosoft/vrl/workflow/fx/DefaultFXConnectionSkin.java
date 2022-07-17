@@ -201,7 +201,6 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
             receiverDraggingStarted = true;
 
             if (lastNode != null) {
-//                    lastNode.setEffect(null);
                 lastNode = null;
             }
 
@@ -214,10 +213,6 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
             if (selConnector != null
                     && selConnector.getNode() != null
                     && selConnector.getConnector() == null) {
-//                    DropShadow shadow = new DropShadow(20, Color.RED);
-//                    Glow effect = new Glow(0.8);
-//                    effect.setInput(shadow);
-//                    selConnector.getNode().setEffect(effect);
                 connectionListener.onNoConnection(selConnector.getNode());
                 lastNode = selConnector.getNode();
             }
@@ -238,11 +233,6 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
                 boolean isSameConnection = receiverConnector.equals(getReceiver());
 
                 if (connResult.getStatus().isCompatible() || isSameConnection) {
-
-//                        DropShadow shadow = new DropShadow(20, Color.WHITE);
-//                        Glow effect = new Glow(0.5);
-//                        shadow.setInput(effect);
-//                        n.setEffect(shadow);
                     getReceiverUI().toFront();
 
                     if (lastNode != n) {
@@ -251,11 +241,6 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
                     }
 
                 } else {
-
-//                        DropShadow shadow = new DropShadow(20, Color.RED);
-//                        Glow effect = new Glow(0.8);
-//                        effect.setInput(shadow);
-//                        n.setEffect(effect);
                     connectionListener.onConnectionIncompatible();
                 }
 
@@ -287,7 +272,6 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
                     }
 
                     if (lastNode != null) {
-//                    lastNode.setEffect(null);
                         lastNode = null;
                     }
 
@@ -364,10 +348,8 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
     @Override
     public void add() {
         NodeUtil.addToParent(getParent(), connectionPath);
-//        VFXNodeUtils.addToParent(getParent(), startConnector);
         NodeUtil.addToParent(getParent(), getReceiverUI());
 
-//        startConnector.toBack();
         getReceiverUI().toFront();
         connectionPath.toBack();
     }
@@ -381,7 +363,6 @@ public class DefaultFXConnectionSkin extends AbstractFXConnectionSkin {
         }
         try {
             super.remove();
-//            connection.getConnections().remove(connection);
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
         }

@@ -80,7 +80,7 @@ public class FXNewConnectionSkin extends AbstractFXConnectionSkin {
         final VNode sender = getSender().getNode();
         final FXFlowNodeSkin senderSkin = (FXFlowNodeSkin) getController().
                 getNodeSkinLookup().getById(skinFactory, sender.getId());
-        
+
         senderShape = senderSkin.getConnectorShape(getSender());
         final Node senderNode = senderShape.getNode();
 
@@ -97,14 +97,13 @@ public class FXNewConnectionSkin extends AbstractFXConnectionSkin {
         receiverConnectorUI.toFront();
 
         MouseControlUtil.makeDraggable(receiverConnectorUI, (MouseEvent t) -> {
-            
+
             if (lastNode != null) {
-//                    lastNode.setEffect(null);
                 lastNode = null;
             }
-            
+
             SelectedConnector selConnector = null;
-            
+
             if (getSender().isOutput()) {
                 selConnector = FXConnectorUtil.getSelectedInputConnector(
                         getSender().getNode(), getParent(), type, t);
@@ -112,64 +111,48 @@ public class FXNewConnectionSkin extends AbstractFXConnectionSkin {
                 selConnector = FXConnectorUtil.getSelectedOutputConnector(
                         getSender().getNode(), getParent(), type, t);
             }
-            
+
             // reject connection if no main input defined for current node
             if (selConnector != null
                     && selConnector.getNode() != null
                     && selConnector.getConnector() == null) {
-//                    DropShadow shadow = new DropShadow(20, Color.RED);
-//                    Glow effect = new Glow(0.8);
-//                    effect.setInput(shadow);
-//                    selConnector.getNode().setEffect(effect);
-                
-                //onConnectionIncompatible();
                 connectionListener.onNoConnection(selConnector.getNode());
-                
+
                 lastNode = selConnector.getNode();
             }
-            
+
             if (selConnector != null
                     && selConnector.getNode() != null
                     && selConnector.getConnector() != null) {
-                
+
                 Connector receiverConnectorModel = selConnector.getConnector();
                 Node n = selConnector.getNode();
                 n.toFront();
-                
-                VNode model = selConnector.getConnector().getNode();
-                
-//                    // we cannot create a connection from us to us
-//                    if (model == getSender()) {
-//                        return;
-//                    }
+
                 ConnectionResult connResult = null;
-                
+
                 if (getSender().isInput() && receiverConnectorModel.isOutput()) {
-                    
+
                     connResult = flow.tryConnect(
                             receiverConnectorModel, getSender());
                 } else {
                     connResult = flow.tryConnect(
                             getSender(), receiverConnectorModel);
                 }
-                
+
                 if (connResult.getStatus().isCompatible()) {
-                    
+
                     if (lastNode != n) {
-                        
+
                         connectionListener.onConnectionCompatible(n);
                     }
-                    
-                } else {    
-//                        DropShadow shadow = new DropShadow(20, Color.RED);
-//                        Glow effect = new Glow(0.8);
-//                        effect.setInput(shadow);
-//                        n.setEffect(effect);
+
+                } else {
                     connectionListener.onConnectionIncompatible();
                 }
-                
+
                 receiverConnectorUI.toFront();
-                
+
                 lastNode = n;
             } else {
                 if (lastNode == null) {
@@ -185,13 +168,13 @@ public class FXNewConnectionSkin extends AbstractFXConnectionSkin {
                 (EventHandler<MouseEvent>) (MouseEvent t) -> {
             receiverConnectorUI.toBack();
             connectionPath.toBack();
-            
+
             if (lastNode != null) {
                 lastNode = null;
             }
 
             SelectedConnector selConnector = null;
-            
+
             if (getSender().isOutput()) {
                 selConnector = FXConnectorUtil.getSelectedInputConnector(
                         getSender().getNode(), getParent(), type, t);
@@ -199,45 +182,45 @@ public class FXNewConnectionSkin extends AbstractFXConnectionSkin {
                 selConnector = FXConnectorUtil.getSelectedOutputConnector(
                         getSender().getNode(), getParent(), type, t);
             }
-            
+
             if (selConnector != null
                     && selConnector.getNode() != null
                     && selConnector.getConnector() != null) {
-                
+
                 Node n = selConnector.getNode();
-                
+
                 n.toFront();
-                
+
                 Connector receiverConnector = selConnector.getConnector();
-                
+
                 ConnectionResult connResult = null;
-                
+
                 if (getSender().isInput() && receiverConnector.isOutput()) {
                     connResult = flow.connect(receiverConnector, getSender());
                     connectionListener.
                             onCreateNewConnectionReverseReleased(connResult);
-                    
+
                 } else {
                     connResult = flow.connect(getSender(), receiverConnector);
                     connectionListener.onCreateNewConnectionReleased(connResult);
                 }
-                
+
                 if (!connResult.getStatus().isCompatible()) {
                     connectionListener.onConnectionIncompatibleReleased(n);
                 }
             }
-            
+
             remove();
         });
     }
 
     @Override
     public final void setSender(Connector n) {
-        
+
         if (n==null) {
             throw new IllegalArgumentException("Sender 'null' not supported.");
         }
-        
+
         senderProperty.set(n);
     }
 

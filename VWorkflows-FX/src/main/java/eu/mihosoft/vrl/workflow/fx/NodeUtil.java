@@ -138,26 +138,15 @@ public class NodeUtil {
      */
     public static List<String> getStylesheetsOfAncestors(Node n) {
 
-//        System.out.println(">> searching stylesheets of ancestors of: " + n);
         List<String> result = new ArrayList<>();
 
         if (n instanceof Parent) {
-
-//            for (String css : ((Parent) n).getStylesheets()) {
-//                System.out.println(" --> n-css: " + css);
-//            }
             result.addAll(((Parent) n).getStylesheets());
         }
 
         Scene scene = null;
 
         for (Parent p : getAncestors(n)) {
-
-//            System.out.println(" --> parent: " + p);
-//
-//            for (String css : p.getStylesheets()) {
-//                System.out.println("  --> p-css: " + p + ": " + css);
-//            }
             result.addAll(p.getStylesheets());
 
             if (scene == null) {
@@ -166,15 +155,7 @@ public class NodeUtil {
         }
 
         if (scene != null) {
-
-//            System.out.println(" --> scene: " + scene);
             result.addAll(scene.getStylesheets());
-
-//            for (String css : scene.getStylesheets()) {
-//                System.out.println("  --> scene-css: " + css);
-//            }
-//
-//            System.out.println(" --> done");
         }
 
         return result;
@@ -296,57 +277,6 @@ public class NodeUtil {
 
         return null;
     }
-
-    /**
-     * Returns the deepest node at the given location that is an instance of the
-     * specified class object. The search is performed recursively until either
-     * a node has been found or a leaf node is reached.
-     *
-     * @param p parent node
-     * @param sceneX x coordinate
-     * @param sceneY y coordinate
-     * @param nodeClasses node classes to search for
-     * @return a node that contains the specified screen coordinates and is an
-     * instance of the specified class or <code>null</code> if no such node
-     * exist
-     */
-    /*
-    public static Node getDeepestNode(Parent p, double sceneX, double sceneY, Class<?>... nodeClasses) {
-
-        // dammit! javafx uses "wrong" children order.
-        List<Node> rightOrder = new ArrayList<>();
-        rightOrder.addAll(p.getChildrenUnmodifiable());
-        Collections.reverse(rightOrder);
-
-        for (Node n : rightOrder) {
-            boolean contains = n.contains(n.sceneToLocal(sceneX, sceneY));
-
-            if (contains) {
-
-                Node result = null;
-
-                if (n instanceof Parent) {
-                    result = getDeepestNode((Parent) n, sceneX, sceneY, nodeClasses);
-                }
-
-                if (result == null) {
-                    result = n;
-                }
-
-                for (Class<?> nodeClass : nodeClasses) {
-
-                    if (nodeClass.isAssignableFrom(result.getClass())) {
-
-                        return result;
-
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-    */
 
     /**
      * Returns the first node at the given location that is an instance of the

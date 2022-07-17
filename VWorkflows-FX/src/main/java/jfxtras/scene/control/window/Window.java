@@ -168,7 +168,7 @@ public class Window extends Control implements SelectableNode {
      */
     private final BooleanProperty selectableProperty = new SimpleBooleanProperty(true);
 
-    /* 
+    /*
      * Closed property (defines whether window is closed).
      */
     private final BooleanProperty closeRequested = new SimpleBooleanProperty();
@@ -340,8 +340,8 @@ public class Window extends Control implements SelectableNode {
 
         initializeMovingPropertyMonitor();
         initializeResizingPropertyMonitor();
-        
-        
+
+
 
     }
 
@@ -349,14 +349,8 @@ public class Window extends Control implements SelectableNode {
         // detects whether the window is currently moving
         boolean[] timerTaskSet = {false};
         double[] wh = {0, 0};
-//        int[] cancelledTasks = {0};
         InvalidationListener resizingListener = (ov) -> {
 
-//            // purge cancelled tasks regularily to prevent memory leaks
-//            if (cancelledTasks[0] > 1000) {
-//                timer[0].purge();
-//                cancelledTasks[0] = 0;
-//            }
             if (!timerTaskSet[0]) {
                 timerTaskSet[0] = true;
                 timer.scheduleAtFixedRate(new TimerTask() {
@@ -392,15 +386,8 @@ public class Window extends Control implements SelectableNode {
         // detects whether the window is currently moving
         boolean [] timerTaskSet = {false};
         double[] xy = {0, 0};
-//        boolean[] running = {false};
-//        int[] cancelledTasks = {0};
         InvalidationListener movingListener = (ov) -> {
 
-//            // purge cancelled tasks regularily to prevent memory leaks
-//            if (cancelledTasks[0] > 1000) {
-//                timer[0].purge();
-//                cancelledTasks[0] = 0;
-//            }
             if (!timerTaskSet[0] && (getLayoutX() != 0 || getLayoutY() != 0)) {
                 timerTaskSet[0] = true;
                 timer.scheduleAtFixedRate(new TimerTask() {
@@ -458,18 +445,12 @@ public class Window extends Control implements SelectableNode {
     }
 
     public double minWidthWithTitle() {
-        if (getSkin() instanceof DefaultWindowSkin) {
-            DefaultWindowSkin skin = (DefaultWindowSkin) getSkin();
-//            return skin.computeMinWidth();
-        }
-
         return minWidth(0);
     }
 
     @Override
     protected double computeMinWidth(double height) {
-        double result = super.computeMinWidth(height);
-        return result;
+        return super.computeMinWidth(height);
     }
 
     // TODO move from control to behavior class (a lot of other stuff here too)
@@ -752,7 +733,7 @@ public class Window extends Control implements SelectableNode {
      */
     public void close() {
 
-        // if already closed, we do nothing 
+        // if already closed, we do nothing
         if (this.getParent() == null) {
             return;
         }

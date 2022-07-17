@@ -323,15 +323,6 @@ class VFlowModelImpl implements VFlowModel {
         return node.getFlow();
     }
 
-//    @Override
-//    public boolean isInput() {
-//        return node.isInput();
-//    }
-//
-//    @Override
-//    public boolean isOutput() {
-//        return node.isOutput();
-//    }
     @Override
     public VFlowModel newFlowNode(ValueObject obj) {
         VFlowModel flowNode = new VFlowModelImpl(this);
@@ -386,10 +377,6 @@ class VFlowModelImpl implements VFlowModel {
         return result;
     }
 
-//    @Override
-//    public String getGlobalId() {
-//        return node.getGlobalId();
-//    }
     @Override
     public final void setIdGenerator(IdGenerator generator) {
         flow.setIdGenerator(generator);
@@ -410,25 +397,6 @@ class VFlowModelImpl implements VFlowModel {
         return flow.getNodeLookup();
     }
 
-//    @Override
-//    public ObservableList<String> getInputTypes() {
-//        return node.getInputTypes();
-//    }
-//
-//    @Override
-//    public ObservableList<String> getOutputTypes() {
-//        return node.getOutputTypes();
-//    }
-//
-//    @Override
-//    public boolean isInputOfType(String type) {
-//        return node.isInputOfType(type);
-//    }
-//
-//    @Override
-//    public boolean isOutputOfType(String type) {
-//        return node.isOutputOfType(type);
-//    }
     @Override
     public Connector getMainInput(String type) {
         return this.node.getMainInput(type);

@@ -99,9 +99,6 @@ public interface VNode extends Model, Selectable {
 
     public double getHeight();
 
-//    public ObservableList<VNode> getChildren();
-//    public ObservableList<Connector<FlowNode>> getInputs();
-//    public ObservableList<Connector<FlowNode>> getOutputs();
     public void setValueObject(ValueObject obj);
 
     public ValueObject getValueObject();
@@ -110,25 +107,14 @@ public interface VNode extends Model, Selectable {
 
     public VFlowModel getFlow();
 
-//    boolean isInputOfType(String type);
-//
-//    boolean isOutputOfType(String type);
-//    boolean isInput();
-//
-//    boolean isOutput();
-//    void setInput(boolean state, String type);
-//    void setOutput(boolean state, String type);
     public Connector addInput(String type);
 
     public Connector addOutput(String type);
 
     public Connector addConnector(Connector c);
-    
+
     public boolean removeConnector(Connector c);
 
-//    ObservableList<String> getInputTypes();
-//
-//    ObservableList<String> getOutputTypes();
     public Collection<String> getMainInputTypes();
 
     public Collection<String> getMainOutputTypes();
@@ -148,20 +134,20 @@ public interface VNode extends Model, Selectable {
     public ObservableList<Connector> getInputs();
 
     public ObservableList<Connector> getOutputs();
-    
+
     public BooleanProperty selectableProperty();
     public boolean isSelectable();
-    
-        
+
+
     /**
      * Returns the distance to the root element.
      */
     public int getDepth();
-    
+
     /**
      * Returns the root element of this flow.
      * @return root element
      */
     public FlowModel getRoot();
-    
+
 }

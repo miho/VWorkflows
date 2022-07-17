@@ -131,7 +131,6 @@ public class DefaultConnectionListener implements ConnectionListener {
     }
 
     private void newConnectionReverseAnim(ConnectionResult connResult) {
-        // System.out.println("new-connection anim (reverse)");
         if (connResult.getConnection() != null) {
             FXConnectionSkin connectionSkin
                     = (FXConnectionSkin) flowController.getNodeSkinLookup().getById(

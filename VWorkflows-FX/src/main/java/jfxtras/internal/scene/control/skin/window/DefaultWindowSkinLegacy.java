@@ -129,8 +129,8 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
 //                            }
 //                        } else if (change.wasUpdated()) {
 //                            //update item
-//                        } else 
-                            
+//                        } else
+
                         if (change.wasRemoved()) {
                             for (WindowIcon i : change.getRemoved()) {
                                 titleBar.removeLeftIcon(i);
@@ -153,8 +153,8 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
 //                            }
 //                        } else if (change.wasUpdated()) {
 //                            //update item
-//                        } else 
-                            
+//                        } else
+
                             if (change.wasRemoved()) {
                             for (WindowIcon i : change.getRemoved()) {
                                 titleBar.removeRightIcon(i);
@@ -201,20 +201,12 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
                             (ObservableValue<? extends Status> ov2,
                                     Status oldStatus, Status newStatus) -> {
                                 if (newStatus == Status.STOPPED) {
-
-//                                    // restore cache hint
-//                                    getSkinnable().setCache(true);
-//                                    getSkinnable().setCacheHint(CacheHint.SPEED);
                                     minimizeTimeLine = null;
                                     if (newValue) {
                                         control.getContentPane().setVisible(false);
                                     }
                                 }
                             });
-
-                    // temporarily disable cache hint due to rendering bugs
-//                    getSkinnable().setCache(false);
-//                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
                     minimizeTimeLine.play();
                 });
 
@@ -236,23 +228,6 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
 
         control.getContentPane().setManaged(false);
 
-//        InvalidationListener contentLayoutListener = (ov) -> {
-//            
-//            control.autosize();
-//            root.autosize();
-//        };
-//
-//        control.getContentPane().needsLayoutProperty().addListener(contentLayoutListener);
-//
-//        control.contentPaneProperty().addListener(
-//                (ObservableValue<? extends Pane> ov,
-//                        Pane oldValue, Pane newValue) -> {
-//                    root.getChildren().remove(oldValue);
-//                    root.getChildren().add(newValue);
-//                    newValue.setManaged(false);
-//                    newValue.needsLayoutProperty().
-//                    addListener(contentLayoutListener);
-//                });
         titleBar.setStyle(control.getStyle());
 
         control.styleProperty().addListener(
@@ -281,7 +256,7 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
 //                            }
 //                        } else if (change.wasUpdated()) {
 //                            //update item
-//                        } else 
+//                        } else
                             if (change.wasRemoved()) {
                             for (String i : change.getRemoved()) {
                                 titleBar.getStylesheets().remove(i);
@@ -308,8 +283,6 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
                         if (control.isSelectionEffectEnabled()) {
                             ColorAdjust effect
                             = new ColorAdjust(-0.25, 0.2, 0.8, 0);
-//                            Glow glow = new Glow(0.5);
-//                            glow.setInput(effect);
                             control.setEffect(effect);
                         }
                     } else {
@@ -319,37 +292,6 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
                 });
 
         getSkinnable().setCacheHint(CacheHint.SPEED);
-
-//        control.resizingProperty().addListener((ov) -> {
-//            control.setCache(control.isResizing());
-//        });
-        // counter intuitive caching (see http://bit.ly/1MemgLz why)
-//        control.resizingProperty().addListener((ov) -> {
-//            control.setCache(!control.isResizing());
-//        });
-//
-//        InvalidationListener cacheListener = (ov) -> {
-//            if (!control.isResizing()) {
-//                control.setCache(
-//                        !control.isResizing()
-//                        && !control.getParent().isCache()
-//                );
-//            } else {
-//                control.setCache(false);
-//            }
-//        };
-//        Parent p = control.getParent();
-//        if (p != null) {
-//            p.cacheProperty().addListener(cacheListener);
-//        }
-//        control.parentProperty().addListener((ov, oldV, newV) -> {
-//            if (oldV != null) {
-//                oldV.cacheProperty().removeListener(cacheListener);
-//            }
-//            if (newV != null) {
-//                newV.cacheProperty().addListener(cacheListener);
-//            }
-//        });
 
         Rectangle clipRectangle = new Rectangle();
         control.getContentPane().setClip(clipRectangle);
@@ -434,14 +376,7 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
 
             } else {
 
-                double width = n.getBoundsInLocal().getMaxX()
-                        - n.getBoundsInLocal().getMinX();
-                double height = n.getBoundsInLocal().getMaxY()
-                        - n.getBoundsInLocal().getMinY();
-
                 if (resizeTop) {
-//                        System.out.println("TOP");
-
                     double insetOffset = getSkinnable().getInsets().getTop() * 0.5;
 
                     double yDiff
@@ -457,8 +392,6 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
                     }
                 }
                 if (resizeLeft) {
-//                        System.out.println("LEFT");
-
                     double insetOffset = getSkinnable().getInsets().getLeft() * 0.5;
 
                     double xDiff = sceneX / parentScaleX
@@ -509,14 +442,6 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
                         control.setPrefWidth(newWidth);
                     }
                 }
-
-//                if (RESIZE_BOTTOM || RESIZE_TOP || RESIZE_LEFT || RESIZE_RIGHT) {
-//                    getSkinnable().setCache(false);
-//
-//                } else {
-//                    getSkinnable().setCache(true);
-//                    getSkinnable().setCacheHint(CacheHint.DEFAULT);
-//                }
             }
 
             mouseX = event.getSceneX();
@@ -543,10 +468,6 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
 
             final Node n = control;
 
-            final double parentScaleX = n.getParent().
-                    localToSceneTransformProperty().getValue().getMxx();
-            final double parentScaleY = n.getParent().
-                    localToSceneTransformProperty().getValue().getMyy();
 
             final double scaleX = n.localToSceneTransformProperty().getValue().getMxx();
             final double scaleY = n.localToSceneTransformProperty().getValue().getMyy();
@@ -722,15 +643,13 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
 
         double leftAndRight = getSkinnable().getInsets().getLeft()
                 + getSkinnable().getInsets().getRight();
-        double topAndBottom = getSkinnable().getInsets().getTop()
-                + getSkinnable().getInsets().getBottom();
 
         control.getContentPane().relocate(
                 getSkinnable().getInsets().getLeft(),
                 titleBar.prefHeight(-1));
 
-        double rootW = root.getWidth(); //Math.max(root.getWidth(), root.getMinWidth());
-        double rootH = root.getHeight();//Math.max(root.getHeight(), root.getMinHeight());
+        double rootW = root.getWidth();
+        double rootH = root.getHeight();
 
         double contentWidth = rootW - leftAndRight;
         double contentHeight = rootH - getSkinnable().getInsets().
@@ -775,10 +694,8 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
     protected double computePrefWidth(double width, double topInset,
             double rightInset, double bottomInset, double leftInset) {
 
-        double result = computeMinWidth(
+        return computeMinWidth(
                 width, topInset, rightInset, bottomInset, leftInset);
-
-        return result;
     }
 
     @Override
@@ -869,12 +786,10 @@ public class DefaultWindowSkinLegacy extends SkinBase<Window> {
                     && control.getPrefHeight()
                     < titleBar.minHeight(0) + control.getContentPane().minHeight(0)) {
                 control.getContentPane().setVisible(false);
-//                System.out.println("v: false");
             } else if (!control.isMinimized()
                     && control.getPrefHeight()
                     >= titleBar.minHeight(0) + control.getContentPane().minHeight(0)) {
                 control.getContentPane().setVisible(true);
-//                System.out.println("v: true");
             }
         }
     }
@@ -905,16 +820,11 @@ class TitleBarLegacy extends HBox {
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 
         setSpacing(8);
-
-//        label.setTextAlignment(TextAlignment.CENTER);
-//        label.getStyleClass().setAll(DEFAULT_STYLE_CLASS);
         leftIconPane = new IconPane();
         rightIconPane = new IconPane();
 
         getChildren().add(leftIconPane);
-//        getChildren().add(VFXLayoutUtil.createHBoxFiller());
         getChildren().add(label);
-//        getChildren().add(VFXLayoutUtil.createHBoxFiller());
         getChildren().add(rightIconPane);
 
         control.boundsInParentProperty().addListener(
@@ -925,20 +835,7 @@ class TitleBarLegacy extends HBox {
                         return;
                     }
 
-                    double maxIconWidth = Math.max(
-                            leftIconPane.getWidth(), rightIconPane.getWidth());
-
-//                    if (!control.getTitle().equals(getLabel().getText())) {
-//                        if (originalTitleWidth
-//                        + maxIconWidth * 2 + offset < getWidth()) {
                     getLabel().setText(control.getTitle());
-//                        }
-//                    } else if (!"...".equals(getLabel().getText())) {
-//                        if (originalTitleWidth
-//                        + maxIconWidth * 2 + offset >= getWidth()) {
-//                            getLabel().setText("...");
-//                        }
-//                    }
                 });
 
     }

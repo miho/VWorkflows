@@ -44,10 +44,8 @@ import java.util.Set;
 class IdGeneratorImpl implements IdGenerator {
 
     private Set<String> ids = new HashSet<>();
-//    private int lastId = 0;
 
     public IdGeneratorImpl() {
-        //
     }
 
     @Override
@@ -65,9 +63,9 @@ class IdGeneratorImpl implements IdGenerator {
 
         // TODO improve id generation
         // Question: do we really want strings as id?
-        int counter = 0;//lastId + 1;
-       
-        
+        int counter = 0;
+
+
         if (prefix != null && !prefix.isEmpty() && !prefix.endsWith(":")) {
             prefix = prefix + "-";
         }
@@ -81,8 +79,6 @@ class IdGeneratorImpl implements IdGenerator {
 
         ids.add(id);
 
-//        lastId = counter;
-
         return id;
     }
 
@@ -93,8 +89,7 @@ class IdGeneratorImpl implements IdGenerator {
 
     @Override
     public Set<String> getIds() {
-        Set<String> result = new HashSet<>(ids);
-        return result;
+        return new HashSet<>(ids);
     }
 
     @Override

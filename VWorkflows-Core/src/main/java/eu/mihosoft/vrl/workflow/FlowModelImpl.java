@@ -136,10 +136,7 @@ public class FlowModelImpl implements FlowModel {
             receiver = r.getMainInput(type);
         }
 
-//        System.out.println("ADD: " + sender + ", " + receiver);
         Connection connection = getConnections(type).add(sender, receiver);
-        
-        
 
         return new ConnectionResultImpl(result.getStatus(), connection);
     }
@@ -183,14 +180,10 @@ public class FlowModelImpl implements FlowModel {
     @Override
     public VNode remove(VNode n) {
 
-//        if (n instanceof FlowModel) {
-//            ((FlowModel)n).clear();
-//        }
         VNode result = nodes.remove(n.getId());
         nodeLookup.invalidateCache();
         observableNodes.remove(n);
 
-//        removeNodeSkin(n);
         for (Connections cns : getAllConnections().values()) {
 
             Collection<Connection> connectionsToRemove
@@ -198,7 +191,6 @@ public class FlowModelImpl implements FlowModel {
 
             for (Connection c : connectionsToRemove) {
                 cns.remove(c);
-//                removeConnectionSkin(c);
             }
         }
 

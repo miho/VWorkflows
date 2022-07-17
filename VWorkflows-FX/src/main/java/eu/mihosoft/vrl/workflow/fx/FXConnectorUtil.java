@@ -143,9 +143,6 @@ public class FXConnectorUtil {
         }
 
         Timeline timeline = new Timeline();
-//        timeline.setAutoReverse(true);
-//        timeline.setCycleCount(Timeline.INDEFINITE);
-
         final Circle connectedShape = new Circle();
         connectedShape.setStrokeWidth(15);
         connectedShape.setFill(Color.TRANSPARENT);
@@ -185,9 +182,6 @@ public class FXConnectorUtil {
 
     public static void connnectionIncompatibleAnim(Node receiverUI) {
         Timeline timeline = new Timeline();
-//        timeline.setAutoReverse(true);
-//        timeline.setCycleCount(Timeline.INDEFINITE);
-
         final Circle connectedShape = new Circle();
         connectedShape.setStrokeWidth(15);
         connectedShape.setFill(Color.TRANSPARENT);

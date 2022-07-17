@@ -76,8 +76,8 @@ public class PersistentNode {
         this.id = id;
         this.connectors = WorkflowIO.listToSerializableList(connectors);
     }
-    
-    
+
+
 
     /**
      * @return the x
@@ -202,20 +202,17 @@ public class PersistentNode {
      * @param connectors the inputTypes to set
      */
     public void setConnectors(List<PersistentConnector> connectors) {
-        
+
         for (PersistentConnector persistentConnector : connectors) {
             addConnector(persistentConnector);
         }
     }
-    
+
         /**
      * @param connector the inputTypes to set
      */
     public void addConnector(PersistentConnector connector ) {
-
-//            connector.setNode(this);
-            
-            connectors.add(connector);
+        connectors.add(connector);
     }
 
     /**

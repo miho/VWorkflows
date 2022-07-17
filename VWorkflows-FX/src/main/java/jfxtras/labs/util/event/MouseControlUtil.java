@@ -215,9 +215,6 @@ public class MouseControlUtil {
         _makeDraggable(n, dragHandlerGroup, pressHandlerGroup, centerNode);
     }
 
-//    public static void makeResizable(Node n) {
-//        
-//    }
     private static void _makeDraggable(
             final Node n,
             EventHandlerGroup<MouseEvent> dragHandler,
@@ -371,12 +368,6 @@ class RectangleSelectionControllerImpl {
 
         this.root = root;
 
-//        root.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent t) {
-//                WindowUtil.getDefaultClipboard().unselectAll();
-//            }
-//        });
         mouseDraggedEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
